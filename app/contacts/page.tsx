@@ -1,41 +1,11 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { Search, X } from "lucide-react";
-import Papa from "papaparse";
-
-type Lead = {
-  name: string;
-  company: string;
-  position: string;
-  linkedin: string;
-  email: string;
-};
+import { leads } from "@/lib/leads-data";
 
 export default function ContactsPage() {
-  const [leads, setLeads] = useState<Lead[]>([]);
   const [query, setQuery] = useState("");
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch("/leads.csv")
-      .then((r) => r.text())
-      .then((text) => {
-        const result = Papa.parse<Record<string, string>>(text, {
-          header: true,
-          skipEmptyLines: true,
-        });
-        const parsed: Lead[] = result.data.map((row) => ({
-          name: [row["First Name"], row["Last Name"]].filter(Boolean).join(" "),
-          company: row["Company Name"] || "",
-          position: row["Title"] || "",
-          linkedin: row["LinkedIn"] || "",
-          email: row["Email"] || "",
-        }));
-        setLeads(parsed);
-        setLoading(false);
-      });
-  }, []);
 
   const filtered = useMemo(() => {
     if (!query.trim()) return leads;
@@ -47,7 +17,7 @@ export default function ContactsPage() {
         l.position.toLowerCase().includes(q) ||
         l.email.toLowerCase().includes(q),
     );
-  }, [leads, query]);
+  }, [query]);
 
   return (
     <div className="p-8 max-w-6xl mx-auto">
@@ -57,9 +27,8 @@ export default function ContactsPage() {
             Contacts
           </h1>
           <p className="text-slate-500 text-sm mt-1">
-            {loading
-              ? "Loading…"
-              : `${filtered.length} contact${filtered.length !== 1 ? "s" : ""}`}
+            {filtered.length} of {leads.length} contact
+            {leads.length !== 1 ? "s" : ""}
           </p>
         </div>
       </div>
@@ -110,16 +79,7 @@ export default function ContactsPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-50">
-            {loading ? (
-              <tr>
-                <td
-                  colSpan={5}
-                  className="px-5 py-10 text-center text-sm text-slate-400"
-                >
-                  Loading contacts…
-                </td>
-              </tr>
-            ) : filtered.length === 0 ? (
+            {filtered.length === 0 ? (
               <tr>
                 <td
                   colSpan={5}
