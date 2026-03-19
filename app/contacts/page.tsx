@@ -164,9 +164,9 @@ export default function ContactsPage() {
             <thead>
               <tr className="border-b border-slate-100 bg-slate-50/70">
                 <th className="text-left px-5 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wide">Name</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wide hidden md:table-cell">Company</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wide hidden lg:table-cell">Position</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wide hidden sm:table-cell">Last Emailed</th>
+                <th className="text-left px-5 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wide">Company</th>
+                <th className="text-left px-5 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wide">Position</th>
+                <th className="text-left px-5 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wide">Last Emailed</th>
                 <th className="px-5 py-3" />
               </tr>
             </thead>
@@ -193,13 +193,13 @@ export default function ContactsPage() {
                           </div>
                         </Link>
                       </td>
-                      <td className="px-5 py-3.5 text-slate-600 hidden md:table-cell">
+                      <td className="px-5 py-3.5 text-slate-600">
                         {c.company || <span className="text-slate-300">—</span>}
                       </td>
-                      <td className="px-5 py-3.5 text-slate-500 hidden lg:table-cell">
+                      <td className="px-5 py-3.5 text-slate-500">
                         {c.position || <span className="text-slate-300">—</span>}
                       </td>
-                      <td className="px-5 py-3.5 hidden sm:table-cell">
+                      <td className="px-5 py-3.5">
                         {last ? (
                           <span className="text-xs text-slate-500">{formatDate(last)}</span>
                         ) : (
