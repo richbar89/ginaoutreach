@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Send, CheckCircle } from "lucide-react";
+import { appendEmailRecord } from "@/lib/storage";
 
 export default function SendEmailPage() {
   const [form, setForm] = useState({ to: "", toName: "", subject: "", body: "" });
@@ -14,6 +15,13 @@ export default function SendEmailPage() {
       `?subject=${encodeURIComponent(form.subject)}` +
       `&body=${encodeURIComponent(form.body)}`;
     window.location.href = mailto;
+
+    appendEmailRecord({
+      contactEmail: form.to,
+      subject: form.subject,
+      body: form.body,
+    });
+
     setLaunched(true);
     setTimeout(() => setLaunched(false), 4000);
   };
@@ -22,7 +30,6 @@ export default function SendEmailPage() {
 
   return (
     <div className="p-8 max-w-2xl mx-auto">
-      {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Send Email</h1>
         <p className="mt-1 text-slate-500 text-sm">
@@ -41,7 +48,6 @@ export default function SendEmailPage() {
         onSubmit={handleSubmit}
         className="bg-white border border-slate-200 rounded-2xl divide-y divide-slate-100"
       >
-        {/* To */}
         <div className="px-6 py-4 grid grid-cols-2 gap-4">
           <div>
             <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
@@ -70,7 +76,6 @@ export default function SendEmailPage() {
           </div>
         </div>
 
-        {/* Subject */}
         <div className="px-6 py-4">
           <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
             Subject <span className="text-red-400">*</span>
@@ -85,7 +90,6 @@ export default function SendEmailPage() {
           />
         </div>
 
-        {/* Body */}
         <div className="px-6 py-4">
           <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
             Message <span className="text-red-400">*</span>
@@ -100,7 +104,6 @@ export default function SendEmailPage() {
           />
         </div>
 
-        {/* Footer */}
         <div className="px-6 py-4 flex items-center justify-between bg-slate-50 rounded-b-2xl">
           <p className="text-xs text-slate-400">Opens your default mail app to send</p>
           <button

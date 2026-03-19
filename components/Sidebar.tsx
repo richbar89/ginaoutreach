@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Send, MailOpen, Plus } from "lucide-react";
+import { LayoutDashboard, Send, MailOpen, Users, Plus } from "lucide-react";
 
 const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { href: "/contacts", label: "Contacts", icon: Users, exact: false },
   { href: "/send", label: "Send Email", icon: Send, exact: false },
   { href: "/campaigns", label: "Campaigns", icon: MailOpen, exact: false },
 ];
