@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import { Plus, Search, Upload, Mail, X } from "lucide-react";
+import { Plus, Search, Upload, Mail, X, Linkedin } from "lucide-react";
 import Papa from "papaparse";
 import InitialsAvatar from "@/components/InitialsAvatar";
 import { getContacts, saveContacts, getEmailLog, upsertContact } from "@/lib/storage";
@@ -20,14 +20,16 @@ function lastEmailed(email: string, log: EmailRecord[]): string | null {
   return records.sort((a, b) => b.sentAt.localeCompare(a.sentAt))[0].sentAt;
 }
 
-const EMPTY: StoredContact = { id: "", name: "", email: "", position: "", company: "", notes: "", createdAt: "" };
+function blankContact(): StoredContact {
+  return { id: "", name: "", email: "", position: "", company: "", linkedin: "", notes: "", createdAt: "" };
+}
 
 export default function ContactsPage() {
   const [contacts, setContacts] = useState<StoredContact[]>([]);
   const [log, setLog] = useState<EmailRecord[]>([]);
   const [query, setQuery] = useState("");
   const [showAdd, setShowAdd] = useState(false);
-  const [form, setForm] = useState(EMPTY);
+  const [form, setForm] = useState<StoredContact>(blankContact());
 
   useEffect(() => {
     setContacts(getContacts());
@@ -49,15 +51,19 @@ export default function ContactsPage() {
   const saveContact = () => {
     if (!form.email) return;
     const contact: StoredContact = {
-      ...form,
       id: form.id || crypto.randomUUID(),
+      name: form.name,
       email: form.email.toLowerCase(),
+      position: form.position,
+      company: form.company,
+      linkedin: form.linkedin,
+      notes: form.notes,
       createdAt: form.createdAt || new Date().toISOString(),
     };
     upsertContact(contact);
     setContacts(getContacts());
     setShowAdd(false);
-    setForm(EMPTY);
+    setForm(blankContact());
   };
 
   const deleteContact = (id: string) => {
@@ -81,8 +87,9 @@ export default function ContactsPage() {
               id: crypto.randomUUID(),
               email: find(["email", "Email", "EMAIL"]).toLowerCase(),
               name: find(["name", "Name", "full_name", "Full Name"]),
-              position: find(["position", "Position", "job_title", "title"]),
+              position: find(["position", "Position", "job_title", "Job Title", "title"]),
               company: find(["company", "Company", "organisation", "organization"]),
+              linkedin: find(["linkedin", "LinkedIn", "linkedin_url", "LinkedIn URL"]),
               notes: "",
               createdAt: new Date().toISOString(),
             };
@@ -117,7 +124,7 @@ export default function ContactsPage() {
             />
           </label>
           <button
-            onClick={() => { setForm(EMPTY); setShowAdd(true); }}
+            onClick={() => { setForm(blankContact()); setShowAdd(true); }}
             className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-xl transition-colors"
           >
             <Plus size={14} />
@@ -208,6 +215,17 @@ export default function ContactsPage() {
                       </td>
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-1 justify-end opacity-0 group-hover:opacity-100 transition-opacity">
+                          {c.linkedin && (
+                            <a
+                              href={c.linkedin.startsWith("http") ? c.linkedin : `https://${c.linkedin}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              title="LinkedIn"
+                              className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            >
+                              <Linkedin size={14} />
+                            </a>
+                          )}
                           <a
                             href={`mailto:${c.email}`}
                             title="Quick email"
@@ -244,24 +262,66 @@ export default function ContactsPage() {
               </button>
             </div>
             <div className="px-6 py-5 space-y-3">
-              {(["email", "name", "position", "company"] as const).map((field) => (
-                <div key={field}>
-                  <label className="block text-xs font-medium text-slate-400 uppercase tracking-wide mb-1">
-                    {field}{field === "email" && <span className="text-red-400 ml-0.5">*</span>}
-                  </label>
-                  <input
-                    type={field === "email" ? "email" : "text"}
-                    value={form[field]}
-                    onChange={(e) => setForm((f) => ({ ...f, [field]: e.target.value }))}
-                    placeholder={
-                      field === "email" ? "jane@acme.com" :
-                      field === "name" ? "Jane Smith" :
-                      field === "position" ? "Head of Marketing" : "Acme Ltd"
-                    }
-                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-              ))}
+              <div>
+                <label className="block text-xs font-medium text-slate-400 uppercase tracking-wide mb-1">
+                  Email <span className="text-red-400">*</span>
+                </label>
+                <input
+                  type="email"
+                  value={form.email}
+                  onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+                  placeholder="jane@acme.com"
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-400 uppercase tracking-wide mb-1">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  value={form.name}
+                  onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+                  placeholder="Jane Smith"
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-400 uppercase tracking-wide mb-1">
+                  Position
+                </label>
+                <input
+                  type="text"
+                  value={form.position}
+                  onChange={(e) => setForm((f) => ({ ...f, position: e.target.value }))}
+                  placeholder="Head of Marketing"
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-400 uppercase tracking-wide mb-1">
+                  Company
+                </label>
+                <input
+                  type="text"
+                  value={form.company}
+                  onChange={(e) => setForm((f) => ({ ...f, company: e.target.value }))}
+                  placeholder="Acme Ltd"
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-400 uppercase tracking-wide mb-1">
+                  LinkedIn URL
+                </label>
+                <input
+                  type="url"
+                  value={form.linkedin}
+                  onChange={(e) => setForm((f) => ({ ...f, linkedin: e.target.value }))}
+                  placeholder="https://linkedin.com/in/janesmith"
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
             </div>
             <div className="px-6 py-4 border-t border-slate-100 flex justify-end gap-2">
               <button onClick={() => setShowAdd(false)} className="px-4 py-2 text-sm text-slate-600 hover:text-slate-900 transition-colors">

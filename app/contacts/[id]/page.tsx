@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Mail, Pencil, Check, X, ExternalLink } from "lucide-react";
+import { ArrowLeft, Mail, Pencil, Check, X, ExternalLink, Linkedin } from "lucide-react";
 import InitialsAvatar from "@/components/InitialsAvatar";
 import { getContacts, upsertContact, getContactEmailLog } from "@/lib/storage";
 import type { StoredContact, EmailRecord } from "@/lib/types";
@@ -112,15 +112,26 @@ export default function ContactProfilePage() {
                 {contact.position} at {contact.company}
               </p>
             )}
-            <div className="flex items-center gap-3 mt-3">
+            <div className="flex items-center gap-3 mt-3 flex-wrap">
               <a
                 href={`mailto:${contact.email}`}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors"
               >
                 <Mail size={12} />
                 Send email
-                <ExternalLink size={10} className="opacity-70" />
               </a>
+              {contact.linkedin && (
+                <a
+                  href={contact.linkedin.startsWith("http") ? contact.linkedin : `https://${contact.linkedin}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-medium rounded-lg transition-colors"
+                >
+                  <Linkedin size={12} />
+                  LinkedIn
+                  <ExternalLink size={10} className="opacity-70" />
+                </a>
+              )}
               <span className="text-xs text-slate-400">
                 Added {formatDate(contact.createdAt)}
               </span>
@@ -134,6 +145,7 @@ export default function ContactProfilePage() {
           <EditableField field="email" label="Email" value={contact.email} />
           <EditableField field="position" label="Position" value={contact.position} />
           <EditableField field="company" label="Company" value={contact.company} />
+          <EditableField field="linkedin" label="LinkedIn URL" value={contact.linkedin || ""} />
         </div>
       </div>
 

@@ -20,6 +20,7 @@ export type StoredContact = {
   email: string;
   position: string;
   company: string;
+  linkedin: string;
   notes: string;
   createdAt: string;
 };
