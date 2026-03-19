@@ -92,6 +92,10 @@ export default function ContactsPage() {
               company: find([
                 "company",
                 "Company",
+                "company_name",
+                "Company Name",
+                "CompanyName",
+                "COMPANY",
                 "organisation",
                 "organization",
                 "Organization",
