@@ -23,24 +23,9 @@ const navSections = [
   {
     label: "Intelligence",
     items: [
-      {
-        href: "/meta-analytics",
-        label: "Meta Analytics",
-        icon: BarChart2,
-        exact: false,
-      },
-      {
-        href: "/competitors",
-        label: "Competitor Tracker",
-        icon: Eye,
-        exact: false,
-      },
-      {
-        href: "/influencer-tracker",
-        label: "Influencer Tracker",
-        icon: Megaphone,
-        exact: false,
-      },
+      { href: "/meta-analytics", label: "Meta Analytics", icon: BarChart2, exact: false },
+      { href: "/competitors", label: "Competitor Tracker", icon: Eye, exact: false },
+      { href: "/influencer-tracker", label: "Influencer Tracker", icon: Megaphone, exact: false },
       { href: "/ad-alerts", label: "Ad Alerts", icon: Bell, exact: false },
     ],
   },
@@ -50,27 +35,41 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-60 flex-shrink-0 bg-navy-900 flex flex-col h-full">
+    <aside
+      className="w-64 flex-shrink-0 flex flex-col h-full"
+      style={{ background: "#0d1829" }}
+    >
       {/* Logo */}
-      <div className="px-5 py-6 border-b border-navy-800">
+      <div className="px-6 py-7" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-coral-500 rounded-lg flex items-center justify-center">
-            <Zap size={15} className="text-white" strokeWidth={2.5} />
+          <div
+            className="w-9 h-9 bg-coral-500 rounded-xl flex items-center justify-center flex-shrink-0"
+            style={{ boxShadow: "0 4px 14px rgba(232,113,90,0.4)" }}
+          >
+            <Zap size={16} className="text-white" strokeWidth={2.5} />
           </div>
-          <span className="text-white font-semibold text-[15px] tracking-tight font-serif">
-            GinaOS
-          </span>
+          <div>
+            <span className="text-white font-serif text-lg font-bold leading-none tracking-tight">
+              GinaOS
+            </span>
+            <p className="text-[10px] mt-0.5 tracking-widest uppercase" style={{ color: "rgba(255,255,255,0.25)" }}>
+              Outreach Suite
+            </p>
+          </div>
         </div>
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 px-3 py-5 overflow-y-auto scrollbar-thin space-y-6">
+      <nav className="flex-1 px-4 py-6 overflow-y-auto scrollbar-thin space-y-7">
         {navSections.map((section) => (
           <div key={section.label}>
-            <p className="px-3 mb-2 text-[10px] font-semibold uppercase tracking-widest text-navy-400">
+            <p
+              className="px-3 mb-2.5 text-[10px] font-bold uppercase tracking-widest"
+              style={{ color: "rgba(255,255,255,0.2)" }}
+            >
               {section.label}
             </p>
-            <div className="space-y-0.5">
+            <div className="space-y-1">
               {section.items.map(({ href, label, icon: Icon, exact }) => {
                 const active = exact
                   ? pathname === href
@@ -79,13 +78,18 @@ export default function Sidebar() {
                   <Link
                     key={href}
                     href={href}
-                    className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ${
                       active
                         ? "bg-coral-500 text-white"
-                        : "text-navy-300 hover:text-white hover:bg-navy-800"
+                        : "hover:bg-white/5"
                     }`}
+                    style={
+                      active
+                        ? { boxShadow: "0 4px 12px rgba(232,113,90,0.35)" }
+                        : { color: "rgba(255,255,255,0.4)" }
+                    }
                   >
-                    <Icon size={16} strokeWidth={active ? 2.5 : 2} />
+                    <Icon size={16} strokeWidth={active ? 2.5 : 1.75} />
                     {label}
                   </Link>
                 );
@@ -96,8 +100,23 @@ export default function Sidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="px-4 py-4 border-t border-navy-800">
-        <p className="text-xs text-navy-500 text-center">GinaOS v1.0</p>
+      <div className="px-5 py-5" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+        <div className="flex items-center gap-3">
+          <div
+            className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+            style={{ background: "rgba(232,113,90,0.15)" }}
+          >
+            <span className="text-coral-400 text-xs font-bold font-serif">G</span>
+          </div>
+          <div>
+            <p className="text-xs font-medium" style={{ color: "rgba(255,255,255,0.45)" }}>
+              Gina's workspace
+            </p>
+            <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.2)" }}>
+              GinaOS v1.0
+            </p>
+          </div>
+        </div>
       </div>
     </aside>
   );
