@@ -20,13 +20,13 @@ export default function ContactsPage() {
   }, [query]);
 
   return (
-    <div className="p-8 max-w-6xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
+    <div className="p-10 max-w-6xl mx-auto">
+      <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+          <h1 className="font-serif text-4xl font-bold text-navy-900 tracking-tight">
             Contacts
           </h1>
-          <p className="text-slate-500 text-sm mt-1">
+          <p className="text-navy-500 text-base mt-2">
             {filtered.length} of {leads.length} contact
             {leads.length !== 1 ? "s" : ""}
           </p>
@@ -34,22 +34,22 @@ export default function ContactsPage() {
       </div>
 
       {/* Search */}
-      <div className="relative mb-5">
+      <div className="relative mb-6">
         <Search
           size={15}
-          className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-navy-300"
         />
         <input
           type="text"
           placeholder="Search by name, company or position…"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full pl-11 pr-4 py-3 bg-white border border-cream-200 rounded-xl text-sm text-navy-900 placeholder:text-navy-300 focus:outline-none focus:ring-2 focus:ring-coral-400 focus:border-transparent shadow-sm shadow-cream-200"
         />
         {query && (
           <button
             onClick={() => setQuery("")}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-navy-300 hover:text-navy-600 transition-colors"
           >
             <X size={14} />
           </button>
@@ -57,50 +57,50 @@ export default function ContactsPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
+      <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm shadow-cream-200">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-slate-100 bg-slate-50/70">
-              <th className="text-left px-5 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wide">
+            <tr className="border-b border-cream-100 bg-cream-50">
+              <th className="text-left px-6 py-4 text-xs font-semibold text-navy-400 uppercase tracking-widest">
                 Name
               </th>
-              <th className="text-left px-5 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wide">
-                Company Name
+              <th className="text-left px-6 py-4 text-xs font-semibold text-navy-400 uppercase tracking-widest">
+                Company
               </th>
-              <th className="text-left px-5 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wide">
+              <th className="text-left px-6 py-4 text-xs font-semibold text-navy-400 uppercase tracking-widest">
                 Position
               </th>
-              <th className="text-left px-5 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wide">
+              <th className="text-left px-6 py-4 text-xs font-semibold text-navy-400 uppercase tracking-widest">
                 LinkedIn
               </th>
-              <th className="text-left px-5 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wide">
+              <th className="text-left px-6 py-4 text-xs font-semibold text-navy-400 uppercase tracking-widest">
                 Email
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-50">
+          <tbody className="divide-y divide-cream-50">
             {filtered.length === 0 ? (
               <tr>
                 <td
                   colSpan={5}
-                  className="px-5 py-10 text-center text-sm text-slate-400"
+                  className="px-6 py-12 text-center text-sm text-navy-300"
                 >
                   No contacts match &ldquo;{query}&rdquo;
                 </td>
               </tr>
             ) : (
               filtered.map((l, i) => (
-                <tr key={i} className="hover:bg-slate-50 transition-colors">
-                  <td className="px-5 py-3.5 font-medium text-slate-900">
-                    {l.name || <span className="text-slate-300">—</span>}
+                <tr key={i} className="hover:bg-cream-50 transition-colors">
+                  <td className="px-6 py-4 font-medium text-navy-900">
+                    {l.name || <span className="text-navy-200">—</span>}
                   </td>
-                  <td className="px-5 py-3.5 text-slate-600">
-                    {l.company || <span className="text-slate-300">—</span>}
+                  <td className="px-6 py-4 text-navy-600">
+                    {l.company || <span className="text-navy-200">—</span>}
                   </td>
-                  <td className="px-5 py-3.5 text-slate-500">
-                    {l.position || <span className="text-slate-300">—</span>}
+                  <td className="px-6 py-4 text-navy-400">
+                    {l.position || <span className="text-navy-200">—</span>}
                   </td>
-                  <td className="px-5 py-3.5">
+                  <td className="px-6 py-4">
                     {l.linkedin ? (
                       <a
                         href={
@@ -110,24 +110,24 @@ export default function ContactsPage() {
                         }
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-800 hover:underline text-sm"
+                        className="text-coral-500 hover:text-coral-700 hover:underline text-sm font-medium"
                       >
                         View Profile
                       </a>
                     ) : (
-                      <span className="text-slate-300">—</span>
+                      <span className="text-navy-200">—</span>
                     )}
                   </td>
-                  <td className="px-5 py-3.5">
+                  <td className="px-6 py-4">
                     {l.email ? (
                       <a
                         href={`mailto:${l.email}`}
-                        className="inline-flex items-center px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors"
+                        className="inline-flex items-center px-3 py-1.5 bg-coral-500 hover:bg-coral-600 text-white text-xs font-medium rounded-lg transition-colors"
                       >
                         Email
                       </a>
                     ) : (
-                      <span className="text-slate-300">—</span>
+                      <span className="text-navy-200">—</span>
                     )}
                   </td>
                 </tr>

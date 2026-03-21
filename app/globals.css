@@ -1,17 +1,24 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..700;1,14..32,300..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --coral: #e8715a;
+  --navy: #131f36;
+  --cream: #fdf8f4;
+  --cream-border: #f2e3d2;
+}
 
 * {
   box-sizing: border-box;
 }
 
 body {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'DM Sans', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
-  background-color: #fdf8f4;
+  background-color: var(--cream);
 }
 
 @layer utilities {
@@ -22,5 +29,17 @@ body {
 
   .font-display {
     font-family: 'Playfair Display', Georgia, serif;
+  }
+
+  .input-base {
+    @apply w-full px-3.5 py-2.5 bg-cream-50 border border-cream-200 rounded-xl text-sm text-navy-900 placeholder:text-navy-300 focus:outline-none focus:ring-2 focus:ring-coral-400 focus:border-transparent transition;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 disabled:bg-cream-200 disabled:text-navy-300 text-white text-sm font-medium rounded-xl transition-colors;
+  }
+
+  .card {
+    @apply bg-white border border-cream-200 rounded-2xl;
   }
 }

@@ -29,12 +29,14 @@ export default function CampaignsPage() {
   };
 
   return (
-    <div className="p-8 max-w-4xl mx-auto">
+    <div className="p-10 max-w-4xl mx-auto">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-10">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Campaigns</h1>
-          <p className="text-slate-500 text-sm mt-1">
+          <h1 className="font-serif text-4xl font-bold text-navy-900 tracking-tight">
+            Campaigns
+          </h1>
+          <p className="text-navy-500 text-base mt-2">
             {campaigns.length > 0
               ? `${campaigns.length} campaign${campaigns.length !== 1 ? "s" : ""} saved`
               : "Bulk email campaigns with personalisation"}
@@ -42,7 +44,7 @@ export default function CampaignsPage() {
         </div>
         <Link
           href="/campaigns/new"
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-xl transition-colors"
+          className="btn-primary"
         >
           <Plus size={15} />
           New Campaign
@@ -50,18 +52,17 @@ export default function CampaignsPage() {
       </div>
 
       {campaigns.length === 0 ? (
-        /* Empty state */
-        <div className="bg-white border border-slate-200 rounded-2xl p-16 text-center">
-          <div className="w-14 h-14 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <MailOpen size={24} className="text-slate-400" />
+        <div className="bg-white border border-cream-200 rounded-2xl p-16 text-center shadow-sm shadow-cream-200">
+          <div className="w-14 h-14 bg-coral-50 rounded-2xl flex items-center justify-center mx-auto mb-5">
+            <MailOpen size={24} className="text-coral-400" />
           </div>
-          <h2 className="text-base font-semibold text-slate-800 mb-1">No campaigns yet</h2>
-          <p className="text-sm text-slate-400 mb-6 max-w-xs mx-auto">
+          <h2 className="font-serif text-xl font-semibold text-navy-900 mb-2">No campaigns yet</h2>
+          <p className="text-sm text-navy-400 mb-7 max-w-xs mx-auto leading-relaxed">
             Create a campaign to send personalised bulk emails from your contact list.
           </p>
           <Link
             href="/campaigns/new"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-xl transition-colors"
+            className="btn-primary"
           >
             <Plus size={15} />
             Create your first campaign
@@ -72,39 +73,37 @@ export default function CampaignsPage() {
           {campaigns.map((c) => (
             <div
               key={c.id}
-              className="group bg-white border border-slate-200 hover:border-slate-300 rounded-2xl px-6 py-5 flex items-center gap-4 transition-all hover:shadow-sm"
+              className="group bg-white border border-cream-200 hover:border-coral-200 rounded-2xl px-7 py-5 flex items-center gap-4 transition-all hover:shadow-md hover:shadow-coral-50"
             >
-              <div className="w-10 h-10 bg-violet-50 rounded-xl flex items-center justify-center flex-shrink-0">
-                <MailOpen size={18} className="text-violet-600" />
+              <div className="w-10 h-10 bg-coral-50 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-coral-100 transition-colors">
+                <MailOpen size={18} className="text-coral-500" />
               </div>
 
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-3">
-                  <h2 className="text-sm font-semibold text-slate-900 truncate">{c.name}</h2>
-                </div>
-                <p className="text-xs text-slate-500 truncate mt-0.5">{c.subject}</p>
+                <h2 className="text-sm font-semibold text-navy-900 truncate">{c.name}</h2>
+                <p className="text-xs text-navy-400 truncate mt-0.5">{c.subject}</p>
               </div>
 
-              <div className="flex items-center gap-1.5 text-xs text-slate-400 flex-shrink-0">
+              <div className="flex items-center gap-1.5 text-xs text-navy-400 flex-shrink-0">
                 <Users size={12} />
                 {c.contacts.length} contact{c.contacts.length !== 1 ? "s" : ""}
               </div>
 
-              <div className="text-xs text-slate-400 flex-shrink-0 hidden sm:block">
+              <div className="text-xs text-navy-300 flex-shrink-0 hidden sm:block">
                 {formatDate(c.createdAt)}
               </div>
 
               <div className="flex items-center gap-1 flex-shrink-0">
                 <Link
                   href={`/campaigns/${c.id}`}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-navy-600 hover:text-coral-600 hover:bg-coral-50 rounded-lg transition-colors"
                 >
                   View & Send
                   <ChevronRight size={12} />
                 </Link>
                 <button
                   onClick={() => deleteCampaign(c.id)}
-                  className="p-1.5 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                  className="p-1.5 text-navy-200 hover:text-coral-500 hover:bg-coral-50 rounded-lg transition-colors"
                 >
                   <Trash2 size={14} />
                 </button>

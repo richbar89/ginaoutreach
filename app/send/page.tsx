@@ -29,29 +29,31 @@ export default function SendEmailPage() {
   const isReady = form.to && form.subject && form.body;
 
   return (
-    <div className="p-8 max-w-2xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Send Email</h1>
-        <p className="mt-1 text-slate-500 text-sm">
+    <div className="p-10 max-w-2xl mx-auto">
+      <div className="mb-10">
+        <h1 className="font-serif text-4xl font-bold text-navy-900 tracking-tight">
+          Send an Email
+        </h1>
+        <p className="mt-2 text-navy-500 text-base">
           Fill in the details below — your mail app will open ready to send.
         </p>
       </div>
 
       {launched && (
-        <div className="mb-6 flex items-center gap-3 px-4 py-3 bg-green-50 border border-green-200 rounded-xl text-green-800 text-sm font-medium">
-          <CheckCircle size={16} className="text-green-600 flex-shrink-0" />
+        <div className="mb-6 flex items-center gap-3 px-4 py-3 bg-coral-50 border border-coral-200 rounded-xl text-coral-700 text-sm font-medium">
+          <CheckCircle size={16} className="text-coral-500 flex-shrink-0" />
           Your mail app should have opened. If not, check your browser&apos;s pop-up settings.
         </div>
       )}
 
       <form
         onSubmit={handleSubmit}
-        className="bg-white border border-slate-200 rounded-2xl divide-y divide-slate-100"
+        className="bg-white border border-cream-200 rounded-2xl divide-y divide-cream-100 shadow-sm shadow-cream-200"
       >
-        <div className="px-6 py-4 grid grid-cols-2 gap-4">
+        <div className="px-7 py-5 grid grid-cols-2 gap-5">
           <div>
-            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
-              To <span className="text-red-400">*</span>
+            <label className="block text-xs font-semibold text-navy-400 mb-2 uppercase tracking-widest">
+              To <span className="text-coral-400">*</span>
             </label>
             <input
               type="email"
@@ -59,11 +61,11 @@ export default function SendEmailPage() {
               value={form.to}
               onChange={(e) => setForm((f) => ({ ...f, to: e.target.value }))}
               placeholder="recipient@example.com"
-              className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+              className="input-base"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
+            <label className="block text-xs font-semibold text-navy-400 mb-2 uppercase tracking-widest">
               Recipient Name
             </label>
             <input
@@ -71,14 +73,14 @@ export default function SendEmailPage() {
               value={form.toName}
               onChange={(e) => setForm((f) => ({ ...f, toName: e.target.value }))}
               placeholder="Jane Smith (optional)"
-              className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+              className="input-base"
             />
           </div>
         </div>
 
-        <div className="px-6 py-4">
-          <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
-            Subject <span className="text-red-400">*</span>
+        <div className="px-7 py-5">
+          <label className="block text-xs font-semibold text-navy-400 mb-2 uppercase tracking-widest">
+            Subject <span className="text-coral-400">*</span>
           </label>
           <input
             type="text"
@@ -86,13 +88,13 @@ export default function SendEmailPage() {
             value={form.subject}
             onChange={(e) => setForm((f) => ({ ...f, subject: e.target.value }))}
             placeholder="Your email subject line"
-            className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+            className="input-base"
           />
         </div>
 
-        <div className="px-6 py-4">
-          <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide">
-            Message <span className="text-red-400">*</span>
+        <div className="px-7 py-5">
+          <label className="block text-xs font-semibold text-navy-400 mb-2 uppercase tracking-widest">
+            Message <span className="text-coral-400">*</span>
           </label>
           <textarea
             required
@@ -100,16 +102,16 @@ export default function SendEmailPage() {
             value={form.body}
             onChange={(e) => setForm((f) => ({ ...f, body: e.target.value }))}
             placeholder="Write your message here..."
-            className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-y font-mono leading-relaxed"
+            className="input-base resize-y font-mono leading-relaxed"
           />
         </div>
 
-        <div className="px-6 py-4 flex items-center justify-between bg-slate-50 rounded-b-2xl">
-          <p className="text-xs text-slate-400">Opens your default mail app to send</p>
+        <div className="px-7 py-5 flex items-center justify-between bg-cream-50 rounded-b-2xl">
+          <p className="text-xs text-navy-400">Opens your default mail app to send</p>
           <button
             type="submit"
             disabled={!isReady}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 text-white text-sm font-medium rounded-xl transition-colors"
+            className="btn-primary"
           >
             <Send size={15} />
             Open in Mail App
