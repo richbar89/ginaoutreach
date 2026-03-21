@@ -50,24 +50,24 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-60 flex-shrink-0 bg-slate-900 flex flex-col h-full">
+    <aside className="w-60 flex-shrink-0 bg-navy-900 flex flex-col h-full">
       {/* Logo */}
-      <div className="px-5 py-5 border-b border-slate-800">
-        <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 bg-violet-500 rounded-lg flex items-center justify-center">
-            <Zap size={14} className="text-white" strokeWidth={2.5} />
+      <div className="px-5 py-6 border-b border-navy-800">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-coral-500 rounded-lg flex items-center justify-center">
+            <Zap size={15} className="text-white" strokeWidth={2.5} />
           </div>
-          <span className="text-white font-semibold text-[15px] tracking-tight">
+          <span className="text-white font-semibold text-[15px] tracking-tight font-serif">
             GinaOS
           </span>
         </div>
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 px-3 py-4 overflow-y-auto scrollbar-thin space-y-5">
+      <nav className="flex-1 px-3 py-5 overflow-y-auto scrollbar-thin space-y-6">
         {navSections.map((section) => (
           <div key={section.label}>
-            <p className="px-3 mb-1 text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+            <p className="px-3 mb-2 text-[10px] font-semibold uppercase tracking-widest text-navy-400">
               {section.label}
             </p>
             <div className="space-y-0.5">
@@ -79,10 +79,10 @@ export default function Sidebar() {
                   <Link
                     key={href}
                     href={href}
-                    className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-100 ${
+                    className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${
                       active
-                        ? "bg-violet-600 text-white"
-                        : "text-slate-400 hover:text-white hover:bg-slate-800"
+                        ? "bg-coral-500 text-white"
+                        : "text-navy-300 hover:text-white hover:bg-navy-800"
                     }`}
                   >
                     <Icon size={16} strokeWidth={active ? 2.5 : 2} />
@@ -96,8 +96,8 @@ export default function Sidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="px-4 py-4 border-t border-slate-800">
-        <p className="text-xs text-slate-600 text-center">GinaOS v1.0</p>
+      <div className="px-4 py-4 border-t border-navy-800">
+        <p className="text-xs text-navy-500 text-center">GinaOS v1.0</p>
       </div>
     </aside>
   );
