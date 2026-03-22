@@ -2,6 +2,7 @@ export const leads = [
   {
     name: "Beth Griffiths",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/beth-griffiths-b1b8a7190",
     email: "bethgriffiths@greeneking.co.uk",
@@ -9,6 +10,7 @@ export const leads = [
   {
     name: "Kristel Kruusmaegi",
     company: "JOE & THE JUICE",
+    category: "Coffee & Tea",
     position: "Brand Manager",
     linkedin:
       "http://www.linkedin.com/in/kristel-mairit-kruusm%c3%a4gi-764423bb",
@@ -17,6 +19,7 @@ export const leads = [
   {
     name: "Catherine Barber",
     company: "PROPER SNACKS",
+    category: "Snacks & Crisps",
     position: "Trade Marketing Manager",
     linkedin: "http://www.linkedin.com/in/catherine-barber-a3a226194",
     email: "catherineb@warpsnacks.com",
@@ -24,6 +27,7 @@ export const leads = [
   {
     name: "Abigail Nelson-ehoff",
     company: "Vegan Food Group",
+    category: "Grocery & Food Brands",
     position: "Head Of Marketing & Category",
     linkedin: "http://www.linkedin.com/in/abigailehoff",
     email: "a.nelson-ehoff@veganfoodgroup.org",
@@ -31,6 +35,7 @@ export const leads = [
   {
     name: "Chad Masters",
     company: "wagamama",
+    category: "Casual Dining & Restaurants",
     position:
       "Business And Marketing Graduate And Area Marketing Assistant (marketing Sensei) With Wagamama",
     linkedin: "http://www.linkedin.com/in/chad-masters-117261bb",
@@ -39,6 +44,7 @@ export const leads = [
   {
     name: "Michele Conway",
     company: "Snack Creations",
+    category: "Snacks & Crisps",
     position:
       "Sales, R&d, Marketing Director At Snack Creations & Pasta Foods - Manufacturers",
     linkedin: "http://www.linkedin.com/in/michele-conway-65130713",
@@ -47,6 +53,7 @@ export const leads = [
   {
     name: "Charlie Whalley",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/charlie-whalley-705b871",
     email: "",
@@ -54,6 +61,7 @@ export const leads = [
   {
     name: "Chloe Stephenson",
     company: "ManiLife | B Corp™",
+    category: "Grocery & Food Brands",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/chloe-stephenson-4a814a209",
     email: "chloe@mani-life.com",
@@ -61,6 +69,7 @@ export const leads = [
   {
     name: "Paul Samways",
     company: "Lotus Bakeries",
+    category: "Bakery & Bread",
     position: "Senior Shopper Marketing Manager",
     linkedin: "http://www.linkedin.com/in/paul-samways-36656190",
     email: "paul.samways@lotusbakeries.com",
@@ -68,6 +77,7 @@ export const leads = [
   {
     name: "Lauren Quick",
     company: "Doughnotts",
+    category: "Bakery & Bread",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/lauren-quick-b8298b124",
     email: "",
@@ -75,6 +85,7 @@ export const leads = [
   {
     name: "Hannah Kennedy",
     company: "British Bakels",
+    category: "Bakery & Bread",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/hannah-kennedy-4474b88a",
     email: "hannah.kennedy@bakels.com",
@@ -82,6 +93,7 @@ export const leads = [
   {
     name: "Paul Freeman",
     company: "Hovis Ltd",
+    category: "Bakery & Bread",
     position: "Marketing Manager - Brand Experience",
     linkedin: "http://www.linkedin.com/in/paul-freeman-6568899",
     email: "paul.freeman@hovis.co.uk",
@@ -89,6 +101,7 @@ export const leads = [
   {
     name: "Georgina Fotopoulou",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position:
       "Senior Marketing Manager Heinz Sauces Uk (ketchup, Masterbrand & Local Jewels)",
     linkedin: "http://www.linkedin.com/in/georgina-fotopoulou-76610a83",
@@ -97,6 +110,7 @@ export const leads = [
   {
     name: "Sarah Leahy",
     company: "Casella Family Brands",
+    category: "Wine & Spirits",
     position: "[yellow Tail] Marketing Manager - Europe",
     linkedin: "http://www.linkedin.com/in/sarah-leahy-marketing",
     email: "sarah.leahy@casellafamilybrands.com",
@@ -104,6 +118,7 @@ export const leads = [
   {
     name: "Simon Worne",
     company: "KTC (Edibles) Limited",
+    category: "Grocery & Food Brands",
     position: "Interim Marketing Director - Ktc Food Group",
     linkedin: "http://www.linkedin.com/in/simon-worne-495454b",
     email: "simon.worne@ktc-edibles.co.uk",
@@ -111,6 +126,7 @@ export const leads = [
   {
     name: "Melissa Goffe",
     company: "Müller UK & Ireland",
+    category: "Dairy & Alternatives",
     position: "Head Of Brand & Marketing Excellence",
     linkedin: "http://www.linkedin.com/in/melissa-goffe",
     email: "melissa.goffe@muller.co.uk",
@@ -118,6 +134,7 @@ export const leads = [
   {
     name: "Elliott Williams",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Gkp Marketing Assistant",
     linkedin: "http://www.linkedin.com/in/elliott-williams-925371261",
     email: "elliottwilliams@greeneking.co.uk",
@@ -125,6 +142,7 @@ export const leads = [
   {
     name: "Lorene Decam",
     company: "Carambar & Co",
+    category: "Confectionery",
     position: "Senior Marketing Manager - Terry’s Chocolate Orange",
     linkedin: "http://www.linkedin.com/in/lorenedeblanpre",
     email: "lorene.decam@terryschocolate.com",
@@ -132,6 +150,7 @@ export const leads = [
   {
     name: "Joao Fidalgo",
     company: "Rollover Ltd.",
+    category: "Grocery & Food Brands",
     position: "Assistant Brand Manager",
     linkedin: "http://www.linkedin.com/in/joaodsfidalgo",
     email: "",
@@ -139,6 +158,7 @@ export const leads = [
   {
     name: "Daniel Duncan",
     company: "Naturya | B Corp",
+    category: "Health & Wellness Food",
     position: "Web & Social Media Projects Manager",
     linkedin: "http://www.linkedin.com/in/daniel-duncan-4569b310b",
     email: "daniel.duncan@naturya.com",
@@ -146,6 +166,7 @@ export const leads = [
   {
     name: "Jacob Donohoe",
     company: "NOMADIC",
+    category: "Dairy & Alternatives",
     position: "Trade Marketing Manager",
     linkedin: "http://www.linkedin.com/in/jacobdonohoe",
     email: "jacob@nomadic.ie",
@@ -153,6 +174,7 @@ export const leads = [
   {
     name: "Kristen Hartley",
     company: "Gosh! Food",
+    category: "Grocery & Food Brands",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/kristen-hartley-893011a7",
     email: "kristen.hartley@goshfood.com",
@@ -160,6 +182,7 @@ export const leads = [
   {
     name: "Jitka Fleglova",
     company: "The Real Food Cafe",
+    category: "Casual Dining & Restaurants",
     position: "Marketing & Operational Compliance Manager",
     linkedin: "http://www.linkedin.com/in/jitka-fleglova",
     email: "jitka@therealfoodcafe.com",
@@ -167,6 +190,7 @@ export const leads = [
   {
     name: "Victoria Rowland",
     company: "Boojum",
+    category: "Casual Dining & Restaurants",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/victoria-rowland-a48b1a108",
     email: "vicki@boojummex.com",
@@ -174,6 +198,7 @@ export const leads = [
   {
     name: "Merve Kir",
     company: "Birds Eye UK & IE",
+    category: "Grocery & Food Brands",
     position: "Head Of Finance (marketing) Uk & Ie",
     linkedin: "http://www.linkedin.com/in/merve-kir",
     email: "merve.kir@birdseye.co.uk",
@@ -181,6 +206,7 @@ export const leads = [
   {
     name: "Rhys Williams",
     company: "HIPPEAS Snacks",
+    category: "Snacks & Crisps",
     position: "International Sales & Marketing Manager",
     linkedin: "http://www.linkedin.com/in/rhys-williams-25b33b89",
     email: "rhys@hippeas.com",
@@ -188,6 +214,7 @@ export const leads = [
   {
     name: "Shane Simpson",
     company: "My Baker",
+    category: "Bakery & Bread",
     position: "Marketing And Creative Executive",
     linkedin: "http://www.linkedin.com/in/shane-simpson-875b52224",
     email: "",
@@ -195,6 +222,7 @@ export const leads = [
   {
     name: "Kerry Hopkins",
     company: "Pollen + Grace",
+    category: "Health & Wellness Food",
     position: "Head Of Brand",
     linkedin: "http://www.linkedin.com/in/kerry-hopkins-b48212a7",
     email: "kerry@pollenandgrace.com",
@@ -202,6 +230,7 @@ export const leads = [
   {
     name: "Beccy Ward",
     company: "Little Moons",
+    category: "Confectionery",
     position: "Brand Manager (social & Word Of Mouth)",
     linkedin: "http://www.linkedin.com/in/reward91",
     email: "beccy.w@littlemoons.co.uk",
@@ -209,6 +238,7 @@ export const leads = [
   {
     name: "Lucy Matthews",
     company: "The Collective UK | B Corp™",
+    category: "Dairy & Alternatives",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/lucyhelenmatthews",
     email: "lucy.matthews@epicdairy.com",
@@ -216,6 +246,7 @@ export const leads = [
   {
     name: "Anna Pearson-frean",
     company: "Gousto",
+    category: "Grocery & Food Brands",
     position: "Senior Digital Marketing Manager",
     linkedin: "http://www.linkedin.com/in/anna-pearson-frean-1aa49914a",
     email: "anna.pearson-frean@gousto.co.uk",
@@ -223,6 +254,7 @@ export const leads = [
   {
     name: "Melissa Sargeant",
     company: "graze",
+    category: "Snacks & Crisps",
     position: "Senior Brand Manager - Portfolio And Innovation",
     linkedin: "http://www.linkedin.com/in/melissa-sargeant-2a5138103",
     email: "melissa.sargeant@graze.com",
@@ -230,6 +262,7 @@ export const leads = [
   {
     name: "Olly Crown",
     company: "MOJU",
+    category: "Drinks",
     position: "Brand Experience Manager",
     linkedin: "http://www.linkedin.com/in/olly-crown",
     email: "olly@mojudrinks.com",
@@ -237,6 +270,7 @@ export const leads = [
   {
     name: "Ted Smith",
     company: "Casella Family Brands",
+    category: "Wine & Spirits",
     position: "Brand Activation Manager",
     linkedin: "http://www.linkedin.com/in/18-ted-smith",
     email: "ted.smith@casellafamilybrands.com",
@@ -244,6 +278,7 @@ export const leads = [
   {
     name: "Lauren Acim",
     company: "Arley's®",
+    category: "Snacks & Crisps",
     position: "Brand & Design Lead",
     linkedin: "http://www.linkedin.com/in/lauren-reis-msc-ba-acim-b4b23698",
     email: "",
@@ -251,6 +286,7 @@ export const leads = [
   {
     name: "Thomas Austin",
     company: "JUBEL",
+    category: "Beer & Brewing",
     position: "Student Brand Ambassador",
     linkedin: "http://www.linkedin.com/in/thomas-austin-0802362b2",
     email: "thomas@jubelbeer.com",
@@ -258,6 +294,7 @@ export const leads = [
   {
     name: "Rosie Henderson",
     company: "Piccolo (Organic Baby & Toddler Food)",
+    category: "Baby & Kids Food",
     position: "Head Of Marketing - Growth Projects",
     linkedin: "http://www.linkedin.com/in/rosie-henderson-8b217b62",
     email: "",
@@ -265,6 +302,7 @@ export const leads = [
   {
     name: "Anne-chantal Leon",
     company: "TiNDLE Foods",
+    category: "Grocery & Food Brands",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/annechantalleonpernet",
     email: "annechantal.leon@tindle.com",
@@ -272,6 +310,7 @@ export const leads = [
   {
     name: "Melissa Cairney",
     company: "The Victor Pizza Co",
+    category: "Casual Dining & Restaurants",
     position: "Sales & Marketing Manager",
     linkedin: "http://www.linkedin.com/in/melissa-cairney-glas123",
     email: "melissa@victorpizza.co.uk",
@@ -279,6 +318,7 @@ export const leads = [
   {
     name: "Graham Graves",
     company: "Speciality Breads Ltd",
+    category: "Bakery & Bread",
     position: "Head Of National Accounts & Marketing",
     linkedin: "http://www.linkedin.com/in/graham-graves-6400a119",
     email: "graham@specialitybreads.co.uk",
@@ -286,6 +326,7 @@ export const leads = [
   {
     name: "Alice Yan",
     company: "Kaspa's Desserts",
+    category: "Casual Dining & Restaurants",
     position: "Digital Marketing Manager",
     linkedin: "http://www.linkedin.com/in/alice-ng-wing-yan",
     email: "alice.yan@kaspas.co.uk",
@@ -293,6 +334,7 @@ export const leads = [
   {
     name: "Emilia Ciacca",
     company: "Contini Restaurants & Events",
+    category: "Casual Dining & Restaurants",
     position: "Assistant Marketing Manager",
     linkedin: "http://www.linkedin.com/in/emilia-di-ciacca-9a1a94196",
     email: "",
@@ -300,6 +342,7 @@ export const leads = [
   {
     name: "Emma Herring",
     company: "LIVEKINDLY Collective",
+    category: "Grocery & Food Brands",
     position: "Uk Marketing Manager",
     linkedin: "http://www.linkedin.com/in/emma-herring-a3038730",
     email: "emma.herring@thelivekindlyco.com",
@@ -307,6 +350,7 @@ export const leads = [
   {
     name: "Francesca Bright",
     company: "wagamama",
+    category: "Casual Dining & Restaurants",
     position: "Hospitality Manager And Marketing Champ",
     linkedin: "http://www.linkedin.com/in/francesca-bright-1a885221b",
     email: "",
@@ -314,6 +358,7 @@ export const leads = [
   {
     name: "Emma Smith",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Commercial Marketing Manager (food) - Destination Brands",
     linkedin: "http://www.linkedin.com/in/emma-smith-73178719",
     email: "emmasmith@greeneking.co.uk",
@@ -321,6 +366,7 @@ export const leads = [
   {
     name: "Scott Mcdonald",
     company: "Birds Eye UK & IE",
+    category: "Grocery & Food Brands",
     position: "Customer Marketing Executive",
     linkedin: "http://www.linkedin.com/in/connectscottmcdonald",
     email: "scott.mcdonald@birdseye.co.uk",
@@ -328,6 +374,7 @@ export const leads = [
   {
     name: "Hanna Guy",
     company: "Freja Bone Broth",
+    category: "Health & Wellness Food",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/hanna-guy-5263252a",
     email: "hanna@frejafoods.com",
@@ -335,6 +382,7 @@ export const leads = [
   {
     name: "Alexandra Locke",
     company: "Mondarella",
+    category: "Dairy & Alternatives",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/alexandra-locke-16371840",
     email: "alexandra.locke@mondarella.eu",
@@ -342,6 +390,7 @@ export const leads = [
   {
     name: "Lily Mcenroe",
     company: "Life Health Foods",
+    category: "Health & Wellness Food",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/lily-mcenroe-140724107",
     email: "",
@@ -349,6 +398,7 @@ export const leads = [
   {
     name: "Scarlett Hine",
     company: "Shana Foods",
+    category: "Grocery & Food Brands",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/scarlett-hine-09327165",
     email: "scarlett@shanafoods.com",
@@ -356,6 +406,7 @@ export const leads = [
   {
     name: "Abbie Meakin",
     company: "Müller UK & Ireland",
+    category: "Dairy & Alternatives",
     position: "Shopper Marketing Manager - Grocery",
     linkedin: "http://www.linkedin.com/in/abbie-meakin-702808134",
     email: "",
@@ -363,6 +414,7 @@ export const leads = [
   {
     name: "Astrid Simpson",
     company: "PROPER SNACKS",
+    category: "Snacks & Crisps",
     position: "Brand Communications & Campaign Lead",
     linkedin: "http://www.linkedin.com/in/astrid-simpson-91462731",
     email: "astrid.simpson@propersnacks.com",
@@ -370,6 +422,7 @@ export const leads = [
   {
     name: "Georgia Acim",
     company: "Fresh Direct (UK)",
+    category: "Other",
     position: "Customer Marketing Manager",
     linkedin: "http://www.linkedin.com/in/georgia-stanley-acim-814221173",
     email: "georgia.acim@freshdirect.co.uk",
@@ -377,6 +430,7 @@ export const leads = [
   {
     name: "Emma Mckie",
     company: "Lindt & Sprungli UK",
+    category: "Confectionery",
     position: "Social Media & Engagement Manager",
     linkedin: "http://www.linkedin.com/in/emmamckie95",
     email: "emckie@lindt.com",
@@ -384,6 +438,7 @@ export const leads = [
   {
     name: "Jaye Stahlhut",
     company: "FUNKIN COCKTAILS",
+    category: "Drinks",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/jaye-stahlhut-02532135",
     email: "",
@@ -391,6 +446,7 @@ export const leads = [
   {
     name: "Anthonia Webster",
     company: "iPRO Hydrate",
+    category: "Drinks",
     position: "Brand Representative",
     linkedin: "http://www.linkedin.com/in/anthonia-webster-8536a4219",
     email: "anthonia.w@iprohydrate.com",
@@ -398,6 +454,7 @@ export const leads = [
   {
     name: "Macarena Taladriz",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Head Of Marketing Away-from-home, Emerging Markets",
     linkedin: "http://www.linkedin.com/in/macarena-espinoza-taladriz-269b1129",
     email: "macarena.espinoza@kraftheinz.com",
@@ -405,6 +462,7 @@ export const leads = [
   {
     name: "Olivia Stoddart",
     company: "Quorn Foods",
+    category: "Grocery & Food Brands",
     position: "Assistant Brand Manager",
     linkedin: "http://www.linkedin.com/in/oliviagracestoddart",
     email: "olivia.stoddart@quornfoods.com",
@@ -412,6 +470,7 @@ export const leads = [
   {
     name: "Ricardo Cavalcanti",
     company: "Arborea",
+    category: "Dairy & Alternatives",
     position: "Director Of Marketing And Business Development",
     linkedin: "http://www.linkedin.com/in/rcavalcanti",
     email: "",
@@ -419,6 +478,7 @@ export const leads = [
   {
     name: "Mark Logan",
     company: "Sproud | B Corp™",
+    category: "Dairy & Alternatives",
     position: "Brand Activation Manager",
     linkedin: "http://www.linkedin.com/in/marklogan366",
     email: "mark.logan@sproud.se",
@@ -426,6 +486,7 @@ export const leads = [
   {
     name: "Jessica Hogg",
     company: "KP Snacks",
+    category: "Snacks & Crisps",
     position: "International Assistant Brand Manager",
     linkedin: "http://www.linkedin.com/in/jessica-hogg-45ab58b6",
     email: "jessica.hogg@kpsnacks.com",
@@ -433,6 +494,7 @@ export const leads = [
   {
     name: "Bethany Corbett",
     company: "COOK Trading Ltd",
+    category: "Grocery & Food Brands",
     position: "Head Of Performance Marketing",
     linkedin: "http://www.linkedin.com/in/bethany-corbett-8a606725",
     email: "bethany.corbett@cookfood.net",
@@ -440,6 +502,7 @@ export const leads = [
   {
     name: "Shivam Agarwal",
     company: "Haldiram’s snacks food pvt. ltd.",
+    category: "Snacks & Crisps",
     position: "Sales And Marketing Executive",
     linkedin: "http://www.linkedin.com/in/shivam-agarwal-8a6881148",
     email: "",
@@ -447,6 +510,7 @@ export const leads = [
   {
     name: "Georgina Curtis-hughes",
     company: "Bon Bon's Confectionery",
+    category: "Confectionery",
     position: "Category Brand Manager",
     linkedin: "http://www.linkedin.com/in/georgina-curtis-hughes-a0aa2a103",
     email: "georgina@bonbons.co.uk",
@@ -454,6 +518,7 @@ export const leads = [
   {
     name: "Millie Leavold",
     company: "Lotus Bakeries",
+    category: "Bakery & Bread",
     position: "Digital Marketing Executive",
     linkedin: "http://www.linkedin.com/in/millie-leavold-a36ab7187",
     email: "millie.leavold@lotusbakeries.com",
@@ -461,6 +526,7 @@ export const leads = [
   {
     name: "Laura Pijuan",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager - Heinz Sauces - International",
     linkedin: "http://www.linkedin.com/in/laurapijuan",
     email: "laura.pijuan@kraftheinz.com",
@@ -468,6 +534,7 @@ export const leads = [
   {
     name: "Neil Lunn",
     company: "KP Snacks",
+    category: "Snacks & Crisps",
     position: "Uk Brand Activation Manager - Whole Earth",
     linkedin: "http://www.linkedin.com/in/neillunn",
     email: "neil.lunn@kpsnacks.com",
@@ -475,6 +542,7 @@ export const leads = [
   {
     name: "Kieran Simmonds",
     company: "Crosstown",
+    category: "Bakery & Bread",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/kieran-simmonds-9b659444",
     email: "kieran.simmonds@crosstown.co.uk",
@@ -482,6 +550,7 @@ export const leads = [
   {
     name: "Katelyn Randle",
     company: "UPP",
+    category: "Other",
     position: "Marketing & Office Manager",
     linkedin: "http://www.linkedin.com/in/katelynrandle",
     email: "",
@@ -489,6 +558,7 @@ export const leads = [
   {
     name: "Michelle Pytlakowska",
     company: "Pukka",
+    category: "Coffee & Tea",
     position: "Assistant Brand Manager",
     linkedin: "http://www.linkedin.com/in/michelle-pytlakowska",
     email: "michelle.pytlakowska@pukkapies.co.uk",
@@ -496,6 +566,7 @@ export const leads = [
   {
     name: "Sophie Robinson",
     company: "Aimia Foods Ltd",
+    category: "Grocery & Food Brands",
     position: "Brand Marketing Manager",
     linkedin: "http://www.linkedin.com/in/sophie-robinson-80361bb2",
     email: "sophie.robinson@aimiafoods.com",
@@ -503,6 +574,7 @@ export const leads = [
   {
     name: "Ian White",
     company: "Greggs",
+    category: "Bakery & Bread",
     position: "Head Of Brand And Communications",
     linkedin: "http://www.linkedin.com/in/iwhitey",
     email: "",
@@ -510,6 +582,7 @@ export const leads = [
   {
     name: "Maria Nikolaou",
     company: "Coco di Mama",
+    category: "Casual Dining & Restaurants",
     position: "Senior Marketing Manager",
     linkedin: "http://www.linkedin.com/in/maria-nikolaou-a06592143",
     email: "maria.nikolaou@cocodimama.co.uk",
@@ -517,6 +590,7 @@ export const leads = [
   {
     name: "Jessie Kenneth",
     company: "Pip & Nut | B Corp",
+    category: "Grocery & Food Brands",
     position: "Head Of Brand",
     linkedin: "http://www.linkedin.com/in/jessiekenneth",
     email: "jessie@pipandnut.com",
@@ -524,6 +598,7 @@ export const leads = [
   {
     name: "Grace Shearer",
     company: "Hilton Foods UK",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/grace-shearer-1044a41a",
     email: "grace.shearer@hiltonfoodgroup.com",
@@ -531,6 +606,7 @@ export const leads = [
   {
     name: "Rosie Glencross",
     company: "Pure",
+    category: "Other",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/rosie-glencross-5a13a57b",
     email: "",
@@ -538,6 +614,7 @@ export const leads = [
   {
     name: "Alex Wade",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Head Of Brand Communications, Media & Digital, Northern Europe",
     linkedin: "http://www.linkedin.com/in/alex-wade-546b075b",
     email: "alex.wade@kraftheinz.com",
@@ -545,6 +622,7 @@ export const leads = [
   {
     name: "Chris Oaten",
     company: "PLACE UK Ltd",
+    category: "Other",
     position: "Uk Sales And Marketing Manager",
     linkedin: "http://www.linkedin.com/in/chris-oaten-928a9b2a",
     email: "",
@@ -552,6 +630,7 @@ export const leads = [
   {
     name: "Hannah Millar",
     company: "Boojum",
+    category: "Casual Dining & Restaurants",
     position: "Senior Marketing Executive",
     linkedin: "http://www.linkedin.com/in/hannahmillardigital",
     email: "hannah.millar@boojummex.com",
@@ -559,6 +638,7 @@ export const leads = [
   {
     name: "Caroline Rose",
     company: "Ecotone",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/carorose",
     email: "caroline.rose@ecotone.bio",
@@ -566,6 +646,7 @@ export const leads = [
   {
     name: "Grace Chau",
     company: "Merchant Gourmet",
+    category: "Grocery & Food Brands",
     position: "Senior Brand Manager - Innovation",
     linkedin: "http://www.linkedin.com/in/gracechau",
     email: "grace.chau@merchant-gourmet.com",
@@ -573,6 +654,7 @@ export const leads = [
   {
     name: "Yograj Kote",
     company: "Cakes & Bakes",
+    category: "Bakery & Bread",
     position: "Digital Marketing Consultant",
     linkedin: "http://www.linkedin.com/in/yograj-kote-a49294175",
     email: "yograj.kote@cakesandbakes.co.uk",
@@ -580,6 +662,7 @@ export const leads = [
   {
     name: "Andrew Gallagher",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Brand & Marketing Director",
     linkedin: "http://www.linkedin.com/in/ajgallagher1",
     email: "andrewgallagher@greeneking.co.uk",
@@ -587,6 +670,7 @@ export const leads = [
   {
     name: "Jane Stork",
     company: "Macphie UK",
+    category: "Other",
     position: "Category Marketing Manager At Macphie",
     linkedin: "http://www.linkedin.com/in/jane-stork-92475259",
     email: "",
@@ -594,6 +678,7 @@ export const leads = [
   {
     name: "Paul Beiboer",
     company: "Wahaca",
+    category: "Casual Dining & Restaurants",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/paul-beiboer-498a0a101",
     email: "paul.beiboer@wahaca.co.uk",
@@ -601,6 +686,7 @@ export const leads = [
   {
     name: "Joshua John",
     company: "ASK Italian",
+    category: "Casual Dining & Restaurants",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/joshua-john-1392b2109",
     email: "joshua.john@askitalian.co.uk",
@@ -608,6 +694,7 @@ export const leads = [
   {
     name: "Gary Johnson",
     company: "Bon Bon's Confectionery",
+    category: "Confectionery",
     position: "Head Of Brands",
     linkedin: "http://www.linkedin.com/in/gary-johnson-86765438",
     email: "gary@bonbons.co.uk",
@@ -615,6 +702,7 @@ export const leads = [
   {
     name: "Caitie Hall",
     company: "Buttermilk Confections",
+    category: "Confectionery",
     position: "Senior Sales And Trade Marketing Manager",
     linkedin: "http://www.linkedin.com/in/caitie-hall-1bb90a44",
     email: "caitie@buttermilk.co.uk",
@@ -622,6 +710,7 @@ export const leads = [
   {
     name: "Marta Monellini",
     company: "Company Bakery",
+    category: "Bakery & Bread",
     position: "Marketing And Community Relations Manager",
     linkedin: "http://www.linkedin.com/in/monellinimarta",
     email: "marta@companybakery.co.uk",
@@ -629,6 +718,7 @@ export const leads = [
   {
     name: "Clara Tipper",
     company: "Merchant Gourmet",
+    category: "Grocery & Food Brands",
     position: "Customer Marketing Manager",
     linkedin: "http://www.linkedin.com/in/clara-tipper-710755155",
     email: "clara.tipper@merchant-gourmet.com",
@@ -636,6 +726,7 @@ export const leads = [
   {
     name: "Rachel Harding",
     company: "Hain Celestial UK",
+    category: "Grocery & Food Brands",
     position: "Senior Product Developer - Brand",
     linkedin: "http://www.linkedin.com/in/rachel-harding-8869b2121",
     email: "rachel.harding@haindaniels.com",
@@ -643,6 +734,7 @@ export const leads = [
   {
     name: "Emily Cowls",
     company: "Müller UK & Ireland",
+    category: "Dairy & Alternatives",
     position: "Assistant Brand Manager - Drinks Team",
     linkedin: "http://www.linkedin.com/in/emily-cowls-24417b201",
     email: "emily.cowls@muller.co.uk",
@@ -650,6 +742,7 @@ export const leads = [
   {
     name: "Karen Smith",
     company: "HiPP Organic (UK)",
+    category: "Baby & Kids Food",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/karen-smith-60a22235",
     email: "karen.smith@hipp.co.uk",
@@ -657,6 +750,7 @@ export const leads = [
   {
     name: "Jess Walker",
     company: "Jascots Wine Merchants",
+    category: "Wine & Spirits",
     position: "Jascots Marketing Manager",
     linkedin: "http://www.linkedin.com/in/jess-walker-b615a5166",
     email: "j.walker@jascots.co.uk",
@@ -664,6 +758,7 @@ export const leads = [
   {
     name: "Ian Mccabe",
     company: "HiPP Organic (UK)",
+    category: "Baby & Kids Food",
     position: "Head Of Uk Marketing",
     linkedin: "http://www.linkedin.com/in/ian-mccabe-16b05513",
     email: "ian.mccabe@hipp.co.uk",
@@ -671,6 +766,7 @@ export const leads = [
   {
     name: "Leigh Kilby",
     company: "MOJU",
+    category: "Drinks",
     position: "Head Of Brand And Creative",
     linkedin: "http://www.linkedin.com/in/leighkimpton",
     email: "leigh@mojudrinks.com",
@@ -678,6 +774,7 @@ export const leads = [
   {
     name: "Nikhil Deshpande",
     company: "Tilda® | B Corp™",
+    category: "Grocery & Food Brands",
     position: "Brand Lead",
     linkedin: "http://www.linkedin.com/in/nideshpande",
     email: "nikhil@tilda.com",
@@ -685,6 +782,7 @@ export const leads = [
   {
     name: "Jessica Stephens",
     company: "Birds Eye UK & IE",
+    category: "Grocery & Food Brands",
     position: "Cluster Marketing Manager - Pr & Communications",
     linkedin: "http://www.linkedin.com/in/jessica-stephens-3aa99a13",
     email: "jessica.stephens@birdseye.co.uk",
@@ -692,6 +790,7 @@ export const leads = [
   {
     name: "Emma Isaacs",
     company: "Wiltshire Farm Foods",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/emma-isaacs-55069012",
     email: "",
@@ -699,6 +798,7 @@ export const leads = [
   {
     name: "Rachel Elmore",
     company: "Doves Farm Foods Ltd",
+    category: "Grocery & Food Brands",
     position: "Assistant Brand Manager",
     linkedin: "http://www.linkedin.com/in/rachel-elmore-90362749",
     email: "relmore@dovesfarm.co.uk",
@@ -706,6 +806,7 @@ export const leads = [
   {
     name: "Jessica Stpierre",
     company: "Carrs Pasties Ltd",
+    category: "Bakery & Bread",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/jessica-st-pierre",
     email: "",
@@ -713,6 +814,7 @@ export const leads = [
   {
     name: "Martin Wonham",
     company: "wagamama",
+    category: "Casual Dining & Restaurants",
     position: "Talent Acquisition + Employer Brand Manager",
     linkedin: "http://www.linkedin.com/in/martin-wonham",
     email: "martin.wonham@wagamama.com",
@@ -720,6 +822,7 @@ export const leads = [
   {
     name: "David Winters",
     company: "Müller UK & Ireland",
+    category: "Dairy & Alternatives",
     position: "Brand Projects & Innovation Manager",
     linkedin: "http://www.linkedin.com/in/davidgwinters",
     email: "david.winters@muller.co.uk",
@@ -727,6 +830,7 @@ export const leads = [
   {
     name: "Emma Parkins",
     company: "Little Freddie Organic Baby Food",
+    category: "Baby & Kids Food",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/emma-parkins-34bb5b136",
     email: "emma.parkins@littlefreddie.com",
@@ -734,6 +838,7 @@ export const leads = [
   {
     name: "Lee Switzer-woolf",
     company: "Organico Realfoods | Certified B Corporation",
+    category: "Grocery & Food Brands",
     position: "Uk Sales And Marketing Manager",
     linkedin: "http://www.linkedin.com/in/lee-switzer-woolf-7a39aa28",
     email: "lee@organico.co.uk",
@@ -741,6 +846,7 @@ export const leads = [
   {
     name: "Mark Lee",
     company: "Huel",
+    category: "Health & Wellness Food",
     position: "Junior Brand Experience And Community Manager",
     linkedin: "http://www.linkedin.com/in/mark-lee-7873231a3",
     email: "mark.lee@huel.com",
@@ -748,6 +854,7 @@ export const leads = [
   {
     name: "Sidonie Knight",
     company: "Goodrays",
+    category: "Drinks",
     position: "Community Marketing Manager",
     linkedin: "http://www.linkedin.com/in/sidonieknight",
     email: "sidonie@goodrays.com",
@@ -755,6 +862,7 @@ export const leads = [
   {
     name: "Joe Allen",
     company: "Goodrays",
+    category: "Drinks",
     position: "Brand & Digital Designer",
     linkedin: "http://www.linkedin.com/in/joe-allen-b9bb7a251",
     email: "joe@goodrays.com",
@@ -762,6 +870,7 @@ export const leads = [
   {
     name: "Samie Razaq",
     company: "Pillars Brewery",
+    category: "Beer & Brewing",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/samie-razaq-8ab28241",
     email: "samie@pillarsbrewery.com",
@@ -769,6 +878,7 @@ export const leads = [
   {
     name: "Qp Agro",
     company: "Qualite Premiere",
+    category: "Grocery & Food Brands",
     position: "Social Media Manager",
     linkedin: "http://www.linkedin.com/in/qp-agro-64123120b",
     email: "",
@@ -776,6 +886,7 @@ export const leads = [
   {
     name: "Valentina Marchi",
     company: "LA VIE™",
+    category: "Grocery & Food Brands",
     position: "Marketing Lead Uk",
     linkedin: "http://www.linkedin.com/in/valentina-marchi-a2680791",
     email: "valentina@laviefoods.com",
@@ -783,6 +894,7 @@ export const leads = [
   {
     name: "Chloe Gill",
     company: "Moy Park",
+    category: "Grocery & Food Brands",
     position: "Brand Marketing Manager",
     linkedin: "http://www.linkedin.com/in/chloe-gill-burgess-3b385814a",
     email: "chloe.gill@pilgrimseurope.com",
@@ -790,6 +902,7 @@ export const leads = [
   {
     name: "Chante Johnson",
     company: "Hain Celestial UK",
+    category: "Grocery & Food Brands",
     position: "Assistant Brand Manager Marketing",
     linkedin: "http://www.linkedin.com/in/chante-syreena-johnson",
     email: "chante.johnson@hain.com",
@@ -797,6 +910,7 @@ export const leads = [
   {
     name: "Shireen Hamdy",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Head Of Future Brands",
     linkedin: "http://www.linkedin.com/in/shireen-hamdy-0816b739",
     email: "shireen.hamdy@kraftheinz.com",
@@ -804,6 +918,7 @@ export const leads = [
   {
     name: "Kirsty Jones",
     company: "The Tofoo Co",
+    category: "Grocery & Food Brands",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/kirsty-jones-254231b4",
     email: "kirsty.jones@tofoo.co.uk",
@@ -811,6 +926,7 @@ export const leads = [
   {
     name: "Maxwell Machin",
     company: "JUBEL",
+    category: "Beer & Brewing",
     position: "Field Marketing Manager (sports & Lifestyle)",
     linkedin: "http://www.linkedin.com/in/maxwell-machin-a997441b9",
     email: "maxwell@jubelbeer.com",
@@ -818,6 +934,7 @@ export const leads = [
   {
     name: "Bronagh Clarke",
     company: "Kestrel Foods || Forest Feast & Acti-Snack & Just Live a Little",
+    category: "Snacks & Crisps",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/bronagh-clarke-925a091a",
     email: "bronaghc@forestfeast.com",
@@ -825,6 +942,7 @@ export const leads = [
   {
     name: "Donna Chappelle",
     company: "Brand Organic",
+    category: "Grocery & Food Brands",
     position: "Head Of Brands",
     linkedin: "http://www.linkedin.com/in/donna-chappelle-8a0a83",
     email: "donna@brandorganic.co.uk",
@@ -832,6 +950,7 @@ export const leads = [
   {
     name: "Anna Sidhu",
     company: "The British Hamper Company",
+    category: "Grocery & Food Brands",
     position: "Marketing Assistant",
     linkedin: "http://www.linkedin.com/in/anna-sidhu-a5ab6316a",
     email: "anna@britishhamper.com",
@@ -839,6 +958,7 @@ export const leads = [
   {
     name: "Matthew Churchill",
     company: "Westfalia Fruit",
+    category: "Grocery & Food Brands",
     position: "Global Brand Manager",
     linkedin: "http://www.linkedin.com/in/matthew-churchill-539b4937",
     email: "matthew.churchill@greencell.com",
@@ -846,6 +966,7 @@ export const leads = [
   {
     name: "Hyacinth Garnett",
     company: "Tilda® | B Corp™",
+    category: "Grocery & Food Brands",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/hgarnett",
     email: "hyacinth@tilda.com",
@@ -853,6 +974,7 @@ export const leads = [
   {
     name: "Zoha Rahman",
     company: "Grubby",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/zoha-rahman-5777901b1",
     email: "",
@@ -860,6 +982,7 @@ export const leads = [
   {
     name: "Zoey Westcott",
     company: "Müller UK & Ireland",
+    category: "Dairy & Alternatives",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/zoey-westcott-25968b7a",
     email: "zoey.westcott@muller.co.uk",
@@ -867,6 +990,7 @@ export const leads = [
   {
     name: "Paola Bassi",
     company: "Synergy Flavors",
+    category: "Other",
     position: "Marketing Director, Europe",
     linkedin: "http://www.linkedin.com/in/paola-bassi-280994",
     email: "",
@@ -874,6 +998,7 @@ export const leads = [
   {
     name: "Sandie Dilger",
     company: "PROPER SNACKS",
+    category: "Snacks & Crisps",
     position: "Chief Marketing Officer",
     linkedin: "http://www.linkedin.com/in/sandie-dilger-05848325",
     email: "sandie@warpsnacks.com",
@@ -881,6 +1006,7 @@ export const leads = [
   {
     name: "Floriane Dominguez",
     company: "Coco di Mama",
+    category: "Casual Dining & Restaurants",
     position: "Sales And Brand Manager",
     linkedin: "http://www.linkedin.com/in/floriane-dominguez-1a4441155",
     email: "floriane@cocodimama.co.uk",
@@ -888,6 +1014,7 @@ export const leads = [
   {
     name: "Katie Brownlee",
     company: "Greggs",
+    category: "Bakery & Bread",
     position: "IT & Marketing Purchasing Manager",
     linkedin: "http://www.linkedin.com/in/katie-brownlee-38a8151ab",
     email: "katie.brownlee@greggs.co.uk",
@@ -895,6 +1022,7 @@ export const leads = [
   {
     name: "Ben Bokaie",
     company: "Huel",
+    category: "Health & Wellness Food",
     position: "Performance Marketing Director",
     linkedin: "http://www.linkedin.com/in/ben-bokaie-57708354",
     email: "ben.bokaie@huel.com",
@@ -902,6 +1030,7 @@ export const leads = [
   {
     name: "Robbie R",
     company: "KIND",
+    category: "Snacks & Crisps",
     position:
       "Management Sciences Bsc Graduate | Former Bespoke Sales And Marketing Intern",
     linkedin: "http://www.linkedin.com/in/robbiejoereilly",
@@ -910,6 +1039,7 @@ export const leads = [
   {
     name: "Kari Gibson",
     company: "Little Moons",
+    category: "Confectionery",
     position: "Social Media Manager",
     linkedin: "http://www.linkedin.com/in/kari-gibson-5a2317a6",
     email: "kari.g@littlemoons.co.uk",
@@ -917,6 +1047,7 @@ export const leads = [
   {
     name: "Hannah Lambert",
     company: "HiPP Organic (UK)",
+    category: "Baby & Kids Food",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/hannah-lambert-7630561a",
     email: "hannah.lambert@hipp.co.uk",
@@ -924,6 +1055,7 @@ export const leads = [
   {
     name: "Carmen Ferguson",
     company: "Windmill Organics Ltd",
+    category: "Grocery & Food Brands",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/carmen-ferguson-b1306165",
     email: "carmen@windmillorganics.com",
@@ -931,6 +1063,7 @@ export const leads = [
   {
     name: "Samuel Williams",
     company: "Bevie",
+    category: "Drinks",
     position: "Brand Manager - Wine & Distributor Brands",
     linkedin: "http://www.linkedin.com/in/samuelwilliams3",
     email: "samuel.williams@bevie.co",
@@ -938,6 +1071,7 @@ export const leads = [
   {
     name: "Beth George",
     company: "KP Snacks",
+    category: "Snacks & Crisps",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/beth-george-25727383",
     email: "beth.george@kpsnacks.com",
@@ -945,6 +1079,7 @@ export const leads = [
   {
     name: "Luisa Kozlowski",
     company: "Brand Organic",
+    category: "Grocery & Food Brands",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/luisalovedaykozlowski",
     email: "luisa@brandorganic.co.uk",
@@ -952,6 +1087,7 @@ export const leads = [
   {
     name: "Andy Beattie",
     company: "Birds Eye",
+    category: "Grocery & Food Brands",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/andy-beattie-0b55aa4",
     email: "andrew.beattie@birdseye.co.uk",
@@ -959,6 +1095,7 @@ export const leads = [
   {
     name: "Skye Novis",
     company: "BOL Foods",
+    category: "Health & Wellness Food",
     position: "Assistant Brand Manager",
     linkedin: "http://www.linkedin.com/in/skye-novis-19763118a",
     email: "skye.novis@bolfoods.com",
@@ -966,6 +1103,7 @@ export const leads = [
   {
     name: "Emily Vaz",
     company: "Lindt & Sprungli UK",
+    category: "Confectionery",
     position: "Brand Manager, Lindor",
     linkedin: "http://www.linkedin.com/in/emily-vaz-121908100",
     email: "evaz@lindt.com",
@@ -973,6 +1111,7 @@ export const leads = [
   {
     name: "Bhanavi Agarwal",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Social Media Manager",
     linkedin: "http://www.linkedin.com/in/bhanavi-agarwal-8a556b215",
     email: "bhanavi.agarwal@giveusashout.org",
@@ -980,6 +1119,7 @@ export const leads = [
   {
     name: "Rebecca L",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Brand Executive",
     linkedin: "http://www.linkedin.com/in/rebeccalouiselawler",
     email: "rebeccal@greeneking.co.uk",
@@ -987,6 +1127,7 @@ export const leads = [
   {
     name: "Talitha H",
     company: "wagamama",
+    category: "Casual Dining & Restaurants",
     position: "Ba (hons) Business Studies With Digital Marketing",
     linkedin: "http://www.linkedin.com/in/talitha-h-9aba77214",
     email: "talithah@wagamama.com",
@@ -994,6 +1135,7 @@ export const leads = [
   {
     name: "Scott Colley",
     company: "The Tofoo Co",
+    category: "Grocery & Food Brands",
     position: "(interim) Digital & Social Brand Manager",
     linkedin: "http://www.linkedin.com/in/scottcolley",
     email: "scott.colley@tofoo.co.uk",
@@ -1001,6 +1143,7 @@ export const leads = [
   {
     name: "Christina Crook",
     company: "Murphy & Son Ltd",
+    category: "Other",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/christina-crook-0180a235",
     email: "christina.crook@murphyandson.co.uk",
@@ -1008,6 +1151,7 @@ export const leads = [
   {
     name: "Sahara Johnny",
     company: "Cookery School at Little Portland Street",
+    category: "Other",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/sahara-johnny-b3b36b172",
     email: "sahara@cookeryschool.co.uk",
@@ -1015,6 +1159,7 @@ export const leads = [
   {
     name: "Sita Dobbs",
     company: "wagamama",
+    category: "Casual Dining & Restaurants",
     position: "Brand Experience And Purpose Lead",
     linkedin: "http://www.linkedin.com/in/sita-dobbs",
     email: "sita.dobbs@wagamama.com",
@@ -1022,6 +1167,7 @@ export const leads = [
   {
     name: "Louisa Kilburn",
     company: "Kendamil (Kendal Nutricare)",
+    category: "Baby & Kids Food",
     position: "Senior Social Media & Content Manager",
     linkedin: "http://www.linkedin.com/in/louisa-kilburn-7b399841",
     email: "louisa.kilburn@kendalnutricare.com",
@@ -1029,6 +1175,7 @@ export const leads = [
   {
     name: "Paula Gagin",
     company: "Samworth Brothers",
+    category: "Grocery & Food Brands",
     position: "Ye Olde Pork Pie Shoppe Distribution Manager & Brand Ambassador",
     linkedin: "http://www.linkedin.com/in/paula-gagin-734314102",
     email: "paula.gagin@samworthbrothers.co.uk",
@@ -1036,6 +1183,7 @@ export const leads = [
   {
     name: "Margot Kimask",
     company: "Esquires Coffee UK",
+    category: "Coffee & Tea",
     position: "Brand & Marketing Manager",
     linkedin: "http://www.linkedin.com/in/18a01ba3",
     email: "margot@esquirescoffee.co.uk",
@@ -1043,6 +1191,7 @@ export const leads = [
   {
     name: "Oisin Burrell",
     company: "Stroud Brewery | B Corp",
+    category: "Beer & Brewing",
     position: "Communications And Marketing Assistant",
     linkedin: "http://www.linkedin.com/in/oisin-hayden-burrell-57762830b",
     email: "",
@@ -1050,6 +1199,7 @@ export const leads = [
   {
     name: "Manya Gupta",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Junior Brand Manager",
     linkedin: "http://www.linkedin.com/in/guptamanya15",
     email: "manya.gupta@kraftheinz.com",
@@ -1057,6 +1207,7 @@ export const leads = [
   {
     name: "Emma Gale",
     company: "Jacksons",
+    category: "Snacks & Crisps",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/emma-gale-21255339",
     email: "emmagale@jacksonsbread.co.uk",
@@ -1064,6 +1215,7 @@ export const leads = [
   {
     name: "Danielle Taylor",
     company: "Quorn Foods",
+    category: "Grocery & Food Brands",
     position: "Senior Social Media Executive",
     linkedin: "http://www.linkedin.com/in/danielletaylor607",
     email: "danielle.taylor@quorn.com",
@@ -1071,6 +1223,7 @@ export const leads = [
   {
     name: "Rebecca Doherty",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Brand Manager - Beanz",
     linkedin: "http://www.linkedin.com/in/rebecca-doherty-a04b0a12b",
     email: "rebecca.doherty@kraftheinz.com",
@@ -1078,6 +1231,7 @@ export const leads = [
   {
     name: "Sam Yates",
     company: "Plenish",
+    category: "Dairy & Alternatives",
     position: "Growth Marketing Manager",
     linkedin: "http://www.linkedin.com/in/samyates95",
     email: "sam@plenishdrinks.com",
@@ -1085,6 +1239,7 @@ export const leads = [
   {
     name: "Chris Moreman",
     company: "Stonegate",
+    category: "Casual Dining & Restaurants",
     position: "Sales And Marketing Director",
     linkedin: "http://www.linkedin.com/in/chris-moreman-7a157757",
     email: "chris.moreman@stonegate.co.uk",
@@ -1092,6 +1247,7 @@ export const leads = [
   {
     name: "Samantha Simpson",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Loyalty Marketing Manager",
     linkedin: "http://www.linkedin.com/in/samantha-simpson-609949181",
     email: "samanthasimpson@greeneking.co.uk",
@@ -1099,6 +1255,7 @@ export const leads = [
   {
     name: "Shahab Bachchu",
     company: "Euro Foods Group",
+    category: "Grocery & Food Brands",
     position: "Group Marketing Manager",
     linkedin: "http://www.linkedin.com/in/shahab-ahmed-bachchu-0586a936",
     email: "",
@@ -1106,6 +1263,7 @@ export const leads = [
   {
     name: "Sam Mckinty",
     company: "Califia Farms",
+    category: "Dairy & Alternatives",
     position: "Senior Brand Manager Europe",
     linkedin: "http://www.linkedin.com/in/sam-mckinty-126641a6",
     email: "",
@@ -1113,6 +1271,7 @@ export const leads = [
   {
     name: "Lucy Gatward",
     company: "Better Food",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/lucy-gatward-b9992046",
     email: "",
@@ -1120,6 +1279,7 @@ export const leads = [
   {
     name: "Millie Walford",
     company: "White Rabbit",
+    category: "Casual Dining & Restaurants",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/millie-walford",
     email: "millie@whiterabbitpizza.co.uk",
@@ -1127,6 +1287,7 @@ export const leads = [
   {
     name: "Annabelle Stitt",
     company: "HiPP Organic (UK)",
+    category: "Baby & Kids Food",
     position: "Marketing Manager",
     linkedin:
       "http://www.linkedin.com/in/annabelle-stitt-n%c3%a9e-riches-10490539",
@@ -1135,6 +1296,7 @@ export const leads = [
   {
     name: "Mitch Adams",
     company: "Sustainable Wine Solutions (Borough Wines)",
+    category: "Wine & Spirits",
     position: "Head Of Operations & Product Marketing",
     linkedin: "http://www.linkedin.com/in/mitcheladams1",
     email: "mitch@sustainablewinesolutions.co.uk",
@@ -1142,6 +1304,7 @@ export const leads = [
   {
     name: "Elizabeth Good",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Social Media Manager",
     linkedin: "http://www.linkedin.com/in/elizabeth-good-9487311ab",
     email: "",
@@ -1149,6 +1312,7 @@ export const leads = [
   {
     name: "Karen Bagwell",
     company: "The Ilchester Cheese Co.",
+    category: "Dairy & Alternatives",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/karen-bagwell-73583315",
     email: "kbagwell@ilchestercheese.co.uk",
@@ -1156,6 +1320,7 @@ export const leads = [
   {
     name: "Abbie Meakin",
     company: "Müller UK & Ireland",
+    category: "Dairy & Alternatives",
     position: "Ecommerce & Shopper Marketing Manager",
     linkedin: "http://www.linkedin.com/in/abbie-meakin-702808134",
     email: "abigail.meakin@muller.co.uk",
@@ -1163,6 +1328,7 @@ export const leads = [
   {
     name: "Ciara O'reilly",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Integrated Brand Comms Manager",
     linkedin: "http://www.linkedin.com/in/oreillyciara",
     email: "ciara.oreilly@kraftheinz.com",
@@ -1170,6 +1336,7 @@ export const leads = [
   {
     name: "Jade Simpkin",
     company: "The Gym Kitchen",
+    category: "Health & Wellness Food",
     position: "Assistant Brand Manager",
     linkedin: "http://www.linkedin.com/in/jade-simpkin-7356b9173",
     email: "jade@thegymkitchen.com",
@@ -1177,6 +1344,7 @@ export const leads = [
   {
     name: "Kevin Butterworth",
     company: "Nairn's Oatcakes",
+    category: "Bakery & Bread",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/kevin-butterworth-2313bb50",
     email: "kevinbutterworth@nairns-oatcakes.com",
@@ -1184,6 +1352,7 @@ export const leads = [
   {
     name: "Stephanie Stewart",
     company: "The Wine Society",
+    category: "Wine & Spirits",
     position: "Business Programme And Marketing Projects Manager",
     linkedin: "http://www.linkedin.com/in/stephanie-stewart-76a31b28",
     email: "stewarts@thewinesociety.com",
@@ -1191,6 +1360,7 @@ export const leads = [
   {
     name: "Natalie Hill",
     company: "MOTH Drinks - B Corp™",
+    category: "Drinks",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/natalie-hill-55237638",
     email: "natalie@mothdrinks.com",
@@ -1198,6 +1368,7 @@ export const leads = [
   {
     name: "Stephanie Case",
     company: "MOJU",
+    category: "Drinks",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/stephanie-case-982057b6",
     email: "",
@@ -1205,6 +1376,7 @@ export const leads = [
   {
     name: "Rebecca Perks",
     company: "Solina",
+    category: "Other",
     position: "Head Of Foodservice Marketing (uk & Ireland)",
     linkedin: "http://www.linkedin.com/in/rebecca-perks-880b4861",
     email: "rebecca.perks@solina.com",
@@ -1212,6 +1384,7 @@ export const leads = [
   {
     name: "Rajan Dave",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Social Media Manager And Team Leader",
     linkedin: "http://www.linkedin.com/in/rajan-dave-b747981aa",
     email: "",
@@ -1219,6 +1392,7 @@ export const leads = [
   {
     name: "Sophie Perry",
     company: "COOK Trading Ltd",
+    category: "Grocery & Food Brands",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/sophie-perry-78a61410",
     email: "sophie.perry@cookfood.net",
@@ -1226,6 +1400,7 @@ export const leads = [
   {
     name: "Michelle Pytlakowska",
     company: "Pukka",
+    category: "Coffee & Tea",
     position: "Assistant Brand Manager",
     linkedin: "http://www.linkedin.com/in/michelle-pytlakowska",
     email: "michelle.pytlakowska@pukkapies.co.uk",
@@ -1233,6 +1408,7 @@ export const leads = [
   {
     name: "Wayne Greensmith",
     company: "Samworth Brothers - Food For Now",
+    category: "Grocery & Food Brands",
     position: "Head Of Customer Marketing",
     linkedin: "http://www.linkedin.com/in/wayne-greensmith-314a4b6",
     email: "wayne.greensmith@foodfornow.co.uk",
@@ -1240,6 +1416,7 @@ export const leads = [
   {
     name: "Alex Mcmillan",
     company: "Revolution Bars Group PLC",
+    category: "Casual Dining & Restaurants",
     position: "Brand Operations Director",
     linkedin: "http://www.linkedin.com/in/alexlmcmillan",
     email: "alex.mcmillan@revolutionbarsgroup.com",
@@ -1247,6 +1424,7 @@ export const leads = [
   {
     name: "Gabriella Sudall",
     company: "FrieslandCampina",
+    category: "Dairy & Alternatives",
     position: "Marketing Manager - Drinks Platform",
     linkedin: "http://www.linkedin.com/in/gabriella-sudall-b8b0974a",
     email: "gabriella.sudall@frieslandcampina.com",
@@ -1254,6 +1432,7 @@ export const leads = [
   {
     name: "Alison Taylor",
     company: "Belton Farm",
+    category: "Dairy & Alternatives",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/alison-taylor-6a860621",
     email: "alisontaylor@beltonfarm.co.uk",
@@ -1261,6 +1440,7 @@ export const leads = [
   {
     name: "Shahan Hafeez",
     company: "FGS Ingredients Limited",
+    category: "Other",
     position: "Business Development & Brand Promotion Manager",
     linkedin: "http://www.linkedin.com/in/shahan-shah-hafeez-9649876a",
     email: "shahan@fgsingredients.com",
@@ -1268,6 +1448,7 @@ export const leads = [
   {
     name: "Kate Steen",
     company: "Rich Sauces",
+    category: "Grocery & Food Brands",
     position: "Digital Marketing Assistant",
     linkedin: "http://www.linkedin.com/in/kate-steen-7b125b299",
     email: "kate.steen@richsauces.com",
@@ -1275,6 +1456,7 @@ export const leads = [
   {
     name: "Emily Knight",
     company: "Youings Wholesale",
+    category: "Other",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/emilyknight1984",
     email: "emily.knight@youingswholesale.co.uk",
@@ -1282,6 +1464,7 @@ export const leads = [
   {
     name: "Maisie Wright",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Integrated Marketing Executive",
     linkedin: "http://www.linkedin.com/in/maisie-wright-703124100",
     email: "maisiewright@greeneking.co.uk",
@@ -1289,6 +1472,7 @@ export const leads = [
   {
     name: "Anees Rehman",
     company: "Shakedown",
+    category: "Health & Wellness Food",
     position: "Digital Marketing Manager",
     linkedin: "http://www.linkedin.com/in/anees-ur-rehman-0a4a60176",
     email: "anees@heyshakedown.co.uk",
@@ -1296,6 +1480,7 @@ export const leads = [
   {
     name: "Charlotte Boyce",
     company: "PizzaExpress",
+    category: "Casual Dining & Restaurants",
     position: "Head Of Pr And Social Media",
     linkedin: "http://www.linkedin.com/in/charlotte-boyce-5a6ab210b",
     email: "charlotte.boyce@pizzaexpress.com",
@@ -1303,6 +1488,7 @@ export const leads = [
   {
     name: "Latifa Lagos",
     company: "Nestlé Professional",
+    category: "Grocery & Food Brands",
     position: "Brand Activation Manager",
     linkedin: "http://www.linkedin.com/in/latifalagos",
     email: "",
@@ -1310,6 +1496,7 @@ export const leads = [
   {
     name: "Raania Myah",
     company: "JOE & THE JUICE",
+    category: "Coffee & Tea",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/raania-myah-h-0a05811b7",
     email: "raania@joejuice.com",
@@ -1317,6 +1504,7 @@ export const leads = [
   {
     name: "Sophie Dale",
     company: "Florette UK & Ireland",
+    category: "Grocery & Food Brands",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/sophie-d-a12930160",
     email: "",
@@ -1324,6 +1512,7 @@ export const leads = [
   {
     name: "Paul Mccullagh",
     company: "Boojum",
+    category: "Casual Dining & Restaurants",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/paul-mccullagh-64663b2a",
     email: "paul.mccullagh@boojummex.com",
@@ -1331,6 +1520,7 @@ export const leads = [
   {
     name: "Wen Lin",
     company: "Planty",
+    category: "Grocery & Food Brands",
     position: "Marketing Team",
     linkedin: "http://www.linkedin.com/in/zoelinwy",
     email: "wen@planty.uk",
@@ -1338,6 +1528,7 @@ export const leads = [
   {
     name: "Tina Mohamadi",
     company: "The Avenue Cookery School",
+    category: "Other",
     position: "Marketing Assistant",
     linkedin: "http://www.linkedin.com/in/tinamohamadi",
     email: "",
@@ -1345,6 +1536,7 @@ export const leads = [
   {
     name: "Emma Price",
     company: "The Bierkeller",
+    category: "Casual Dining & Restaurants",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/emma-price-83177a79",
     email: "emma.price@thebierkeller.com",
@@ -1352,6 +1544,7 @@ export const leads = [
   {
     name: "Dan Pugh",
     company: "TRIBE Natural Energy | B Corp™",
+    category: "Health & Wellness Food",
     position: "Trade Marketing Manager",
     linkedin: "http://www.linkedin.com/in/dan-pugh-687371178",
     email: "dan@wearetribe.co",
@@ -1359,6 +1552,7 @@ export const leads = [
   {
     name: "Tim Brown",
     company: "Lionel Hitchen Limited",
+    category: "Other",
     position: "Sales And Marketing Director",
     linkedin: "http://www.linkedin.com/in/tim-brown-969184a",
     email: "tbrown@lionelhitchen.com",
@@ -1366,6 +1560,7 @@ export const leads = [
   {
     name: "Simon Wilkinson",
     company: "Broadland Drinks",
+    category: "Drinks",
     position: "Head Of Sales - North America & Brand Owners",
     linkedin: "http://www.linkedin.com/in/simon-wilkinson-105621104",
     email: "",
@@ -1373,6 +1568,7 @@ export const leads = [
   {
     name: "Louise Grace",
     company: "Goodfella's Pizza UK & IE",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/louise-grace-84810124",
     email: "",
@@ -1380,6 +1576,7 @@ export const leads = [
   {
     name: "Siobhan Wilde",
     company: "Ginsters",
+    category: "Bakery & Bread",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/siobhan-wilde-b63b31153",
     email: "siobhan.wilde@ginsters.co.uk",
@@ -1387,6 +1584,7 @@ export const leads = [
   {
     name: "Alex Houle",
     company: "KP Snacks",
+    category: "Snacks & Crisps",
     position: "Senior Brand Manager - Popchips Brand Lead",
     linkedin: "http://www.linkedin.com/in/anhoule",
     email: "alex.houle@kpsnacks.com",
@@ -1394,6 +1592,7 @@ export const leads = [
   {
     name: "Emma Swycher",
     company: "MOJU",
+    category: "Drinks",
     position: "Senior Trade Marketing Manager",
     linkedin: "http://www.linkedin.com/in/emmaswycher",
     email: "emma@mojudrinks.com",
@@ -1401,6 +1600,7 @@ export const leads = [
   {
     name: "Tony Kane",
     company: "Virgin Wines",
+    category: "Wine & Spirits",
     position: "Head Of Crm Marketing",
     linkedin: "http://www.linkedin.com/in/tony-kane-94257412a",
     email: "tony.kane@virginwines.co.uk",
@@ -1408,6 +1608,7 @@ export const leads = [
   {
     name: "Lily Clarke",
     company: "Greggs",
+    category: "Bakery & Bread",
     position: "Performance Marketing Support Manager",
     linkedin: "http://www.linkedin.com/in/lily-clarke-833131100",
     email: "lily.clarke@greggs.co.uk",
@@ -1415,6 +1616,7 @@ export const leads = [
   {
     name: "Paige Langran",
     company: "Little Freddie Organic Baby Food",
+    category: "Baby & Kids Food",
     position: "Group Brand Manager",
     linkedin: "http://www.linkedin.com/in/pclay1",
     email: "paige.clay@littlefreddie.com",
@@ -1422,6 +1624,7 @@ export const leads = [
   {
     name: "Bryony Warwick",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/bryonylwarwick",
     email: "bryony.warwick@kraftheinz.com",
@@ -1429,6 +1632,7 @@ export const leads = [
   {
     name: "Beth Bridge",
     company: "Paris Baguette UK",
+    category: "Bakery & Bread",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/beth-b-8b11bab5",
     email: "beth@parisbaguette.co.uk",
@@ -1436,6 +1640,7 @@ export const leads = [
   {
     name: "Edward Mather",
     company: "Cambridge Commodities",
+    category: "Other",
     position: "Account Manager (uk Sales - Brands)",
     linkedin: "http://www.linkedin.com/in/edward-mather-00938683",
     email: "",
@@ -1443,6 +1648,7 @@ export const leads = [
   {
     name: "Mariana Ruiz",
     company: "PIM Brands",
+    category: "Snacks & Crisps",
     position: "Sr. Global Brand Manager",
     linkedin: "http://www.linkedin.com/in/mariana-ruiz-329a3864",
     email: "mruiz@promotioninmotion.com",
@@ -1450,6 +1656,7 @@ export const leads = [
   {
     name: "Richard Pilbeam",
     company: "Goodrays",
+    category: "Drinks",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/richardpilbeam",
     email: "richard@goodrays.com",
@@ -1457,6 +1664,7 @@ export const leads = [
   {
     name: "Emma Hurst",
     company: "MOMA Foods",
+    category: "Grocery & Food Brands",
     position: "Digital Marketing Manager",
     linkedin: "http://www.linkedin.com/in/emma-hurst-6397a139",
     email: "emmahurst@momafoods.co.uk",
@@ -1464,6 +1672,7 @@ export const leads = [
   {
     name: "Lucy Anson",
     company: "Gosh! Food",
+    category: "Grocery & Food Brands",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/lucy-anson-15065061",
     email: "lucy.anson@goshfood.com",
@@ -1471,6 +1680,7 @@ export const leads = [
   {
     name: "Joshua Boydell-smith",
     company: "Bells of Lazonby",
+    category: "Bakery & Bread",
     position: "Head Of Brand And Marketing",
     linkedin: "http://www.linkedin.com/in/joshua-boydell-smith-ab3968101",
     email: "josh.boydell-smith@bellsoflazonby.co.uk",
@@ -1478,6 +1688,7 @@ export const leads = [
   {
     name: "Joanna Thomas",
     company: "The Collective UK | B Corp™",
+    category: "Dairy & Alternatives",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/joanna-thomas",
     email: "",
@@ -1485,6 +1696,7 @@ export const leads = [
   {
     name: "Sherilyn C",
     company: "Partridges",
+    category: "Grocery & Food Brands",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/sherilynchu",
     email: "",
@@ -1492,6 +1704,7 @@ export const leads = [
   {
     name: "George Horton",
     company: "Lucky Saint | B Corp™",
+    category: "Beer & Brewing",
     position: "Social Media Manager",
     linkedin: "http://www.linkedin.com/in/luckysaintgeorge",
     email: "george.horton@luckysaint.co",
@@ -1499,6 +1712,7 @@ export const leads = [
   {
     name: "Chloe Gill",
     company: "Moy Park",
+    category: "Grocery & Food Brands",
     position: "Brand Marketing Manager",
     linkedin: "http://www.linkedin.com/in/chloe-gill-burgess-3b385814a",
     email: "",
@@ -1506,6 +1720,7 @@ export const leads = [
   {
     name: "George Vaughan",
     company: "Müller UK & Ireland",
+    category: "Dairy & Alternatives",
     position:
       "Data Analytics Manager - Uk&i Lead, Marketing Strategy & Insight",
     linkedin: "http://www.linkedin.com/in/george-vaughan-927247108",
@@ -1514,6 +1729,7 @@ export const leads = [
   {
     name: "Maddy Hooton",
     company: "Grupo Bimbo",
+    category: "Bakery & Bread",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/maddy-hooton",
     email: "maddy.hooton@grupobimbo.com",
@@ -1521,6 +1737,7 @@ export const leads = [
   {
     name: "Evelyne Wilkinson",
     company: "The Ilchester Cheese Co.",
+    category: "Dairy & Alternatives",
     position: "Brand Director",
     linkedin: "http://www.linkedin.com/in/evelyne-wilkinson-b8579496",
     email: "ewilkinson@norseland.co.uk",
@@ -1528,6 +1745,7 @@ export const leads = [
   {
     name: "Kate W",
     company: "PACK'D",
+    category: "Health & Wellness Food",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/kate-w-28351830",
     email: "kate@packd.co.uk",
@@ -1535,6 +1753,7 @@ export const leads = [
   {
     name: "Silvia R",
     company: "Origin Wine",
+    category: "Wine & Spirits",
     position: "Head Of Origin Premium Brands",
     linkedin: "http://www.linkedin.com/in/silvia-r-3b0a5a7b",
     email: "",
@@ -1542,6 +1761,7 @@ export const leads = [
   {
     name: "Ben Brophy",
     company: "El Rayo Tequila",
+    category: "Wine & Spirits",
     position: "Trade Marketing Manager",
     linkedin: "http://www.linkedin.com/in/ben-brophy-43249b1a1",
     email: "ben@elrayotequila.com",
@@ -1549,6 +1769,7 @@ export const leads = [
   {
     name: "Mark Muncey",
     company: "Proper Cornish",
+    category: "Bakery & Bread",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/mark-muncey-02b2b6125",
     email: "",
@@ -1556,6 +1777,7 @@ export const leads = [
   {
     name: "Amelia Griffiths",
     company: "Cereal Partners Worldwide (Nestlé & General Mills)",
+    category: "Grocery & Food Brands",
     position: "Shopper Activation Marketing Manager",
     linkedin: "http://www.linkedin.com/in/amelia-griffiths-bb35b918",
     email: "",
@@ -1563,6 +1785,7 @@ export const leads = [
   {
     name: "Hannah Wood",
     company: "Huel",
+    category: "Health & Wellness Food",
     position: "Senior Performance Marketing Executive",
     linkedin: "http://www.linkedin.com/in/hannah-wood-4b693316a",
     email: "hannah.wood@huel.com",
@@ -1570,6 +1793,7 @@ export const leads = [
   {
     name: "Jamie Scott",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Commercial Finance Manager - Brewing & Brands",
     linkedin: "http://www.linkedin.com/in/jcmscott",
     email: "",
@@ -1577,6 +1801,7 @@ export const leads = [
   {
     name: "Jess Bates",
     company: "Tim Hortons UK & Ireland Ltd.",
+    category: "Casual Dining & Restaurants",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/jess-bates-a9695069",
     email: "",
@@ -1584,6 +1809,7 @@ export const leads = [
   {
     name: "Dani Taylor",
     company: "KP Snacks",
+    category: "Snacks & Crisps",
     position: "Innovation Marketing Manager",
     linkedin: "http://www.linkedin.com/in/dani-taylor-75605950",
     email: "dani-taylor@kpsnacks.com",
@@ -1591,6 +1817,7 @@ export const leads = [
   {
     name: "Lucy Grogut",
     company: "Quorn Foods",
+    category: "Grocery & Food Brands",
     position: "Head Of Brand Marketing Quorn",
     linkedin: "http://www.linkedin.com/in/lucy-grogut-a027b041",
     email: "lucy.grogut@quorn.com",
@@ -1598,6 +1825,7 @@ export const leads = [
   {
     name: "Payal Patel",
     company: "Taiko Foods Ltd",
+    category: "Grocery & Food Brands",
     position: "Business Marketing Student",
     linkedin: "http://www.linkedin.com/in/impayal",
     email: "payal.patel@taikofoods.co.uk",
@@ -1605,6 +1833,7 @@ export const leads = [
   {
     name: "Morris Hazan",
     company: "RAMONA'S",
+    category: "Casual Dining & Restaurants",
     position: "Marketing",
     linkedin: "http://www.linkedin.com/in/morris-hazan-ba127148",
     email: "",
@@ -1612,6 +1841,7 @@ export const leads = [
   {
     name: "Ines Sousa",
     company: "PROPER SNACKS",
+    category: "Snacks & Crisps",
     position: "Brand Manager- Eat Real",
     linkedin: "http://www.linkedin.com/in/ines-s-155305152",
     email: "ines@warpsnacks.com",
@@ -1619,6 +1849,7 @@ export const leads = [
   {
     name: "Bo Bochenek",
     company: "Baxters Food Group",
+    category: "Grocery & Food Brands",
     position: "Uk Marketing Director (interim)",
     linkedin: "http://www.linkedin.com/in/bo-bochenek-2b288614",
     email: "",
@@ -1626,6 +1857,7 @@ export const leads = [
   {
     name: "Hayley Mcloughlin",
     company: "MOJU",
+    category: "Drinks",
     position: "Brand Comms & Partnerships Manager",
     linkedin: "http://www.linkedin.com/in/hayley-mcloughlin-05a97ba6",
     email: "hayley@mojudrinks.com",
@@ -1633,6 +1865,7 @@ export const leads = [
   {
     name: "Gemma Evans",
     company: "Westons Cider",
+    category: "Beer & Brewing",
     position: "Brand Manager - Westons And Westons Direct At Westons Cider",
     linkedin: "http://www.linkedin.com/in/gemma-evans-05746a1a1",
     email: "",
@@ -1640,6 +1873,7 @@ export const leads = [
   {
     name: "Ellie Blake",
     company: "Creams Cafe",
+    category: "Casual Dining & Restaurants",
     position: "Digital Marketing Manager",
     linkedin: "http://www.linkedin.com/in/ellieblake22",
     email: "ellie.blake@creamscafe.com",
@@ -1647,6 +1881,7 @@ export const leads = [
   {
     name: "Alice Eagle",
     company: "wagamama",
+    category: "Casual Dining & Restaurants",
     position: "Senior Regional Marketing Manager",
     linkedin: "http://www.linkedin.com/in/aliceeagle",
     email: "alice@wagamama.com",
@@ -1654,6 +1889,7 @@ export const leads = [
   {
     name: "Fiona Reyner",
     company: "Baxters Food Group",
+    category: "Grocery & Food Brands",
     position: "Assistant Brand Manager (garner's)",
     linkedin: "http://www.linkedin.com/in/fiona-reyner-389303107",
     email: "fiona.reyner@baxters.com",
@@ -1661,6 +1897,7 @@ export const leads = [
   {
     name: "Mary Culhane",
     company: "Rollover Ltd.",
+    category: "Grocery & Food Brands",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/mary-d-culhane",
     email: "",
@@ -1668,6 +1905,7 @@ export const leads = [
   {
     name: "Monique Togara",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Social Media Manager",
     linkedin: "http://www.linkedin.com/in/monique-togara-2898b7224",
     email: "moniquetogara@greeneking.co.uk",
@@ -1675,6 +1913,7 @@ export const leads = [
   {
     name: "Eleanor Morris",
     company: "HEALTHY FOOD BRANDS LIMITED",
+    category: "Health & Wellness Food",
     position: "Brand & Sales Support Administrator",
     linkedin: "http://www.linkedin.com/in/eleanor-morris-03a281175",
     email: "",
@@ -1682,6 +1921,7 @@ export const leads = [
   {
     name: "Katie Townsend",
     company: "Müller UK & Ireland",
+    category: "Dairy & Alternatives",
     position: "Acting Brand Manager - Müller Bliss",
     linkedin: "http://www.linkedin.com/in/katietownsend5",
     email: "katie.townsend@muller.co.uk",
@@ -1689,6 +1929,7 @@ export const leads = [
   {
     name: "Alex Townsend",
     company: "Birds Eye UK & IE",
+    category: "Grocery & Food Brands",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/alex-townsend-406161150",
     email: "alex.townsend@birdseye.co.uk",
@@ -1696,6 +1937,7 @@ export const leads = [
   {
     name: "Vicky Gregory",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/vicky-gregory-683365",
     email: "vicky.gregory@kraftheinzcompany.com",
@@ -1703,6 +1945,7 @@ export const leads = [
   {
     name: "Joshua Patterson",
     company: "GNAW Chocolate",
+    category: "Confectionery",
     position: "Digital Marketing Manager",
     linkedin: "http://www.linkedin.com/in/pattershua",
     email: "",
@@ -1710,6 +1953,7 @@ export const leads = [
   {
     name: "Susan Steddy",
     company: "The Wine Society",
+    category: "Wine & Spirits",
     position: "Head Of Brand Marketing",
     linkedin: "http://www.linkedin.com/in/susan-steddy-447362292",
     email: "",
@@ -1717,6 +1961,7 @@ export const leads = [
   {
     name: "David Balderstone",
     company: "Red Tractor",
+    category: "Other",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/david-balderstone-271b59a9",
     email: "david.balderstone@redtractor.org.uk",
@@ -1724,6 +1969,7 @@ export const leads = [
   {
     name: "Jennifer Crew",
     company: "NOMADIC",
+    category: "Dairy & Alternatives",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/jennifer-crew-06201a140",
     email: "jennifer@nomadic.ie",
@@ -1731,6 +1977,7 @@ export const leads = [
   {
     name: "Jeremy Gibson",
     company: "Princes Limited",
+    category: "Grocery & Food Brands",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/jeremy-gibson-19199513",
     email: "jeremy.gibson@princes.co.uk",
@@ -1738,6 +1985,7 @@ export const leads = [
   {
     name: "Daisy Barlow",
     company: "KIND",
+    category: "Snacks & Crisps",
     position: "Emea Marketing Director",
     linkedin: "http://www.linkedin.com/in/daisy-barlow-2084572b",
     email: "",
@@ -1745,6 +1993,7 @@ export const leads = [
   {
     name: "Samantha Salazar",
     company: "Skoulikas Bedford Ltd",
+    category: "Grocery & Food Brands",
     position: "Marketing And Ecommerce Coordinator",
     linkedin: "http://www.linkedin.com/in/samantha-salazar-94a586125",
     email: "samantha@skoulikasbedford.com",
@@ -1752,6 +2001,7 @@ export const leads = [
   {
     name: "Itzel Meza-loeza",
     company: "Cereal Partners Worldwide (Nestlé & General Mills)",
+    category: "Grocery & Food Brands",
     position: "Global Data Strategy And Marketing Measurement Manager",
     linkedin: "http://www.linkedin.com/in/itzelmezaloeza",
     email: "",
@@ -1759,6 +2009,7 @@ export const leads = [
   {
     name: "Adam Fitzpatrick-moore",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Social Media Manager",
     linkedin: "http://www.linkedin.com/in/adam-fitzpatrick-moore-a9390154",
     email: "alexradcliffe@greeneking.co.uk",
@@ -1766,6 +2017,7 @@ export const leads = [
   {
     name: "Cara Ostick",
     company: "BatchdUK",
+    category: "Other",
     position: "Brand Representative",
     linkedin: "http://www.linkedin.com/in/cara-ostick-086727267",
     email: "cara@batchd.co.uk",
@@ -1773,6 +2025,7 @@ export const leads = [
   {
     name: "Abbie Bennett",
     company: "Pizzarova",
+    category: "Casual Dining & Restaurants",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/abigailmaburutse",
     email: "abbie@pizzarova.com",
@@ -1780,6 +2033,7 @@ export const leads = [
   {
     name: "Emeka Maduka",
     company: "Cereal Partners Worldwide (Nestlé & General Mills)",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager - Global Brands",
     linkedin: "http://www.linkedin.com/in/emekamaduka",
     email: "",
@@ -1787,6 +2041,7 @@ export const leads = [
   {
     name: "Mia Brixey",
     company: "Lilley's Cider",
+    category: "Beer & Brewing",
     position: "Commercial Operations And Marketing Manager",
     linkedin: "http://www.linkedin.com/in/miabrixey",
     email: "mia.brixey@lilleyscider.co.uk",
@@ -1794,6 +2049,7 @@ export const leads = [
   {
     name: "Katie Fulcher",
     company: "Greggs",
+    category: "Bakery & Bread",
     position: "Brand Planning And Performance Manager",
     linkedin: "http://www.linkedin.com/in/katie-fulcher-57507390",
     email: "katie.fulcher@greggs.co.uk",
@@ -1801,6 +2057,7 @@ export const leads = [
   {
     name: "Irini Schmid",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Brand Manager - Heinz Meals",
     linkedin: "http://www.linkedin.com/in/irini-schmid",
     email: "irini.schmid@kraftheinz.com",
@@ -1808,6 +2065,7 @@ export const leads = [
   {
     name: "Monsur Miah",
     company: "Euro Foods Group",
+    category: "Grocery & Food Brands",
     position: "Marketing Intern",
     linkedin: "http://www.linkedin.com/in/monsur-miah-2695617b",
     email: "",
@@ -1815,6 +2073,7 @@ export const leads = [
   {
     name: "Rob Godfrey",
     company: "Oatly",
+    category: "Dairy & Alternatives",
     position: "Brand Lead Uk&i",
     linkedin: "http://www.linkedin.com/in/rob-godfrey-54374544",
     email: "",
@@ -1822,6 +2081,7 @@ export const leads = [
   {
     name: "Sarah Moore",
     company: "Hovis Ltd",
+    category: "Bakery & Bread",
     position: "Marketing Manager - Innovation",
     linkedin: "http://www.linkedin.com/in/sarah-moore-3b2b2230",
     email: "sarah.moore@hovis.co.uk",
@@ -1829,6 +2089,7 @@ export const leads = [
   {
     name: "Sophie Williams",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Brand Lead - Premium Ventures Ftc",
     linkedin: "http://www.linkedin.com/in/sophie-williams-3450a715",
     email: "sophiewilliams@greeneking.co.uk",
@@ -1836,6 +2097,7 @@ export const leads = [
   {
     name: "Charlotte Brown",
     company: "Gü Desserts |  Certified B Corp™",
+    category: "Confectionery",
     position: "Global Senior Brand + Innovation Manager",
     linkedin: "http://www.linkedin.com/in/charlotte-brown-93b41458",
     email: "charlotte.brown@gupuds.com",
@@ -1843,6 +2105,7 @@ export const leads = [
   {
     name: "Anke Hanstein",
     company: "Capri Sun Group",
+    category: "Drinks",
     position: "Senior Marketing & Category Manager, Uk&i",
     linkedin: "http://www.linkedin.com/in/anke-von-hanstein",
     email: "anke.hanstein@capri-sun.com",
@@ -1850,6 +2113,7 @@ export const leads = [
   {
     name: "Miguel Martin",
     company: "JOE & THE JUICE",
+    category: "Coffee & Tea",
     position: "Digital Marketing Director",
     linkedin: "http://www.linkedin.com/in/miguel-martin-650921b4",
     email: "miguelmartin@joejuice.com",
@@ -1857,6 +2121,7 @@ export const leads = [
   {
     name: "Stuart Gibbard",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Brand Lead",
     linkedin: "http://www.linkedin.com/in/stuart-gibbard",
     email: "stuartgibbard@greeneking.co.uk",
@@ -1864,6 +2129,7 @@ export const leads = [
   {
     name: "Shaun Millis",
     company: "Jelly Drops",
+    category: "Confectionery",
     position: "Digital Marketing Manager",
     linkedin: "http://www.linkedin.com/in/shaunmillis",
     email: "shaun@jellydrops.com",
@@ -1871,6 +2137,7 @@ export const leads = [
   {
     name: "Fiona Chui",
     company: "Doughlicious The London Dough Co.",
+    category: "Bakery & Bread",
     position: "Global Brand Manager",
     linkedin: "http://www.linkedin.com/in/fiona-chui",
     email: "fiona@doughlicious.co.uk",
@@ -1878,6 +2145,7 @@ export const leads = [
   {
     name: "Louise Buet",
     company: "Tim Hortons UK & Ireland Ltd.",
+    category: "Casual Dining & Restaurants",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/louisebuet",
     email: "lbuet@skgroupuk.com",
@@ -1885,6 +2153,7 @@ export const leads = [
   {
     name: "Lance Hau",
     company: "Lee Kum Kee Europe",
+    category: "Grocery & Food Brands",
     position: "Senior Digital Marketing Executive",
     linkedin: "http://www.linkedin.com/in/lance-hau-8bab7991",
     email: "",
@@ -1892,6 +2161,7 @@ export const leads = [
   {
     name: "Harry Gerrard-stevenson",
     company: "Mr Organic | Certified B Corporation",
+    category: "Grocery & Food Brands",
     position: "Social Media & Content Manager",
     linkedin: "http://www.linkedin.com/in/harry-gerrard-stevenson",
     email: "harry@mr-organic.com",
@@ -1899,6 +2169,7 @@ export const leads = [
   {
     name: "Mary Fudge-curran",
     company: "Proper Cornish",
+    category: "Bakery & Bread",
     position: "Group Marketing Manager",
     linkedin: "http://www.linkedin.com/in/mary-fudge-curran-a5141b14",
     email: "",
@@ -1906,6 +2177,7 @@ export const leads = [
   {
     name: "Ashley Mcnair",
     company: "Baxters Food Group",
+    category: "Grocery & Food Brands",
     position: "Communications Manager Marketing (brand And Trade)",
     linkedin: "http://www.linkedin.com/in/ashleycampbellpr",
     email: "ashley.mcnair@baxters.com",
@@ -1913,6 +2185,7 @@ export const leads = [
   {
     name: "Matthew Mcdermid",
     company: "The Bury Black Pudding Company",
+    category: "Grocery & Food Brands",
     position: "Brand & Marketing Manager",
     linkedin: "http://www.linkedin.com/in/matthew-mcdermid-753b53106",
     email: "m.mcdermid@buryblackpuddings.co.uk",
@@ -1920,6 +2193,7 @@ export const leads = [
   {
     name: "Ryan Delves",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Brand Manager | Destination Brands",
     linkedin: "http://www.linkedin.com/in/ryandelves",
     email: "ryandelves@greeneking.co.uk",
@@ -1927,6 +2201,7 @@ export const leads = [
   {
     name: "Hannah Gay",
     company: "Samworth Brothers",
+    category: "Grocery & Food Brands",
     position: "Category & Customer Marketing Manager",
     linkedin: "http://www.linkedin.com/in/hannah-gay-nee-lutkin-0832b36a",
     email: "hannah.gay@samworthbrothers.co.uk",
@@ -1934,6 +2209,7 @@ export const leads = [
   {
     name: "Megan Lundberg",
     company: "Princes Limited",
+    category: "Grocery & Food Brands",
     position: "Brand Marketing Manager (napolina)",
     linkedin: "http://www.linkedin.com/in/megan-lundberg-76343a15b",
     email: "megan.lundberg@princes.co.uk",
@@ -1941,6 +2217,7 @@ export const leads = [
   {
     name: "Alice Marquand",
     company: "The Gym Kitchen",
+    category: "Health & Wellness Food",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/alice-le-marquand-b1a38b102",
     email: "alice@thegymkitchen.com",
@@ -1948,6 +2225,7 @@ export const leads = [
   {
     name: "Stefanie Jahn-hustler",
     company: "Gü Desserts |  Certified B Corp™",
+    category: "Confectionery",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/stefaniejahn",
     email: "stefanie.jahn-hustler@gupuds.com",
@@ -1955,6 +2233,7 @@ export const leads = [
   {
     name: "Rosie Ford",
     company: "The Wild Beer Co",
+    category: "Beer & Brewing",
     position: "Marketing Promotions Manager",
     linkedin: "http://www.linkedin.com/in/rosie-ford-9525939b",
     email: "",
@@ -1962,6 +2241,7 @@ export const leads = [
   {
     name: "Alan Prior",
     company: "FrieslandCampina",
+    category: "Dairy & Alternatives",
     position: "Sales & Marketing Director",
     linkedin: "http://www.linkedin.com/in/alan-prior-a207535",
     email: "",
@@ -1969,6 +2249,7 @@ export const leads = [
   {
     name: "Lucy Hunkin",
     company: "Vegetarian Express",
+    category: "Grocery & Food Brands",
     position: "Marketing Activation Manager",
     linkedin: "http://www.linkedin.com/in/lucy-hunkin",
     email: "",
@@ -1976,6 +2257,7 @@ export const leads = [
   {
     name: "Constance Jones",
     company: "Veeno - Wine Bars",
+    category: "Casual Dining & Restaurants",
     position: "Digital Marketing Student",
     linkedin: "http://www.linkedin.com/in/constance-jones-a4aab0295",
     email: "",
@@ -1983,6 +2265,7 @@ export const leads = [
   {
     name: "Andrew Stark",
     company: "Brew York",
+    category: "Beer & Brewing",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/stark-andrew",
     email: "andrewstark@brewyork.co.uk",
@@ -1990,6 +2273,7 @@ export const leads = [
   {
     name: "Pamela Bower-nye",
     company: "Higgidy",
+    category: "Bakery & Bread",
     position: "Senior Brand Lead",
     linkedin: "http://www.linkedin.com/in/pamela-bower-nye-9423b159",
     email: "pamela.bower-nye@higgidy.co.uk",
@@ -1997,6 +2281,7 @@ export const leads = [
   {
     name: "Gillian Nash",
     company: "GDK (German Doner Kebab)",
+    category: "Casual Dining & Restaurants",
     position: "Marketing Manager - Uk",
     linkedin: "http://www.linkedin.com/in/gillian-nash-208956b1",
     email: "gillian@gdk.com",
@@ -2004,6 +2289,7 @@ export const leads = [
   {
     name: "Bianca Fisher",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Digital Marketing Manager",
     linkedin: "http://www.linkedin.com/in/bianca-fisher-10ab55115",
     email: "bianca.fisher@kraftheinz.com",
@@ -2011,6 +2297,7 @@ export const leads = [
   {
     name: "Rebecca Arrowsmith",
     company: "ORGANO™",
+    category: "Coffee & Tea",
     position: "Marketing Associate",
     linkedin: "http://www.linkedin.com/in/rebecca-arrowsmith-72170844",
     email: "rebecca.arrowsmith@organogold.com",
@@ -2018,6 +2305,7 @@ export const leads = [
   {
     name: "Katy Barker",
     company: "The Oxford Wine Company",
+    category: "Wine & Spirits",
     position: "Retail And Marketing Manager",
     linkedin: "http://www.linkedin.com/in/katy-barker-125229187",
     email: "katy@oxfordwine.co.uk",
@@ -2025,6 +2313,7 @@ export const leads = [
   {
     name: "Rebecca Chapman",
     company: "The Tracklement Company Limited | B Corp",
+    category: "Grocery & Food Brands",
     position: "Trade Marketing, Category & Insights Lead",
     linkedin: "http://www.linkedin.com/in/rlchapman1",
     email: "becca.chapman@tracklements.co.uk",
@@ -2032,6 +2321,7 @@ export const leads = [
   {
     name: "Ellen Chen",
     company: "Ming Foods Ltd",
+    category: "Grocery & Food Brands",
     position: "Sales & Marketing Executive",
     linkedin: "http://www.linkedin.com/in/ellen-chen-660b9793",
     email: "ellen.chen@mingfoods.co.uk",
@@ -2039,6 +2329,7 @@ export const leads = [
   {
     name: "Alex Palmer",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Sports Marketing Manager",
     linkedin: "http://www.linkedin.com/in/alex-palmer-11284748",
     email: "alexpalmer@greeneking.co.uk",
@@ -2046,6 +2337,7 @@ export const leads = [
   {
     name: "David Taylor",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Marketing Analyst",
     linkedin: "http://www.linkedin.com/in/david-taylor-62029224",
     email: "davidtaylor@greeneking.co.uk",
@@ -2053,6 +2345,7 @@ export const leads = [
   {
     name: "Elizabeth Wilton",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Marketing Manager - Drinks",
     linkedin: "http://www.linkedin.com/in/elizabeth-wilton-898444a7",
     email: "elizabethwilton@greeneking.co.uk",
@@ -2060,6 +2353,7 @@ export const leads = [
   {
     name: "Adam Green",
     company: "Freedom Brewery",
+    category: "Beer & Brewing",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/adam-green-6baa60113",
     email: "adam@freedombrewery.com",
@@ -2067,6 +2361,7 @@ export const leads = [
   {
     name: "Claire K",
     company: "Grupo Bimbo",
+    category: "Bakery & Bread",
     position: "Uk Marketing Director",
     linkedin: "http://www.linkedin.com/in/claire-k0ng",
     email: "claire.k@grupobimbo.com",
@@ -2074,6 +2369,7 @@ export const leads = [
   {
     name: "Izzy Whitehead",
     company: "Hawkshead Relish Company Ltd",
+    category: "Grocery & Food Brands",
     position: "Marketing & Brand Manager",
     linkedin: "http://www.linkedin.com/in/izzy-whitehead-96b608bb",
     email: "izzy@hawksheadrelish.com",
@@ -2081,6 +2377,7 @@ export const leads = [
   {
     name: "Sue Mead",
     company: "Wiltshire Farm Foods",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/sue-mead-4b9225b5",
     email: "",
@@ -2088,6 +2385,7 @@ export const leads = [
   {
     name: "Adam Whitehouse",
     company: "Love Joes",
+    category: "Snacks & Crisps",
     position: "Head Of Sales And Marketing",
     linkedin: "http://www.linkedin.com/in/adam-whitehouse-b44b4291",
     email: "adam.whitehouse@lovejoes.co.uk",
@@ -2095,6 +2393,7 @@ export const leads = [
   {
     name: "Neil Sharp",
     company: "Müller UK & Ireland",
+    category: "Dairy & Alternatives",
     position: "Senior Shopper Marketing Manager (yogurts & Desserts)",
     linkedin: "http://www.linkedin.com/in/neildavidsharp",
     email: "neil.sharp@muller.co.uk",
@@ -2102,6 +2401,7 @@ export const leads = [
   {
     name: "Emma Haslehurst",
     company: "Princes Limited",
+    category: "Grocery & Food Brands",
     position: "Head Of Brands",
     linkedin: "http://www.linkedin.com/in/emma-haslehurst-a07b431b5",
     email: "emma.haslehurst@princes.co.uk",
@@ -2109,6 +2409,7 @@ export const leads = [
   {
     name: "Jennifer Lyall",
     company: "Bounce Back",
+    category: "Health & Wellness Food",
     position: "Social Media Manager And Marketing Executive",
     linkedin: "http://www.linkedin.com/in/jennifer-lyall-087250198",
     email: "jennifer@thebiscuitbaron.co.uk",
@@ -2116,6 +2417,7 @@ export const leads = [
   {
     name: "Rossana Mirehsan",
     company: "Riverford Organic Farmers",
+    category: "Grocery & Food Brands",
     position: "Performance Marketing Manager",
     linkedin: "http://www.linkedin.com/in/rossana-mirehsan-00a99b55",
     email: "rossanamirehsan@riverford.co.uk",
@@ -2123,6 +2425,7 @@ export const leads = [
   {
     name: "Holly Brooks",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Senior Marketing Manager",
     linkedin: "http://www.linkedin.com/in/holly-brooks-a7614723",
     email: "hollybrooks@greeneking.co.uk",
@@ -2130,6 +2433,7 @@ export const leads = [
   {
     name: "Katie-louise Rayner",
     company: "wagamama",
+    category: "Casual Dining & Restaurants",
     position: "Assistant General Manager + Area Marketing Sensei",
     linkedin: "http://www.linkedin.com/in/katie-louise-rayner",
     email: "katier@wagamama.com",
@@ -2137,6 +2441,7 @@ export const leads = [
   {
     name: "Will Patrick",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Associate Global Marketing Director",
     linkedin: "http://www.linkedin.com/in/will-patrick",
     email: "will.patrick@kraftheinz.com",
@@ -2144,6 +2449,7 @@ export const leads = [
   {
     name: "Emma Reynolds",
     company: "JUBEL",
+    category: "Beer & Brewing",
     position: "Head Of Brand",
     linkedin: "http://www.linkedin.com/in/emma-reynolds-41281a99",
     email: "emma@jubelbeer.com",
@@ -2151,6 +2457,7 @@ export const leads = [
   {
     name: "Gemma Tibbs",
     company: "Corney and Barrow LTD",
+    category: "Wine & Spirits",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/gemma-tibbs-10933a4",
     email: "",
@@ -2158,6 +2465,7 @@ export const leads = [
   {
     name: "Marilyn Wilson",
     company: "Moy Park",
+    category: "Grocery & Food Brands",
     position: "Customer Marketing Manager",
     linkedin: "http://www.linkedin.com/in/marilynparlett",
     email: "marilyn.parlett@moypark.com",
@@ -2165,6 +2473,7 @@ export const leads = [
   {
     name: "Joy Kellaway",
     company: "British Bakels",
+    category: "Bakery & Bread",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/joy-kellaway-2278921",
     email: "jkellaway@bakels.com",
@@ -2172,6 +2481,7 @@ export const leads = [
   {
     name: "Andrew Dale",
     company: "Birds Eye UK & IE",
+    category: "Grocery & Food Brands",
     position: "Cluster (uk & Ie) Marketing Manager",
     linkedin: "http://www.linkedin.com/in/andrew-dale-04808332",
     email: "andrew.dale@birdseye.co.uk",
@@ -2179,6 +2489,7 @@ export const leads = [
   {
     name: "Joseff Vobe",
     company: "GNAW Chocolate",
+    category: "Confectionery",
     position: "Social Media Manager",
     linkedin: "http://www.linkedin.com/in/joseff-vobe-50a7a5233",
     email: "joseff.vobe@gnawfolkchocolate.co.uk",
@@ -2186,6 +2497,7 @@ export const leads = [
   {
     name: "Fiona Mills",
     company: "Greggs",
+    category: "Bakery & Bread",
     position: "Brand Communications & Creative Lead",
     linkedin: "http://www.linkedin.com/in/fiona-mills-09712890",
     email: "fiona.mills@greggs.co.uk",
@@ -2193,6 +2505,7 @@ export const leads = [
   {
     name: "Michal Bresinski",
     company: "Willisch",
+    category: "Other",
     position: "Brand, Art & Marketing Manager @ Willisch Finance",
     linkedin: "http://www.linkedin.com/in/michal-bresinski-44870398",
     email: "",
@@ -2200,6 +2513,7 @@ export const leads = [
   {
     name: "Helen Park-weir",
     company: "HPW",
+    category: "Other",
     position: "Strategic Marketing Consultant",
     linkedin: "http://www.linkedin.com/in/helenparkweir",
     email: "hpark-weir@hpwag.com",
@@ -2207,6 +2521,7 @@ export const leads = [
   {
     name: "Jamie Mcmillan",
     company: "DR. OETKER (UK) LIMITED",
+    category: "Grocery & Food Brands",
     position: "Shopper Marketing Manager",
     linkedin: "http://www.linkedin.com/in/jamie-mcmillan-b2365a13a",
     email: "jamie.mcmillan@oetker.co.uk",
@@ -2214,6 +2529,7 @@ export const leads = [
   {
     name: "Aron Clark",
     company: "Tapp'd Cocktails Ltd",
+    category: "Drinks",
     position: "Brand Representative",
     linkedin: "http://www.linkedin.com/in/aronclark",
     email: "",
@@ -2221,6 +2537,7 @@ export const leads = [
   {
     name: "Jane Mcgown",
     company: "Glebe Farm Foods",
+    category: "Grocery & Food Brands",
     position: "Trade Marketing Manager",
     linkedin: "http://www.linkedin.com/in/jane-mcgown-58865917",
     email: "jane.mcgown@glebefarmfoods.co.uk",
@@ -2228,6 +2545,7 @@ export const leads = [
   {
     name: "Jenna Anderson",
     company: "Parsley Box",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/jennamariaanderson",
     email: "jenna@parsleybox.com",
@@ -2235,6 +2553,7 @@ export const leads = [
   {
     name: "Melissa Clements",
     company: "PLACE UK Ltd",
+    category: "Other",
     position: "Business Development And Marketing Manager",
     linkedin: "http://www.linkedin.com/in/melissa-clements-81230860",
     email: "melissac@placeuk.com",
@@ -2242,6 +2561,7 @@ export const leads = [
   {
     name: "Robert Stubbing",
     company: "PizzaExpress",
+    category: "Casual Dining & Restaurants",
     position: "Director Of Brand Development",
     linkedin: "http://www.linkedin.com/in/robert-stubbing-3250141a5",
     email: "",
@@ -2249,6 +2569,7 @@ export const leads = [
   {
     name: "Becky White",
     company: "Doves Farm Foods Ltd",
+    category: "Grocery & Food Brands",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/becky-white-57a3713b",
     email: "bwhite@dovesfarm.co.uk",
@@ -2256,6 +2577,7 @@ export const leads = [
   {
     name: "Richard Cullen",
     company: "Tiffin Sandwiches",
+    category: "Casual Dining & Restaurants",
     position: "Sales & Marketing Director",
     linkedin: "http://www.linkedin.com/in/richard-cullen-8a0721167",
     email: "richard@tiffinsandwiches.co.uk",
@@ -2263,6 +2585,7 @@ export const leads = [
   {
     name: "Annabelle Jessop",
     company: "Sands Catering London",
+    category: "Other",
     position: "Social Media Manager",
     linkedin: "http://www.linkedin.com/in/jessopanna",
     email: "",
@@ -2270,6 +2593,7 @@ export const leads = [
   {
     name: "Tekalla Williams",
     company: "NICE RICE ¦ B Corp",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/tekalla-williams-63a8a0107",
     email: "tekalla@wearenicerice.com",
@@ -2277,6 +2601,7 @@ export const leads = [
   {
     name: "Alison Dunn",
     company: "Soreen",
+    category: "Bakery & Bread",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/alison-dunn-48055713",
     email: "",
@@ -2284,6 +2609,7 @@ export const leads = [
   {
     name: "Helen Nelson",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Business Unit Director Destination Brands",
     linkedin: "http://www.linkedin.com/in/helen-nelson-mcgregor-a781bb1a",
     email: "helennelson@greeneking.co.uk",
@@ -2291,6 +2617,7 @@ export const leads = [
   {
     name: "Louise Leon",
     company: "Silbury - Your Key Ingredients Supplier",
+    category: "Other",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/louise-de-leon-593a6227",
     email: "louise.deleon@silbury.co.uk",
@@ -2298,6 +2625,7 @@ export const leads = [
   {
     name: "Karmel Maletta",
     company: "Hovis Ltd",
+    category: "Bakery & Bread",
     position: "Hovis Marketing Project Manager",
     linkedin: "http://www.linkedin.com/in/karmel-maletta-a14162b2",
     email: "karmel.maletta@hovis.co.uk",
@@ -2305,6 +2633,7 @@ export const leads = [
   {
     name: "Mark Brown",
     company: "Hovis Ltd",
+    category: "Bakery & Bread",
     position: "Chief Marketing Officer",
     linkedin: "http://www.linkedin.com/in/mark-brown-4b77bab",
     email: "mark.brown@hovis.co.uk",
@@ -2312,6 +2641,7 @@ export const leads = [
   {
     name: "Stefania Scardaccione",
     company: "Vibrant Foods",
+    category: "Grocery & Food Brands",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/stefaniascardaccione",
     email: "stefania@vibrantfoods.com",
@@ -2319,6 +2649,7 @@ export const leads = [
   {
     name: "Bronwen Arthur",
     company: "Fox's Biscuits",
+    category: "Bakery & Bread",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/bronwen-arthur-a4aba41b4",
     email: "bronwen.arthur@foxs-biscuits.co.uk",
@@ -2326,6 +2657,7 @@ export const leads = [
   {
     name: "Stephanie Lee",
     company: "Mr Organic | Certified B Corporation",
+    category: "Grocery & Food Brands",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/steph-lee",
     email: "steph@mr-organic.com",
@@ -2333,6 +2665,7 @@ export const leads = [
   {
     name: "Matthew Yates",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Head Of Marketing - Hotels",
     linkedin: "http://www.linkedin.com/in/mryates",
     email: "",
@@ -2340,6 +2673,7 @@ export const leads = [
   {
     name: "Prasad Gaikwad",
     company: "Bombay Delight Ltd",
+    category: "Grocery & Food Brands",
     position: "Marketing Consultant",
     linkedin: "http://www.linkedin.com/in/prasad-gaikwad-6784881b3",
     email: "prasad.gaikwad@bombaydelight.co.uk",
@@ -2347,6 +2681,7 @@ export const leads = [
   {
     name: "Helen Carswell",
     company: "Müller UK & Ireland",
+    category: "Dairy & Alternatives",
     position: "Marketing Manager, Müller Corner And Müller Bliss",
     linkedin: "http://www.linkedin.com/in/helen-carswell-0884158b",
     email: "helen.carswell@muller.co.uk",
@@ -2354,6 +2689,7 @@ export const leads = [
   {
     name: "Ellie Field",
     company: "Princes Limited",
+    category: "Grocery & Food Brands",
     position: "Head Of Brand",
     linkedin: "http://www.linkedin.com/in/elliefield1",
     email: "ellie.field@princes.co.uk",
@@ -2361,6 +2697,7 @@ export const leads = [
   {
     name: "Phil Cook",
     company: "Oterra",
+    category: "Other",
     position: "Head Of Strategic Marketing",
     linkedin: "http://www.linkedin.com/in/phil-cook-b5145b11",
     email: "phillip.cook@oterra.com",
@@ -2368,6 +2705,7 @@ export const leads = [
   {
     name: "Emily Johnson",
     company: "Rhug Organic Estate",
+    category: "Grocery & Food Brands",
     position: "Senior Marketing Manager",
     linkedin: "http://www.linkedin.com/in/emily-johnson-36246a21",
     email: "emilyjohnson@rhug.co.uk",
@@ -2375,6 +2713,7 @@ export const leads = [
   {
     name: "Chiedza Mashonganyika",
     company: "Tasty African Food Distribution",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/mashonganyika-chiedza",
     email: "chiedza@tastyafricanfood.com",
@@ -2382,6 +2721,7 @@ export const leads = [
   {
     name: "Lici Sawyer",
     company: "BOL Foods",
+    category: "Health & Wellness Food",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/lici-sawyer-b84368199",
     email: "lici.sawyer@bolfoods.com",
@@ -2389,6 +2729,7 @@ export const leads = [
   {
     name: "Rhian James-williams",
     company: "Ingredion Incorporated",
+    category: "Other",
     position: "Global Marketing Communications Manager",
     linkedin: "http://www.linkedin.com/in/rhianwilliams",
     email: "rhian.james-williams@ingredion.com",
@@ -2396,6 +2737,7 @@ export const leads = [
   {
     name: "Ruby Smith",
     company: "Better Nature",
+    category: "Grocery & Food Brands",
     position: "Senior Marketing Executive",
     linkedin: "http://www.linkedin.com/in/ruby-smith-5b9b33109",
     email: "ruby@betternaturetempeh.co",
@@ -2403,6 +2745,7 @@ export const leads = [
   {
     name: "Megan Hooper",
     company: "FUNKIN COCKTAILS",
+    category: "Drinks",
     position: "Assistant Brand Manager Marketing",
     linkedin: "http://www.linkedin.com/in/megan-hooper-81b4431b3",
     email: "meganhooper@funkin.co.uk",
@@ -2410,6 +2753,7 @@ export const leads = [
   {
     name: "Mahammadirfan Meman",
     company: "Chicken Shop",
+    category: "Casual Dining & Restaurants",
     position:
       "I'm Enrolled In An Mba Program Specializing In Project Management (marketing In Digital Age)",
     linkedin: "http://www.linkedin.com/in/mahammadirfan-meman-a6609b255",
@@ -2418,6 +2762,7 @@ export const leads = [
   {
     name: "Joanne Fray",
     company: "Pasta King (UK) Limited",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/joanne-fray-05301a31",
     email: "jo.fray@pastaking.co.uk",
@@ -2425,6 +2770,7 @@ export const leads = [
   {
     name: "Georgia Lawrence",
     company: "Caffè Concerto",
+    category: "Casual Dining & Restaurants",
     position: "Director, Marketing",
     linkedin: "http://www.linkedin.com/in/georgia-lawrence-a0417978",
     email: "georgia.lawrence@caffeconcerto.co.uk",
@@ -2432,6 +2778,7 @@ export const leads = [
   {
     name: "Nik Valentine",
     company: "JOE & THE JUICE",
+    category: "Coffee & Tea",
     position: "Global Head Of Strategic Marketing",
     linkedin: "http://www.linkedin.com/in/nik-valentine-aa4574b4",
     email: "nik.valentine@joejuice.com",
@@ -2439,6 +2786,7 @@ export const leads = [
   {
     name: "Kate Williams",
     company: "Essential Trading Co-operative",
+    category: "Grocery & Food Brands",
     position: "Graphic Designer And Marketing Worker",
     linkedin: "http://www.linkedin.com/in/pieceofkateuk",
     email: "",
@@ -2446,6 +2794,7 @@ export const leads = [
   {
     name: "Ruth Mcgivern",
     company: "Greggs",
+    category: "Bakery & Bread",
     position: "Social Media Support Manager",
     linkedin: "http://www.linkedin.com/in/ruthmcgivern",
     email: "ruth.mcgivern@greggs.co.uk",
@@ -2453,6 +2802,7 @@ export const leads = [
   {
     name: "Samantha Williams",
     company: "The Protein Ball Co.",
+    category: "Health & Wellness Food",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/samanthacharlottewilliams",
     email: "samantha@theproteinballco.com",
@@ -2460,6 +2810,7 @@ export const leads = [
   {
     name: "Olivia Colbeck",
     company: "Boundless",
+    category: "Snacks & Crisps",
     position: "Brand & Marketing Manager",
     linkedin: "http://www.linkedin.com/in/olivia-colbeck-0570a5189",
     email: "olivia@weareboundless.co.uk",
@@ -2467,6 +2818,7 @@ export const leads = [
   {
     name: "Gemma Whitaker",
     company: "Whitakers Chocolates Ltd",
+    category: "Confectionery",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/gemma-whitaker-90029157",
     email: "gemma-whitaker@whitakerschocolates.com",
@@ -2474,6 +2826,7 @@ export const leads = [
   {
     name: "Alys Mitchelmore",
     company: "ManiLife | B Corp™",
+    category: "Grocery & Food Brands",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/alys-mitchelmore-1716234b",
     email: "alys@mani-life.com",
@@ -2481,6 +2834,7 @@ export const leads = [
   {
     name: "Lucy Bell",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Finance Director - Destination Brands & Ventures",
     linkedin: "http://www.linkedin.com/in/lucy-bell-51893b44",
     email: "lucybell@greeneking.co.uk",
@@ -2488,6 +2842,7 @@ export const leads = [
   {
     name: "Heather Wilde",
     company: "Wasabi Sushi & Bento",
+    category: "Casual Dining & Restaurants",
     position: "Grocery Brand Manager",
     linkedin: "http://www.linkedin.com/in/heather-wilde-3950731b1",
     email: "heather.wilde@wasabi.uk.com",
@@ -2495,6 +2850,7 @@ export const leads = [
   {
     name: "Yolanda Ocon",
     company: "School of Wok",
+    category: "Other",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/yolandaocon",
     email: "yolanda@schoolofwok.co.uk",
@@ -2502,6 +2858,7 @@ export const leads = [
   {
     name: "Erin Mcnulty",
     company: "SERVED®",
+    category: "Drinks",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/erinmcnulty1",
     email: "erin@serveddrinks.co.uk",
@@ -2509,6 +2866,7 @@ export const leads = [
   {
     name: "Amy Seymour",
     company: "Raw Hydrate",
+    category: "Drinks",
     position: "Brand & Communications Manager",
     linkedin: "http://www.linkedin.com/in/amy-seymour",
     email: "",
@@ -2516,6 +2874,7 @@ export const leads = [
   {
     name: "Phil Carratt",
     company: "Country Choice",
+    category: "Bakery & Bread",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/phil-carratt",
     email: "phil.carratt@brake.co.uk",
@@ -2523,6 +2882,7 @@ export const leads = [
   {
     name: "Charlotte Manley",
     company: "The Coconut Collab",
+    category: "Dairy & Alternatives",
     position: "Assistant Brand Manager",
     linkedin: "http://www.linkedin.com/in/charlotte-manley-436a28230",
     email: "charlotte.manley@coconutco.co.uk",
@@ -2530,6 +2890,7 @@ export const leads = [
   {
     name: "Sarah Morrison",
     company: "SAMBAZON",
+    category: "Health & Wellness Food",
     position: "Marketing Manager - Europe",
     linkedin: "http://www.linkedin.com/in/sarah-morrison-3b5a5923",
     email: "sarahm@sambazon.com",
@@ -2537,6 +2898,7 @@ export const leads = [
   {
     name: "Marie Medhurst",
     company: "Farmhouse Potato Bakers Ltd (Bannisters Yorkshire Family Farm)",
+    category: "Grocery & Food Brands",
     position: "Sales & Marketing Director",
     linkedin: "http://www.linkedin.com/in/marie-medhurst-009b3023",
     email: "marie@farmhousepotatobakers.co.uk",
@@ -2544,6 +2906,7 @@ export const leads = [
   {
     name: "Sophie Fitzgerald",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/sophie-fitzgerald-aa6a52176",
     email: "sophiefitzgerald@greeneking.co.uk",
@@ -2551,6 +2914,7 @@ export const leads = [
   {
     name: "Seb Gray",
     company: "Huel",
+    category: "Health & Wellness Food",
     position: "Performance Marketing Lead",
     linkedin: "http://www.linkedin.com/in/seb-gray-b32004178",
     email: "seb.gray@huel.com",
@@ -2558,6 +2922,7 @@ export const leads = [
   {
     name: "Elle Witek",
     company: "Tilda® | B Corp™",
+    category: "Grocery & Food Brands",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/elle-witek-919806142",
     email: "elle@tilda.com",
@@ -2565,6 +2930,7 @@ export const leads = [
   {
     name: "Renee Scadeng",
     company: "Müller UK & Ireland",
+    category: "Dairy & Alternatives",
     position: "Assistant Brand Manager",
     linkedin: "http://www.linkedin.com/in/ren%c3%a9e-scadeng-37105119b",
     email: "renee.scadeng@muller.co.uk",
@@ -2572,6 +2938,7 @@ export const leads = [
   {
     name: "Alistair Dunn",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Senior Brand Manager - Beanz",
     linkedin: "http://www.linkedin.com/in/alistair-dunn-021581112",
     email: "alistair.dunn@kraftheinz.com",
@@ -2579,6 +2946,7 @@ export const leads = [
   {
     name: "Florence Lawes",
     company: "PizzaExpress",
+    category: "Casual Dining & Restaurants",
     position: "National Marketing Manager",
     linkedin: "http://www.linkedin.com/in/florencelawes",
     email: "florence.lawes@pizzaexpress.com",
@@ -2586,6 +2954,7 @@ export const leads = [
   {
     name: "Jules Smith",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Media Strategy & Brand Comms Lead Uk & I",
     linkedin: "http://www.linkedin.com/in/jules-smith-86870a11",
     email: "julia.smith@penske.com",
@@ -2593,6 +2962,7 @@ export const leads = [
   {
     name: "Dean Towey",
     company: "Baxters Food Group",
+    category: "Grocery & Food Brands",
     position: "Interim Senior Marketing Manager",
     linkedin: "http://www.linkedin.com/in/dean-towey-1bb683243",
     email: "dean.towey@baxters.com",
@@ -2600,6 +2970,7 @@ export const leads = [
   {
     name: "Louise Collins",
     company: "Booja-Booja",
+    category: "Confectionery",
     position: "Marketing Communications Manager",
     linkedin: "http://www.linkedin.com/in/louise-collins-a68839170",
     email: "louise@boojabooja.com",
@@ -2607,6 +2978,7 @@ export const leads = [
   {
     name: "Tim Brown",
     company: "Projuice",
+    category: "Drinks",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/tim-brown-a223048",
     email: "tim@projuice.co.uk",
@@ -2614,6 +2986,7 @@ export const leads = [
   {
     name: "Juan Pulido",
     company: "Japan Centre",
+    category: "Casual Dining & Restaurants",
     position: "Group Marketing Manager",
     linkedin: "http://www.linkedin.com/in/juan-de-dios-jim%c3%a9nez-pulido",
     email: "",
@@ -2621,6 +2994,7 @@ export const leads = [
   {
     name: "Dan Jones",
     company: "British Bakels",
+    category: "Bakery & Bread",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/djones10",
     email: "djones@bakels.com",
@@ -2628,6 +3002,7 @@ export const leads = [
   {
     name: "Sarah Williams",
     company: "Cottage Delight",
+    category: "Grocery & Food Brands",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/sarah-williams-9756b22b",
     email: "sarah.williams@cottagedelight.co.uk",
@@ -2635,6 +3010,7 @@ export const leads = [
   {
     name: "Rachel King",
     company: "Chicken Shop",
+    category: "Casual Dining & Restaurants",
     position: "Social Media Manager",
     linkedin: "http://www.linkedin.com/in/rachelking11",
     email: "rachel.king@chickenshop.com",
@@ -2642,6 +3018,7 @@ export const leads = [
   {
     name: "Tara Mullally",
     company: "Black Lines Drinks",
+    category: "Drinks",
     position: "Brand & Marketing Lead",
     linkedin: "http://www.linkedin.com/in/tara-mullally-b52b1994",
     email: "tara@blacklinesdrinks.com",
@@ -2649,6 +3026,7 @@ export const leads = [
   {
     name: "Helen Mctaggart",
     company: "HECK!",
+    category: "Grocery & Food Brands",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/helen-mctaggart-8b1b695a",
     email: "helenm@heckfood.co.uk",
@@ -2656,6 +3034,7 @@ export const leads = [
   {
     name: "Megan Fairhead",
     company: "KP Snacks",
+    category: "Snacks & Crisps",
     position: "Shopper Marketing Manager - Sainsburys & Waitrose",
     linkedin: "http://www.linkedin.com/in/megan-fairhead-455b9057",
     email: "megan.fairhead@kpsnacks.com",
@@ -2663,6 +3042,7 @@ export const leads = [
   {
     name: "Sarah-louise Heslop",
     company: "Swizzels",
+    category: "Confectionery",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/sarah-louise-heslop-33846b11",
     email: "sarah-louise.heslop@swizzels-matlow.com",
@@ -2670,6 +3050,7 @@ export const leads = [
   {
     name: "Helen Mcilveen",
     company: "Westons Cider",
+    category: "Beer & Brewing",
     position: "Category & Customer Marketing Mgr (on Trade)",
     linkedin: "http://www.linkedin.com/in/helen-mcilveen-51b38029",
     email: "helen.mcilveen@westons-cider.co.uk",
@@ -2677,6 +3058,7 @@ export const leads = [
   {
     name: "Jodie Ward",
     company: "Soreen",
+    category: "Bakery & Bread",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/jodie-ward-614960360",
     email: "jodie.ward@soreen.com",
@@ -2684,6 +3066,7 @@ export const leads = [
   {
     name: "Jonathan Irvine",
     company: "Gousto",
+    category: "Grocery & Food Brands",
     position: "Senior Marketing Manager",
     linkedin: "http://www.linkedin.com/in/jonathan-irvine-5348328a",
     email: "jonathan.irvine@gousto.co.uk",
@@ -2691,6 +3074,7 @@ export const leads = [
   {
     name: "Caroline Niece",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Head Of Brand - Hungry Horse, Flaming Grill, Wacky Warehouse",
     linkedin: "http://www.linkedin.com/in/caroline-la-niece-19aa6235",
     email: "",
@@ -2698,6 +3082,7 @@ export const leads = [
   {
     name: "Sarah Jackson",
     company: "Higgidy",
+    category: "Bakery & Bread",
     position: "Marketing & Sustainability Director",
     linkedin: "http://www.linkedin.com/in/sarah-jackson-750a8a42",
     email: "sarah@higgidy.co.uk",
@@ -2705,6 +3090,7 @@ export const leads = [
   {
     name: "Greg Brady",
     company: "Emmi Group",
+    category: "Dairy & Alternatives",
     position: "Brand Manager - Onken",
     linkedin: "http://www.linkedin.com/in/gregor-brady7",
     email: "greg.brady@emmi.com",
@@ -2712,6 +3098,7 @@ export const leads = [
   {
     name: "Benedicta Tornieri",
     company: "Lyre's Spirit Co",
+    category: "Drinks",
     position: "Marketing Manager Europe, Uk And Middle East",
     linkedin: "http://www.linkedin.com/in/benedicta-tornieri-3772129b",
     email: "benedicta.tornieri@lyres.co",
@@ -2719,6 +3106,7 @@ export const leads = [
   {
     name: "Olivia Lynch",
     company: "FrieslandCampina",
+    category: "Dairy & Alternatives",
     position: "Category Marketing Manager - Grocery Lead",
     linkedin: "http://www.linkedin.com/in/olivia-lynch-02582b161",
     email: "olivia.lynch@frieslandcampina.com",
@@ -2726,6 +3114,7 @@ export const leads = [
   {
     name: "Katie-ann Wiseman",
     company: "Banhoek Chilli Oil Company",
+    category: "Grocery & Food Brands",
     position: "Sales Marketing Manager",
     linkedin: "http://www.linkedin.com/in/katie-ann-wiseman-68a79022",
     email: "",
@@ -2733,6 +3122,7 @@ export const leads = [
   {
     name: "Andrea Egido",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Global Marketing Manager",
     linkedin: "http://www.linkedin.com/in/andrea-egido-2a13385",
     email: "andrea.egido@kraftheinz.com",
@@ -2740,6 +3130,7 @@ export const leads = [
   {
     name: "Jono Hannam",
     company: "Rich Products UK",
+    category: "Other",
     position: "R&d Business Partner-grocery And Brands",
     linkedin: "http://www.linkedin.com/in/jono-hannam-5152a09a",
     email: "jhannam@rich.com",
@@ -2747,6 +3138,7 @@ export const leads = [
   {
     name: "Luisa Withington",
     company: "Soreen",
+    category: "Bakery & Bread",
     position: "Senior Shopper Marketing Manager",
     linkedin: "http://www.linkedin.com/in/luisawithington",
     email: "luisa.withington@soreen.com",
@@ -2754,6 +3146,7 @@ export const leads = [
   {
     name: "Zoe Leibling",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Junior Brand Manager - Infant",
     linkedin: "http://www.linkedin.com/in/zoe-leibling",
     email: "zoe.leibling@kraftheinz.com",
@@ -2761,6 +3154,7 @@ export const leads = [
   {
     name: "The Savanna",
     company: "The Savanna",
+    category: "Casual Dining & Restaurants",
     position: "Social Media Manager",
     linkedin: "http://www.linkedin.com/in/the-savanna-6a993817a",
     email: "sfshop@thesavanna.co.uk",
@@ -2768,6 +3162,7 @@ export const leads = [
   {
     name: "Louise Hall",
     company: "Wiltshire Farm Foods",
+    category: "Grocery & Food Brands",
     position: "Customer Engagement & Retention Manager - Marketing",
     linkedin: "http://www.linkedin.com/in/louise-hall-29198b28",
     email: "louise.hall@wiltshirefarmfoods.co.uk",
@@ -2775,6 +3170,7 @@ export const leads = [
   {
     name: "Natasha Cheney",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Junior Brand Manager",
     linkedin: "http://www.linkedin.com/in/natashacheney",
     email: "natasha.cheney@kraftheinz.com",
@@ -2782,6 +3178,7 @@ export const leads = [
   {
     name: "Debbie Epstein",
     company: "THIS™",
+    category: "Grocery & Food Brands",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/debbie-epstein-48b0305",
     email: "debbie@this.co",
@@ -2789,6 +3186,7 @@ export const leads = [
   {
     name: "Benjamin Moody",
     company: "Gü Desserts |  Certified B Corp™",
+    category: "Confectionery",
     position: "Assistant Brand Manager - International & New Markets",
     linkedin: "http://www.linkedin.com/in/benjamin-m-5b6972152",
     email: "benjamin.moody@gupuds.com",
@@ -2796,6 +3194,7 @@ export const leads = [
   {
     name: "Natasha Thompson",
     company: "MOMA Foods",
+    category: "Grocery & Food Brands",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/natasha-thompson-6a47b441",
     email: "natasha@momafoods.co.uk",
@@ -2803,6 +3202,7 @@ export const leads = [
   {
     name: "Julia Deraska",
     company: "Perdue Farms",
+    category: "Grocery & Food Brands",
     position: "Digital Marketing Specialist",
     linkedin: "http://www.linkedin.com/in/julia-deraska-788140194",
     email: "",
@@ -2810,6 +3210,7 @@ export const leads = [
   {
     name: "Chloe Keir",
     company: "Kirsty's",
+    category: "Grocery & Food Brands",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/chloe-keir-1280462a",
     email: "chloe@kirstys.co.uk",
@@ -2817,6 +3218,7 @@ export const leads = [
   {
     name: "Nathan Haigh",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/nathan-haigh-27a11647",
     email: "",
@@ -2824,6 +3226,7 @@ export const leads = [
   {
     name: "Chris Mcnally",
     company: "Staple Food Group",
+    category: "Other",
     position: "Group Sales & Marketing Director",
     linkedin: "http://www.linkedin.com/in/chris-g-mcnally-mba-76b59332",
     email: "chris.mcnally@staplefoods.co.uk",
@@ -2831,6 +3234,7 @@ export const leads = [
   {
     name: "Sue Johnson",
     company: "Quorn Foods",
+    category: "Grocery & Food Brands",
     position: "Senior Customer Marketing Manager",
     linkedin: "http://www.linkedin.com/in/sue-johnson-7067145",
     email: "",
@@ -2838,6 +3242,7 @@ export const leads = [
   {
     name: "Sarah Evans",
     company: "Princes Limited",
+    category: "Grocery & Food Brands",
     position: "Digital Marketing Manager",
     linkedin: "http://www.linkedin.com/in/sarah-evans-39b9185b",
     email: "sarah.evans@princes.co.uk",
@@ -2845,6 +3250,7 @@ export const leads = [
   {
     name: "Sheena Mohamed-khan",
     company: "Belazu | B Corp™",
+    category: "Grocery & Food Brands",
     position: "Digital & Social Media Manager",
     linkedin: "http://www.linkedin.com/in/sheenamk",
     email: "sheena@belazu.com",
@@ -2852,6 +3258,7 @@ export const leads = [
   {
     name: "Clair Howison",
     company: "Simon Howie Foods",
+    category: "Grocery & Food Brands",
     position: "Brand Director",
     linkedin: "http://www.linkedin.com/in/clairhowison",
     email: "clair.howison@simonhowiefoods.co.uk",
@@ -2859,6 +3266,7 @@ export const leads = [
   {
     name: "Martha Wood",
     company: "Ulrick & Short",
+    category: "Other",
     position: "Marketing Lead",
     linkedin: "http://www.linkedin.com/in/martha-wood-938b00174",
     email: "martha@ulrickandshort.com",
@@ -2866,6 +3274,7 @@ export const leads = [
   {
     name: "Becky Allan",
     company: "Grupo Bimbo",
+    category: "Bakery & Bread",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/becky-allan-5b381b49",
     email: "becky.allan@grupobimbo.com",
@@ -2873,6 +3282,7 @@ export const leads = [
   {
     name: "Becky Borges",
     company: "Doves Farm Foods Ltd",
+    category: "Grocery & Food Brands",
     position: "Senior Brand Manager - Doves Farm And Wessex Mill",
     linkedin: "http://www.linkedin.com/in/becky-borges-ba13a074",
     email: "",
@@ -2880,6 +3290,7 @@ export const leads = [
   {
     name: "Phil Carratt",
     company: "Country Choice",
+    category: "Bakery & Bread",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/phil-carratt",
     email: "phil.carratt@brake.co.uk",
@@ -2887,6 +3298,7 @@ export const leads = [
   {
     name: "Giovanna Sinisgalli",
     company: "KIND",
+    category: "Snacks & Crisps",
     position: "Emea Marketing Lead",
     linkedin: "http://www.linkedin.com/in/giovanna-sinisgalli",
     email: "",
@@ -2894,6 +3306,7 @@ export const leads = [
   {
     name: "Beth Perry",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Events & Marketing Manager",
     linkedin: "http://www.linkedin.com/in/beth-perry-3a3b43239",
     email: "",
@@ -2901,6 +3314,7 @@ export const leads = [
   {
     name: "Holly Geall",
     company: "Vilgain",
+    category: "Health & Wellness Food",
     position: "Social Media Manager",
     linkedin: "http://www.linkedin.com/in/holly-geall-b6b5ba16b",
     email: "hollygeall@vilgain.com",
@@ -2908,6 +3322,7 @@ export const leads = [
   {
     name: "Malcolm Bearden",
     company: "Godiva Chocolatier",
+    category: "Confectionery",
     position: "Online Marketing",
     linkedin: "http://www.linkedin.com/in/malcolm-bearden-b04676a",
     email: "malcolm.bearden@pladisglobal.com",
@@ -2915,6 +3330,7 @@ export const leads = [
   {
     name: "Karla Courtney",
     company: "Eva's Original Chimneys",
+    category: "Bakery & Bread",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/karlacourtney",
     email: "karla@originalchimmeys.com",
@@ -2922,6 +3338,7 @@ export const leads = [
   {
     name: "Julie Johns",
     company: "Birds Eye",
+    category: "Grocery & Food Brands",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/julie-johns-9b435511",
     email: "",
@@ -2929,6 +3346,7 @@ export const leads = [
   {
     name: "Ailis Prowse",
     company: "Diverse Fine Food",
+    category: "Grocery & Food Brands",
     position: "Customer Service & Marketing Manager",
     linkedin: "http://www.linkedin.com/in/ailis-prowse-704aa8ba",
     email: "ailis@diversefinefood.co.uk",
@@ -2936,6 +3354,7 @@ export const leads = [
   {
     name: "Eva Karypidou",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager Heinz",
     linkedin: "http://www.linkedin.com/in/evdoxiakarypidou",
     email: "eva.karypidou@kraftheinz.com",
@@ -2943,6 +3362,7 @@ export const leads = [
   {
     name: "Erin Quinn",
     company: "KIND",
+    category: "Snacks & Crisps",
     position: "Student Brand Ambassador",
     linkedin: "http://www.linkedin.com/in/erin-quinn-5194301ba",
     email: "erin@kindsnacks.com",
@@ -2950,6 +3370,7 @@ export const leads = [
   {
     name: "Paul Brazier",
     company: "Purity Brewing Co",
+    category: "Beer & Brewing",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/pjbrazier",
     email: "paul.brazier@puritybrewing.com",
@@ -2957,6 +3378,7 @@ export const leads = [
   {
     name: "Man Chan",
     company: "WASO",
+    category: "Casual Dining & Restaurants",
     position: "Marketing Executive",
     linkedin: "http://www.linkedin.com/in/man-chan-3a288988",
     email: "",
@@ -2964,6 +3386,7 @@ export const leads = [
   {
     name: "Natalie Hoy",
     company: "Princes Limited",
+    category: "Grocery & Food Brands",
     position: "Senior Shopper Marketing Manager",
     linkedin: "http://www.linkedin.com/in/nathoy80",
     email: "natalie.hoy@princes.co.uk",
@@ -2971,6 +3394,7 @@ export const leads = [
   {
     name: "Daniella Mulvey",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/daniella-mulvey-076408159",
     email: "",
@@ -2978,6 +3402,7 @@ export const leads = [
   {
     name: "Sophie Fitzgerald",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/sophie-fitzgerald-aa6a52176",
     email: "sophiefitzgerald@greeneking.co.uk",
@@ -2985,6 +3410,7 @@ export const leads = [
   {
     name: "Emma Richards",
     company: "HiPP Organic (UK)",
+    category: "Baby & Kids Food",
     position: "Junior Brand Manager",
     linkedin: "http://www.linkedin.com/in/emma-louise-richards-52a9a2177",
     email: "",
@@ -2992,6 +3418,7 @@ export const leads = [
   {
     name: "Marc Izquierdo",
     company: "Lindt & Sprungli UK",
+    category: "Confectionery",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/marccastellaiz",
     email: "",
@@ -2999,6 +3426,7 @@ export const leads = [
   {
     name: "Andy Nowlan",
     company: "Siren Craft Brew",
+    category: "Beer & Brewing",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/andynowlan",
     email: "andy@sirencraftbrew.com",
@@ -3006,6 +3434,7 @@ export const leads = [
   {
     name: "Caitlin Dear-fitzpatrick",
     company: "Beyond the Bean Ltd",
+    category: "Coffee & Tea",
     position: "Senior Marketing Executive",
     linkedin: "http://www.linkedin.com/in/caitlin-dear-fitzpatrick-253992ba",
     email: "caitlin@beyondthebean.com",
@@ -3013,6 +3442,7 @@ export const leads = [
   {
     name: "Harriet Knight",
     company: "Gousto",
+    category: "Grocery & Food Brands",
     position: "Senior Brand Marketing Manager",
     linkedin: "http://www.linkedin.com/in/harriet-knight-759b0862",
     email: "harriet.knight@gousto.co.uk",
@@ -3020,6 +3450,7 @@ export const leads = [
   {
     name: "Olivia Lignac",
     company: "wagamama",
+    category: "Casual Dining & Restaurants",
     position: "Marketing Team Member",
     linkedin: "http://www.linkedin.com/in/olivia-lignac-5b3793201",
     email: "olivial@wagamama.com",
@@ -3027,6 +3458,7 @@ export const leads = [
   {
     name: "Charlotte Commarmond",
     company: "Ingredion Incorporated",
+    category: "Other",
     position: "Vice President Global Marketing",
     linkedin: "http://www.linkedin.com/in/charlotte-commarmond-62ba222",
     email: "charlotte.commarmond@ingredion.com",
@@ -3034,6 +3466,7 @@ export const leads = [
   {
     name: "Charlotte Simms",
     company: "The Avenue Cookery School",
+    category: "Other",
     position: "Admin & Marketing",
     linkedin: "http://www.linkedin.com/in/charlotte-simms",
     email: "",
@@ -3041,6 +3474,7 @@ export const leads = [
   {
     name: "Charlotte Gribbin",
     company: "Mornflake",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/charlottegribbin",
     email: "charlotte.gribbin@morningfoods.com",
@@ -3048,6 +3482,7 @@ export const leads = [
   {
     name: "Alastair Johns",
     company: "Samworth Brothers",
+    category: "Grocery & Food Brands",
     position:
       "Head Of Sales & Marketing - Dickinson & Morris And Ye Olde Pork Pie Shoppe",
     linkedin: "http://www.linkedin.com/in/alastair-johns-10a0b670",
@@ -3056,6 +3491,7 @@ export const leads = [
   {
     name: "Ross Antrobus",
     company: "Müller UK & Ireland",
+    category: "Dairy & Alternatives",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/ross-antrobus-6905318",
     email: "ross.antrobus@muller.co.uk",
@@ -3063,6 +3499,7 @@ export const leads = [
   {
     name: "Bethany Robb",
     company: "OCEANIUM",
+    category: "Health & Wellness Food",
     position: "Communications & Marketing Manager",
     linkedin: "http://www.linkedin.com/in/bethrobb1",
     email: "brobb@oceanium.co.uk",
@@ -3070,6 +3507,7 @@ export const leads = [
   {
     name: "Rachel Bradshaw",
     company: "DR. OETKER (UK) LIMITED",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager - Chicago Town",
     linkedin: "http://www.linkedin.com/in/rachel-bradshaw-28761a76",
     email: "rachel.bradshaw@oetker.co.uk",
@@ -3077,6 +3515,7 @@ export const leads = [
   {
     name: "Matt Walker",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/matt-walker-7005a92",
     email: "matt.walker@kraftheinz.com",
@@ -3084,6 +3523,7 @@ export const leads = [
   {
     name: "Hannah O?neill",
     company: "DELI LITES IRELAND",
+    category: "Grocery & Food Brands",
     position: "Assistant Brand Manager",
     linkedin: "http://www.linkedin.com/in/hannahoneill-",
     email: "hannah.oneill@delilites.com",
@@ -3091,6 +3531,7 @@ export const leads = [
   {
     name: "Charlotte Roberts",
     company: "English Cheesecake Company",
+    category: "Bakery & Bread",
     position: "Head Of Marketing",
     linkedin:
       "http://www.linkedin.com/in/charlotte-hel%c3%a9na-roberts-0214a7a3",
@@ -3099,6 +3540,7 @@ export const leads = [
   {
     name: "Eloise Brown",
     company: "MOTH Drinks - B Corp™",
+    category: "Drinks",
     position: "Social Media Manager",
     linkedin: "http://www.linkedin.com/in/eloise-brown-745157125",
     email: "eloise@mothdrinks.com",
@@ -3106,6 +3548,7 @@ export const leads = [
   {
     name: "Charlotte Sutcliffe",
     company: "Nestlé Professional",
+    category: "Grocery & Food Brands",
     position: "Nescafé Solutions Brand Manager",
     linkedin: "http://www.linkedin.com/in/charlotte-sutcliffe-0011296b",
     email: "charlotte.sutcliffe@uk.nestle.com",
@@ -3113,6 +3556,7 @@ export const leads = [
   {
     name: "Rachel Galloway",
     company: "Müller UK & Ireland",
+    category: "Dairy & Alternatives",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/rachel-galloway-4213b123",
     email: "rachel.galloway@muller.co.uk",
@@ -3120,6 +3564,7 @@ export const leads = [
   {
     name: "Denise M",
     company: "Dalziel Ingredients Ltd",
+    category: "Other",
     position: "Senior Npd Marketing Analyst",
     linkedin: "http://www.linkedin.com/in/denise-m-a9066911b",
     email: "denise.m@dalzielingredients.co.uk",
@@ -3127,6 +3572,7 @@ export const leads = [
   {
     name: "Sophie Herrmann",
     company: "Plenish",
+    category: "Dairy & Alternatives",
     position: "Brand & Innovation Manager",
     linkedin: "http://www.linkedin.com/in/scherrmann",
     email: "",
@@ -3134,6 +3580,7 @@ export const leads = [
   {
     name: "Esmee Hall",
     company: "Kestrel Foods || Forest Feast & Acti-Snack & Just Live a Little",
+    category: "Snacks & Crisps",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/esm%c3%a9e-hall-a21023173",
     email: "esmeeh@forestfeast.com",
@@ -3141,6 +3588,7 @@ export const leads = [
   {
     name: "Michelle Orr",
     company: "New York Bakery Company Ltd.",
+    category: "Bakery & Bread",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/michelle-o-49532b30",
     email: "",
@@ -3148,6 +3596,7 @@ export const leads = [
   {
     name: "Paula Prione",
     company: "Doughlicious The London Dough Co.",
+    category: "Bakery & Bread",
     position: "Field Marketing Manager",
     linkedin: "http://www.linkedin.com/in/paula-prione-291a38185",
     email: "paula@doughlicious.co.uk",
@@ -3155,6 +3604,7 @@ export const leads = [
   {
     name: "Krina Gill",
     company: "KP Snacks",
+    category: "Snacks & Crisps",
     position: "Shopper Marketing Executive",
     linkedin: "http://www.linkedin.com/in/krina-patel123",
     email: "gillk@kpsnacks.com",
@@ -3162,6 +3612,7 @@ export const leads = [
   {
     name: "Alice Ba",
     company: "Planet Doughnut",
+    category: "Bakery & Bread",
     position: "Head Of Marketing & Social Media",
     linkedin: "http://www.linkedin.com/in/aeturnbull",
     email: "alice@planetdoughnut.co.uk",
@@ -3169,6 +3620,7 @@ export const leads = [
   {
     name: "Hayley Waters",
     company: "Springvale Foods Ltd",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/hayley-virr",
     email: "hayley@springvalefoods.co.uk",
@@ -3176,6 +3628,7 @@ export const leads = [
   {
     name: "Tomi Degani",
     company: "Nestlé Professional",
+    category: "Grocery & Food Brands",
     position: "Marketing Activation Manager - Food",
     linkedin: "http://www.linkedin.com/in/tomi-degani",
     email: "",
@@ -3183,6 +3636,7 @@ export const leads = [
   {
     name: "Tor Dennison",
     company: "Redmond Fine Foods",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/tor-dennison-51759582",
     email: "tor@redmondfinefoods.ie",
@@ -3190,6 +3644,7 @@ export const leads = [
   {
     name: "Delicia Lyners",
     company: "Gooey",
+    category: "Bakery & Bread",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/delicia-lyners-18662599",
     email: "delicia.l@weelee.co.za",
@@ -3197,6 +3652,7 @@ export const leads = [
   {
     name: "Joanna Giddins",
     company: "The Avenue Cookery School",
+    category: "Other",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/joanna-giddins-6b43b06b",
     email: "",
@@ -3204,6 +3660,7 @@ export const leads = [
   {
     name: "Adele Rowlands",
     company: "Caterite Food & Wineservice Ltd",
+    category: "Other",
     position: "Commercial And Marketing Manager",
     linkedin: "http://www.linkedin.com/in/adele-rowlands-26378655",
     email: "arowlands@caterite.co.uk",
@@ -3211,6 +3668,7 @@ export const leads = [
   {
     name: "Brianna Wright",
     company: "Vegetarian Express",
+    category: "Grocery & Food Brands",
     position: "Senior Digital Marketing Executive",
     linkedin: "http://www.linkedin.com/in/briannahillswright",
     email: "brianna.hills.wright@vegexp.co.uk",
@@ -3218,6 +3676,7 @@ export const leads = [
   {
     name: "Jamie Hadley",
     company: "PROPER SNACKS",
+    category: "Snacks & Crisps",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/jamie-hadley-9767a692",
     email: "jamie.h@warpsnacks.com",
@@ -3225,6 +3684,7 @@ export const leads = [
   {
     name: "Ruth Tyrie",
     company: "SURREAL",
+    category: "Grocery & Food Brands",
     position: "Brand Lead",
     linkedin: "http://www.linkedin.com/in/ruth-tyrie-33b796142",
     email: "ruth@eatsurreal.co.uk",
@@ -3232,6 +3692,7 @@ export const leads = [
   {
     name: "Emma Colquhoun",
     company: "wagamama",
+    category: "Casual Dining & Restaurants",
     position: "Chief Marketing & Commercial Officer",
     linkedin: "http://www.linkedin.com/in/emma-colquhoun",
     email: "emma.colquhoun@wagamama.com",
@@ -3239,6 +3700,7 @@ export const leads = [
   {
     name: "Stephanie Allen",
     company: "Ginsters",
+    category: "Bakery & Bread",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/stephanie-allen-b45a4040",
     email: "stephanie.allen@ginsters.co.uk",
@@ -3246,6 +3708,7 @@ export const leads = [
   {
     name: "Gabriel Tresmontant",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Head Of Growth & Innovation, World Food & New Brands, Europe",
     linkedin: "http://www.linkedin.com/in/gabrieltresmontant",
     email: "gabriel.tresmontant@kraftheinz.com",
@@ -3253,6 +3716,7 @@ export const leads = [
   {
     name: "Mike Sowerby",
     company: "Birds Eye UK & IE",
+    category: "Grocery & Food Brands",
     position: "Head Of Marketing Birds Eye Uk & I",
     linkedin: "http://www.linkedin.com/in/mike-sowerby-4a03141",
     email: "michael.sowerby@birdseye.co.uk",
@@ -3260,6 +3724,7 @@ export const leads = [
   {
     name: "Katiso Ndlela",
     company: "The Wine Society",
+    category: "Wine & Spirits",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/katiso-ndlela",
     email: "ndlelak@thewinesociety.com",
@@ -3267,6 +3732,7 @@ export const leads = [
   {
     name: "Isabel Roberts",
     company: "Capri Sun Group",
+    category: "Drinks",
     position: "Junior Brand Manager",
     linkedin: "http://www.linkedin.com/in/isabel-roberts-4560b01b3",
     email: "isabel.roberts@capri-sun.com",
@@ -3274,6 +3740,7 @@ export const leads = [
   {
     name: "Zara Munday-muir",
     company: "Gousto",
+    category: "Grocery & Food Brands",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/zara-munday-muir-25ba2871",
     email: "zara.munday-muir@gousto.co.uk",
@@ -3281,6 +3748,7 @@ export const leads = [
   {
     name: "Rosie Morrison",
     company: "Signature Brew",
+    category: "Beer & Brewing",
     position: "Assistant Brand Manager",
     linkedin: "http://www.linkedin.com/in/rosie-morrison-55149914a",
     email: "rosie@signaturebrew.co.uk",
@@ -3288,6 +3756,7 @@ export const leads = [
   {
     name: "Carly Jones",
     company: "The ARK Collection",
+    category: "Other",
     position: "Marketing, Events And Memberships Manager",
     linkedin: "http://www.linkedin.com/in/carly-jones-0bb599b7",
     email: "",
@@ -3295,6 +3764,7 @@ export const leads = [
   {
     name: "Yvonne Hollyoak",
     company: "Proper Cornish",
+    category: "Bakery & Bread",
     position: "Company Secretary And Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/yvonne-hollyoak-28980639",
     email: "yvonne.hollyoak@propercornish.co.uk",
@@ -3302,6 +3772,7 @@ export const leads = [
   {
     name: "Amy-louise Cartmel",
     company: "Callestick Farm Ice Cream",
+    category: "Confectionery",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/amylouisecartmel",
     email: "amy@callestickfarm.co.uk",
@@ -3309,6 +3780,7 @@ export const leads = [
   {
     name: "Michaela Hickey",
     company: "Müller UK & Ireland",
+    category: "Dairy & Alternatives",
     position: "Senior Brand Manager - Brand Equity",
     linkedin: "http://www.linkedin.com/in/michaela-hickey-53860956",
     email: "michaela.hickey@muller.co.uk",
@@ -3316,6 +3788,7 @@ export const leads = [
   {
     name: "Dinesh Annadurai",
     company: "Paris Baguette UK",
+    category: "Bakery & Bread",
     position: "Assistant Marketing Manager",
     linkedin: "http://www.linkedin.com/in/dineshkumar-annadurai",
     email: "dinesh@parisbaguette.co.uk",
@@ -3323,6 +3796,7 @@ export const leads = [
   {
     name: "Laura Brookes",
     company: "Birds Eye UK & IE",
+    category: "Grocery & Food Brands",
     position: "Shopper Marketing Manager - Asda, Iceland & Co-op",
     linkedin: "http://www.linkedin.com/in/laura-brookes-2b36771ab",
     email: "laura.brookes@birdseye.co.uk",
@@ -3330,6 +3804,7 @@ export const leads = [
   {
     name: "Amy Gow",
     company: "Kendamil (Kendal Nutricare)",
+    category: "Baby & Kids Food",
     position: "Senior Packing And Brand Designer",
     linkedin: "http://www.linkedin.com/in/amy-gow-986b64236",
     email: "amy.gow@kendalnutricare.com",
@@ -3337,6 +3812,7 @@ export const leads = [
   {
     name: "Abi Evans",
     company: "Westons Cider",
+    category: "Beer & Brewing",
     position: "Customer Marketing Manager",
     linkedin: "http://www.linkedin.com/in/abi-evans-18a50411",
     email: "",
@@ -3344,6 +3820,7 @@ export const leads = [
   {
     name: "Carys Barriball",
     company: "Ginsters",
+    category: "Bakery & Bread",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/carys-barriball-14829b4a",
     email: "carys.barriball@ginsters.co.uk",
@@ -3351,6 +3828,7 @@ export const leads = [
   {
     name: "Hannah Gillespie-cross",
     company: "Müller UK & Ireland",
+    category: "Dairy & Alternatives",
     position: "Senior Brand Manager - Drinks",
     linkedin: "http://www.linkedin.com/in/hannah-gillespie-cross-715363a1",
     email: "hannah.gillespie-cross@muller.co.uk",
@@ -3358,6 +3836,7 @@ export const leads = [
   {
     name: "Amy Cowan",
     company: "Hain Celestial UK",
+    category: "Grocery & Food Brands",
     position: "Channel Marketing Manager",
     linkedin: "http://www.linkedin.com/in/amycowan2",
     email: "amy.cowan@haindaniels.com",
@@ -3365,6 +3844,7 @@ export const leads = [
   {
     name: "Direct Team",
     company: "Direct Line Supplies ltd",
+    category: "Other",
     position: "Marketing Team Member",
     linkedin:
       "http://www.linkedin.com/in/direct-line-supplies-marketing-team-7b445b212",
@@ -3373,6 +3853,7 @@ export const leads = [
   {
     name: "Emily Frank",
     company: "Birds Eye UK & IE",
+    category: "Grocery & Food Brands",
     position: "Head Of Marketing Operations",
     linkedin: "http://www.linkedin.com/in/emily-frank-bb5a9315",
     email: "emily.frank@birdseye.co.uk",
@@ -3380,6 +3861,7 @@ export const leads = [
   {
     name: "Anna Greene",
     company: "Gousto",
+    category: "Grocery & Food Brands",
     position: "VP Marketing",
     linkedin: "http://www.linkedin.com/in/anna-greene-a5a81916",
     email: "anna.greene@gousto.co.uk",
@@ -3387,6 +3869,7 @@ export const leads = [
   {
     name: "Sophie Brentnall",
     company: "Belazu | B Corp™",
+    category: "Grocery & Food Brands",
     position: "Food Service Brand Manager",
     linkedin: "http://www.linkedin.com/in/sophie-brentnall",
     email: "sophie@belazu.com",
@@ -3394,6 +3877,7 @@ export const leads = [
   {
     name: "Jack Rankin",
     company: "Aimia Foods Ltd",
+    category: "Grocery & Food Brands",
     position: "Assistant Brand Manager",
     linkedin: "http://www.linkedin.com/in/jack-rankin-3a7a3911b",
     email: "jack.rankin@aimiafoods.com",
@@ -3401,6 +3885,7 @@ export const leads = [
   {
     name: "George Lloyd-jones",
     company: "Müller UK & Ireland",
+    category: "Dairy & Alternatives",
     position: "Data Analytics Manager - Uk&i Lead, Marketing Insight",
     linkedin: "http://www.linkedin.com/in/george-lloyd-jones-927247108",
     email: "",
@@ -3408,6 +3893,7 @@ export const leads = [
   {
     name: "Caitlin Davies",
     company: "Pip & Nut | B Corp",
+    category: "Grocery & Food Brands",
     position: "Marketing Intern",
     linkedin: "http://www.linkedin.com/in/caitlin-davies-4902b3226",
     email: "caitlin@pipandnut.com",
@@ -3415,6 +3901,7 @@ export const leads = [
   {
     name: "Aisleen Byrne",
     company: "Lotus Bakeries",
+    category: "Bakery & Bread",
     position: "Marketing Manager - Nākd.",
     linkedin: "http://www.linkedin.com/in/aisleen-byrne-b2743645",
     email: "",
@@ -3422,6 +3909,7 @@ export const leads = [
   {
     name: "Imogen Hobart",
     company: "Galeta",
+    category: "Bakery & Bread",
     position: "Head Of Brand",
     linkedin: "http://www.linkedin.com/in/imogen-hobart-2911a21b8",
     email: "imogen@galeta.co.uk",
@@ -3429,6 +3917,7 @@ export const leads = [
   {
     name: "Shannon Kendall",
     company: "FUNKIN COCKTAILS",
+    category: "Drinks",
     position: "Head Of Trade Marketing",
     linkedin: "http://www.linkedin.com/in/shannonkendall-1100",
     email: "shannonkendall@funkin.co.uk",
@@ -3436,6 +3925,7 @@ export const leads = [
   {
     name: "Kate Havard",
     company: "MOMA Foods",
+    category: "Grocery & Food Brands",
     position: "Marketing & Innovation Manager",
     linkedin: "http://www.linkedin.com/in/kate-havard-81823256",
     email: "kate@momafoods.co.uk",
@@ -3443,6 +3933,7 @@ export const leads = [
   {
     name: "Jeff Swan",
     company: "KP Snacks",
+    category: "Snacks & Crisps",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/jeff-swan-80333a106",
     email: "jeff.swan@kpsnacks.com",
@@ -3450,6 +3941,7 @@ export const leads = [
   {
     name: "Miriam Ellesmere",
     company: "Wahaca",
+    category: "Casual Dining & Restaurants",
     position: "Digital Marketing Lead",
     linkedin: "http://www.linkedin.com/in/miriam-ellesmere-98b69a84",
     email: "",
@@ -3457,6 +3949,7 @@ export const leads = [
   {
     name: "Elly Bennett",
     company: "Big Penny",
+    category: "Casual Dining & Restaurants",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/elly-bennett",
     email: "elly@bigpenny.co.uk",
@@ -3464,6 +3957,7 @@ export const leads = [
   {
     name: "Matt Cole",
     company: "Snowdonia Cheese Company",
+    category: "Dairy & Alternatives",
     position: "Head Of Projects And Trade Marketing",
     linkedin: "http://www.linkedin.com/in/matthewcole109",
     email: "matt.cole@snowdonia-cheese.co.uk",
@@ -3471,6 +3965,7 @@ export const leads = [
   {
     name: "Danyar Baker",
     company: "Amigos Burgers & Shakes",
+    category: "Casual Dining & Restaurants",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/danyar-baker-a71623161",
     email: "danyar@amigosburgersandshakes.com",
@@ -3478,6 +3973,7 @@ export const leads = [
   {
     name: "Claire Milner",
     company: "Moy Park",
+    category: "Grocery & Food Brands",
     position: "Senior Customer Marketing Manager",
     linkedin: "http://www.linkedin.com/in/claire-milner-95462720",
     email: "",
@@ -3485,6 +3981,7 @@ export const leads = [
   {
     name: "Lysander Bickham",
     company: "SMALL BEER | B Corp™",
+    category: "Beer & Brewing",
     position: "Brand Ambassador",
     linkedin: "http://www.linkedin.com/in/lysander-bickham-b653b7190",
     email: "",
@@ -3492,6 +3989,7 @@ export const leads = [
   {
     name: "Chris Chorlton",
     company: "Caterforce Ltd",
+    category: "Other",
     position: "Digital Marketing And Production Manager",
     linkedin: "http://www.linkedin.com/in/chris-chorlton-764aa254",
     email: "cchorlton@caterforce.co.uk",
@@ -3499,6 +3997,7 @@ export const leads = [
   {
     name: "Ayodele Idowu-bello",
     company: "Shelter Hall",
+    category: "Casual Dining & Restaurants",
     position: "Social Media Assistant",
     linkedin: "http://www.linkedin.com/in/ayodele-idowu-bello-4145281b5",
     email: "",
@@ -3506,6 +4005,7 @@ export const leads = [
   {
     name: "Georgia Lawrence",
     company: "Caffè Concerto",
+    category: "Casual Dining & Restaurants",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/georgia-lawrence-a0417978",
     email: "georgia.lawrence@caffeconcerto.co.uk",
@@ -3513,6 +4013,7 @@ export const leads = [
   {
     name: "Sarah Heward",
     company: "The Real Food Cafe",
+    category: "Casual Dining & Restaurants",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/sarah-heward-262bb354",
     email: "sarah@therealfoodcafe.com",
@@ -3520,6 +4021,7 @@ export const leads = [
   {
     name: "Alyssa Sal",
     company: "Huel",
+    category: "Health & Wellness Food",
     position: "Brand & Retail Marketing Manager",
     linkedin: "http://www.linkedin.com/in/alyssa-del-sal-810265179",
     email: "alyssa@huel.com",
@@ -3527,6 +4029,7 @@ export const leads = [
   {
     name: "Katy Hill",
     company: "El Rayo Tequila",
+    category: "Wine & Spirits",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/katy-hill-72971134",
     email: "katy@elrayotequila.com",
@@ -3534,6 +4037,7 @@ export const leads = [
   {
     name: "Olatunji Oluwatayo",
     company: "Nestlé Professional",
+    category: "Grocery & Food Brands",
     position: "Marketing",
     linkedin: "http://www.linkedin.com/in/olatunji-oluwatayo-972a8698",
     email: "",
@@ -3541,6 +4045,7 @@ export const leads = [
   {
     name: "Sarah Kilgallon",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/sarah-kilgallon-68a543120",
     email: "",
@@ -3548,6 +4053,7 @@ export const leads = [
   {
     name: "Stephanie Harling",
     company: "Nestlé Professional",
+    category: "Grocery & Food Brands",
     position: "Marketing Activation Manager - We Proudly Serve Starbucks",
     linkedin: "http://www.linkedin.com/in/stephanie-harling-57509814a",
     email: "",
@@ -3555,6 +4061,7 @@ export const leads = [
   {
     name: "Chloe Utting",
     company: "THIS™",
+    category: "Grocery & Food Brands",
     position: "Brand Ambassador",
     linkedin: "http://www.linkedin.com/in/chloe-utting-616583265",
     email: "chloe@this.co",
@@ -3562,6 +4069,7 @@ export const leads = [
   {
     name: "Marc Verzijl",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Marketing Information Manager",
     linkedin: "http://www.linkedin.com/in/marc-verzijl-7390b31a",
     email: "marcverzijl@greeneking.co.uk",
@@ -3569,6 +4077,7 @@ export const leads = [
   {
     name: "Colette Gourlay",
     company: "Baxters Food Group",
+    category: "Grocery & Food Brands",
     position: "Marketing Communications Manager",
     linkedin: "http://www.linkedin.com/in/colette-gourlay-98b17b31",
     email: "",
@@ -3576,6 +4085,7 @@ export const leads = [
   {
     name: "Taylor Churchman",
     company: "simply roasted crisps",
+    category: "Snacks & Crisps",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/taylorchurchman",
     email: "taylor@simplyroastedcrisps.co.uk",
@@ -3583,6 +4093,7 @@ export const leads = [
   {
     name: "Joe Allen",
     company: "Goodrays",
+    category: "Drinks",
     position: "Brand & Digital Designer",
     linkedin: "http://www.linkedin.com/in/joe-allen-b9bb7a251",
     email: "joe@goodrays.com",
@@ -3590,6 +4101,7 @@ export const leads = [
   {
     name: "Sally Hayter",
     company: "VITHIT",
+    category: "Drinks",
     position: "Uk Brand And Marketing Manager",
     linkedin: "http://www.linkedin.com/in/sally-hayter-362396147",
     email: "sally.hayter@vithit.com",
@@ -3597,6 +4109,7 @@ export const leads = [
   {
     name: "Katharina Kern",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Senior Brand Manager - Heinz Tomato Ketchup",
     linkedin: "http://www.linkedin.com/in/kernkatharina",
     email: "katharina.kern@kraftheinz.com",
@@ -3604,6 +4117,7 @@ export const leads = [
   {
     name: "Amelia Butler",
     company: "Little Moons",
+    category: "Confectionery",
     position: "Senior Trade Marketing Manager",
     linkedin: "http://www.linkedin.com/in/amelia-butler-015047b3",
     email: "amelia.b@littlemoons.co.uk",
@@ -3611,6 +4125,7 @@ export const leads = [
   {
     name: "George Hood",
     company: "Sapling Spirits | B Corp",
+    category: "Wine & Spirits",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/george-hood-9380b75b",
     email: "george@saplingspirits.com",
@@ -3618,6 +4133,7 @@ export const leads = [
   {
     name: "Emily Turner",
     company: "Müller UK & Ireland",
+    category: "Dairy & Alternatives",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/emily-turner-26499b81",
     email: "emily.turner@muller.co.uk",
@@ -3625,6 +4141,7 @@ export const leads = [
   {
     name: "Katherine Hall",
     company: "Hain Celestial UK",
+    category: "Grocery & Food Brands",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/kathall1",
     email: "katherine.hall@haindaniels.com",
@@ -3632,6 +4149,7 @@ export const leads = [
   {
     name: "Ross Farquhar",
     company: "Little Moons",
+    category: "Confectionery",
     position: "Marketing, Innovation & Sustainability Director",
     linkedin: "http://www.linkedin.com/in/rossfarquhar",
     email: "ross@littlemoons.co.uk",
@@ -3639,6 +4157,7 @@ export const leads = [
   {
     name: "Lee Matthews",
     company: "Princes Limited",
+    category: "Grocery & Food Brands",
     position: "Category Marketing Controller",
     linkedin: "http://www.linkedin.com/in/lee-matthews-8b099971",
     email: "lee.matthews@princesgroup.com",
@@ -3646,6 +4165,7 @@ export const leads = [
   {
     name: "Gemma Syrett",
     company: "DR. OETKER (UK) LIMITED",
+    category: "Grocery & Food Brands",
     position: "Senior Brand Manager - Chicago Town",
     linkedin: "http://www.linkedin.com/in/seniorbrandmarketingmanager",
     email: "gemma.syrett@oetker.co.uk",
@@ -3653,6 +4173,7 @@ export const leads = [
   {
     name: "Sophie Dennis",
     company: "DRY DRINKER",
+    category: "Drinks",
     position: "Data And Marketing",
     linkedin: "http://www.linkedin.com/in/sophie-dennis-41b7644a",
     email: "",
@@ -3660,6 +4181,7 @@ export const leads = [
   {
     name: "Poppy Kearney",
     company: "Lilley's Cider",
+    category: "Beer & Brewing",
     position: "E-commerce & Social Media",
     linkedin: "http://www.linkedin.com/in/poppy-kearney-a11389173",
     email: "poppy@lilleyscider.co.uk",
@@ -3667,6 +4189,7 @@ export const leads = [
   {
     name: "Elle-rose Moogan",
     company: "Shoryu Ramen",
+    category: "Casual Dining & Restaurants",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/elle-rose-moogan-34bbbb29",
     email: "elle@shoryuramen.com",
@@ -3674,6 +4197,7 @@ export const leads = [
   {
     name: "Michael Schofield",
     company: "Bakels Group",
+    category: "Other",
     position: "Digital Marketing Manager",
     linkedin: "http://www.linkedin.com/in/michael-schofield-0ab41626",
     email: "mschofield@bakels.com",
@@ -3681,6 +4205,7 @@ export const leads = [
   {
     name: "Amy Marks",
     company: "The Wine Society",
+    category: "Wine & Spirits",
     position: "Campaign Marketing Manager",
     linkedin: "http://www.linkedin.com/in/amy-marks-ba644133",
     email: "marksa@thewinesociety.com",
@@ -3688,6 +4213,7 @@ export const leads = [
   {
     name: "Charlotte Pask",
     company: "Birds Eye UK & IE",
+    category: "Grocery & Food Brands",
     position: "Cluster Marketing Portfolio Lead Uk & Ie",
     linkedin: "http://www.linkedin.com/in/charlotte-pask-28700510",
     email: "charlotte.pask@birdseye.co.uk",
@@ -3695,6 +4221,7 @@ export const leads = [
   {
     name: "Joanne Green",
     company: "The Salad Kitchen",
+    category: "Casual Dining & Restaurants",
     position: "Social Media Manager",
     linkedin: "http://www.linkedin.com/in/joanne-green-1a29b939",
     email: "",
@@ -3702,6 +4229,7 @@ export const leads = [
   {
     name: "Milly Tuck",
     company: "Little Moons",
+    category: "Confectionery",
     position: "Head Of Brand Marketing",
     linkedin: "http://www.linkedin.com/in/milly-tuck-679a0b49",
     email: "milly.t@littlemoons.co.uk",
@@ -3709,6 +4237,7 @@ export const leads = [
   {
     name: "Chris Bryant",
     company: "COOK Trading Ltd",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager Crm",
     linkedin: "http://www.linkedin.com/in/chrisbryant81",
     email: "chris.bryant@cookfood.net",
@@ -3716,6 +4245,7 @@ export const leads = [
   {
     name: "Charlotte Crane",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Junior Brand Manager, Food Service",
     linkedin: "http://www.linkedin.com/in/charlotte-crane-615064172",
     email: "charlotte.crane@kraftheinz.com",
@@ -3723,6 +4253,7 @@ export const leads = [
   {
     name: "Annabel Stephens",
     company: "Wasabi Sushi & Bento",
+    category: "Casual Dining & Restaurants",
     position: "Head Of Grocery Marketing",
     linkedin: "http://www.linkedin.com/in/annabel-stephens-ba169110b",
     email: "annabel.stephens@wasabi.uk.com",
@@ -3730,6 +4261,7 @@ export const leads = [
   {
     name: "Ashley Alexander-birch",
     company: "Holie's",
+    category: "Snacks & Crisps",
     position: "Uk Marketing Director",
     linkedin: "http://www.linkedin.com/in/ashley-alexander-birch-6224a779",
     email: "ashley@holies.com",
@@ -3737,6 +4269,7 @@ export const leads = [
   {
     name: "Paul Bradley",
     company: "Clayton Park Bakery Limited",
+    category: "Bakery & Bread",
     position: "Sales And Marketing Manager",
     linkedin: "http://www.linkedin.com/in/paul-bradley-490aa9101",
     email: "paul.bradley@pietastic.com",
@@ -3744,6 +4277,7 @@ export const leads = [
   {
     name: "Olivia-rose Luxford",
     company: "Hain Celestial UK",
+    category: "Grocery & Food Brands",
     position: "Brand Manager - Soup",
     linkedin: "http://www.linkedin.com/in/olivia-rose-luxford-96b851187",
     email: "olivia.luxford@haindaniels.com",
@@ -3751,6 +4285,7 @@ export const leads = [
   {
     name: "Kimberley Curtis",
     company: "Lees of Scotland Limited",
+    category: "Confectionery",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/kimberley-curtis-803804178",
     email: "kcurtis@leesofscotland.co.uk",
@@ -3758,6 +4293,7 @@ export const leads = [
   {
     name: "Charlotte Duke",
     company: "Little Moons",
+    category: "Confectionery",
     position: "Brand Manager (core & Innovation)",
     linkedin: "http://www.linkedin.com/in/charlotte-duke1",
     email: "charlotte.d@littlemoons.co.uk",
@@ -3765,6 +4301,7 @@ export const leads = [
   {
     name: "Leah Shearer",
     company: "Greggs",
+    category: "Bakery & Bread",
     position: "Retail Brand Project Manager",
     linkedin: "http://www.linkedin.com/in/leah-shearer-3ba492100",
     email: "leah.shearer@greggs.co.uk",
@@ -3772,6 +4309,7 @@ export const leads = [
   {
     name: "Jon Luke",
     company: "Casella Family Brands",
+    category: "Wine & Spirits",
     position: "Sales Director - Casella Family Brands [europe]",
     linkedin: "http://www.linkedin.com/in/jonluke1",
     email: "jon.luke@casellafamilybrands.com",
@@ -3779,6 +4317,7 @@ export const leads = [
   {
     name: "Lucy Reidy",
     company: "FUNKIN COCKTAILS",
+    category: "Drinks",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/lucy-reidy-644915152",
     email: "lucyreidy@funkin.co.uk",
@@ -3786,6 +4325,7 @@ export const leads = [
   {
     name: "Poppy Kearney",
     company: "Lilley's Cider",
+    category: "Beer & Brewing",
     position: "Ecommerce & Social Media Manager",
     linkedin: "http://www.linkedin.com/in/poppy-kearney-a11389173",
     email: "poppy@lilleyscider.co.uk",
@@ -3793,6 +4333,7 @@ export const leads = [
   {
     name: "Maha Kausar",
     company: "FrieslandCampina",
+    category: "Dairy & Alternatives",
     position: "Marketing Director Uk",
     linkedin: "http://www.linkedin.com/in/maha-kausar-4a86b919b",
     email: "",
@@ -3800,6 +4341,7 @@ export const leads = [
   {
     name: "Mary Niven",
     company: "Dalziel Ingredients Ltd",
+    category: "Other",
     position: "Npd Marketing Manager",
     linkedin: "http://www.linkedin.com/in/mary-niven-9b4283133",
     email: "mary.niven@dalziel.co.uk",
@@ -3807,6 +4349,7 @@ export const leads = [
   {
     name: "Dave Howarth",
     company: "The Bierkeller",
+    category: "Casual Dining & Restaurants",
     position: "Operations Manager & Brand Manager",
     linkedin: "http://www.linkedin.com/in/dave-howarth-82b541263",
     email: "davehowarth@thebierkeller.com",
@@ -3814,6 +4357,7 @@ export const leads = [
   {
     name: "Harriette Irons",
     company: "Cereal Partners Worldwide (Nestlé & General Mills)",
+    category: "Grocery & Food Brands",
     position: "Activation Marketing Manager",
     linkedin: "http://www.linkedin.com/in/harriette-irons-973565a4",
     email: "",
@@ -3821,6 +4365,7 @@ export const leads = [
   {
     name: "Emma Ng",
     company: "The Wine Society",
+    category: "Wine & Spirits",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/emmacng",
     email: "nge@thewinesociety.com",
@@ -3828,6 +4373,7 @@ export const leads = [
   {
     name: "Suzi Hoy",
     company: "BURGER KING UK",
+    category: "Casual Dining & Restaurants",
     position: "Head Of Brand And Communications",
     linkedin: "http://www.linkedin.com/in/suzi-hoy-96b916b4",
     email: "suzi.hoy@bkukgroup.co.uk",
@@ -3835,6 +4381,7 @@ export const leads = [
   {
     name: "Pippa Robinson",
     company: "Gousto",
+    category: "Grocery & Food Brands",
     position: "Partnerships Marketing Manager",
     linkedin: "http://www.linkedin.com/in/pippa-robinson-191818114",
     email: "pippa.robinson@gousto.co.uk",
@@ -3842,6 +4389,7 @@ export const leads = [
   {
     name: "Sarah Babb",
     company: "Ginsters",
+    category: "Bakery & Bread",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/sarahbabb100",
     email: "sarah.babb@ginsters.co.uk",
@@ -3849,6 +4397,7 @@ export const leads = [
   {
     name: "Lara Squire",
     company: "Westons Cider",
+    category: "Beer & Brewing",
     position:
       "Customer Marketing Manager - Off-trade, International And New Ventures",
     linkedin: "http://www.linkedin.com/in/lara-squire-26b876125",
@@ -3857,6 +4406,7 @@ export const leads = [
   {
     name: "Tally Spear",
     company: "Lola's",
+    category: "Bakery & Bread",
     position: "Social Media Manager",
     linkedin: "http://www.linkedin.com/in/tally-spear-2785b0a5",
     email: "tally@lolascupcakes.co.uk",
@@ -3864,6 +4414,7 @@ export const leads = [
   {
     name: "Delicia Lyners",
     company: "Gooey",
+    category: "Bakery & Bread",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/delicia-lyners-18662599",
     email: "delicia.l@weelee.co.za",
@@ -3871,6 +4422,7 @@ export const leads = [
   {
     name: "Riju Chaudhuri",
     company: "KIND",
+    category: "Snacks & Crisps",
     position: "Senior Brand Ambassador",
     linkedin: "http://www.linkedin.com/in/riju-chaudhuri-73269017",
     email: "",
@@ -3878,6 +4430,7 @@ export const leads = [
   {
     name: "Amelia Connolly",
     company: "Rainbow Dust & Squires Kitchen",
+    category: "Other",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/ameliaconnolly",
     email: "amelia@rainbowdust.co.uk",
@@ -3885,6 +4438,7 @@ export const leads = [
   {
     name: "Chandu Myla",
     company: "Cakes & Bakes",
+    category: "Bakery & Bread",
     position: "Digital Marketing Intern",
     linkedin: "http://www.linkedin.com/in/chandu-myla-4aa14116b",
     email: "",
@@ -3892,6 +4446,7 @@ export const leads = [
   {
     name: "Lois Nash",
     company: "Solina",
+    category: "Other",
     position: "Brand Manager - Uk&i",
     linkedin: "http://www.linkedin.com/in/lois-nash-5277911bb",
     email: "lois.nash@solina.com",
@@ -3899,6 +4454,7 @@ export const leads = [
   {
     name: "Natalia Domagala",
     company: "Go Zero",
+    category: "Drinks",
     position: "Marketing Specialist",
     linkedin: "http://www.linkedin.com/in/natalia-domagala-96a205312",
     email: "",
@@ -3906,6 +4462,7 @@ export const leads = [
   {
     name: "Ambra Barbera",
     company: "SushiDog",
+    category: "Casual Dining & Restaurants",
     position: "Brand Standards Manager",
     linkedin: "http://www.linkedin.com/in/ambra-barbera-b44b41207",
     email: "ambra@sushidog.co.uk",
@@ -3913,6 +4470,7 @@ export const leads = [
   {
     name: "Alexander Travers",
     company: "KIND",
+    category: "Snacks & Crisps",
     position: "Emea Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/alexandertravers",
     email: "atravers@kindsnacks.com",
@@ -3920,6 +4478,7 @@ export const leads = [
   {
     name: "Anna Lawty",
     company: "Virgin Wines",
+    category: "Wine & Spirits",
     position: "Senior Marketing Executive",
     linkedin: "http://www.linkedin.com/in/anna-lawty",
     email: "anna.lawty@virginwines.co.uk",
@@ -3927,6 +4486,7 @@ export const leads = [
   {
     name: "Louise Thornton",
     company: "Quorn Foods",
+    category: "Grocery & Food Brands",
     position: "Brand Activation Manager",
     linkedin: "http://www.linkedin.com/in/louise-thornton-8a74a553",
     email: "louise.thornton@quorn.com",
@@ -3934,6 +4494,7 @@ export const leads = [
   {
     name: "Alice Whorwell",
     company: "Denzel's",
+    category: "Other",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/alice-whorwell",
     email: "alice.w@denzels.co.uk",
@@ -3941,6 +4502,7 @@ export const leads = [
   {
     name: "Hayley Murgett",
     company: "Ecotone",
+    category: "Grocery & Food Brands",
     position: "Global Head Of Marketing - Hot Drinks Category",
     linkedin: "http://www.linkedin.com/in/hayley-murgett-a6711a1b",
     email: "hayley.murgett@wessanen.com",
@@ -3948,6 +4510,7 @@ export const leads = [
   {
     name: "Claire Postans",
     company: "COOK Trading Ltd",
+    category: "Grocery & Food Brands",
     position: "Brand Director",
     linkedin: "http://www.linkedin.com/in/claire-postans-81b7652",
     email: "claire.postans@cookfood.net",
@@ -3955,6 +4518,7 @@ export const leads = [
   {
     name: "Hannah Borley",
     company: "Hain Celestial UK",
+    category: "Grocery & Food Brands",
     position: "Brand Manager - Plant Based",
     linkedin: "http://www.linkedin.com/in/hannah-borley-025b3a15a",
     email: "hannah.borley@haindaniels.com",
@@ -3962,6 +4526,7 @@ export const leads = [
   {
     name: "Louis Burr",
     company: "Gousto",
+    category: "Grocery & Food Brands",
     position: "Affiliate Marketing Manager",
     linkedin: "http://www.linkedin.com/in/louis-burr-009700a2",
     email: "louis.burr@gousto.co.uk",
@@ -3969,6 +4534,7 @@ export const leads = [
   {
     name: "Kate Wilkins",
     company: "Pip Organic",
+    category: "Drinks",
     position: "Marketing And Sales Intern",
     linkedin: "http://www.linkedin.com/in/kate-wilkins-5b79a0300",
     email: "kate@piporganic.com",
@@ -3976,6 +4542,7 @@ export const leads = [
   {
     name: "Francesca Cipolla",
     company: "Pasta Evangelists",
+    category: "Casual Dining & Restaurants",
     position: "Social Media And Influencer Marketing Manager",
     linkedin: "http://www.linkedin.com/in/francesca-cipolla-6107088a",
     email: "",
@@ -3983,6 +4550,7 @@ export const leads = [
   {
     name: "Daisy Dalgliesh",
     company: "Rhythm 108",
+    category: "Bakery & Bread",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/daisydalgliesh",
     email: "daisy.dalgliesh@rhythm108.com",
@@ -3990,6 +4558,7 @@ export const leads = [
   {
     name: "Lara Cusack",
     company: "Piglet’s Pantry",
+    category: "Bakery & Bread",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/lara-cusack-7069261a7",
     email: "lara@pigletspantry.co.uk",
@@ -3997,6 +4566,7 @@ export const leads = [
   {
     name: "Kate Netrebska",
     company: "JULIENNE BRUNO®",
+    category: "Grocery & Food Brands",
     position: "Commercial & Marketing Manager",
     linkedin: "http://www.linkedin.com/in/kateryna-netrebska",
     email: "kate@juliennebruno.com",
@@ -4004,6 +4574,7 @@ export const leads = [
   {
     name: "Anna Grant",
     company: "Double Dutch Drinks | B Corp",
+    category: "Drinks",
     position: "Head Of Marketing & Communications",
     linkedin: "http://www.linkedin.com/in/annalouisegrant",
     email: "anna@doubledutchdrinks.com",
@@ -4011,6 +4582,7 @@ export const leads = [
   {
     name: "Sophie Hanson",
     company: "Müller UK & Ireland",
+    category: "Dairy & Alternatives",
     position: "Brand Print & Artwork Manager",
     linkedin: "http://www.linkedin.com/in/sophhanson",
     email: "sophie.hanson@muller.co.uk",
@@ -4018,6 +4590,7 @@ export const leads = [
   {
     name: "Courtney Jones",
     company: "Nestlé Professional",
+    category: "Grocery & Food Brands",
     position:
       "Marketing Activation Manager - Wps Starbucks & Seattle’s Best Coffee",
     linkedin: "http://www.linkedin.com/in/courtney-jones-a7b403a9",
@@ -4026,6 +4599,7 @@ export const leads = [
   {
     name: "Yoshiko Uno-flukes",
     company: "The Fine Cheese Co.",
+    category: "Dairy & Alternatives",
     position: "Head Of Design, E-commerce And Marketing",
     linkedin: "http://www.linkedin.com/in/yoshiko-uno-flukes-70b9654b",
     email: "yoshiko.uno-flukes@finecheese.co.uk",
@@ -4033,6 +4607,7 @@ export const leads = [
   {
     name: "Charly Richards",
     company: "Jude's",
+    category: "Confectionery",
     position: "Associate Brand Manager",
     linkedin: "http://www.linkedin.com/in/charly-richards",
     email: "charly@judes.com",
@@ -4040,6 +4615,7 @@ export const leads = [
   {
     name: "Isabella Maxwell",
     company: "Della Vite",
+    category: "Wine & Spirits",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/isabella-maxwell-a0b20410a",
     email: "",
@@ -4047,6 +4623,7 @@ export const leads = [
   {
     name: "Nicola Mills",
     company: "Billington Foods",
+    category: "Grocery & Food Brands",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/nicola-mills-08779b24",
     email: "nicola.mills@billington-foods.com",
@@ -4054,6 +4631,7 @@ export const leads = [
   {
     name: "Jack Elkins",
     company: "Peter's Yard",
+    category: "Bakery & Bread",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/elkinsjack",
     email: "jack.elkins@petersyard.com",
@@ -4061,6 +4639,7 @@ export const leads = [
   {
     name: "Emily Muddeman",
     company: "Riverford Organic Farmers",
+    category: "Grocery & Food Brands",
     position: "Brand Lead And Social Media Manager",
     linkedin: "http://www.linkedin.com/in/emily-muddeman-66ab26105",
     email: "emilymuddeman@riverford.co.uk",
@@ -4068,6 +4647,7 @@ export const leads = [
   {
     name: "Sarah Lloyd",
     company: "Greggs",
+    category: "Bakery & Bread",
     position: "Brand Communications Support Manager",
     linkedin: "http://www.linkedin.com/in/sarah-lloyd-82279a199",
     email: "sarah.lloyd@greggs.co.uk",
@@ -4075,6 +4655,7 @@ export const leads = [
   {
     name: "Lourenco Arriaga",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position:
       "Associate Director, Global Heinz Brand Communications & Creativity",
     linkedin: "http://www.linkedin.com/in/lourencoarriaga",
@@ -4083,6 +4664,7 @@ export const leads = [
   {
     name: "Rebecca Isom",
     company: "Averys Wine Cellars",
+    category: "Wine & Spirits",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/rebecca-isom-b898b8220",
     email: "rebeccaisom@averys.com",
@@ -4090,6 +4672,7 @@ export const leads = [
   {
     name: "Jordan Pollock",
     company: "Mash Direct",
+    category: "Grocery & Food Brands",
     position: "Digital Marketing Lead Executive",
     linkedin: "http://www.linkedin.com/in/jordanpollock",
     email: "jordan@mashdirect.com",
@@ -4097,6 +4680,7 @@ export const leads = [
   {
     name: "Daniella Kelley",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/daniella-kelley-076408159",
     email: "daniellakelley@greeneking.co.uk",
@@ -4104,6 +4688,7 @@ export const leads = [
   {
     name: "Francesca Pearson",
     company: "MOTH Drinks - B Corp™",
+    category: "Drinks",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/francesca-pearson-15879316a",
     email: "francesca@mothdrinks.com",
@@ -4111,6 +4696,7 @@ export const leads = [
   {
     name: "Natalie Hoy",
     company: "Princes Limited",
+    category: "Grocery & Food Brands",
     position: "Senior Shopper Marketing Manager",
     linkedin: "http://www.linkedin.com/in/nathoy80",
     email: "natalie.hoy@princesgroup.com",
@@ -4118,6 +4704,7 @@ export const leads = [
   {
     name: "Amy Hadley",
     company: "Müller UK & Ireland",
+    category: "Dairy & Alternatives",
     position: "Senior Brand Manager - Private Label",
     linkedin: "http://www.linkedin.com/in/amy-hadley-34287b58",
     email: "amy.hadley@muller.co.uk",
@@ -4125,6 +4712,7 @@ export const leads = [
   {
     name: "Lee O'mahoney",
     company: "Fresh Direct (UK)",
+    category: "Other",
     position: "Brand Marketing Manager",
     linkedin: "http://www.linkedin.com/in/lee-o-mahoney-343a31ab",
     email: "lee.omahoney@freshdirect.co.uk",
@@ -4132,6 +4720,7 @@ export const leads = [
   {
     name: "Ella Thomson",
     company: "The Collective UK | B Corp™",
+    category: "Dairy & Alternatives",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/ella-thomson-010621156",
     email: "ella.thomson@epicdairy.com",
@@ -4139,6 +4728,7 @@ export const leads = [
   {
     name: "Imogen Robins",
     company: "Tilda® | B Corp™",
+    category: "Grocery & Food Brands",
     position: "Global Social Media Manager",
     linkedin: "http://www.linkedin.com/in/imogen-robins-197981196",
     email: "imogen@tilda.com",
@@ -4146,6 +4736,7 @@ export const leads = [
   {
     name: "Andrea Deutschmanek",
     company: "Oliehoorn",
+    category: "Grocery & Food Brands",
     position: "Marketing Uk & Germany Senior Consultant",
     linkedin: "http://www.linkedin.com/in/andrea-deutschmanek-a700a288",
     email: "a.deutschmanek@oliehoorn.nl",
@@ -4153,6 +4744,7 @@ export const leads = [
   {
     name: "Lucy W",
     company: "Jacksons",
+    category: "Snacks & Crisps",
     position: "Brand Marketing Manager",
     linkedin: "http://www.linkedin.com/in/lucygratton",
     email: "",
@@ -4160,6 +4752,7 @@ export const leads = [
   {
     name: "Emilia Giblin",
     company: "Emmi Group",
+    category: "Dairy & Alternatives",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/emilia-giblin-10277818",
     email: "emilia.giblin@emmi.com",
@@ -4167,6 +4760,7 @@ export const leads = [
   {
     name: "Kalpana Amlani",
     company: "Wiltshire Farm Foods",
+    category: "Grocery & Food Brands",
     position: "Operational/marketing Director",
     linkedin: "http://www.linkedin.com/in/kalpana-amlani-71a06142",
     email: "",
@@ -4174,6 +4768,7 @@ export const leads = [
   {
     name: "Dean Passan",
     company: "Birds Eye",
+    category: "Grocery & Food Brands",
     position: "Freelance Marketing Manager",
     linkedin: "http://www.linkedin.com/in/dean-passan-398595103",
     email: "",
@@ -4181,6 +4776,7 @@ export const leads = [
   {
     name: "Liena Wright",
     company: "NORTHERN BL°C",
+    category: "Confectionery",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/liena-wright-6b092239",
     email: "liena.wright@northern-bloc.com",
@@ -4188,6 +4784,7 @@ export const leads = [
   {
     name: "Ghazal Ameri",
     company: "Sadaf Foods",
+    category: "Grocery & Food Brands",
     position: "Director Of Marketing And Business Development",
     linkedin: "http://www.linkedin.com/in/ghazal-ameri-8b93a431",
     email: "ghazal_ameri@sadaf.com",
@@ -4195,6 +4792,7 @@ export const leads = [
   {
     name: "Tim Brown",
     company: "Lionel Hitchen Limited",
+    category: "Other",
     position: "Sales And Marketing Director",
     linkedin: "http://www.linkedin.com/in/tim-brown-969184a",
     email: "tbrown@lionelhitchen.com",
@@ -4202,6 +4800,7 @@ export const leads = [
   {
     name: "Helena Wright",
     company: "Jacksons",
+    category: "Snacks & Crisps",
     position: "Marketing & Npd Director",
     linkedin: "http://www.linkedin.com/in/helena-wright-5898ba37",
     email: "helenawright@jacksonsbread.co.uk",
@@ -4209,6 +4808,7 @@ export const leads = [
   {
     name: "James Stevens",
     company: "Huel",
+    category: "Health & Wellness Food",
     position: "Product Marketing Manager",
     linkedin: "http://www.linkedin.com/in/james-stevens-67aa33127",
     email: "james.stevens@huel.com",
@@ -4216,6 +4816,7 @@ export const leads = [
   {
     name: "Sarah Sammons",
     company: "wagamama",
+    category: "Casual Dining & Restaurants",
     position: "Brand Design Lead",
     linkedin: "http://www.linkedin.com/in/sarah-sammons-65630273",
     email: "sarah.sammons@wagamama.com",
@@ -4223,6 +4824,7 @@ export const leads = [
   {
     name: "Nids Mehta",
     company: "PACK'D",
+    category: "Health & Wellness Food",
     position: "Junior Brand Manager",
     linkedin: "http://www.linkedin.com/in/nidsmehta",
     email: "nids@packd.co.uk",
@@ -4230,6 +4832,7 @@ export const leads = [
   {
     name: "Yiru L",
     company: "Solbar Industries Ltd",
+    category: "Other",
     position: "Regional Bd And Marketing Manager",
     linkedin: "http://www.linkedin.com/in/yiru-liu",
     email: "",
@@ -4237,6 +4840,7 @@ export const leads = [
   {
     name: "Amy Corbett",
     company: "Pure",
+    category: "Other",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/amy-corbett-374aa595",
     email: "amy@pure.co.uk",
@@ -4244,6 +4848,7 @@ export const leads = [
   {
     name: "May Kirkby",
     company: "Market Halls",
+    category: "Casual Dining & Restaurants",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/may-k-14558639",
     email: "may@markethalls.co.uk",
@@ -4251,6 +4856,7 @@ export const leads = [
   {
     name: "Lydia Abbott",
     company: "IBC Simply",
+    category: "Other",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/lydia-mallinson",
     email: "lydia.abbott@ibcsimply.com",
@@ -4258,6 +4864,7 @@ export const leads = [
   {
     name: "Alison Chadwick",
     company: "Tanners Wines Ltd",
+    category: "Wine & Spirits",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/alison-chadwick-712aba29",
     email: "",
@@ -4265,6 +4872,7 @@ export const leads = [
   {
     name: "Sara Roustoby",
     company: "BRECKENHOLME Trading Company Ltd",
+    category: "Other",
     position: "Brand Account Manager",
     linkedin: "http://www.linkedin.com/in/sara-roustoby-45367627",
     email: "sara@breckenholme.co.uk",
@@ -4272,6 +4880,7 @@ export const leads = [
   {
     name: "Jasmine Bull",
     company: "PizzaExpress",
+    category: "Casual Dining & Restaurants",
     position: "National Brand Manager",
     linkedin: "http://www.linkedin.com/in/jasmine-bull-824ab610b",
     email: "jasmine.bull@pizzaexpress.com",
@@ -4279,6 +4888,7 @@ export const leads = [
   {
     name: "Marian Mutumba-ssali",
     company: "ORGANO™",
+    category: "Coffee & Tea",
     position: "Independent Marketing Consultant",
     linkedin: "http://www.linkedin.com/in/marian-mutumba-ssali-b7897237",
     email: "",
@@ -4286,6 +4896,7 @@ export const leads = [
   {
     name: "Veronica Carton",
     company: "Sapling Spirits | B Corp",
+    category: "Wine & Spirits",
     position: "Trade Marketing And Events Manager",
     linkedin: "http://www.linkedin.com/in/veronica-carton-7b3568106",
     email: "veronica@saplingspirits.com",
@@ -4293,6 +4904,7 @@ export const leads = [
   {
     name: "Harriet Brooks",
     company: "Allen & Page Ltd",
+    category: "Other",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/harriettaylor",
     email: "",
@@ -4300,6 +4912,7 @@ export const leads = [
   {
     name: "Courtney Field",
     company: "Emmi Group",
+    category: "Dairy & Alternatives",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/courtney-field-25b94351",
     email: "",
@@ -4307,6 +4920,7 @@ export const leads = [
   {
     name: "David Tester",
     company: "Franco Manca",
+    category: "Casual Dining & Restaurants",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/testerdavid",
     email: "david.tester@francomanca.co.uk",
@@ -4314,6 +4928,7 @@ export const leads = [
   {
     name: "Ellen Hyland",
     company: "NORTHERN BL°C",
+    category: "Confectionery",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/ellen-hyland-819b26170",
     email: "ellen.hyland@northern-bloc.com",
@@ -4321,6 +4936,7 @@ export const leads = [
   {
     name: "Daniel Perkin",
     company: "Regency Hampers Limited",
+    category: "Grocery & Food Brands",
     position: "Sales & Marketing Director",
     linkedin: "http://www.linkedin.com/in/daniel-perkin-2a44ab52",
     email: "daniel@regencyhampers.com",
@@ -4328,6 +4944,7 @@ export const leads = [
   {
     name: "Anna Bond",
     company: "Samworth Brothers - Food For Now",
+    category: "Grocery & Food Brands",
     position: "Customer Marketing Manager",
     linkedin: "http://www.linkedin.com/in/anna-bond-63819a46",
     email: "anna.bond@foodfornow.co.uk",
@@ -4335,6 +4952,7 @@ export const leads = [
   {
     name: "Alex Brown",
     company: "Birds Eye UK & IE",
+    category: "Grocery & Food Brands",
     position: "Senior Customer Marketing Manager",
     linkedin: "http://www.linkedin.com/in/alex-brown-2b83a2129",
     email: "alex.brown@birdseye.co.uk",
@@ -4342,6 +4960,7 @@ export const leads = [
   {
     name: "Lee Nottle",
     company: "Essential Trading Co-operative",
+    category: "Grocery & Food Brands",
     position: "Pr And Digital Marketing",
     linkedin: "http://www.linkedin.com/in/lee-nottle-58a7b515a",
     email: "",
@@ -4349,6 +4968,7 @@ export const leads = [
   {
     name: "Siobhan O?donnell",
     company: "Konditor",
+    category: "Bakery & Bread",
     position: "E-commerce And Digital Marketing Manager",
     linkedin: "http://www.linkedin.com/in/siobhan-o%e2%80%99donnell-8b56b91aa",
     email: "siobhan@konditor.co.uk",
@@ -4356,6 +4976,7 @@ export const leads = [
   {
     name: "Francois Brugiere",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position:
       "Marketing Director - Brand Build & Marketing Excellence For Emerging Markets",
     linkedin: "http://www.linkedin.com/in/francoisbrugiere",
@@ -4364,6 +4985,7 @@ export const leads = [
   {
     name: "Adriana Raupp",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Brand Growth System, Senior Manager",
     linkedin: "http://www.linkedin.com/in/adriana-r-88a70860",
     email: "adriana.raupp@kraftheinz.com",
@@ -4371,6 +4993,7 @@ export const leads = [
   {
     name: "Louise Page",
     company: "Higgidy",
+    category: "Bakery & Bread",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/louiseapage",
     email: "louise@higgidy.co.uk",
@@ -4378,6 +5001,7 @@ export const leads = [
   {
     name: "Bee Supavarasuwat",
     company: "Buono (Thailand)",
+    category: "Grocery & Food Brands",
     position: "Marketing Director (uk Region)",
     linkedin: "http://www.linkedin.com/in/bee-supavarasuwat-84b88a160",
     email: "bee@buonothailand.com",
@@ -4385,6 +5009,7 @@ export const leads = [
   {
     name: "Sara Ashworth",
     company: "Lucky Saint | B Corp™",
+    category: "Beer & Brewing",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/sara-ashworth-049617160",
     email: "sara@luckysaint.co",
@@ -4392,6 +5017,7 @@ export const leads = [
   {
     name: "Adina Mathieson",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Head Of Marketing & Commercial - Uk Sauces",
     linkedin: "http://www.linkedin.com/in/adina-m-a0a25936",
     email: "adina.mathieson@kraftheinz.com",
@@ -4399,6 +5025,7 @@ export const leads = [
   {
     name: "James Armitage",
     company: "Fresh Direct (UK)",
+    category: "Other",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/james-armitage-82189b30",
     email: "james.armitage@freshdirect.co.uk",
@@ -4406,6 +5033,7 @@ export const leads = [
   {
     name: "Daxa Pabari",
     company: "FGS Ingredients Limited",
+    category: "Other",
     position: "Sales Marketing Manager",
     linkedin: "http://www.linkedin.com/in/daxa-pabari-b7568b259",
     email: "",
@@ -4413,6 +5041,7 @@ export const leads = [
   {
     name: "Olivia Galea",
     company: "Corney and Barrow LTD",
+    category: "Wine & Spirits",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/oliviajalibert",
     email: "olivia.galea@corneyandbarrow.com",
@@ -4420,6 +5049,7 @@ export const leads = [
   {
     name: "Leona Munday",
     company: "Mademoiselle Macaron",
+    category: "Bakery & Bread",
     position: "Digital Marketing Manager",
     linkedin: "http://www.linkedin.com/in/leona-munday-044516a9",
     email: "leona@mademoisellemacaron.co.uk",
@@ -4427,6 +5057,7 @@ export const leads = [
   {
     name: "Sara Mckennedy",
     company: "Coco di Mama",
+    category: "Casual Dining & Restaurants",
     position: "Commercial Brand Director",
     linkedin: "http://www.linkedin.com/in/sara-mckennedy-she-her-347b6b30",
     email: "sara@cocodimama.co.uk",
@@ -4434,6 +5065,7 @@ export const leads = [
   {
     name: "Liora Lieberman",
     company: "Mockingbird Raw Press",
+    category: "Drinks",
     position: "Assistant Brand Manager",
     linkedin: "http://www.linkedin.com/in/lioralieberman",
     email: "liora.lieberman@mockingbirdrawpress.com",
@@ -4441,6 +5073,7 @@ export const leads = [
   {
     name: "Richard Wardrop",
     company: "Vault City Brewing",
+    category: "Beer & Brewing",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/richard-wardrop",
     email: "richard.wardrop@vaultcity.co.uk",
@@ -4448,6 +5081,7 @@ export const leads = [
   {
     name: "Vicky Mctaggart",
     company: "Stokes Sauces",
+    category: "Grocery & Food Brands",
     position: "Marketing And Personnel Manager",
     linkedin: "http://www.linkedin.com/in/vicky-mctaggart-9438305",
     email: "vicky@stokessauces.co.uk",
@@ -4455,6 +5089,7 @@ export const leads = [
   {
     name: "Helena Chalfon",
     company: "Naturya | B Corp",
+    category: "Health & Wellness Food",
     position: "Marketing Intern",
     linkedin: "http://www.linkedin.com/in/helenachalfon",
     email: "helena.chalfon@naturya.com",
@@ -4462,6 +5097,7 @@ export const leads = [
   {
     name: "Louise Armstrong",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Senior HR Business Partner - Brand Transformation",
     linkedin: "http://www.linkedin.com/in/louise-armstrong-3a938372",
     email: "",
@@ -4469,6 +5105,7 @@ export const leads = [
   {
     name: "Elle Picton",
     company: "BOL Foods",
+    category: "Health & Wellness Food",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/ellepicton",
     email: "elle.picton@bolfoods.com",
@@ -4476,6 +5113,7 @@ export const leads = [
   {
     name: "Eve Rodway",
     company: "Hip Pop",
+    category: "Drinks",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/everodway",
     email: "eve.r@drinkhippop.com",
@@ -4483,6 +5121,7 @@ export const leads = [
   {
     name: "Ian Greengrass",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Brand Lead",
     linkedin: "http://www.linkedin.com/in/iangreengrass",
     email: "",
@@ -4490,6 +5129,7 @@ export const leads = [
   {
     name: "Georgia Crick",
     company: "Denzel's",
+    category: "Other",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/georgia-crick-7b9bb214a",
     email: "georgia@denzels.co.uk",
@@ -4497,6 +5137,7 @@ export const leads = [
   {
     name: "Jade Clapham",
     company: "Lucky Saint | B Corp™",
+    category: "Beer & Brewing",
     position: "Senior Brand Activations Executive",
     linkedin: "http://www.linkedin.com/in/jadeclapham",
     email: "jade@luckysaint.co",
@@ -4504,6 +5145,7 @@ export const leads = [
   {
     name: "Natalie Hopper",
     company: "Greggs",
+    category: "Bakery & Bread",
     position: "Retail Brand Manager, Greggs Plc",
     linkedin: "http://www.linkedin.com/in/natalie-hopper-42602985",
     email: "natalie.hopper@greggs.co.uk",
@@ -4511,6 +5153,7 @@ export const leads = [
   {
     name: "Sarah Hill",
     company: "Coffee#1",
+    category: "Coffee & Tea",
     position: "Senior Brand Marketing & Category Manager",
     linkedin: "http://www.linkedin.com/in/sarahnhill",
     email: "sarah@coffee1.co.uk",
@@ -4518,6 +5161,7 @@ export const leads = [
   {
     name: "Libby Hordos",
     company: "Freja Bone Broth",
+    category: "Health & Wellness Food",
     position: "Senior Social Media Marketing & Content Manager",
     linkedin: "http://www.linkedin.com/in/libby-hordos-4982b758",
     email: "libby@frejafoods.com",
@@ -4525,6 +5169,7 @@ export const leads = [
   {
     name: "Timothe Duquenne",
     company: "Verdant Brewing Co",
+    category: "Beer & Brewing",
     position: "Marketing & Communication Manager",
     linkedin: "http://www.linkedin.com/in/timoth%c3%a9-duquenne-689b4277",
     email: "timothe@verdantbrewing.co",
@@ -4532,6 +5177,7 @@ export const leads = [
   {
     name: "Fiona Watson",
     company: "DR. OETKER (UK) LIMITED",
+    category: "Grocery & Food Brands",
     position: "Head Of Shopper & Online Marketing",
     linkedin: "http://www.linkedin.com/in/fiona-watson-57480a1a6",
     email: "fiona.watson@oetker.co.uk",
@@ -4539,6 +5185,7 @@ export const leads = [
   {
     name: "Martha Jensen",
     company: "Bold Bean Co | B Corp™",
+    category: "Grocery & Food Brands",
     position: "Brand Lead",
     linkedin: "http://www.linkedin.com/in/martha-jensen-73919914a",
     email: "martha@boldbeanco.com",
@@ -4546,6 +5193,7 @@ export const leads = [
   {
     name: "Thomas Collins",
     company: "The Pantry UK Ltd",
+    category: "Grocery & Food Brands",
     position: "Marketing & Brand Manager",
     linkedin: "http://www.linkedin.com/in/thomas-collins-141797b4",
     email: "tcollins@thepantrycatering.co.uk",
@@ -4553,6 +5201,7 @@ export const leads = [
   {
     name: "Leonie Alert",
     company: "Tilda® | B Corp™",
+    category: "Grocery & Food Brands",
     position: "Senior Brand Manager - International Markets",
     linkedin: "http://www.linkedin.com/in/leoniealert",
     email: "leonie@tilda.com",
@@ -4560,6 +5209,7 @@ export const leads = [
   {
     name: "Rose Doherty",
     company: "Lindt & Sprungli UK",
+    category: "Confectionery",
     position: "Assistant Brand Manager (choco Wafer & Snacking)",
     linkedin: "http://www.linkedin.com/in/rose-doherty-099223168",
     email: "rodoherty@lindt.com",
@@ -4567,6 +5217,7 @@ export const leads = [
   {
     name: "Dana Bradshaw",
     company: "Pukka",
+    category: "Coffee & Tea",
     position: "Shopper Marketing Executive",
     linkedin: "http://www.linkedin.com/in/dana-bradshaw-33933913b",
     email: "dana.bradshaw@pukkapies.co.uk",
@@ -4574,6 +5225,7 @@ export const leads = [
   {
     name: "Paul Lowe",
     company: "Bennett Opie Ltd",
+    category: "Grocery & Food Brands",
     position: "National Account Manager - Bennett Opie Limited - Monin Brand",
     linkedin: "http://www.linkedin.com/in/paul-lowe-39b26b13",
     email: "paul.lowe@b-opie.com",
@@ -4581,6 +5233,7 @@ export const leads = [
   {
     name: "Lucy Limage",
     company: "Market Halls",
+    category: "Casual Dining & Restaurants",
     position: "Head Of Marketing And Partnerships",
     linkedin: "http://www.linkedin.com/in/lucy-limage-6a130a127",
     email: "lucy@markethalls.co.uk",
@@ -4588,6 +5241,7 @@ export const leads = [
   {
     name: "Jasmeen Uppal",
     company: "BURGER KING UK",
+    category: "Casual Dining & Restaurants",
     position: "Brand Management / Digital Communications",
     linkedin: "http://www.linkedin.com/in/jasmeen-uppal-6b405b195",
     email: "",
@@ -4595,6 +5249,7 @@ export const leads = [
   {
     name: "Gemma Hayden",
     company: "Lindt & Sprungli UK",
+    category: "Confectionery",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/gemma-hayden-43204890",
     email: "ghayden@lindt.com",
@@ -4602,6 +5257,7 @@ export const leads = [
   {
     name: "Clare Twiss",
     company: "Vegetarian Express",
+    category: "Grocery & Food Brands",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/clare-twiss-4433a526",
     email: "claretwiss@vegexp.co.uk",
@@ -4609,6 +5265,7 @@ export const leads = [
   {
     name: "Robbie R",
     company: "KIND",
+    category: "Snacks & Crisps",
     position:
       "Management Sciences Bsc Graduate | Former Bespoke Sales And Marketing Intern",
     linkedin: "http://www.linkedin.com/in/robbiejoereilly",
@@ -4617,6 +5274,7 @@ export const leads = [
   {
     name: "Andreea Mihaescu",
     company: "YOGOODY",
+    category: "Dairy & Alternatives",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/andreea-mihaescu",
     email: "andreea@yogoody.com",
@@ -4624,6 +5282,7 @@ export const leads = [
   {
     name: "Clare Lynch",
     company: "Swizzels",
+    category: "Confectionery",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/clare-lynch-4b002013a",
     email: "clare.lynch@swizzels-matlow.com",
@@ -4631,6 +5290,7 @@ export const leads = [
   {
     name: "Michael Jordan",
     company: "Fresh Direct (UK)",
+    category: "Other",
     position: "Senior Brand & Communications Marketing Manager",
     linkedin: "http://www.linkedin.com/in/michael-c-jordan",
     email: "michael.jordan@freshdirect.co.uk",
@@ -4638,6 +5298,7 @@ export const leads = [
   {
     name: "Shaunagh Dunlop",
     company: "Island Poké",
+    category: "Casual Dining & Restaurants",
     position: "Senior Marketing Manager",
     linkedin: "http://www.linkedin.com/in/shaunagh-dunlop-38936263",
     email: "shaunagh@islandpoke.co.uk",
@@ -4645,6 +5306,7 @@ export const leads = [
   {
     name: "Amy Heap",
     company: "KP Snacks",
+    category: "Snacks & Crisps",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/amy-heap-2a310041",
     email: "amy.heap@kpsnacks.com",
@@ -4652,6 +5314,7 @@ export const leads = [
   {
     name: "Karen Graney",
     company: "Greggs",
+    category: "Bakery & Bread",
     position: "Brand Format Manager",
     linkedin: "http://www.linkedin.com/in/karen-graney-bb66443b",
     email: "karen.graney@greggs.co.uk",
@@ -4659,6 +5322,7 @@ export const leads = [
   {
     name: "Ellie Baker",
     company: "DDC Foods Ltd",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/ellie-baker12",
     email: "ellie.baker@ddcfoods.co.uk",
@@ -4666,6 +5330,7 @@ export const leads = [
   {
     name: "Marcia West",
     company: "KP Snacks",
+    category: "Snacks & Crisps",
     position: "Grocery Shopper Marketing Lead",
     linkedin: "http://www.linkedin.com/in/marcia-west",
     email: "marcia.west@kpsnacks.com",
@@ -4673,6 +5338,7 @@ export const leads = [
   {
     name: "Erica Lowe",
     company: "Oatly",
+    category: "Dairy & Alternatives",
     position: "Brand Project Manager",
     linkedin: "http://www.linkedin.com/in/ekplowe",
     email: "erica.lowe@oatly.com",
@@ -4680,6 +5346,7 @@ export const leads = [
   {
     name: "Katie Evans",
     company: "BURGER KING UK",
+    category: "Casual Dining & Restaurants",
     position: "Chief Marketing Officer",
     linkedin: "http://www.linkedin.com/in/katie-evans-8841a511",
     email: "katie.evans@bkukgroup.co.uk",
@@ -4687,6 +5354,7 @@ export const leads = [
   {
     name: "Sally Fenton",
     company: "The Monty Bojangles Co",
+    category: "Confectionery",
     position: "Chief Marketing Officer",
     linkedin: "http://www.linkedin.com/in/sally-fenton-9993a754",
     email: "sfenton@themontybojanglesco.com",
@@ -4694,6 +5362,7 @@ export const leads = [
   {
     name: "Megan Allcock",
     company: "Gousto",
+    category: "Grocery & Food Brands",
     position: "Social Media And Content Manager",
     linkedin: "http://www.linkedin.com/in/megan-allcock-59110a10a",
     email: "megan-rose.allcock@gousto.co.uk",
@@ -4701,6 +5370,7 @@ export const leads = [
   {
     name: "Amy Ikin",
     company: "Princes Limited",
+    category: "Grocery & Food Brands",
     position: "Senior Digital Marketing Manager",
     linkedin: "http://www.linkedin.com/in/amy-ikin-397846ba",
     email: "amy.ikin@princes.co.uk",
@@ -4708,6 +5378,7 @@ export const leads = [
   {
     name: "Hannes Spangenberg",
     company: "The Wine Society",
+    category: "Wine & Spirits",
     position: "Campaign Marketing Manager",
     linkedin: "http://www.linkedin.com/in/hannes-spangenberg",
     email: "spangenbergh@thewinesociety.com",
@@ -4715,6 +5386,7 @@ export const leads = [
   {
     name: "Carolyn Whitelaw",
     company: "Wiltshire Farm Foods",
+    category: "Grocery & Food Brands",
     position: "Senior Marketing Production Manager",
     linkedin: "http://www.linkedin.com/in/carolyn-whitelaw-51015788",
     email: "",
@@ -4722,6 +5394,7 @@ export const leads = [
   {
     name: "Jessica Wylie",
     company: "Lindt & Sprungli UK",
+    category: "Confectionery",
     position: "Senior Customer Marketing Manager",
     linkedin: "http://www.linkedin.com/in/jessica-wylie-5b273318",
     email: "jwylie@lindt.com",
@@ -4729,6 +5402,7 @@ export const leads = [
   {
     name: "Karen Lewis",
     company: "FrieslandCampina",
+    category: "Dairy & Alternatives",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/karen-w-lewis",
     email: "karen.lewis@frieslandcampina.com",
@@ -4736,6 +5410,7 @@ export const leads = [
   {
     name: "Rob Godfrey",
     company: "Oatly",
+    category: "Dairy & Alternatives",
     position: "Brand Lead Uk&i",
     linkedin: "http://www.linkedin.com/in/rob-godfrey-54374544",
     email: "rob.godfrey@oatly.com",
@@ -4743,6 +5418,7 @@ export const leads = [
   {
     name: "Louise Bebbington",
     company: "Henry Colbeck",
+    category: "Other",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/louise-bebbington-91b54346",
     email: "louise.bebbington@colbeck.co.uk",
@@ -4750,6 +5426,7 @@ export const leads = [
   {
     name: "Sasha Finan",
     company: "KP Snacks",
+    category: "Snacks & Crisps",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/sasha-finan-515ba8195",
     email: "finans@kpsnacks.com",
@@ -4757,6 +5434,7 @@ export const leads = [
   {
     name: "Sammy Rae",
     company: "Scrumbles",
+    category: "Other",
     position: "Social Media And Content Manager",
     linkedin: "http://www.linkedin.com/in/sammy-r-48bb98247",
     email: "sammy@scrumbles.co.uk",
@@ -4764,6 +5442,7 @@ export const leads = [
   {
     name: "Ronan Patel",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Fp&a Manager: Zbb And Marketing Finance",
     linkedin: "http://www.linkedin.com/in/ronan-patel-cima-dip-ma-6321b51b4",
     email: "ronan.patel@kraftheinz.com",
@@ -4771,6 +5450,7 @@ export const leads = [
   {
     name: "Sayali Sarode",
     company: "Boulangerie Bon Matin LTD",
+    category: "Bakery & Bread",
     position: "Marketing Coordinator",
     linkedin: "http://www.linkedin.com/in/sayalisarode1407",
     email: "",
@@ -4778,6 +5458,7 @@ export const leads = [
   {
     name: "Amber Adaskaveg",
     company: "Mom's Meals | A Purfoods Company",
+    category: "Grocery & Food Brands",
     position: "Senior Strategic Marketing Manager",
     linkedin: "http://www.linkedin.com/in/amberadaskaveg",
     email: "amber.adaskaveg@momsmeals.com",
@@ -4785,6 +5466,7 @@ export const leads = [
   {
     name: "Lucie Connolly",
     company: "Lucky Saint | B Corp™",
+    category: "Beer & Brewing",
     position: "Customer Marketing Manager",
     linkedin: "http://www.linkedin.com/in/luckysaintlucie",
     email: "lucie@luckysaint.co",
@@ -4792,6 +5474,7 @@ export const leads = [
   {
     name: "Laura Mallon",
     company: "Aimia Foods Ltd",
+    category: "Grocery & Food Brands",
     position: "Innovation Marketing Manager",
     linkedin: "http://www.linkedin.com/in/laura-mallon-b1611021",
     email: "laura.mallon@aimiafoods.com",
@@ -4799,6 +5482,7 @@ export const leads = [
   {
     name: "Brianna M",
     company: "Queensland Bakery Co.",
+    category: "Bakery & Bread",
     position: "Brand And Innovation Executive",
     linkedin: "http://www.linkedin.com/in/brianna-j-m",
     email: "",
@@ -4806,6 +5490,7 @@ export const leads = [
   {
     name: "Oliver Brown",
     company: "Ingredion Incorporated",
+    category: "Other",
     position: "Emea Marketing Communication & Content Lead",
     linkedin: "http://www.linkedin.com/in/oliver-brown-6a3669b7",
     email: "oliver.brown@ingredion.com",
@@ -4813,6 +5498,7 @@ export const leads = [
   {
     name: "Luke Mcdonagh",
     company: "Gloucester Brewery Ltd",
+    category: "Beer & Brewing",
     position: "Sales Marketing Manager",
     linkedin: "http://www.linkedin.com/in/luke-mcdonagh-66393b304",
     email: "luke@gloucesterbrewery.co.uk",
@@ -4820,6 +5506,7 @@ export const leads = [
   {
     name: "Adam Pearson",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Food Drink & Brand Partner",
     linkedin: "http://www.linkedin.com/in/adam-pearson-4117541aa",
     email: "",
@@ -4827,6 +5514,7 @@ export const leads = [
   {
     name: "Finn Lagun",
     company: "Pasta Evangelists",
+    category: "Casual Dining & Restaurants",
     position: "Co-founder & Chief Marketing Officer",
     linkedin: "http://www.linkedin.com/in/finn-lagun-b0173aa5",
     email: "finn@pastaevangelists.com",
@@ -4834,6 +5522,7 @@ export const leads = [
   {
     name: "Erica Pun",
     company: "Cereal Partners Worldwide (Nestlé & General Mills)",
+    category: "Grocery & Food Brands",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/erica-pun-093a56ba",
     email: "",
@@ -4841,6 +5530,7 @@ export const leads = [
   {
     name: "Natalia Bulatewicz",
     company: "BURGER KING UK",
+    category: "Casual Dining & Restaurants",
     position: "Commercial Finance Data Analyst - Marketing And Insights",
     linkedin: "http://www.linkedin.com/in/natalia-bulatewicz-79b7a115b",
     email: "",
@@ -4848,6 +5538,7 @@ export const leads = [
   {
     name: "Cristina Pasantes",
     company: "Brindisa",
+    category: "Grocery & Food Brands",
     position: "Sales And Marketing Director",
     linkedin: "http://www.linkedin.com/in/cristina-pasantes-21775513",
     email: "cristinap@brindisa.com",
@@ -4855,6 +5546,7 @@ export const leads = [
   {
     name: "Sigrid Zeiner-gundersen",
     company: "Plenish",
+    category: "Dairy & Alternatives",
     position: "Social Media And Content Manager",
     linkedin: "http://www.linkedin.com/in/sigrid-zeiner-gundersen",
     email: "sigrid@plenishdrinks.com",
@@ -4862,6 +5554,7 @@ export const leads = [
   {
     name: "Kimmy C",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "International Brand Manager",
     linkedin: "http://www.linkedin.com/in/kimmycheung",
     email: "kimmy.c@kraftheinz.com",
@@ -4869,6 +5562,7 @@ export const leads = [
   {
     name: "Rebecca Wilmott",
     company: "Capri Sun Group",
+    category: "Drinks",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/rebeccaaolley",
     email: "rebecca.wilmott@capri-sun.com",
@@ -4876,6 +5570,7 @@ export const leads = [
   {
     name: "Leah Gregg",
     company: "Andrew Ingredients",
+    category: "Other",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/leah-gregg-a0190b4a",
     email: "leah@andrewingredients.co.uk",
@@ -4883,6 +5578,7 @@ export const leads = [
   {
     name: "Victoria Morgan",
     company: "Müller UK & Ireland",
+    category: "Dairy & Alternatives",
     position: "Health And Wellness Segment Lead (brand Marketing)",
     linkedin: "http://www.linkedin.com/in/victoria-morgan-182b8b1",
     email: "vicky.morgan@muller.co.uk",
@@ -4890,6 +5586,7 @@ export const leads = [
   {
     name: "Molly Wolstenholme",
     company: "Princes Limited",
+    category: "Grocery & Food Brands",
     position: "Graduate Assistant Brand Manager",
     linkedin: "http://www.linkedin.com/in/molly-wolstenholme-6062481b6",
     email: "molly.wolstenholme@princes.co.uk",
@@ -4897,6 +5594,7 @@ export const leads = [
   {
     name: "Melissa Bentley",
     company: "Life Health Foods Europe",
+    category: "Health & Wellness Food",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/melissa-bentley",
     email: "melissa.bentley@lhf.co.uk",
@@ -4904,6 +5602,7 @@ export const leads = [
   {
     name: "Jo Hall",
     company: "allmanhall",
+    category: "Other",
     position: "Development & Marketing Director",
     linkedin: "http://www.linkedin.com/in/halljo",
     email: "jo.hall@allmanhall.co.uk",
@@ -4911,6 +5610,7 @@ export const leads = [
   {
     name: "Joel Hughes",
     company: "Lindt & Sprungli UK",
+    category: "Confectionery",
     position: "Marketing Manager - Excellence & Secondary Franchises",
     linkedin: "http://www.linkedin.com/in/joelhughes87",
     email: "jhughes@lindt.com",
@@ -4918,6 +5618,7 @@ export const leads = [
   {
     name: "Adele Ward",
     company: "Ecotone",
+    category: "Grocery & Food Brands",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/wardadele",
     email: "adele.ward@ecotone.bio",
@@ -4925,6 +5626,7 @@ export const leads = [
   {
     name: "Saffron Unwin",
     company: "DR. OETKER (UK) LIMITED",
+    category: "Grocery & Food Brands",
     position: "Assistant Brand Manager",
     linkedin: "http://www.linkedin.com/in/saffron-unwin",
     email: "saffron.unwin@oetker.co.uk",
@@ -4932,6 +5634,7 @@ export const leads = [
   {
     name: "Laura Robinson",
     company: "DR. OETKER (UK) LIMITED",
+    category: "Grocery & Food Brands",
     position: "Senior Brand Manager - Chicago Town",
     linkedin: "http://www.linkedin.com/in/laura-robinson-67571b159",
     email: "laura.robinson@oetker.co.uk",
@@ -4939,6 +5642,7 @@ export const leads = [
   {
     name: "Mark Carolan",
     company: "Godiva Chocolatier",
+    category: "Confectionery",
     position: "Global Brand & Creative Director",
     linkedin: "http://www.linkedin.com/in/markcarolan",
     email: "mark.carolan@pladisglobal.com",
@@ -4946,6 +5650,7 @@ export const leads = [
   {
     name: "Claire Taylor-bates",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Trade Marketing Manager",
     linkedin: "http://www.linkedin.com/in/claire-taylor-bates-10a68157",
     email: "clairebates@greeneking.co.uk",
@@ -4953,6 +5658,7 @@ export const leads = [
   {
     name: "Will Robinson",
     company: "Müller UK & Ireland",
+    category: "Dairy & Alternatives",
     position: "Head Of Marketing, Treats Portfolio",
     linkedin: "http://www.linkedin.com/in/will-robinson-98709612",
     email: "will.robinson@muller.co.uk",
@@ -4960,6 +5666,7 @@ export const leads = [
   {
     name: "Emma Smith",
     company: "KP Snacks",
+    category: "Snacks & Crisps",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/emma-smith-79224073",
     email: "smithe@kpsnacks.com",
@@ -4967,6 +5674,7 @@ export const leads = [
   {
     name: "Casper Brazier",
     company: "Jelly Drops",
+    category: "Confectionery",
     position: "Digital Marketing Manager",
     linkedin: "http://www.linkedin.com/in/casper-brazier-997499113",
     email: "casper@jellydrops.com",
@@ -4974,6 +5682,7 @@ export const leads = [
   {
     name: "Emma Stowers",
     company: "Ginsters",
+    category: "Bakery & Bread",
     position: "Ginsters Marketing Director",
     linkedin: "http://www.linkedin.com/in/emma-stowers-25a6157b",
     email: "emma.stowers@ginsters.co.uk",
@@ -4981,6 +5690,7 @@ export const leads = [
   {
     name: "Sherilyn Chu",
     company: "Partridges",
+    category: "Grocery & Food Brands",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/sherilyn-chu-b06389320",
     email: "",
@@ -4988,6 +5698,7 @@ export const leads = [
   {
     name: "Ema Mcim",
     company: "Samworth Brothers",
+    category: "Grocery & Food Brands",
     position: "Category Marketing Manager",
     linkedin: "http://www.linkedin.com/in/ema-gawthorne-dipm-mcim-48b39716",
     email: "ema.gawthorne@samworthbrothers.co.uk",
@@ -4995,6 +5706,7 @@ export const leads = [
   {
     name: "Adam Pritchard",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Social Media Executive",
     linkedin: "http://www.linkedin.com/in/adam-pritchard-6875331a2",
     email: "adampritchard@greeneking.co.uk",
@@ -5002,6 +5714,7 @@ export const leads = [
   {
     name: "Owen Walmsley",
     company: "Billington Foods",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/owen-walmsley-24134431",
     email: "owen.walmsley@billington-foods.com",
@@ -5009,6 +5722,7 @@ export const leads = [
   {
     name: "Amy Mccudden",
     company: "Tanners Wines Ltd",
+    category: "Wine & Spirits",
     position: "Digital Marketing And Copy Lead",
     linkedin: "http://www.linkedin.com/in/amy-mccudden-961214aa",
     email: "amy.mccudden@tanners-wines.co.uk",
@@ -5016,6 +5730,7 @@ export const leads = [
   {
     name: "Emma Humphrey",
     company: "thefoodpeople",
+    category: "Other",
     position: "Digital Marketing Lead",
     linkedin: "http://www.linkedin.com/in/emma-louise-humphrey",
     email: "emma@thefoodpeople.co.uk",
@@ -5023,6 +5738,7 @@ export const leads = [
   {
     name: "Yiran Dai",
     company: "Lee Kum Kee Europe",
+    category: "Grocery & Food Brands",
     position: "Senior Marketing Executive",
     linkedin: "http://www.linkedin.com/in/yiran-dai-ab6bb81a5",
     email: "yiran.dai@uk.lkk.com",
@@ -5030,6 +5746,7 @@ export const leads = [
   {
     name: "Nicki Wedgwood",
     company: "Cottage Delight",
+    category: "Grocery & Food Brands",
     position: "Trade Marketing Lead",
     linkedin: "http://www.linkedin.com/in/nicki-wedgwood-13314362",
     email: "nicki.wedgwood@cottagedelight.co.uk",
@@ -5037,6 +5754,7 @@ export const leads = [
   {
     name: "Eniola Akinsanya",
     company: "yfood Labs",
+    category: "Health & Wellness Food",
     position: "Growth Influencer Marketing Manager",
     linkedin: "http://www.linkedin.com/in/eniola-a-622579193",
     email: "eakinsanya@yfood.eu",
@@ -5044,6 +5762,7 @@ export const leads = [
   {
     name: "Effie Howard-jones",
     company: "Westons Cider",
+    category: "Beer & Brewing",
     position: "Assistant Brand Manager Marketing",
     linkedin: "http://www.linkedin.com/in/effie-howard-jones-82551a17a",
     email: "",
@@ -5051,6 +5770,7 @@ export const leads = [
   {
     name: "Becci Chatterton",
     company: "The Wine Society",
+    category: "Wine & Spirits",
     position: "Head Of Campaign Marketing",
     linkedin: "http://www.linkedin.com/in/becci-chatterton-69571999",
     email: "chattertonb@thewinesociety.com",
@@ -5058,6 +5778,7 @@ export const leads = [
   {
     name: "Lucy Jaggard",
     company: "Princes Limited",
+    category: "Grocery & Food Brands",
     position: "Shopper Marketing Manager",
     linkedin: "http://www.linkedin.com/in/lucy-jaggard-42a9b2199",
     email: "lucy.jaggard@princesgroup.com",
@@ -5065,6 +5786,7 @@ export const leads = [
   {
     name: "Thomas Barkholt",
     company: "Doves Farm Foods Ltd",
+    category: "Grocery & Food Brands",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/thomas-barkholt-3351642",
     email: "tbarkholt@dovesfarm.co.uk",
@@ -5072,6 +5794,7 @@ export const leads = [
   {
     name: "Alyse Kimsey",
     company: "Pow Food | BCorp, Nutrition-led Catering",
+    category: "Health & Wellness Food",
     position: "Marketing Lead",
     linkedin: "http://www.linkedin.com/in/alysekimsey",
     email: "alyse@powfood.co.uk",
@@ -5079,6 +5802,7 @@ export const leads = [
   {
     name: "Jag Singh",
     company: "Clearspring",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/jagdeepsinghkang",
     email: "jag@clearspring.co.uk",
@@ -5086,6 +5810,7 @@ export const leads = [
   {
     name: "Sophie Elias",
     company: "Emmi Group",
+    category: "Dairy & Alternatives",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/sophie-elias-88b589b6",
     email: "",
@@ -5093,6 +5818,7 @@ export const leads = [
   {
     name: "Joanna Formby",
     company: "Ramsden International",
+    category: "Other",
     position: "Head Of Trading Category And Marketing",
     linkedin: "http://www.linkedin.com/in/joanna-formby-9206b75a",
     email: "",
@@ -5100,6 +5826,7 @@ export const leads = [
   {
     name: "Amarachi Ibanga",
     company: "DR. OETKER (UK) LIMITED",
+    category: "Grocery & Food Brands",
     position: "Marketing Assistant",
     linkedin: "http://www.linkedin.com/in/amarachi-ibanga-0a1312249",
     email: "amarachi.ibanga@oetker.co.uk",
@@ -5107,6 +5834,7 @@ export const leads = [
   {
     name: "Helen Campbell",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Food Marketing Manager",
     linkedin: "http://www.linkedin.com/in/helen-campbell-3b53668",
     email: "",
@@ -5114,6 +5842,7 @@ export const leads = [
   {
     name: "Pippa Mansell",
     company: "Müller UK & Ireland",
+    category: "Dairy & Alternatives",
     position: "Cadbury Brand Manager",
     linkedin: "http://www.linkedin.com/in/pippa-mansell-406219157",
     email: "pippa.mansell@muller.co.uk",
@@ -5121,6 +5850,7 @@ export const leads = [
   {
     name: "Cheryl Barrett",
     company: "The Original Baker",
+    category: "Bakery & Bread",
     position: "Sales And Marketing Director",
     linkedin: "http://www.linkedin.com/in/cheryl-barrett-476a7a139",
     email: "cheryl@theoriginalbaker.co.uk",
@@ -5128,6 +5858,7 @@ export const leads = [
   {
     name: "Ken Tai",
     company: "Lee Kum Kee Europe",
+    category: "Grocery & Food Brands",
     position: "Assistant Brand Marketing Manager",
     linkedin: "http://www.linkedin.com/in/ktwtai",
     email: "ken.tai@uk.lkk.com",
@@ -5135,6 +5866,7 @@ export const leads = [
   {
     name: "Jenna Mckone",
     company: "The Turmeric Co.",
+    category: "Health & Wellness Food",
     position: "Social Media Manager",
     linkedin: "http://www.linkedin.com/in/jenna-mckone",
     email: "jenna@theturmeric.co",
@@ -5142,6 +5874,7 @@ export const leads = [
   {
     name: "Liz Cuff",
     company: "The Tracklement Company Limited | B Corp",
+    category: "Grocery & Food Brands",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/liz-cuff-865188114",
     email: "liz.cuff@tracklements.co.uk",
@@ -5149,6 +5882,7 @@ export const leads = [
   {
     name: "Hira Mushtaq",
     company: "Creams Cafe",
+    category: "Casual Dining & Restaurants",
     position: "Social Media Manager",
     linkedin: "http://www.linkedin.com/in/hira-mushtaq-b7886b312",
     email: "",
@@ -5156,6 +5890,7 @@ export const leads = [
   {
     name: "Charlotte Jackson",
     company: "Lottie Shaw's",
+    category: "Bakery & Bread",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/charlotte-jackson-48b604a8",
     email: "charlottej@lottieshaws.co.uk",
@@ -5163,6 +5898,7 @@ export const leads = [
   {
     name: "Adam Mikael",
     company: "YouMeSushi",
+    category: "Casual Dining & Restaurants",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/adam-london",
     email: "adam@youmesushi.com",
@@ -5170,6 +5906,7 @@ export const leads = [
   {
     name: "Nikki Comiskey",
     company: "Princes Limited",
+    category: "Grocery & Food Brands",
     position: "Head Of Brand Napolina And Eol",
     linkedin: "http://www.linkedin.com/in/nikki-comiskey-16a47346",
     email: "nikki.comiskey@princes.co.uk",
@@ -5177,6 +5914,7 @@ export const leads = [
   {
     name: "Esbah Waseem",
     company: "Vibrant Foods",
+    category: "Grocery & Food Brands",
     position: "Social Media Manager",
     linkedin: "http://www.linkedin.com/in/esbah-waseem-02743a189",
     email: "esbah.waseem@vibrantfoods.com",
@@ -5184,6 +5922,7 @@ export const leads = [
   {
     name: "Helen Pomphrey",
     company: "The Coconut Collab",
+    category: "Dairy & Alternatives",
     position: "Interim Marketing Director",
     linkedin: "http://www.linkedin.com/in/helen-pomphrey",
     email: "helen.pomphrey@heliosx.com",
@@ -5191,6 +5930,7 @@ export const leads = [
   {
     name: "Nick Bruce",
     company: "First Quality Foods",
+    category: "Grocery & Food Brands",
     position: "Marketing Director And A Proud Member",
     linkedin: "http://www.linkedin.com/in/nick-bruce-13b33391",
     email: "",
@@ -5198,6 +5938,7 @@ export const leads = [
   {
     name: "Sreedevi V",
     company: "wagamama",
+    category: "Casual Dining & Restaurants",
     position: "Marketing Team Member",
     linkedin: "http://www.linkedin.com/in/sreedevi-v-852091214",
     email: "sreedevi@wagamama.com",
@@ -5205,6 +5946,7 @@ export const leads = [
   {
     name: "Alex Radcliffe",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Head Of Marketing - Craft",
     linkedin: "http://www.linkedin.com/in/alex-radcliffe-45b45245",
     email: "alexradcliffe@greeneking.co.uk",
@@ -5212,6 +5954,7 @@ export const leads = [
   {
     name: "Heather South",
     company: "Solina",
+    category: "Other",
     position: "Marketing Manager (mcdonalds)",
     linkedin: "http://www.linkedin.com/in/hesouth",
     email: "heather.south@solina.com",
@@ -5219,6 +5962,7 @@ export const leads = [
   {
     name: "Lauren Ward",
     company: "Birds Eye UK & IE",
+    category: "Grocery & Food Brands",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/lauren-ward-b7457993",
     email: "lauren.ward@birdseye.co.uk",
@@ -5226,6 +5970,7 @@ export const leads = [
   {
     name: "Imogen Passam",
     company: "Birds Eye UK & IE",
+    category: "Grocery & Food Brands",
     position: "Junior Brand Manager",
     linkedin: "http://www.linkedin.com/in/imogen-passam-41341a150",
     email: "imogen.passam@birdseye.co.uk",
@@ -5233,6 +5978,7 @@ export const leads = [
   {
     name: "Katie West",
     company: "GROUNDED®",
+    category: "Coffee & Tea",
     position: "Marketing",
     linkedin: "http://www.linkedin.com/in/katie-west-31731b1a",
     email: "katie@groundedshakes.com",
@@ -5240,6 +5986,7 @@ export const leads = [
   {
     name: "Katie Jones",
     company: "Lakeside Food Group",
+    category: "Grocery & Food Brands",
     position: "Marketing And Npd Manager",
     linkedin: "http://www.linkedin.com/in/katie-jones-38800511",
     email: "",
@@ -5247,6 +5994,7 @@ export const leads = [
   {
     name: "Anna Maccarthy",
     company: "Gü Desserts |  Certified B Corp™",
+    category: "Confectionery",
     position: "Assistant Brand Manager",
     linkedin: "http://www.linkedin.com/in/anna-maccarthy-7b7846148",
     email: "anna.maccarthy@gupuds.com",
@@ -5254,6 +6002,7 @@ export const leads = [
   {
     name: "Kirsten Alexander",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/kirstenbealexander",
     email: "",
@@ -5261,6 +6010,7 @@ export const leads = [
   {
     name: "Lauren Docherty",
     company: "Wiltshire Farm Foods",
+    category: "Grocery & Food Brands",
     position: "Marketing",
     linkedin: "http://www.linkedin.com/in/lauren-docherty-899619129",
     email: "",
@@ -5268,6 +6018,7 @@ export const leads = [
   {
     name: "Alice Atherton",
     company: "Aimia Foods Ltd",
+    category: "Grocery & Food Brands",
     position: "Senior Digital Marketing Executive",
     linkedin: "http://www.linkedin.com/in/alice-atherton-11433b110",
     email: "alice.atherton@aimiafoods.com",
@@ -5275,6 +6026,7 @@ export const leads = [
   {
     name: "Liam Ruane",
     company: "SALT",
+    category: "Casual Dining & Restaurants",
     position: "Brand Marketing Executive",
     linkedin: "http://www.linkedin.com/in/liamruane89",
     email: "",
@@ -5282,6 +6034,7 @@ export const leads = [
   {
     name: "Arianna Beach",
     company: "Planet Doughnut",
+    category: "Bakery & Bread",
     position: "Marketing Executive",
     linkedin: "http://www.linkedin.com/in/arianna-beach-11a83921b",
     email: "arianna@planetdoughnut.co.uk",
@@ -5289,6 +6042,7 @@ export const leads = [
   {
     name: "Max Simons-dukes",
     company: "wagamama",
+    category: "Casual Dining & Restaurants",
     position: "Head Of Brand Communications",
     linkedin: "http://www.linkedin.com/in/max-simons-dukes-9730a6104",
     email: "max@wagamama.com",
@@ -5296,6 +6050,7 @@ export const leads = [
   {
     name: "Darren Anderson",
     company: "Henry Colbeck",
+    category: "Other",
     position: "Marketing Manager (head Of Department)",
     linkedin: "http://www.linkedin.com/in/darren-anderson-a30881156",
     email: "d_anderson@colbeck.co.uk",
@@ -5303,6 +6058,7 @@ export const leads = [
   {
     name: "Eloise Bristow",
     company: "Ombar Chocolate",
+    category: "Confectionery",
     position: "Brand & Marketing Manager",
     linkedin: "http://www.linkedin.com/in/eloisebristow",
     email: "eloise@moodfoods.uk",
@@ -5310,6 +6066,7 @@ export const leads = [
   {
     name: "Emma Caumont",
     company: "Pimentae Drinks",
+    category: "Drinks",
     position: "Senior Marketing Manager",
     linkedin: "http://www.linkedin.com/in/emma-caumont-205169200",
     email: "emma@pimentaedrinks.com",
@@ -5317,6 +6074,7 @@ export const leads = [
   {
     name: "Katie Scott",
     company: "Sustainable Wine Solutions (Borough Wines)",
+    category: "Wine & Spirits",
     position: "Social Media Manager",
     linkedin: "http://www.linkedin.com/in/katie-scott-41ba1683",
     email: "",
@@ -5324,6 +6082,7 @@ export const leads = [
   {
     name: "Simon Baggaley",
     company: "Nestlé Professional",
+    category: "Grocery & Food Brands",
     position: "B2b Marketing Manager, Beverages - Zone Europe",
     linkedin: "http://www.linkedin.com/in/simon-baggaley-866ba218",
     email: "simon.baggaley@uk.nestle.com",
@@ -5331,6 +6090,7 @@ export const leads = [
   {
     name: "Jessica Prissman",
     company: "Lindt & Sprungli UK",
+    category: "Confectionery",
     position: "Senior Brand Manager - Bars",
     linkedin: "http://www.linkedin.com/in/jessica-jade-prissman-50858213a",
     email: "jprissman@lindt.com",
@@ -5338,6 +6098,7 @@ export const leads = [
   {
     name: "Siobhan Peterson",
     company: "Pip Organic",
+    category: "Drinks",
     position: "Head Of Brand",
     linkedin: "http://www.linkedin.com/in/siobhan-peterson-6b171587",
     email: "siobhan@piporganic.com",
@@ -5345,6 +6106,7 @@ export const leads = [
   {
     name: "Anna Mcdonald",
     company: "KP Snacks",
+    category: "Snacks & Crisps",
     position: "Retail Brand Manager",
     linkedin: "http://www.linkedin.com/in/anna-mcdonald-42373684",
     email: "anna.mcdonald@kpsnacks.com",
@@ -5352,6 +6114,7 @@ export const leads = [
   {
     name: "Amanda Burningham",
     company: "Emmi Group",
+    category: "Dairy & Alternatives",
     position: "Brand Acceleration Lead",
     linkedin: "http://www.linkedin.com/in/amandaburningham",
     email: "amanda.burningham@emmi.com",
@@ -5359,6 +6122,7 @@ export const leads = [
   {
     name: "Talar Asswad",
     company: "Müller UK & Ireland",
+    category: "Dairy & Alternatives",
     position: "Strategy & Marketing Director",
     linkedin: "http://www.linkedin.com/in/talar-el-asswad-a05ba27",
     email: "",
@@ -5366,6 +6130,7 @@ export const leads = [
   {
     name: "Benjamin Jones",
     company: "Snack Creations",
+    category: "Snacks & Crisps",
     position: "Marketing And Research Executive",
     linkedin: "http://www.linkedin.com/in/benjamincjones",
     email: "benjamin.jones@snackcreations.com",
@@ -5373,6 +6138,7 @@ export const leads = [
   {
     name: "Connie Chapman",
     company: "GNAW Chocolate",
+    category: "Confectionery",
     position: "Sales And Marketing Administrator",
     linkedin: "http://www.linkedin.com/in/connie-chapman-745394141",
     email: "connie.chapman@gnawchocolate.co.uk",
@@ -5380,6 +6146,7 @@ export const leads = [
   {
     name: "Nathalie Vandeweerd",
     company: "Alpro",
+    category: "Dairy & Alternatives",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/nathalie-vandeweerd-39a20944",
     email: "",
@@ -5387,6 +6154,7 @@ export const leads = [
   {
     name: "Jemma Robinson",
     company: "Hain Celestial UK",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager Plant Based",
     linkedin: "http://www.linkedin.com/in/jemma-robinson-52892a114",
     email: "jemma.robinson@haindaniels.com",
@@ -5394,6 +6162,7 @@ export const leads = [
   {
     name: "Skye Banks",
     company: "The Chuckling Cheese Company",
+    category: "Dairy & Alternatives",
     position: "Tiktok Marketing Lead",
     linkedin: "http://www.linkedin.com/in/skye-banks-0951b3206",
     email: "skye@chucklingcheese.co.uk",
@@ -5401,6 +6170,7 @@ export const leads = [
   {
     name: "Becca Dickinson",
     company: "Cutter & Squidge",
+    category: "Bakery & Bread",
     position: "Senior Brand Marketing Manager",
     linkedin: "http://www.linkedin.com/in/becca-dickinson-46a9499a",
     email: "becca@cutterandsquidge.com",
@@ -5408,6 +6178,7 @@ export const leads = [
   {
     name: "Rachel Horrell",
     company: "KP Snacks",
+    category: "Snacks & Crisps",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/rachel-horrell",
     email: "rachel.horrell@kpsnacks.com",
@@ -5415,6 +6186,7 @@ export const leads = [
   {
     name: "Charlotte Cross",
     company: "Birds Eye UK & IE",
+    category: "Grocery & Food Brands",
     position: "Cluster Brand Manager Uk & Ire Chicken Shop",
     linkedin: "http://www.linkedin.com/in/charlotte-vause-cross-736934127",
     email: "charlotte.vause@birdseye.co.uk",
@@ -5422,6 +6194,7 @@ export const leads = [
   {
     name: "Maisie Palmer",
     company: "Thomas Ridley Foodservice",
+    category: "Other",
     position: "Head Of Marketing And Communications",
     linkedin: "http://www.linkedin.com/in/maisie-palmer-47969a136",
     email: "maisie.palmer@thomasridley.co.uk",
@@ -5429,6 +6202,7 @@ export const leads = [
   {
     name: "Paulina Wagner",
     company: "Oatly",
+    category: "Dairy & Alternatives",
     position: "Trade Marketing Manager",
     linkedin: "http://www.linkedin.com/in/paulina-wagner",
     email: "paulina.wagner@oatly.com",
@@ -5436,6 +6210,7 @@ export const leads = [
   {
     name: "Jane Akinhead",
     company: "Lindt & Sprungli UK",
+    category: "Confectionery",
     position: "Senior Brand Manager - Lindor",
     linkedin: "http://www.linkedin.com/in/jane-akinhead-4a636331",
     email: "jakinhead@lindt.com",
@@ -5443,6 +6218,7 @@ export const leads = [
   {
     name: "Alastair Gibbons",
     company: "Huel",
+    category: "Health & Wellness Food",
     position: "Brand Director",
     linkedin: "http://www.linkedin.com/in/alastair-gibbons-41111721",
     email: "ali@huel.com",
@@ -5450,6 +6226,7 @@ export const leads = [
   {
     name: "Amie Norris",
     company: "Denzel's",
+    category: "Other",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/amiehannahnorris",
     email: "amie@denzels.co.uk",
@@ -5457,6 +6234,7 @@ export const leads = [
   {
     name: "Ella Howarth",
     company: "Dr. Will's",
+    category: "Grocery & Food Brands",
     position:
       "Marketing And Content Intern At Dr. Will’s / Bsc Psychology Undergraduate",
     linkedin: "http://www.linkedin.com/in/ella-howarth-03580a227",
@@ -5465,6 +6243,7 @@ export const leads = [
   {
     name: "Julie Plummer",
     company: "Wiltshire Farm Foods",
+    category: "Grocery & Food Brands",
     position: "Marketing. Manager",
     linkedin: "http://www.linkedin.com/in/julie-plummer-6590478b",
     email: "",
@@ -5472,6 +6251,7 @@ export const leads = [
   {
     name: "Michelle Younger",
     company: "Aimia Foods Ltd",
+    category: "Grocery & Food Brands",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/michelle-younger-27629836",
     email: "michelle.younger@aimiafoods.com",
@@ -5479,6 +6259,7 @@ export const leads = [
   {
     name: "Fraser Street",
     company: "Müller UK & Ireland",
+    category: "Dairy & Alternatives",
     position: "Bsc Marketing & Management Student | Marketing Intern",
     linkedin: "http://www.linkedin.com/in/fraser-street",
     email: "fraser.street@muller.co.uk",
@@ -5486,6 +6267,7 @@ export const leads = [
   {
     name: "Rasika Khemka",
     company: "Doughlicious The London Dough Co.",
+    category: "Bakery & Bread",
     position: "Digital Marketing Intern",
     linkedin: "http://www.linkedin.com/in/rasika-khemka",
     email: "rasika@doughlicious.co.uk",
@@ -5493,6 +6275,7 @@ export const leads = [
   {
     name: "Jen Johnson",
     company: "DR. OETKER (UK) LIMITED",
+    category: "Grocery & Food Brands",
     position: "Head Of Marketing - Cake",
     linkedin: "http://www.linkedin.com/in/jen-johnson-03aa05114",
     email: "",
@@ -5500,6 +6283,7 @@ export const leads = [
   {
     name: "Timothy Goh",
     company: "Mindful Chef | B Corp",
+    category: "Grocery & Food Brands",
     position: "Growth Marketing Manager",
     linkedin: "http://www.linkedin.com/in/timothy-jh-goh",
     email: "tim.goh@mindfulchef.com",
@@ -5507,6 +6291,7 @@ export const leads = [
   {
     name: "Jena Allen",
     company: "KIND",
+    category: "Snacks & Crisps",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/jena-allen-2533831b2",
     email: "jena.allen@kindsnacks.co.uk",
@@ -5514,6 +6299,7 @@ export const leads = [
   {
     name: "Gemma Edwards",
     company: "Lakeside Food Group",
+    category: "Grocery & Food Brands",
     position: "Head Of Sales Marketing",
     linkedin: "http://www.linkedin.com/in/gemma-edwards-954ba949",
     email: "gemma.edwards@lakesidefoods.co.uk",
@@ -5521,6 +6307,7 @@ export const leads = [
   {
     name: "Anita Osborne",
     company: "Lyre's Spirit Co",
+    category: "Drinks",
     position: "Sales & Marketing Manager Eu/uk At Lyre's Spirit Co",
     linkedin: "http://www.linkedin.com/in/anita-osborne-83615b154",
     email: "anita@lyres.co",
@@ -5528,6 +6315,7 @@ export const leads = [
   {
     name: "Catherine Davies",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Junior Brand Manager",
     linkedin: "http://www.linkedin.com/in/catherine-davies17",
     email: "catherine.davies@kraftheinz.com",
@@ -5535,6 +6323,7 @@ export const leads = [
   {
     name: "Sherelle Lawrence",
     company: "The FoodFellas",
+    category: "Grocery & Food Brands",
     position: "Sales & Marketing Co-ordinator",
     linkedin: "http://www.linkedin.com/in/sherelle-lawrence-a0b816ba",
     email: "",
@@ -5542,6 +6331,7 @@ export const leads = [
   {
     name: "Gareth Park",
     company: "The Wine Society",
+    category: "Wine & Spirits",
     position: "Marketing Campaign Manager",
     linkedin: "http://www.linkedin.com/in/gareth-park-aa6b6167",
     email: "parkg@thewinesociety.com",
@@ -5549,6 +6339,7 @@ export const leads = [
   {
     name: "Jane Akinhead",
     company: "Lindt & Sprungli UK",
+    category: "Confectionery",
     position: "Senior Brand Manager - Lindor",
     linkedin: "http://www.linkedin.com/in/jane-akinhead-4a636331",
     email: "jakinhead@lindt.com",
@@ -5556,6 +6347,7 @@ export const leads = [
   {
     name: "Keeley Wong",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Digital Marketing Executive",
     linkedin: "http://www.linkedin.com/in/keeley-wong-740ab713a",
     email: "keeleywong@greeneking.co.uk",
@@ -5563,6 +6355,7 @@ export const leads = [
   {
     name: "Tracey C",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Customer Marketing Manager",
     linkedin: "http://www.linkedin.com/in/tracey-c-70093018",
     email: "",
@@ -5570,6 +6363,7 @@ export const leads = [
   {
     name: "Steven Le",
     company: "Huel",
+    category: "Health & Wellness Food",
     position: "Lead Performance Marketing Executive",
     linkedin: "http://www.linkedin.com/in/stevenhuale",
     email: "steven.le@huel.com",
@@ -5577,6 +6371,7 @@ export const leads = [
   {
     name: "Andrew Dobson",
     company: "RAMONA'S",
+    category: "Casual Dining & Restaurants",
     position: "Head Of Sales & Marketing",
     linkedin: "http://www.linkedin.com/in/andrew-dobson-5b15453",
     email: "adobson@ramonaskitchen.com",
@@ -5584,6 +6379,7 @@ export const leads = [
   {
     name: "Adam Collett",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/adam-collett-3578727",
     email: "",
@@ -5591,6 +6387,7 @@ export const leads = [
   {
     name: "Andy Jenkins",
     company: "Virgin Wines",
+    category: "Wine & Spirits",
     position: "Customer Marketing Director",
     linkedin: "http://www.linkedin.com/in/andyvjenkins",
     email: "andy.jenkins@virginwines.co.uk",
@@ -5598,6 +6395,7 @@ export const leads = [
   {
     name: "Rebecca Brown",
     company: "Mimi's Bakehouse",
+    category: "Bakery & Bread",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/rebecca-brown-a0088393",
     email: "rebeccabrown@mimisbakehouse.com",
@@ -5605,6 +6403,7 @@ export const leads = [
   {
     name: "Kerttu Inkeroinen",
     company: "Lucky Saint | B Corp™",
+    category: "Beer & Brewing",
     position: "Marketing And E-commerce Director",
     linkedin: "http://www.linkedin.com/in/kerttu-inkeroinen-111b7b4",
     email: "kerttu@luckysaint.co",
@@ -5612,6 +6411,7 @@ export const leads = [
   {
     name: "Richard Cattell",
     company: "Red Tractor",
+    category: "Other",
     position: "Director Of Marketing & Commercial",
     linkedin: "http://www.linkedin.com/in/richard-cattell-1908887",
     email: "richard.cattell@redtractor.org.uk",
@@ -5619,6 +6419,7 @@ export const leads = [
   {
     name: "Grace Neal",
     company: "Müller UK & Ireland",
+    category: "Dairy & Alternatives",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/grace-neal-0abb4554",
     email: "grace.neal@muller.co.uk",
@@ -5626,6 +6427,7 @@ export const leads = [
   {
     name: "Derek Stellason",
     company: "iPRO Hydrate",
+    category: "Drinks",
     position: "International Marketing Manager",
     linkedin: "http://www.linkedin.com/in/derek-stellason-774b8017b",
     email: "",
@@ -5633,6 +6435,7 @@ export const leads = [
   {
     name: "Ellie Lewis",
     company: "OLLY’S",
+    category: "Snacks & Crisps",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/ellie-lewis-30914a125",
     email: "ellie.lewis@ollys-ollys.com",
@@ -5640,6 +6443,7 @@ export const leads = [
   {
     name: "Katharine Hamblin",
     company: "PACK'D",
+    category: "Health & Wellness Food",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/katharine-hamblin-she-her-4b1ab336",
     email: "",
@@ -5647,6 +6451,7 @@ export const leads = [
   {
     name: "Ellie Goodman",
     company: "Revolution Bars Group PLC",
+    category: "Casual Dining & Restaurants",
     position: "Social Media Executive For Revolution Cardiff",
     linkedin: "http://www.linkedin.com/in/ellie-goodman-5a9248268",
     email: "ellie.goodman@revolutionbarsgroup.com",
@@ -5654,6 +6459,7 @@ export const leads = [
   {
     name: "Aidan Selwood",
     company: "Huel",
+    category: "Health & Wellness Food",
     position: "Lead Performance Marketing Creative Executive",
     linkedin: "http://www.linkedin.com/in/aidanselwood",
     email: "aidan@huel.com",
@@ -5661,6 +6467,7 @@ export const leads = [
   {
     name: "Joe Pascoe",
     company: "Indo-European Foods Limited",
+    category: "Grocery & Food Brands",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/joe-pascoe-818302124",
     email: "joe@ief.uk.com",
@@ -5668,6 +6475,7 @@ export const leads = [
   {
     name: "Don Dovey",
     company: "Safeway",
+    category: "Grocery & Food Brands",
     position: "Sales And Marketing",
     linkedin: "http://www.linkedin.com/in/don-dovey-01123580",
     email: "",
@@ -5675,6 +6483,7 @@ export const leads = [
   {
     name: "Jake Rylands",
     company: "FrieslandCampina",
+    category: "Dairy & Alternatives",
     position: "Chocomel Brand Manager Uk",
     linkedin: "http://www.linkedin.com/in/jake-rylands-491576a6",
     email: "jake.rylands@frieslandcampina.com",
@@ -5682,6 +6491,7 @@ export const leads = [
   {
     name: "Rhona Mckeran",
     company: "MOTH Drinks - B Corp™",
+    category: "Drinks",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/rhona-mckeran-07871a52",
     email: "rhona@mothdrinks.com",
@@ -5689,6 +6499,7 @@ export const leads = [
   {
     name: "Valentine Fournier",
     company: "Lotus Bakeries",
+    category: "Bakery & Bread",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/valentinefournier",
     email: "",
@@ -5696,6 +6507,7 @@ export const leads = [
   {
     name: "Emma Parker",
     company: "Ingredion Incorporated",
+    category: "Other",
     position: "Global Digital Marketing Manager, Demand Generation",
     linkedin: "http://www.linkedin.com/in/emmaparker",
     email: "emma.parker@ingredion.com",
@@ -5703,6 +6515,7 @@ export const leads = [
   {
     name: "Alice Mayberry",
     company: "Supermeal",
+    category: "Health & Wellness Food",
     position: "Marketing / Account Executive",
     linkedin: "http://www.linkedin.com/in/alice-mayberry-a75ba5199",
     email: "",
@@ -5710,6 +6523,7 @@ export const leads = [
   {
     name: "Charlie Marshall",
     company: "ORGANO™",
+    category: "Coffee & Tea",
     position: "Network Marketing",
     linkedin: "http://www.linkedin.com/in/charlie-marshall-ab2323112",
     email: "",
@@ -5717,6 +6531,7 @@ export const leads = [
   {
     name: "Rosie Hook",
     company: "Life Health Foods Europe",
+    category: "Health & Wellness Food",
     position: "Senior Brand Manager",
     linkedin:
       "http://www.linkedin.com/in/rosie-hook-previously-tyrwhitt-drake-01620423",
@@ -5725,6 +6540,7 @@ export const leads = [
   {
     name: "Sahra Ash",
     company: "Little Freddie Organic Baby Food",
+    category: "Baby & Kids Food",
     position: "Junior Brand Manager",
     linkedin: "http://www.linkedin.com/in/sahra-ash-96162218b",
     email: "sahra.ash@littlefreddie.com",
@@ -5732,6 +6548,7 @@ export const leads = [
   {
     name: "Hannah Marsh",
     company: "Riverford Organic Farmers",
+    category: "Grocery & Food Brands",
     position: "Social Media Manager",
     linkedin: "http://www.linkedin.com/in/hannahjmarsh",
     email: "hannahmarsh@riverford.co.uk",
@@ -5739,6 +6556,7 @@ export const leads = [
   {
     name: "Georgina Colbeck",
     company: "Henry Colbeck",
+    category: "Other",
     position: "HR, Quality & Marketing Director",
     linkedin: "http://www.linkedin.com/in/georgina-colbeck-78821322",
     email: "g_colbeck@colbeck.co.uk",
@@ -5746,6 +6564,7 @@ export const leads = [
   {
     name: "Ellen Wright",
     company: "Moy Park",
+    category: "Grocery & Food Brands",
     position: "Brand Marketing Manager",
     linkedin: "http://www.linkedin.com/in/ellen-wright-861026a8",
     email: "ellen.wright@pilgrimseurope.com",
@@ -5753,6 +6572,7 @@ export const leads = [
   {
     name: "Katrina Harrison",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/katrina-harrison-5871a36",
     email: "katrina.harrison@kraftheinz.com",
@@ -5760,6 +6580,7 @@ export const leads = [
   {
     name: "Gemma Williams",
     company: "Windmill Organics Ltd",
+    category: "Grocery & Food Brands",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/gemma-williams-a958aa30",
     email: "gemma@windmillorganics.com",
@@ -5767,6 +6588,7 @@ export const leads = [
   {
     name: "Moira Mills",
     company: "Moy Park",
+    category: "Grocery & Food Brands",
     position: "Senior Customer Marketing Manager",
     linkedin: "http://www.linkedin.com/in/moira-mills-2a174ab0",
     email: "",
@@ -5774,6 +6596,7 @@ export const leads = [
   {
     name: "Jade Howes",
     company: "Little Freddie Organic Baby Food",
+    category: "Baby & Kids Food",
     position: "Marketing Manager - Uki + Me",
     linkedin: "http://www.linkedin.com/in/jade-howes-20b582133",
     email: "jade.howes@littlefreddie.com",
@@ -5781,6 +6604,7 @@ export const leads = [
   {
     name: "Ruth Moran",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/ruth-moran-474603278",
     email: "",
@@ -5788,6 +6612,7 @@ export const leads = [
   {
     name: "Kotryna Jasiulyte",
     company: "Golden Popcorn Ltd",
+    category: "Snacks & Crisps",
     position: "Marketing Assistant",
     linkedin: "http://www.linkedin.com/in/kotryna-jasiulyte-a21b29321",
     email: "kotryna@goldenpopcorn.com",
@@ -5795,6 +6620,7 @@ export const leads = [
   {
     name: "Dj Johnston",
     company: "Deeply Foods",
+    category: "Grocery & Food Brands",
     position: "Non Executive Director Brand Management",
     linkedin: "http://www.linkedin.com/in/dj-johnston-a6337112",
     email: "dj@deeplyfoods.com",
@@ -5802,6 +6628,7 @@ export const leads = [
   {
     name: "Lauren Bellinger",
     company: "Rollagranola",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/lauren-bellinger-ab537b164",
     email: "",
@@ -5809,6 +6636,7 @@ export const leads = [
   {
     name: "Alastair Johns",
     company: "Samworth Brothers",
+    category: "Grocery & Food Brands",
     position: "Head Of Brand Transformation",
     linkedin: "http://www.linkedin.com/in/alastair-johns-10a0b670",
     email: "alastair.johns@samworthbrothers.co.uk",
@@ -5816,6 +6644,7 @@ export const leads = [
   {
     name: "Ailish Pope",
     company: "Swizzels",
+    category: "Confectionery",
     position: "Assistant Brand Manager",
     linkedin: "http://www.linkedin.com/in/ailish-pope-2b09ab160",
     email: "ailish.pope@swizzels-matlow.com",
@@ -5823,6 +6652,7 @@ export const leads = [
   {
     name: "Sam Bridge",
     company: "SEVEN BRO7HERS BREWING CO",
+    category: "Beer & Brewing",
     position: "Digital Marketing Manager",
     linkedin: "http://www.linkedin.com/in/bridgesam",
     email: "sambridge@sevenbro7hers.com",
@@ -5830,6 +6660,7 @@ export const leads = [
   {
     name: "Emily Laws",
     company: "Lucky Saint | B Corp™",
+    category: "Beer & Brewing",
     position: "Head Of Brand",
     linkedin: "http://www.linkedin.com/in/emily-laws",
     email: "emily@luckysaint.co",
@@ -5837,6 +6668,7 @@ export const leads = [
   {
     name: "Elspeth Sargeant",
     company: "SNEAK",
+    category: "Drinks",
     position: "Social Media Manager",
     linkedin: "http://www.linkedin.com/in/elspeth-sargeant-28a5531a7",
     email: "elspeth@sneakenergy.com",
@@ -5844,6 +6676,7 @@ export const leads = [
   {
     name: "Hannah Rowlands",
     company: "Snowdonia Cheese Company",
+    category: "Dairy & Alternatives",
     position: "Digital Marketing Manager",
     linkedin: "http://www.linkedin.com/in/hannah-rowlands1",
     email: "hannah.rowlands@snowdonia-cheese.co.uk",
@@ -5851,6 +6684,7 @@ export const leads = [
   {
     name: "Sarah Mountford",
     company: "The British Hamper Company",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/sarahmountford",
     email: "sarah@britishhamper.com",
@@ -5858,6 +6692,7 @@ export const leads = [
   {
     name: "Ethan Duffey",
     company: "Aimia Foods Ltd",
+    category: "Grocery & Food Brands",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/ethan-duffey-65a4a1177",
     email: "ethan.duffey@aimiafoods.com",
@@ -5865,6 +6700,7 @@ export const leads = [
   {
     name: "Toni Ehrnreich",
     company: "BOL Foods",
+    category: "Health & Wellness Food",
     position: "Marketing Lead",
     linkedin: "http://www.linkedin.com/in/toni-ehrnreich-0371a1b7",
     email: "toni.ehrnreich@bolfoods.com",
@@ -5872,6 +6708,7 @@ export const leads = [
   {
     name: "Liz Brown",
     company: "The Wine Society",
+    category: "Wine & Spirits",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/liz-brown-4522219",
     email: "liz.brown@thewinesociety.com",
@@ -5879,6 +6716,7 @@ export const leads = [
   {
     name: "Eleanor Bridgman",
     company: "Geeta's Foods Ltd",
+    category: "Grocery & Food Brands",
     position: "Director - Sales & Marketing",
     linkedin: "http://www.linkedin.com/in/eleanor-bridgman-15356a5",
     email: "ebridgman@geetasfoods.com",
@@ -5886,6 +6724,7 @@ export const leads = [
   {
     name: "Sophie Roberts",
     company: "Kendamil (Kendal Nutricare)",
+    category: "Baby & Kids Food",
     position: "Uk Marketing Manager",
     linkedin: "http://www.linkedin.com/in/sophie-roberts-21292b107",
     email: "sophie.roberts@kendalnutricare.com",
@@ -5893,6 +6732,7 @@ export const leads = [
   {
     name: "Hayley Morrison",
     company: "Pure",
+    category: "Other",
     position: "Booking Agent & Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/hayleyleaver",
     email: "hayley@pure-represents.com",
@@ -5900,6 +6740,7 @@ export const leads = [
   {
     name: "Julia Riet",
     company: "House of Macadamias",
+    category: "Snacks & Crisps",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/julia-van-der-riet-7a279a193",
     email: "julia@houseofmacadamias.com",
@@ -5907,6 +6748,7 @@ export const leads = [
   {
     name: "Chrissie Napier",
     company: "Wiltshire Farm Foods",
+    category: "Grocery & Food Brands",
     position: "Field Marketing Manager",
     linkedin: "http://www.linkedin.com/in/chrissie-napier-553b81105",
     email: "",
@@ -5914,6 +6756,7 @@ export const leads = [
   {
     name: "Peter Dawson",
     company: "Samworth Brothers",
+    category: "Grocery & Food Brands",
     position: "Head Of Brands, Regulatory And Business Risk",
     linkedin: "http://www.linkedin.com/in/peter-dawson-70a996258",
     email: "peter.dawson@2sfg.com",
@@ -5921,6 +6764,7 @@ export const leads = [
   {
     name: "Lydia Brook",
     company: "Vegan Food Group",
+    category: "Grocery & Food Brands",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/lydia-brook-899664b2",
     email: "l.brook@veganfoodgroup.org",
@@ -5928,6 +6772,7 @@ export const leads = [
   {
     name: "Ali Anstee",
     company: "Riverford Organic Farmers",
+    category: "Grocery & Food Brands",
     position: "Brand Business Partner & Lead",
     linkedin: "http://www.linkedin.com/in/ali-anstee-81b53816",
     email: "alianstee@riverford.co.uk",
@@ -5935,6 +6780,7 @@ export const leads = [
   {
     name: "Sarah Wightwick",
     company: "Nursery Kitchen",
+    category: "Baby & Kids Food",
     position: "Senior Marketing Manager",
     linkedin: "http://www.linkedin.com/in/sarah-wightwick-9029b839",
     email: "sarah@nurserykitchen.co.uk",
@@ -5942,6 +6788,7 @@ export const leads = [
   {
     name: "Emma Aston",
     company: "Aduna Superfoods | B Corp™",
+    category: "Health & Wellness Food",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/emma-aston-906b45174",
     email: "emma.aston@aduna.com",
@@ -5949,6 +6796,7 @@ export const leads = [
   {
     name: "Amber Lacey",
     company: "The Tracklement Company Limited | B Corp",
+    category: "Grocery & Food Brands",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/amberlacey",
     email: "amber.lacey@tracklements.co.uk",
@@ -5956,6 +6804,7 @@ export const leads = [
   {
     name: "Lizzy Allman",
     company: "MOMA Foods",
+    category: "Grocery & Food Brands",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/lizzy-allman-600717190",
     email: "lizzyallman@momafoods.co.uk",
@@ -5963,6 +6812,7 @@ export const leads = [
   {
     name: "Amy Woloski",
     company: "Chhabra",
+    category: "Other",
     position: "Social Media And Marketing Manager",
     linkedin: "http://www.linkedin.com/in/amy-woloski-5152411b2",
     email: "amy@wearechhabra.com",
@@ -5970,6 +6820,7 @@ export const leads = [
   {
     name: "Georgina Miall",
     company: "Wahaca",
+    category: "Casual Dining & Restaurants",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/georgina-miall",
     email: "georgina@wahaca.co.uk",
@@ -5977,6 +6828,7 @@ export const leads = [
   {
     name: "Samantha Mcavoy",
     company: "SEVEN BRO7HERS BREWING CO",
+    category: "Beer & Brewing",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/samantha-mcavoy-05b84b91",
     email: "samantha@sevenbro7hers.com",
@@ -5984,6 +6836,7 @@ export const leads = [
   {
     name: "Elodie Bretz",
     company: "Rollover Ltd.",
+    category: "Grocery & Food Brands",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/elodie-bretz-90a5b22",
     email: "elodie.bretz@rollover-uk.com",
@@ -5991,6 +6844,7 @@ export const leads = [
   {
     name: "Isabella Rogers",
     company: "Godiva Chocolatier",
+    category: "Confectionery",
     position: "Chief Marketing & Innovation Officer | Global",
     linkedin: "http://www.linkedin.com/in/isabella-rogers-90b77645",
     email: "isabella.rogers@pladisglobal.com",
@@ -5998,6 +6852,7 @@ export const leads = [
   {
     name: "Joanne Fray",
     company: "Pasta King (UK) Limited",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/joanne-fray-05301a31",
     email: "jo.fray@pastaking.co.uk",
@@ -6005,6 +6860,7 @@ export const leads = [
   {
     name: "Hannah Squirrell",
     company: "Greggs",
+    category: "Bakery & Bread",
     position: "Customer And Marketing Director",
     linkedin: "http://www.linkedin.com/in/hannah-squirrell-3318301",
     email: "hannah.squirrell@greggs.co.uk",
@@ -6012,6 +6868,7 @@ export const leads = [
   {
     name: "Chris Regan",
     company: "Ingredion Incorporated",
+    category: "Other",
     position: "Senior Director, Head Of Digital Marketing",
     linkedin: "http://www.linkedin.com/in/cjregan",
     email: "chris.regan@ingredion.com",
@@ -6019,6 +6876,7 @@ export const leads = [
   {
     name: "Helen Oxley",
     company: "Birds Eye UK & IE",
+    category: "Grocery & Food Brands",
     position: "Cluster Marketing Manager Chicken",
     linkedin: "http://www.linkedin.com/in/helen-oxley-69a92132",
     email: "helen.oxley@birdseye.co.uk",
@@ -6026,6 +6884,7 @@ export const leads = [
   {
     name: "Nina Nazareth",
     company: "Greggs",
+    category: "Bakery & Bread",
     position: "Brand Format Project Manager",
     linkedin: "http://www.linkedin.com/in/marinazareth",
     email: "nina.nazareth@greggs.co.uk",
@@ -6033,6 +6892,7 @@ export const leads = [
   {
     name: "Nadine Singler",
     company: "wagamama",
+    category: "Casual Dining & Restaurants",
     position: "Marketing Director (interim)",
     linkedin: "http://www.linkedin.com/in/nadine-singler",
     email: "nadine.singler@wagamama.com",
@@ -6040,6 +6900,7 @@ export const leads = [
   {
     name: "Alice Boardman",
     company: "Lotus Bakeries",
+    category: "Bakery & Bread",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/aliceboardman",
     email: "alice.boardman@naturalbalancefoods.co.uk",
@@ -6047,6 +6908,7 @@ export const leads = [
   {
     name: "Rebekha White",
     company: "Aimia Foods Ltd",
+    category: "Grocery & Food Brands",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/rebekha-white-8170a469",
     email: "rebekha.white@aimiafoods.com",
@@ -6054,6 +6916,7 @@ export const leads = [
   {
     name: "Minal Purohit",
     company: "SRSLY Low Carb",
+    category: "Bakery & Bread",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/minal-purohit-17929b29",
     email: "",
@@ -6061,6 +6924,7 @@ export const leads = [
   {
     name: "Lauren Murphy",
     company: "Califia Farms",
+    category: "Dairy & Alternatives",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/lauren-murphy-718321196",
     email: "lmurphy@califiafarms.com",
@@ -6068,6 +6932,7 @@ export const leads = [
   {
     name: "Vicky Bhattu",
     company: "Alpro",
+    category: "Dairy & Alternatives",
     position: "Alpro Global Brand Director",
     linkedin: "http://www.linkedin.com/in/vicky-bhattu-67144420",
     email: "",
@@ -6075,6 +6940,7 @@ export const leads = [
   {
     name: "Sarah Fordy",
     company: "Cereal Partners Worldwide (Nestlé & General Mills)",
+    category: "Grocery & Food Brands",
     position: "Head Of Marketing Uk&i",
     linkedin: "http://www.linkedin.com/in/sarah-fordy-8b494926",
     email: "sarah.fordy@cpuk.nestle.com",
@@ -6082,6 +6948,7 @@ export const leads = [
   {
     name: "Christye Mckinney",
     company: "JNCK Bakery",
+    category: "Bakery & Bread",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/christye-mckinney-3833387a",
     email: "christye@jnckbakery.com",
@@ -6089,6 +6956,7 @@ export const leads = [
   {
     name: "Paul Lockwood",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Food & Drinks Brand Partner",
     linkedin: "http://www.linkedin.com/in/paul-lockwood-4b4b9677",
     email: "",
@@ -6096,6 +6964,7 @@ export const leads = [
   {
     name: "Maria Sanchez",
     company: "iPRO Hydrate",
+    category: "Drinks",
     position: "Senior Marketing Executive",
     linkedin: "http://www.linkedin.com/in/maria-j-s%c3%a1nchez-744055200",
     email: "",
@@ -6103,6 +6972,7 @@ export const leads = [
   {
     name: "Jasmine Adams",
     company: "SoSweet",
+    category: "Confectionery",
     position: "Marketing Assistant",
     linkedin: "http://www.linkedin.com/in/jasmine-adams-5a2a05179",
     email: "",
@@ -6110,6 +6980,7 @@ export const leads = [
   {
     name: "Greta Manione",
     company: "Las Iguanas",
+    category: "Casual Dining & Restaurants",
     position: "Supervisor And Social Media Coordinator",
     linkedin: "http://www.linkedin.com/in/greta-manione-835697101",
     email: "",
@@ -6117,6 +6988,7 @@ export const leads = [
   {
     name: "Sophie Brisbourne-rhodes",
     company: "CleanCo",
+    category: "Drinks",
     position: "Global Chief Marketing Officer",
     linkedin: "http://www.linkedin.com/in/sophie-brisbourne-rhodes-17189b92",
     email: "sophie@clean.co",
@@ -6124,6 +6996,7 @@ export const leads = [
   {
     name: "Kirsty Matthews",
     company: "Macphie UK",
+    category: "Other",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/kirstyamatthews",
     email: "kirsty.matthews@macphie.com",
@@ -6131,6 +7004,7 @@ export const leads = [
   {
     name: "Tom Tye",
     company: "Ombar Chocolate",
+    category: "Confectionery",
     position: "Digital Marketing Manager",
     linkedin: "http://www.linkedin.com/in/tom-tye",
     email: "",
@@ -6138,6 +7012,7 @@ export const leads = [
   {
     name: "Faye Daniels",
     company: "Big Penny",
+    category: "Casual Dining & Restaurants",
     position:
       "Head Of Marketing, Specialising In Transforming Arts Venues & Community Spaces | Copywriter",
     linkedin: "http://www.linkedin.com/in/fayedaniels",
@@ -6146,6 +7021,7 @@ export const leads = [
   {
     name: "Anne Wiziack",
     company: "Lionel Hitchen Limited",
+    category: "Other",
     position: "Marketing Executive",
     linkedin: "http://www.linkedin.com/in/annewiziack",
     email: "anne.wiziack@lionelhitchen.com",
@@ -6153,6 +7029,7 @@ export const leads = [
   {
     name: "Kimberley Barfoot-brace",
     company: "Barfoots of Botley Ltd",
+    category: "Grocery & Food Brands",
     position: "Brand & Marketing Manager",
     linkedin: "http://www.linkedin.com/in/kimberleybarfootbrace",
     email: "",
@@ -6160,6 +7037,7 @@ export const leads = [
   {
     name: "Jo Witchell",
     company: "Tilda® | B Corp™",
+    category: "Grocery & Food Brands",
     position: "Commercial Foodservice Marketing Manager",
     linkedin: "http://www.linkedin.com/in/jo-witchell-a3695b17",
     email: "johanna@tilda.com",
@@ -6167,6 +7045,7 @@ export const leads = [
   {
     name: "Matthew Moran",
     company: "BURGER KING UK",
+    category: "Casual Dining & Restaurants",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/matthew-moran-74b37a156",
     email: "matthew.moran@bkukgroup.co.uk",
@@ -6174,6 +7053,7 @@ export const leads = [
   {
     name: "Katharine Norton",
     company: "Rich Products UK",
+    category: "Other",
     position: "Category Marketing Manager",
     linkedin: "http://www.linkedin.com/in/katharine-norton-55045423",
     email: "knorton@rich.com",
@@ -6181,6 +7061,7 @@ export const leads = [
   {
     name: "Mathilda Noren",
     company: "Paris Baguette UK",
+    category: "Bakery & Bread",
     position: "Marketing Intern",
     linkedin: "http://www.linkedin.com/in/mathilda-noren",
     email: "mnoren@parisbaguette.uk",
@@ -6188,6 +7069,7 @@ export const leads = [
   {
     name: "Michelle Bloom",
     company: "NOMADIC",
+    category: "Dairy & Alternatives",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/michelle-bloom-46b70b4",
     email: "michelle@nomadic.ie",
@@ -6195,6 +7077,7 @@ export const leads = [
   {
     name: "Charlotte Robson",
     company: "Nestlé Professional",
+    category: "Grocery & Food Brands",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/robsoncharlotte",
     email: "charlotte.robson@uk.nestle.com",
@@ -6202,6 +7085,7 @@ export const leads = [
   {
     name: "Louise Kirby",
     company: "Wicked Kitchen",
+    category: "Grocery & Food Brands",
     position: "Director Food, Brand & Business (uk)",
     linkedin: "http://www.linkedin.com/in/louise-kirby-nee-ring-420a14b2",
     email: "louise@wickedkitchen.com",
@@ -6209,6 +7093,7 @@ export const leads = [
   {
     name: "Ellen Roberts",
     company: "Pizzarova",
+    category: "Casual Dining & Restaurants",
     position: "Marketing Graduate",
     linkedin: "http://www.linkedin.com/in/ellen-roberts-28112317a",
     email: "ellen@pizzarova.com",
@@ -6216,6 +7101,7 @@ export const leads = [
   {
     name: "Dan Mcdonnell",
     company: "GILBERTSON & PAGE LIMITED",
+    category: "Other",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/dan-mcdonnell-415b10129",
     email: "dan.mcdonnell@gilpa.co.uk",
@@ -6223,6 +7109,7 @@ export const leads = [
   {
     name: "Stephanie Elgegren",
     company: "Oatly",
+    category: "Dairy & Alternatives",
     position: "Brand Project Manager",
     linkedin: "http://www.linkedin.com/in/stephanieelgegren",
     email: "stephanie.elgegren@oatly.com",
@@ -6230,6 +7117,7 @@ export const leads = [
   {
     name: "Jo Agnew",
     company: "Lotus Bakeries",
+    category: "Bakery & Bread",
     position: "Marketing Director Bear, Urban Fruit, Nakd. & Trek",
     linkedin: "http://www.linkedin.com/in/jo-agnew-22472239",
     email: "jo.agnew@lotusbakeries.com",
@@ -6237,6 +7125,7 @@ export const leads = [
   {
     name: "Tom Baddeley",
     company: "Purbeck Ice Cream",
+    category: "Confectionery",
     position: "Media And Marketing Coordinator",
     linkedin: "http://www.linkedin.com/in/tom-baddeley-447668255",
     email: "tom.baddeley@purbeckicecream.co.uk",
@@ -6244,6 +7133,7 @@ export const leads = [
   {
     name: "Natalie Kenny",
     company: "Kendamil (Kendal Nutricare)",
+    category: "Baby & Kids Food",
     position: "Healthcare Marketing Manager",
     linkedin: "http://www.linkedin.com/in/natalie-kenny-b6a05583",
     email: "natalie.kenny@kendalnutricare.com",
@@ -6251,6 +7141,7 @@ export const leads = [
   {
     name: "Johnson Kwan",
     company: "Godiva Chocolatier",
+    category: "Confectionery",
     position: "Travel Retail Trade Marketing Manager (emea & Isc)",
     linkedin: "http://www.linkedin.com/in/johnson-kwan-08b96384",
     email: "johnson.kwan@godiva.com",
@@ -6258,6 +7149,7 @@ export const leads = [
   {
     name: "Oliver Abel",
     company: "Broadland Drinks",
+    category: "Drinks",
     position: "Assistant Brand Manager",
     linkedin: "http://www.linkedin.com/in/oliver-abel-66b125201",
     email: "oliverabel@broadlanddrinks.com",
@@ -6265,6 +7157,7 @@ export const leads = [
   {
     name: "Roni Newman",
     company: "Healy Group",
+    category: "Other",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/roni-newman",
     email: "rnewman@healy-group.com",
@@ -6272,6 +7165,7 @@ export const leads = [
   {
     name: "Radhe Shyam",
     company: "Creams Cafe",
+    category: "Casual Dining & Restaurants",
     position: "Team Manager And Social Media Manager",
     linkedin: "http://www.linkedin.com/in/radheshyam29",
     email: "",
@@ -6279,6 +7173,7 @@ export const leads = [
   {
     name: "Lucy Taylor",
     company: "The Protein Ball Co.",
+    category: "Health & Wellness Food",
     position: "Marketing + Collaborations",
     linkedin: "http://www.linkedin.com/in/lucy-taylor-46503b155",
     email: "",
@@ -6286,6 +7181,7 @@ export const leads = [
   {
     name: "Rebecca Larkman",
     company: "Mission Foods UK",
+    category: "Grocery & Food Brands",
     position: "Assistant Brand Manager",
     linkedin: "http://www.linkedin.com/in/rebecca-larkman",
     email: "rebeccal797@missionfoods.com",
@@ -6293,6 +7189,7 @@ export const leads = [
   {
     name: "Jenna Wong",
     company: "Lee Kum Kee Europe",
+    category: "Grocery & Food Brands",
     position: "Assistant Brand & Marketing Manager",
     linkedin: "http://www.linkedin.com/in/jennawonghoiyan",
     email: "jenna.wong@uk.lkk.com",
@@ -6300,6 +7197,7 @@ export const leads = [
   {
     name: "Charlotte Telfer",
     company: "Insomnia Cookies",
+    category: "Bakery & Bread",
     position: "Marketing Manager (uk)",
     linkedin: "http://www.linkedin.com/in/charlotte-telfer-369002b4",
     email: "ctelfer@insomniacookies.co.uk",
@@ -6307,6 +7205,7 @@ export const leads = [
   {
     name: "Jack Adams",
     company: "Freedom Brewery",
+    category: "Beer & Brewing",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/jack-adams-90b7aa93",
     email: "jack.adams@freedombrewery.com",
@@ -6314,6 +7213,7 @@ export const leads = [
   {
     name: "Frederieka Bangemann",
     company: "Huel",
+    category: "Health & Wellness Food",
     position: "Senior Commercial & Marketing Manager Eu + Jp",
     linkedin: "http://www.linkedin.com/in/frederieka-bangemann-945477103",
     email: "frederieka.bangemann@huel.com",
@@ -6321,6 +7221,7 @@ export const leads = [
   {
     name: "Danielle Griffiths",
     company: "Nestlé Professional",
+    category: "Grocery & Food Brands",
     position:
       "Commercial Channel Development Manager & Branded Dessert Category Lead",
     linkedin: "http://www.linkedin.com/in/danielle-griffiths-b320a265",
@@ -6329,6 +7230,7 @@ export const leads = [
   {
     name: "Andrew Jackson",
     company: "Jelly Drops",
+    category: "Confectionery",
     position: "Marketing Director @ Jelly Drops",
     linkedin: "http://www.linkedin.com/in/andrewjacksonfentimans",
     email: "",
@@ -6336,6 +7238,7 @@ export const leads = [
   {
     name: "Tanya Lahrani",
     company: "The Belgian Waffle Co",
+    category: "Bakery & Bread",
     position: "Assistant Marketing Manager",
     linkedin: "http://www.linkedin.com/in/tanyalahrani",
     email: "tanya@thebelgianwaffle.co",
@@ -6343,6 +7246,7 @@ export const leads = [
   {
     name: "Nadine Singler",
     company: "wagamama",
+    category: "Casual Dining & Restaurants",
     position: "Marketing Director (interim)",
     linkedin: "http://www.linkedin.com/in/nadine-singler-4281914",
     email: "nadine.singler@wagamama.com",
@@ -6350,6 +7254,7 @@ export const leads = [
   {
     name: "Sahaj Singh",
     company: "Soreen",
+    category: "Bakery & Bread",
     position: "Marketing Apprentice",
     linkedin: "http://www.linkedin.com/in/sahaj-singh-20a773266",
     email: "sahaj.singh@soreen.com",
@@ -6357,6 +7262,7 @@ export const leads = [
   {
     name: "Justin Way",
     company: "Westons Cider",
+    category: "Beer & Brewing",
     position: "Customer Marketing Manager",
     linkedin: "http://www.linkedin.com/in/justinwaywtm",
     email: "jway@westons-cider.co.uk",
@@ -6364,6 +7270,7 @@ export const leads = [
   {
     name: "Rowena Kennerley",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Senior Marketing Manager",
     linkedin: "http://www.linkedin.com/in/rowenakennerley",
     email: "rowenakennerley@greeneking.co.uk",
@@ -6371,6 +7278,7 @@ export const leads = [
   {
     name: "Clara Eastlake",
     company: "Aspens Services Ltd",
+    category: "Other",
     position: "Marketing Executive",
     linkedin: "http://www.linkedin.com/in/claraeastlake",
     email: "clara.eastlake@aspens-services.co.uk",
@@ -6378,6 +7286,7 @@ export const leads = [
   {
     name: "Sarthak Vani",
     company: "foodstrong (Taramis Labs Private Limited)",
+    category: "Health & Wellness Food",
     position: "Head Of Affiliate Marketing",
     linkedin: "http://www.linkedin.com/in/sarthakvani",
     email: "",
@@ -6385,6 +7294,7 @@ export const leads = [
   {
     name: "Ian Greenwood",
     company: "PizzaExpress",
+    category: "Casual Dining & Restaurants",
     position: "Head Of Performance Marketing",
     linkedin: "http://www.linkedin.com/in/igreenwood1",
     email: "ian.greenwood@pizzaexpress.com",
@@ -6392,6 +7302,7 @@ export const leads = [
   {
     name: "Jazzmin Mason",
     company: "Annie's Burger Shack Group",
+    category: "Casual Dining & Restaurants",
     position: "Marketing Executive",
     linkedin: "http://www.linkedin.com/in/jazzmin-mason-a90735253",
     email: "",
@@ -6399,6 +7310,7 @@ export const leads = [
   {
     name: "Kimmy C",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "International Brand Manager",
     linkedin: "http://www.linkedin.com/in/kimmycheung",
     email: "kimmy.c@kraftheinz.com",
@@ -6406,6 +7318,7 @@ export const leads = [
   {
     name: "Kate Dell",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Senior Marketing Manager - Chef & Brewer",
     linkedin: "http://www.linkedin.com/in/kate-dell-15809265",
     email: "katedell@greeneking.co.uk",
@@ -6413,6 +7326,7 @@ export const leads = [
   {
     name: "Martha Lloyd",
     company: "PACK'D",
+    category: "Health & Wellness Food",
     position: "Junior Brand Manager",
     linkedin: "http://www.linkedin.com/in/martha-lloyd-9a4b63246",
     email: "martha@packd.co.uk",
@@ -6420,6 +7334,7 @@ export const leads = [
   {
     name: "Olivia Kennelly",
     company: "Las Iguanas",
+    category: "Casual Dining & Restaurants",
     position: "🦎 Marketing Executive",
     linkedin: "http://www.linkedin.com/in/oliviakennelly429",
     email: "",
@@ -6427,6 +7342,7 @@ export const leads = [
   {
     name: "Rachael Rayner",
     company: "KP Snacks",
+    category: "Snacks & Crisps",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/rachael-rayner-50527283",
     email: "rachael.rayner@kpsnacks.com",
@@ -6434,6 +7350,7 @@ export const leads = [
   {
     name: "Matt Reynolds",
     company: "Signature Brew",
+    category: "Beer & Brewing",
     position: "Brand Marketing Manager",
     linkedin: "http://www.linkedin.com/in/mattbutchreynolds",
     email: "matt@signaturebrew.co.uk",
@@ -6441,6 +7358,7 @@ export const leads = [
   {
     name: "James Dipm",
     company: "GDK (German Doner Kebab)",
+    category: "Casual Dining & Restaurants",
     position: "Digital Marketing Manager",
     linkedin: "http://www.linkedin.com/in/james-kirkham-dipm-bba-mcim-096b514b",
     email: "",
@@ -6448,6 +7366,7 @@ export const leads = [
   {
     name: "Hannah Davidson",
     company: "Hovis Ltd",
+    category: "Bakery & Bread",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/hannah-davidson-044bb416a",
     email: "hannah.davidson@hovis.co.uk",
@@ -6455,6 +7374,7 @@ export const leads = [
   {
     name: "Liz Whieldon",
     company: "Rainbow Dust & Squires Kitchen",
+    category: "Other",
     position: "Head Of Marketing & Npd",
     linkedin: "http://www.linkedin.com/in/liz-w-7390542b",
     email: "liz.whieldon@rainbowdust.co.uk",
@@ -6462,6 +7382,7 @@ export const leads = [
   {
     name: "Graham Cornish",
     company: "Ginsters",
+    category: "Bakery & Bread",
     position: "Brand Development Manager",
     linkedin: "http://www.linkedin.com/in/graham-cornish-111a3849",
     email: "graham.cornish@ginsters.co.uk",
@@ -6469,6 +7390,7 @@ export const leads = [
   {
     name: "George Udrea",
     company: "Capri Sun Group",
+    category: "Drinks",
     position: "Senior Shopper & Trade Marketing Manager",
     linkedin: "http://www.linkedin.com/in/george-udrea-907530a6",
     email: "george.udrea@capri-sun.com",
@@ -6476,6 +7398,7 @@ export const leads = [
   {
     name: "Alexandra Shields",
     company: "Oddlygood",
+    category: "Dairy & Alternatives",
     position: "Assistant Brand Manager Marketing",
     linkedin: "http://www.linkedin.com/in/alexandra-shields-488664136",
     email: "alexandra@oddlygood.com",
@@ -6483,6 +7406,7 @@ export const leads = [
   {
     name: "Francesca Bright",
     company: "wagamama",
+    category: "Casual Dining & Restaurants",
     position: "Hospitality Manager And Marketing Champ",
     linkedin: "http://www.linkedin.com/in/francesca-bright-1a885221b",
     email: "francesca.bright@wagamama.com",
@@ -6490,6 +7414,7 @@ export const leads = [
   {
     name: "Julianne Merrey",
     company: "Tops Pizza",
+    category: "Casual Dining & Restaurants",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/julianne-merrey-5a974722",
     email: "julianne@topspizza.com",
@@ -6497,6 +7422,7 @@ export const leads = [
   {
     name: "Hannah Robbins",
     company: "Allen & Page Ltd",
+    category: "Other",
     position: "Digital Marketing Assistant",
     linkedin: "http://www.linkedin.com/in/hannah-robbins-aa074830a",
     email: "",
@@ -6504,6 +7430,7 @@ export const leads = [
   {
     name: "Dan Pickles",
     company: "FoodChain ID",
+    category: "Other",
     position: "Svp, Product & Marketing",
     linkedin: "http://www.linkedin.com/in/danpickles",
     email: "dpickles@foodchainid.com",
@@ -6511,6 +7438,7 @@ export const leads = [
   {
     name: "Corinne Prior",
     company: "ASK Italian",
+    category: "Casual Dining & Restaurants",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/corinne-prior-48143a20",
     email: "corinne.prior@askitalian.co.uk",
@@ -6518,6 +7446,7 @@ export const leads = [
   {
     name: "Aimee Cunningham",
     company: "Gousto",
+    category: "Grocery & Food Brands",
     position: "Brand Marketing Manager",
     linkedin: "http://www.linkedin.com/in/aimee-cunningham-7963a695",
     email: "aimee.cunningham@gousto.co.uk",
@@ -6525,6 +7454,7 @@ export const leads = [
   {
     name: "Immy Spooner",
     company: "LOVE CORN",
+    category: "Snacks & Crisps",
     position: "Marketing Intern",
     linkedin: "http://www.linkedin.com/in/immy-spooner-1897b7263",
     email: "immy@lovecorn.com",
@@ -6532,6 +7462,7 @@ export const leads = [
   {
     name: "Tarek El-yafi",
     company: "The Berry Company",
+    category: "Drinks",
     position: "Head Of Uk Sales And Brand Partnerships",
     linkedin: "http://www.linkedin.com/in/tarek-el-yafi-bb5a3240",
     email: "tarek@theberrycompany.co.uk",
@@ -6539,6 +7470,7 @@ export const leads = [
   {
     name: "Matthew Parkinson",
     company: "Hennings Wine",
+    category: "Wine & Spirits",
     position: "Ecommerce And Marketing Manager At Hennings Wine",
     linkedin: "http://www.linkedin.com/in/matthew-parkinson-782b7712a",
     email: "matt.parkinson@henningswine.co.uk",
@@ -6546,6 +7478,7 @@ export const leads = [
   {
     name: "Daniel May",
     company: "The Monty Bojangles Co",
+    category: "Confectionery",
     position: "Marketing Administrator",
     linkedin: "http://www.linkedin.com/in/daniel-may-71a8aa171",
     email: "dmay@themontybojanglesco.com",
@@ -6553,6 +7486,7 @@ export const leads = [
   {
     name: "Naomi Fisayo",
     company: "Tilda® | B Corp™",
+    category: "Grocery & Food Brands",
     position: "Senior Social Media Executive",
     linkedin: "http://www.linkedin.com/in/naomi-fisayo-332268111",
     email: "naomi@tilda.com",
@@ -6560,6 +7494,7 @@ export const leads = [
   {
     name: "Conor Brown",
     company: "KIND",
+    category: "Snacks & Crisps",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/conor-brown-879124a5",
     email: "",
@@ -6567,6 +7502,7 @@ export const leads = [
   {
     name: "Yvonne Leischker",
     company: "Cereal Partners Worldwide (Nestlé & General Mills)",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/yvonne-leischker-9b750a57",
     email: "",
@@ -6574,6 +7510,7 @@ export const leads = [
   {
     name: "Rhian Calamita",
     company: "Aduna Superfoods | B Corp™",
+    category: "Health & Wellness Food",
     position: "Social Media & Content Manager",
     linkedin: "http://www.linkedin.com/in/rhiancalamita",
     email: "rhian.calamita@aduna.com",
@@ -6581,6 +7518,7 @@ export const leads = [
   {
     name: "Mohammad Amaan",
     company: "IFFCO Group",
+    category: "Grocery & Food Brands",
     position: "Trade Marketing Manager",
     linkedin: "http://www.linkedin.com/in/mohammad-amaan",
     email: "",
@@ -6588,6 +7526,7 @@ export const leads = [
   {
     name: "Jenny Reynolds",
     company: "Cereal Partners Worldwide (Nestlé & General Mills)",
+    category: "Grocery & Food Brands",
     position: "Customer Brands Director Cereal Partners Worldwide",
     linkedin: "http://www.linkedin.com/in/jenny-reynolds-49bb355",
     email: "",
@@ -6595,6 +7534,7 @@ export const leads = [
   {
     name: "Megan White",
     company: "Kendamil (Kendal Nutricare)",
+    category: "Baby & Kids Food",
     position: "Head Of Marketing Uk & I",
     linkedin: "http://www.linkedin.com/in/megan-white-1a42715a",
     email: "megan.white@kendalnutricare.com",
@@ -6602,6 +7542,7 @@ export const leads = [
   {
     name: "Rosie Wildgoose",
     company: "Freja Bone Broth",
+    category: "Health & Wellness Food",
     position: "Head Of Brand & Marketing (interim)",
     linkedin: "http://www.linkedin.com/in/rosie-wildgoose-33ab715b",
     email: "rosie@frejafoods.com",
@@ -6609,6 +7550,7 @@ export const leads = [
   {
     name: "Jeni Hankins",
     company: "Las Iguanas",
+    category: "Casual Dining & Restaurants",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/jeni-hankins-242b936",
     email: "",
@@ -6616,6 +7558,7 @@ export const leads = [
   {
     name: "Joshua Boulton",
     company: "punchy | B Corp",
+    category: "Drinks",
     position: "Sales And Marketing Intern",
     linkedin: "http://www.linkedin.com/in/joshua-boulton-90b91934b",
     email: "josh@punchydrinks.com",
@@ -6623,6 +7566,7 @@ export const leads = [
   {
     name: "Rebecca Larkman",
     company: "Mission Foods UK",
+    category: "Grocery & Food Brands",
     position: "Assistant Brand Manager",
     linkedin: "http://www.linkedin.com/in/rebecca-larkman",
     email: "",
@@ -6630,6 +7574,7 @@ export const leads = [
   {
     name: "Lorna Povey",
     company: "Virgin Wines",
+    category: "Wine & Spirits",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/lorna-povey-177354107",
     email: "lorna.povey@virginwines.co.uk",
@@ -6637,6 +7582,7 @@ export const leads = [
   {
     name: "Megan Wozencroft",
     company: "Revolution Bars Group PLC",
+    category: "Casual Dining & Restaurants",
     position: "Sales And Marketing Executive - Founders & Co.",
     linkedin: "http://www.linkedin.com/in/megan-wozencroft-934b91242",
     email: "",
@@ -6644,6 +7590,7 @@ export const leads = [
   {
     name: "Kevin Chinn",
     company: "Casella Family Brands",
+    category: "Wine & Spirits",
     position: "Marketing Director - Casella Family Brands Europe Ltd.",
     linkedin: "http://www.linkedin.com/in/kevin-chinn-82680b8",
     email: "kevin.chinn@casellafamilybrands.com",
@@ -6651,6 +7598,7 @@ export const leads = [
   {
     name: "Josh Keen",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Sports Marketing Executive",
     linkedin: "http://www.linkedin.com/in/josh-keen-818ab1176",
     email: "joshkeen@greeneking.co.uk",
@@ -6658,6 +7606,7 @@ export const leads = [
   {
     name: "Kevin Hydes",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Group Marketing Director",
     linkedin: "http://www.linkedin.com/in/kevin-hydes-a766673",
     email: "kevinhydes@greeneking.co.uk",
@@ -6665,6 +7614,7 @@ export const leads = [
   {
     name: "Tom Lavis",
     company: "BIOVIT",
+    category: "Health & Wellness Food",
     position: "Sales & Marketing Director",
     linkedin: "http://www.linkedin.com/in/thomaslavis",
     email: "tom@biovit.com",
@@ -6672,6 +7622,7 @@ export const leads = [
   {
     name: "Sam Hiscocks",
     company: "OLLY’S",
+    category: "Snacks & Crisps",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/sam-hiscocks-98a06983",
     email: "sam@ollys-ollys.com",
@@ -6679,6 +7630,7 @@ export const leads = [
   {
     name: "John Rodgers",
     company: "Delicious Ideas Food Group",
+    category: "Grocery & Food Brands",
     position: "Marketing & Sustainability Executive",
     linkedin: "http://www.linkedin.com/in/john-paul-rodgers-496b8b193",
     email: "john@delicious-ideas.com",
@@ -6686,6 +7638,7 @@ export const leads = [
   {
     name: "Kayleigh Bell",
     company: "Pillars Brewery",
+    category: "Beer & Brewing",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/kayleighbell",
     email: "kayleigh@pillarsbrewery.com",
@@ -6693,6 +7646,7 @@ export const leads = [
   {
     name: "Lucy Parfitt",
     company: "Truly Nuts Global",
+    category: "Snacks & Crisps",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/lucy-parfitt-72a793171",
     email: "lucy.parfitt@trulynuts.com",
@@ -6700,6 +7654,7 @@ export const leads = [
   {
     name: "Jannifer Llanes",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/jannifer-llanes-0186541aa",
     email: "jannifer.llanes@kraftheinz.com",
@@ -6707,6 +7662,7 @@ export const leads = [
   {
     name: "Euan Lutton",
     company: "Nairn's Oatcakes",
+    category: "Bakery & Bread",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/euan-lutton-5a537027b",
     email: "euanlutton@nairns-oatcakes.com",
@@ -6714,6 +7670,7 @@ export const leads = [
   {
     name: "Iti Memon",
     company: "Lemonaid & ChariTea",
+    category: "Drinks",
     position: "Uk Partnerships Marketing Manager",
     linkedin: "http://www.linkedin.com/in/itimemon",
     email: "",
@@ -6721,6 +7678,7 @@ export const leads = [
   {
     name: "Alena Linhartova",
     company: "Hip Pop",
+    category: "Drinks",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/alena-linhartova",
     email: "alena@drinkhippop.com",
@@ -6728,6 +7686,7 @@ export const leads = [
   {
     name: "Amy Beresford",
     company: "DR. OETKER (UK) LIMITED",
+    category: "Grocery & Food Brands",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/amy-beresford-5b13794a",
     email: "amy.beresford@oetker.co.uk",
@@ -6735,6 +7694,7 @@ export const leads = [
   {
     name: "Maddie Carey",
     company: "MOTHER ROOT ✸",
+    category: "Drinks",
     position: "Growth Marketing Manager",
     linkedin: "http://www.linkedin.com/in/maddie-carey-%e2%9c%b8-8294b7137",
     email: "maddie@motherroot.london",
@@ -6742,6 +7702,7 @@ export const leads = [
   {
     name: "Teresa Girao",
     company: "The Wine Society",
+    category: "Wine & Spirits",
     position: "Social Media & Community Manager",
     linkedin: "http://www.linkedin.com/in/teresagirao",
     email: "giraot@thewinesociety.com",
@@ -6749,6 +7710,7 @@ export const leads = [
   {
     name: "Katrina Drake",
     company: "FoodChain ID",
+    category: "Other",
     position: "Senior Manager, Global Marketing Operations",
     linkedin: "http://www.linkedin.com/in/katrinadrake",
     email: "katrina.drake@foodchainid.com",
@@ -6756,6 +7718,7 @@ export const leads = [
   {
     name: "Laura Browne",
     company: "Lindt & Sprungli UK",
+    category: "Confectionery",
     position: "Customer Marketing Manager",
     linkedin: "http://www.linkedin.com/in/laura-browne-722159268",
     email: "lbrowne@lindt.com",
@@ -6763,6 +7726,7 @@ export const leads = [
   {
     name: "Kirsten Gautrey",
     company: "Ecotone",
+    category: "Grocery & Food Brands",
     position: "Social Media Marketing Manager",
     linkedin: "http://www.linkedin.com/in/kirsten-gautrey-0316aa12b",
     email: "kirsten.gautrey@ecotone.bio",
@@ -6770,6 +7734,7 @@ export const leads = [
   {
     name: "Jack Nevitt",
     company: "wagamama",
+    category: "Casual Dining & Restaurants",
     position: "Senior Brand Activation Manager",
     linkedin: "http://www.linkedin.com/in/jack-nevitt-b00742198",
     email: "jack.nevitt@wagamama.com",
@@ -6777,6 +7742,7 @@ export const leads = [
   {
     name: "Richard Macfarlane",
     company: "Wiltshire Farm Foods",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/richard-macfarlane-023b5821",
     email: "",
@@ -6784,6 +7750,7 @@ export const leads = [
   {
     name: "Natsuda Phrom",
     company: "Doughlicious The London Dough Co.",
+    category: "Bakery & Bread",
     position: "Brand Ambassador",
     linkedin: "http://www.linkedin.com/in/natsuda-upri-phrom-88a4a920a",
     email: "natsuda@doughlicious.co.uk",
@@ -6791,6 +7758,7 @@ export const leads = [
   {
     name: "Emily Wharton",
     company: "wagamama",
+    category: "Casual Dining & Restaurants",
     position: "Senior Regional Sales + Marketing Manager",
     linkedin: "http://www.linkedin.com/in/emily-wharton-19177812b",
     email: "emily.wharton@wagamama.com",
@@ -6798,6 +7766,7 @@ export const leads = [
   {
     name: "Penny Baldwin",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Pa To Marketing Director",
     linkedin: "http://www.linkedin.com/in/penny-baldwin-092a544a",
     email: "penny.baldwin@kraftheinz.com",
@@ -6805,6 +7774,7 @@ export const leads = [
   {
     name: "Andy Howey",
     company: "The Brecks Company Ltd",
+    category: "Grocery & Food Brands",
     position: "Head Of Sales (monster Brands Ltd)",
     linkedin: "http://www.linkedin.com/in/andy-howey-76772246",
     email: "andyhowey@brecksfood.com",
@@ -6812,6 +7782,7 @@ export const leads = [
   {
     name: "Claire Hoyle",
     company: "Birds Eye UK & IE",
+    category: "Grocery & Food Brands",
     position: "Head Of Marketing - Local Brands",
     linkedin: "http://www.linkedin.com/in/claire-hoyle-75995935",
     email: "claire.hoyle@birdseye.co.uk",
@@ -6819,6 +7790,7 @@ export const leads = [
   {
     name: "Claire Sutton",
     company: "Birds Eye UK & IE",
+    category: "Grocery & Food Brands",
     position: "Cluster Marketing Director Uk & I",
     linkedin: "http://www.linkedin.com/in/claire-sutton-b5bb1924",
     email: "claire.sutton@birdseye.co.uk",
@@ -6826,6 +7798,7 @@ export const leads = [
   {
     name: "Rebecca Stone",
     company: "Mindful Chef | B Corp",
+    category: "Grocery & Food Brands",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/rebecca-stone-1008751bb",
     email: "becca.stone@mindfulchef.com",
@@ -6833,6 +7806,7 @@ export const leads = [
   {
     name: "Harriet Acim",
     company: "Brindisa",
+    category: "Grocery & Food Brands",
     position: "Marketing And Digital Communications Manager",
     linkedin: "http://www.linkedin.com/in/harriet-stanford-acim-29aa1b27",
     email: "",
@@ -6840,6 +7814,7 @@ export const leads = [
   {
     name: "Erin Doherty",
     company: "wagamama",
+    category: "Casual Dining & Restaurants",
     position: "International Marketing Manager",
     linkedin: "http://www.linkedin.com/in/erin-doherty-5151b2103",
     email: "erind@wagamama.com",
@@ -6847,6 +7822,7 @@ export const leads = [
   {
     name: "Tony Lappin",
     company: "Fox's Biscuits",
+    category: "Bakery & Bread",
     position: "Customer Marketing Manager",
     linkedin: "http://www.linkedin.com/in/tony-lappin-3954572",
     email: "tony.lappin@foxs-biscuits.co.uk",
@@ -6854,6 +7830,7 @@ export const leads = [
   {
     name: "Anokhee Karia",
     company: "Creams Cafe",
+    category: "Casual Dining & Restaurants",
     position: "Brand And Local Store Marketing Manager",
     linkedin: "http://www.linkedin.com/in/anokhee-karia-57984426",
     email: "anokhee.karia@creamscafe.com",
@@ -6861,6 +7838,7 @@ export const leads = [
   {
     name: "Katie King",
     company: "Belazu | B Corp™",
+    category: "Grocery & Food Brands",
     position: "Senior Marketing Manager",
     linkedin: "http://www.linkedin.com/in/katie-king-4891a874",
     email: "katie@belazu.com",
@@ -6868,6 +7846,7 @@ export const leads = [
   {
     name: "Amy Bellchambers",
     company: "The Collective UK | B Corp™",
+    category: "Dairy & Alternatives",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/amy-bellchambers-89b43760",
     email: "amy.bellchambers@epicdairy.com",
@@ -6875,6 +7854,7 @@ export const leads = [
   {
     name: "Erica Bennett",
     company: "Savona Foodservice",
+    category: "Other",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/erica-bennett-39505b17",
     email: "erica.bennett@savona.co.uk",
@@ -6882,6 +7862,7 @@ export const leads = [
   {
     name: "Victoria Westwood-furey",
     company: "Birds Eye UK & IE",
+    category: "Grocery & Food Brands",
     position: "Cluster Marketing Lead - Veg, Green Cuisine & Meals",
     linkedin:
       "http://www.linkedin.com/in/victoria-westwood-furey-chartered-marketer-acim-67a35128",
@@ -6890,6 +7871,7 @@ export const leads = [
   {
     name: "Richard Neale",
     company: "Cereal Partners Worldwide (Nestlé & General Mills)",
+    category: "Grocery & Food Brands",
     position: "Cpuk Lead Quality Specialist For Retailer Brands & Systems",
     linkedin: "http://www.linkedin.com/in/richard-neale-5926a6a",
     email: "richard.neale@cpuk.nestle.com",
@@ -6897,6 +7879,7 @@ export const leads = [
   {
     name: "Gemma Raymond",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Business Management With Marketing Student",
     linkedin: "http://www.linkedin.com/in/gemma-raymond",
     email: "gemmaraymond@greeneking.co.uk",
@@ -6904,6 +7887,7 @@ export const leads = [
   {
     name: "Kazuki Tezuka",
     company: "Huel",
+    category: "Health & Wellness Food",
     position: "Lead International Marketing Executive",
     linkedin: "http://www.linkedin.com/in/kazukismile",
     email: "kazuki@huel.com",
@@ -6911,6 +7895,7 @@ export const leads = [
   {
     name: "Matt Walker",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/matt-walker-7005a92",
     email: "walker.m@kraftheinzcompany.com",
@@ -6918,6 +7903,7 @@ export const leads = [
   {
     name: "Amie Turnbull",
     company: "Huel",
+    category: "Health & Wellness Food",
     position: "Lead Social Media Exec",
     linkedin: "http://www.linkedin.com/in/amie-turnbull-9846a32ba",
     email: "amie@huel.com",
@@ -6925,6 +7911,7 @@ export const leads = [
   {
     name: "Olivia-rose Luxford",
     company: "Hain Celestial UK",
+    category: "Grocery & Food Brands",
     position: "Brand Manager - Cully & Sully Ireland",
     linkedin: "http://www.linkedin.com/in/olivia-rose-luxford-96b851187",
     email: "",
@@ -6932,6 +7919,7 @@ export const leads = [
   {
     name: "Ellie Redford",
     company: "Wasabi Sushi & Bento",
+    category: "Casual Dining & Restaurants",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/elliemeganredford",
     email: "ellie.redford@wasabi.uk.com",
@@ -6939,6 +7927,7 @@ export const leads = [
   {
     name: "Kathryn Griffin",
     company: "Lindt & Sprungli UK",
+    category: "Confectionery",
     position: "Senior Digital Marketing Manager",
     linkedin: "http://www.linkedin.com/in/kathrynemgriffin",
     email: "kgriffin@lindt.com",
@@ -6946,6 +7935,7 @@ export const leads = [
   {
     name: "Karishma Kishnani",
     company: "The Soho Sandwich Co",
+    category: "Casual Dining & Restaurants",
     position: "Sales & Marketing Executive",
     linkedin: "http://www.linkedin.com/in/karishma-mahtani-kishnani-a64310169",
     email: "karishma.kishnani@sohosandwich.co.uk",
@@ -6953,6 +7943,7 @@ export const leads = [
   {
     name: "Caitlin C",
     company: "IBC Simply",
+    category: "Other",
     position: "Sales And Marketing Executive",
     linkedin: "http://www.linkedin.com/in/caitlin-c-4ab98b133",
     email: "",
@@ -6960,6 +7951,7 @@ export const leads = [
   {
     name: "Millie Baker",
     company: "The BakeRite Company",
+    category: "Bakery & Bread",
     position: "Marketing",
     linkedin: "http://www.linkedin.com/in/millie-baker-845458284",
     email: "",
@@ -6967,6 +7959,7 @@ export const leads = [
   {
     name: "Andy Gibson",
     company: "Vault City Brewing",
+    category: "Beer & Brewing",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/andy-gibson-16b89b112",
     email: "",
@@ -6974,6 +7967,7 @@ export const leads = [
   {
     name: "James Stocks",
     company: "graze",
+    category: "Snacks & Crisps",
     position: "Head Of Brand Experience",
     linkedin: "http://www.linkedin.com/in/james-stocks-879773232",
     email: "",
@@ -6981,6 +7975,7 @@ export const leads = [
   {
     name: "Donna Landman",
     company: "West Cornwall Pasty Company",
+    category: "Bakery & Bread",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/donna-landman-5a231651",
     email: "",
@@ -6988,6 +7983,7 @@ export const leads = [
   {
     name: "Esther Sforza",
     company: "Merchant Gourmet",
+    category: "Grocery & Food Brands",
     position: "Head Of Brand",
     linkedin: "http://www.linkedin.com/in/esther-sforza-81169b11",
     email: "esther.sforza@merchant-gourmet.com",
@@ -6995,6 +7991,7 @@ export const leads = [
   {
     name: "Daniella Kelley",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/daniella-kelley-076408159",
     email: "daniellakelley@greeneking.co.uk",
@@ -7002,6 +7999,7 @@ export const leads = [
   {
     name: "Greg O'hare",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Food & Drink Brand Partner",
     linkedin: "http://www.linkedin.com/in/greg-o-hare-14187a118",
     email: "grego'hare@greeneking.co.uk",
@@ -7009,6 +8007,7 @@ export const leads = [
   {
     name: "Claire Lee",
     company: "Swizzels",
+    category: "Confectionery",
     position: "Senior Brand Marketing Manager",
     linkedin: "http://www.linkedin.com/in/claire99",
     email: "claire.lee@swizzels-matlow.com",
@@ -7016,6 +8015,7 @@ export const leads = [
   {
     name: "Hannah Wareing",
     company: "Birds Eye UK & IE",
+    category: "Grocery & Food Brands",
     position: "Brand Manager - Birds Eye Potatoes",
     linkedin: "http://www.linkedin.com/in/hannah-wareing-712301200",
     email: "hannah.wareing@birdseye.co.uk",
@@ -7023,6 +8023,7 @@ export const leads = [
   {
     name: "Jake Everett",
     company: "Tiffin Sandwiches",
+    category: "Casual Dining & Restaurants",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/jake-e-7263581ba",
     email: "jake.everett@tiffinsandwiches.co.uk",
@@ -7030,6 +8031,7 @@ export const leads = [
   {
     name: "Nadine Bonazza",
     company: "Caffè Concerto",
+    category: "Casual Dining & Restaurants",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/nadinebonazza",
     email: "nadine.bonazza@caffeconcerto.co.uk",
@@ -7037,6 +8039,7 @@ export const leads = [
   {
     name: "Fiona Watson",
     company: "DR. OETKER (UK) LIMITED",
+    category: "Grocery & Food Brands",
     position: "Head Of Shopper & Online Marketing",
     linkedin: "http://www.linkedin.com/in/fiona-watson-57480a1a6",
     email: "fiona.watson@oetker.co.uk",
@@ -7044,6 +8047,7 @@ export const leads = [
   {
     name: "Amica Morris",
     company: "Müller UK & Ireland",
+    category: "Dairy & Alternatives",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/amica-morris-4a3b83135",
     email: "amica.morris@muller.co.uk",
@@ -7051,6 +8055,7 @@ export const leads = [
   {
     name: "Rose Doherty",
     company: "Lindt & Sprungli UK",
+    category: "Confectionery",
     position: "Assistant Brand Manager - Choco Wafer & Snacking",
     linkedin: "http://www.linkedin.com/in/rose-doherty-099223168",
     email: "rodoherty@lindt.com",
@@ -7058,6 +8063,7 @@ export const leads = [
   {
     name: "Audrey Arbeeny",
     company: "KIND",
+    category: "Snacks & Crisps",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/audrey-arbeeny-568aa715",
     email: "audrey.arbeeny@kindsnacks.co.uk",
@@ -7065,6 +8071,7 @@ export const leads = [
   {
     name: "Ebru Bircan",
     company: "Pasta Evangelists",
+    category: "Casual Dining & Restaurants",
     position: "Marketing And Brand Director",
     linkedin: "http://www.linkedin.com/in/ebru-bircan-4396074b",
     email: "ebru.bircan@pastaevangelists.com",
@@ -7072,6 +8079,7 @@ export const leads = [
   {
     name: "Michelle Everingham",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Social Media Collaboration Manager",
     linkedin: "http://www.linkedin.com/in/michelle-everingham-a7b7b4b9",
     email: "michelle.everingham@kraftheinz.com",
@@ -7079,6 +8087,7 @@ export const leads = [
   {
     name: "Lucy Idm",
     company: "Caterforce Ltd",
+    category: "Other",
     position: "Group Marketing Director",
     linkedin: "http://www.linkedin.com/in/lucy-boland-pg-dip-idm-431a8049",
     email: "",
@@ -7086,6 +8095,7 @@ export const leads = [
   {
     name: "Emily Tutty",
     company: "Megan's Restaurants",
+    category: "Casual Dining & Restaurants",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/emily-tutty-a5020b153",
     email: "emily@megans.co.uk",
@@ -7093,6 +8103,7 @@ export const leads = [
   {
     name: "Monsur Miah",
     company: "Euro Foods Group",
+    category: "Grocery & Food Brands",
     position: "Marketing Intern",
     linkedin: "http://www.linkedin.com/in/monsur-miah-2695617b",
     email: "",
@@ -7100,6 +8111,7 @@ export const leads = [
   {
     name: "Michael Nulty",
     company: "Cafe Spice",
+    category: "Casual Dining & Restaurants",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/michael-nulty-831897152",
     email: "",
@@ -7107,6 +8119,7 @@ export const leads = [
   {
     name: "Andy Milford",
     company: "Birmingham Brewing Company",
+    category: "Beer & Brewing",
     position: "Sales & Brand Manager",
     linkedin: "http://www.linkedin.com/in/andy-milford-b0690827",
     email: "andy@birminghambrewingcompany.co.uk",
@@ -7114,6 +8127,7 @@ export const leads = [
   {
     name: "Alleyah Burgess",
     company: "SushiDog",
+    category: "Casual Dining & Restaurants",
     position: "Social Media Manager & Content Executive",
     linkedin: "http://www.linkedin.com/in/akiliah",
     email: "alleyah@sushidog.co.uk",
@@ -7121,6 +8135,7 @@ export const leads = [
   {
     name: "Naomi James",
     company: "COCOBA Ltd",
+    category: "Confectionery",
     position: "E-commerce And Digital Marketing Manager",
     linkedin: "http://www.linkedin.com/in/naomiljames",
     email: "naomi@cocobachocolate.com",
@@ -7128,6 +8143,7 @@ export const leads = [
   {
     name: "Beth Edwards",
     company: "Genius Foods",
+    category: "Bakery & Bread",
     position: "Assistant Brand Manager",
     linkedin: "http://www.linkedin.com/in/beth-m-edwards",
     email: "beth.edwards@geniusfood.com",
@@ -7135,6 +8151,7 @@ export const leads = [
   {
     name: "Emily Mcmunn",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/emily-mcmunn-005792151",
     email: "",
@@ -7142,6 +8159,7 @@ export const leads = [
   {
     name: "Matthew Sherratt",
     company: "Oppo Brothers Ice Cream | B Corp™",
+    category: "Confectionery",
     position: "International Marketing Director",
     linkedin: "http://www.linkedin.com/in/matthewsherratt",
     email: "matthew@oppobrothers.co.uk",
@@ -7149,6 +8167,7 @@ export const leads = [
   {
     name: "Mike Trevena",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/mike-trevena-25318aa7",
     email: "mike.trevena@kraftheinz.com",
@@ -7156,6 +8175,7 @@ export const leads = [
   {
     name: "Nathan Trott",
     company: "Greggs",
+    category: "Bakery & Bread",
     position: "Retail Marketing Digital Signage Support Manager",
     linkedin: "http://www.linkedin.com/in/nathan-trott",
     email: "nathan.trott@greggs.co.uk",
@@ -7163,6 +8183,7 @@ export const leads = [
   {
     name: "Uzoma Patrick",
     company: "The Gym Kitchen",
+    category: "Health & Wellness Food",
     position: "Marketing Assistant",
     linkedin: "http://www.linkedin.com/in/uzoma-patrick-9593711b2",
     email: "",
@@ -7170,6 +8191,7 @@ export const leads = [
   {
     name: "Yona Ellis",
     company: "Lotus Bakeries",
+    category: "Bakery & Bread",
     position: "Marketing And Innovation Director Kiddylicious & Peter's Yard",
     linkedin: "http://www.linkedin.com/in/yona-ellis-5516741",
     email: "",
@@ -7177,6 +8199,7 @@ export const leads = [
   {
     name: "Jono Hannam",
     company: "Rich Products UK",
+    category: "Other",
     position: "R&d Business Partner-grocery And Brands",
     linkedin: "http://www.linkedin.com/in/jono-hannam-5152a09a",
     email: "",
@@ -7184,6 +8207,7 @@ export const leads = [
   {
     name: "Darren Anderson",
     company: "Henry Colbeck",
+    category: "Other",
     position: "Marketing Manager (head Of Department)",
     linkedin: "http://www.linkedin.com/in/darren-anderson-a30881156",
     email: "d_anderson@colbeck.co.uk",
@@ -7191,6 +8215,7 @@ export const leads = [
   {
     name: "Alexandra Heal",
     company: "FrieslandCampina",
+    category: "Dairy & Alternatives",
     position: "Brand Manager (yazoo)",
     linkedin: "http://www.linkedin.com/in/alexandra-heal-73a533135",
     email: "alexandra.heal@frieslandcampina.com",
@@ -7198,6 +8223,7 @@ export const leads = [
   {
     name: "Kea Bose",
     company: "Darwin & Wallace",
+    category: "Casual Dining & Restaurants",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/kea-bose-37ba14b6",
     email: "",
@@ -7205,6 +8231,7 @@ export const leads = [
   {
     name: "Nethmi B",
     company: "The Ilchester Cheese Co.",
+    category: "Dairy & Alternatives",
     position: "Brand Manager - Applewood & Marmite Cheddar",
     linkedin: "http://www.linkedin.com/in/nethmi-w-burley",
     email: "",
@@ -7212,6 +8239,7 @@ export const leads = [
   {
     name: "Caitlin Dear-fitzpatrick",
     company: "Beyond the Bean Ltd",
+    category: "Coffee & Tea",
     position: "Senior Marketing Executive",
     linkedin: "http://www.linkedin.com/in/caitlin-dear-fitzpatrick-253992ba",
     email: "caitlin.fitzpatrick@beyondthebean.com",
@@ -7219,6 +8247,7 @@ export const leads = [
   {
     name: "Megan Swinburn",
     company: "Dr. Oetker Professional (UK)",
+    category: "Grocery & Food Brands",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/megan-swinburn-94871a151",
     email: "megan.swinburn@oetker.com",
@@ -7226,6 +8255,7 @@ export const leads = [
   {
     name: "Oliver Johnson",
     company: "Vidrate",
+    category: "Drinks",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/oliver-johnson-8a3a4a167",
     email: "oliver.johnson@vidrate.com",
@@ -7233,6 +8263,7 @@ export const leads = [
   {
     name: "Sarah Brewer",
     company: "PizzaExpress",
+    category: "Casual Dining & Restaurants",
     position: "Senior Marketing Manager",
     linkedin: "http://www.linkedin.com/in/sarah-brewer-301082158",
     email: "",
@@ -7240,6 +8271,7 @@ export const leads = [
   {
     name: "Samantha Peel",
     company: "Birds Eye UK & IE",
+    category: "Grocery & Food Brands",
     position: "Uk & Ie Cluster Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/samantha-peel-37984913",
     email: "samantha.peel@birdseye.co.uk",
@@ -7247,6 +8279,7 @@ export const leads = [
   {
     name: "Phoebe Buckley",
     company: "THIS™",
+    category: "Grocery & Food Brands",
     position: "Senior Marketing Manager",
     linkedin: "http://www.linkedin.com/in/phoebe-buckley-1044",
     email: "phoebe@this.co",
@@ -7254,6 +8287,7 @@ export const leads = [
   {
     name: "Catriona Mcloughlin",
     company: "Greggs",
+    category: "Bakery & Bread",
     position: "Brand Comms Planning & Partnerships Manager",
     linkedin: "http://www.linkedin.com/in/catriona-mcloughlin-899955118",
     email: "",
@@ -7261,6 +8295,7 @@ export const leads = [
   {
     name: "Jasmine Snowdon",
     company: "Plenish",
+    category: "Dairy & Alternatives",
     position: "Category & Shopper Marketing Manager",
     linkedin: "http://www.linkedin.com/in/jasmine-snowdon-581398b4",
     email: "",
@@ -7268,6 +8303,7 @@ export const leads = [
   {
     name: "Alliyah Mccormack",
     company: "Chicken Shop",
+    category: "Casual Dining & Restaurants",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/alliyah-mccormack-65977a212",
     email: "alliyah@chickenshop.com",
@@ -7275,6 +8311,7 @@ export const leads = [
   {
     name: "Kirsten Alexander",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/kirstenbealexander",
     email: "wayneshurvinton@greeneking.co.uk",
@@ -7282,6 +8319,7 @@ export const leads = [
   {
     name: "Jay Shah",
     company: "Lindt & Sprungli UK",
+    category: "Confectionery",
     position: "Assistant Brand Manager",
     linkedin: "http://www.linkedin.com/in/jay-shah-3764658a",
     email: "jshah@lindt.com",
@@ -7289,6 +8327,7 @@ export const leads = [
   {
     name: "Marketa Zahorska",
     company: "Pow Food | BCorp, Nutrition-led Catering",
+    category: "Health & Wellness Food",
     position: "Marketing And Management Of Hotels",
     linkedin: "http://www.linkedin.com/in/marketa-zahorska-287382129",
     email: "marketa@powfood.co.uk",
@@ -7296,6 +8335,7 @@ export const leads = [
   {
     name: "Marta Michalak",
     company: "Country Choice",
+    category: "Bakery & Bread",
     position: "Digital Marketing Manager",
     linkedin: "http://www.linkedin.com/in/marta-michalak-74026a134",
     email: "",
@@ -7303,6 +8343,7 @@ export const leads = [
   {
     name: "Miriam Pomioli",
     company: "Gruppo Montenegro",
+    category: "Wine & Spirits",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/miriam-pomioli-0115637b",
     email: "miriam.pomioli@montenegro.it",
@@ -7310,6 +8351,7 @@ export const leads = [
   {
     name: "Emily Silva",
     company: "The Oxford Wine Company",
+    category: "Wine & Spirits",
     position: "Head Of Retail And Marketing",
     linkedin: "http://www.linkedin.com/in/emily-silva-17923083",
     email: "emily@oxfordwine.co.uk",
@@ -7317,6 +8359,7 @@ export const leads = [
   {
     name: "Caroline Hughes",
     company: "Gosh! Food",
+    category: "Grocery & Food Brands",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/caroline-hughes-134a3b13",
     email: "caroline.hughes@goshfood.com",
@@ -7324,6 +8367,7 @@ export const leads = [
   {
     name: "Catherine Sarsfield",
     company: "MOTHER ROOT ✸",
+    category: "Drinks",
     position: "Head Of Brand",
     linkedin: "http://www.linkedin.com/in/catherine-sarsfield-97100547",
     email: "",
@@ -7331,6 +8375,7 @@ export const leads = [
   {
     name: "Lauren Harber",
     company: "Genius Foods",
+    category: "Bakery & Bread",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/lauren-harber-34037227",
     email: "lauren.harber@geniusfood.com",
@@ -7338,6 +8383,7 @@ export const leads = [
   {
     name: "Annie Birdseye",
     company: "PizzaExpress",
+    category: "Casual Dining & Restaurants",
     position: "Senior Social Media & Talent Executive",
     linkedin: "http://www.linkedin.com/in/annie-birdseye-000b32bb",
     email: "annie.birdseye@pizzaexpress.com",
@@ -7345,6 +8391,7 @@ export const leads = [
   {
     name: "Caitlin Acim",
     company: "OV",
+    category: "Other",
     position: "Digital Marketing Executive",
     linkedin: "http://www.linkedin.com/in/caitlin-hardacre-acim-018797136",
     email: "caitlin.acim@ovgrp.com",
@@ -7352,6 +8399,7 @@ export const leads = [
   {
     name: "Mandeep Kang",
     company: "Indo-European Foods Limited",
+    category: "Grocery & Food Brands",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/mandeep-kang",
     email: "mandeep@ief.uk.com",
@@ -7359,6 +8407,7 @@ export const leads = [
   {
     name: "Em Brown",
     company: "Hain Celestial UK",
+    category: "Grocery & Food Brands",
     position: "Assistant Brand Manager",
     linkedin: "http://www.linkedin.com/in/em-brown-0b55b7156",
     email: "em.brown@haindaniels.com",
@@ -7366,6 +8415,7 @@ export const leads = [
   {
     name: "Dayna Riordan",
     company: "Lindt & Sprungli UK",
+    category: "Confectionery",
     position: "Brand Manager - Bars",
     linkedin: "http://www.linkedin.com/in/dayna-riordan-2b77ab129",
     email: "driordan@lindt.com",
@@ -7373,6 +8423,7 @@ export const leads = [
   {
     name: "Shelley Berton",
     company: "Taylors Snacks",
+    category: "Snacks & Crisps",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/shelley-berton-a18710167",
     email: "shelley.berton@taylorssnacks.com",
@@ -7380,6 +8431,7 @@ export const leads = [
   {
     name: "Stuart Hancock",
     company: "Cofresh Snack Foods Limited",
+    category: "Snacks & Crisps",
     position: "Eat Real Brand Business Unit Controller",
     linkedin: "http://www.linkedin.com/in/stuart-hancock-3b60bb176",
     email: "stuart.hancock@cofresh.co.uk",
@@ -7387,6 +8439,7 @@ export const leads = [
   {
     name: "Ahmad Khan",
     company: "Vibrant Foods",
+    category: "Grocery & Food Brands",
     position: "Marketing Merchandising Manager",
     linkedin: "http://www.linkedin.com/in/ahmad-muneeb-khan-3b5285186",
     email: "ahmad.khan@vibrantfoods.com",
@@ -7394,6 +8447,7 @@ export const leads = [
   {
     name: "Spencer Matthews",
     company: "CleanCo",
+    category: "Drinks",
     position: "Founder & Chief Brand Officer",
     linkedin: "http://www.linkedin.com/in/spencer-matthews-8444441a9",
     email: "spencer@clean.co",
@@ -7401,6 +8455,7 @@ export const leads = [
   {
     name: "Precious O",
     company: "Nestlé Professional",
+    category: "Grocery & Food Brands",
     position: "Assistant Category Marketing Manager",
     linkedin: "http://www.linkedin.com/in/precious-o-79a230123",
     email: "",
@@ -7408,6 +8463,7 @@ export const leads = [
   {
     name: "Holly Dunnett",
     company: "Gü Desserts |  Certified B Corp™",
+    category: "Confectionery",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/holly-dunnett-86140410a",
     email: "holly.dunnett@gupuds.com",
@@ -7415,6 +8471,7 @@ export const leads = [
   {
     name: "Sophie Bryson",
     company: "Gü Desserts |  Certified B Corp™",
+    category: "Confectionery",
     position: "International Marketing Manager",
     linkedin: "http://www.linkedin.com/in/sophie-bryson-b75671149",
     email: "sophie.bryson@gupuds.com",
@@ -7422,6 +8479,7 @@ export const leads = [
   {
     name: "Jess Jouning",
     company: "Daily Dose Juice",
+    category: "Drinks",
     position: "Junior Brand Manager",
     linkedin: "http://www.linkedin.com/in/jess-jouning-3ab674151",
     email: "jess@dailydosejuice.co.uk",
@@ -7429,6 +8487,7 @@ export const leads = [
   {
     name: "Jemma W",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Marketing And Communications Executive, Greene King, Uk",
     linkedin: "http://www.linkedin.com/in/jemmafeabeswilliams",
     email: "jemmaw@greeneking.co.uk",
@@ -7436,6 +8495,7 @@ export const leads = [
   {
     name: "Hannah Page",
     company: "OLLY’S",
+    category: "Snacks & Crisps",
     position: "Social Media Manager",
     linkedin: "http://www.linkedin.com/in/hannah-page-146538150",
     email: "hannah@ollys-ollys.com",
@@ -7443,6 +8503,7 @@ export const leads = [
   {
     name: "Becky Frost",
     company: "Springvale Foods Ltd",
+    category: "Grocery & Food Brands",
     position: "Marketing Executive",
     linkedin: "http://www.linkedin.com/in/becky-frost-marketing",
     email: "",
@@ -7450,6 +8511,7 @@ export const leads = [
   {
     name: "Joshua Gosling",
     company: "Compass Group Ireland",
+    category: "Other",
     position: "Marketing",
     linkedin: "http://www.linkedin.com/in/joshua-gosling-26285111b",
     email: "",
@@ -7457,6 +8519,7 @@ export const leads = [
   {
     name: "Milo Nicholson",
     company: "Lucky Saint | B Corp™",
+    category: "Beer & Brewing",
     position: "Senior Growth Marketing Executive",
     linkedin: "http://www.linkedin.com/in/milo-nicholson-a71ba51aa",
     email: "milo@luckysaint.co",
@@ -7464,6 +8527,7 @@ export const leads = [
   {
     name: "Leah Davies",
     company: "Holdsworth Foods",
+    category: "Confectionery",
     position: "Marketing Manager | Senior Leader | B2b Wholesale Food Industry",
     linkedin: "http://www.linkedin.com/in/leah-davies-18440a7a",
     email: "leah.davies@holdsworth-foods.co.uk",
@@ -7471,6 +8535,7 @@ export const leads = [
   {
     name: "Mohamed Mahamed",
     company: "Green Chef",
+    category: "Grocery & Food Brands",
     position: "Brand Ambassador",
     linkedin: "http://www.linkedin.com/in/mohamed-mahamed-a77a63198",
     email: "mmahamed@greenchef.com",
@@ -7478,6 +8543,7 @@ export const leads = [
   {
     name: "Alex Andrews",
     company: "MOJU",
+    category: "Drinks",
     position: "Ecommerce & Digital Marketing Manager",
     linkedin: "http://www.linkedin.com/in/alex-andrews-9b7ba954",
     email: "alex.andrews@mojudrinks.com",
@@ -7485,6 +8551,7 @@ export const leads = [
   {
     name: "Red Stevens",
     company: "Honest Grapes",
+    category: "Wine & Spirits",
     position: "E-commerce Marketing Manager",
     linkedin: "http://www.linkedin.com/in/red-stevens",
     email: "red@honestgrapes.co.uk",
@@ -7492,6 +8559,7 @@ export const leads = [
   {
     name: "Emily Wilson",
     company: "Birds Eye UK & IE",
+    category: "Grocery & Food Brands",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/emily-wilson-2200b6172",
     email: "emily.wilson@birdseye.co.uk",
@@ -7499,6 +8567,7 @@ export const leads = [
   {
     name: "Stephen Gosling",
     company: "Hawkshead Relish Company Ltd",
+    category: "Grocery & Food Brands",
     position: "Sales And Marketing Executive",
     linkedin: "http://www.linkedin.com/in/stephen-gosling-777238153",
     email: "",
@@ -7506,6 +8575,7 @@ export const leads = [
   {
     name: "Richard Marris",
     company: "Samworth Brothers",
+    category: "Grocery & Food Brands",
     position: "Brands Director",
     linkedin: "http://www.linkedin.com/in/rmarris",
     email: "richard.marris@samworthbrothers.co.uk",
@@ -7513,6 +8583,7 @@ export const leads = [
   {
     name: "Rachel Emery",
     company: "Orbit Beers",
+    category: "Beer & Brewing",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/rachel-emery-4a86b638",
     email: "rachel@orbitbeers.com",
@@ -7520,6 +8591,7 @@ export const leads = [
   {
     name: "Rachel Foster",
     company: "Ingredion Incorporated",
+    category: "Other",
     position: "Global Marketing Communications Manager",
     linkedin: "http://www.linkedin.com/in/rachel-foster-872797115",
     email: "rachel.foster@ingredion.com",
@@ -7527,6 +8599,7 @@ export const leads = [
   {
     name: "Nilesh Prajapati",
     company: "BURGER KING UK",
+    category: "Casual Dining & Restaurants",
     position: "Digital Marketing Manager",
     linkedin:
       "http://www.linkedin.com/in/nilesh-jayantibhai-prajapati-5a94b72b6",
@@ -7535,6 +8608,7 @@ export const leads = [
   {
     name: "Rebecca Woollam",
     company: "Caterforce Ltd",
+    category: "Other",
     position: "Own Brand Marketing Manager",
     linkedin: "http://www.linkedin.com/in/rebecca-woollam-b7915126",
     email: "rwoollam@caterforce.co.uk",
@@ -7542,6 +8616,7 @@ export const leads = [
   {
     name: "Cleo Evans",
     company: "The Dalesman Group",
+    category: "Bakery & Bread",
     position: "Marketing Executive",
     linkedin: "http://www.linkedin.com/in/cleo-evans",
     email: "cleo.evans@thedalesmangroup.co.uk",
@@ -7549,6 +8624,7 @@ export const leads = [
   {
     name: "Victor Bellec",
     company: "Slurp",
+    category: "Drinks",
     position: "Digital Marketing & Ecommerce Manager",
     linkedin: "http://www.linkedin.com/in/victor-bellec-02b66227",
     email: "victor.bellec@slurp.co.uk",
@@ -7556,6 +8632,7 @@ export const leads = [
   {
     name: "Joanna Halucha",
     company: "Caterforce Ltd",
+    category: "Other",
     position: "Head Of Own Brand Buying & Technical",
     linkedin: "http://www.linkedin.com/in/joanna-halucha-mba-mcips-13594922",
     email: "jhalucha@caterforce.co.uk",
@@ -7563,6 +8640,7 @@ export const leads = [
   {
     name: "Cara Pring",
     company: "PROPER SNACKS",
+    category: "Snacks & Crisps",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/cara-pring-7b29a7b1",
     email: "cara@warpsnacks.com",
@@ -7570,6 +8648,7 @@ export const leads = [
   {
     name: "Anna Kaarow",
     company: "Beyond the Bean Ltd",
+    category: "Coffee & Tea",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/annakaarow",
     email: "anna.kaarow@beyondthebean.com",
@@ -7577,6 +8656,7 @@ export const leads = [
   {
     name: "Pav Dhinsa",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/pav-dhinsa-56608564",
     email: "",
@@ -7584,6 +8664,7 @@ export const leads = [
   {
     name: "Kate Murphy",
     company: "Ginsters",
+    category: "Bakery & Bread",
     position: "Shopper & Trade Marketing Manager",
     linkedin: "http://www.linkedin.com/in/katiemariemurphy",
     email: "kate.murphy@ginsters.co.uk",
@@ -7591,6 +8672,7 @@ export const leads = [
   {
     name: "Clare Gane",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Senior Marketing Manager (premium)",
     linkedin: "http://www.linkedin.com/in/clare-gane-3b738135",
     email: "",
@@ -7598,6 +8680,7 @@ export const leads = [
   {
     name: "Victoria Barkle",
     company: "Pollen + Grace",
+    category: "Health & Wellness Food",
     position: "Junior Marketing Manager",
     linkedin: "http://www.linkedin.com/in/victoriabarkle",
     email: "victoria@pollenandgrace.com",
@@ -7605,6 +8688,7 @@ export const leads = [
   {
     name: "Daniel Page",
     company: "FodaBox",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/daniel-page-677382181",
     email: "daniel.page@fodabox.com",
@@ -7612,6 +8696,7 @@ export const leads = [
   {
     name: "James Magee",
     company: "Belazu | B Corp™",
+    category: "Grocery & Food Brands",
     position: "Assistant Brand Manager",
     linkedin: "http://www.linkedin.com/in/james-magee-marketing",
     email: "james.magee@belazu.com",
@@ -7619,6 +8704,7 @@ export const leads = [
   {
     name: "Peyton Squires",
     company: "PROPER SNACKS",
+    category: "Snacks & Crisps",
     position: "Marketing Manager - Eat Real",
     linkedin: "http://www.linkedin.com/in/peyton-squires-8b6931a2",
     email: "peyton@warpsnacks.com",
@@ -7626,6 +8712,7 @@ export const leads = [
   {
     name: "Carmen Ferguson",
     company: "Windmill Organics Ltd",
+    category: "Grocery & Food Brands",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/carmen-ferguson-b1306165",
     email: "carmen@windmillorganics.com",
@@ -7633,6 +8720,7 @@ export const leads = [
   {
     name: "David Amesbury",
     company: "Essential Trading Co-operative",
+    category: "Grocery & Food Brands",
     position: "Website/marketing Worker",
     linkedin: "http://www.linkedin.com/in/davidamesbury",
     email: "",
@@ -7640,6 +8728,7 @@ export const leads = [
   {
     name: "Jill Cassidy",
     company: "GDK (German Doner Kebab)",
+    category: "Casual Dining & Restaurants",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/jill-cassidy-09a84052",
     email: "jill.cassidy@germandonerkebab.com",
@@ -7647,6 +8736,7 @@ export const leads = [
   {
     name: "Katie Simpson",
     company: "Oddlygood",
+    category: "Dairy & Alternatives",
     position: "Head Of Marketing Uk & International",
     linkedin: "http://www.linkedin.com/in/katie-simpson-0075197",
     email: "katie@oddlygood.com",
@@ -7654,6 +8744,7 @@ export const leads = [
   {
     name: "Michelle Lane",
     company: "Ballymaloe Foods",
+    category: "Grocery & Food Brands",
     position: "Junior Brand Manager",
     linkedin: "http://www.linkedin.com/in/michelle-lane-0194981a0",
     email: "michelle@ballymaloefoods.ie",
@@ -7661,6 +8752,7 @@ export const leads = [
   {
     name: "Megan Whitehouse",
     company: "Rubies In The Rubble",
+    category: "Grocery & Food Brands",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/megan-whitehouse-a1355274",
     email: "megan@rubiesintherubble.com",
@@ -7668,6 +8760,7 @@ export const leads = [
   {
     name: "Rachael Stone",
     company: "Soreen",
+    category: "Bakery & Bread",
     position: "Senior Shopper Marketing Manager",
     linkedin: "http://www.linkedin.com/in/rachael-stone-66300639",
     email: "rachael.stone@soreen.com",
@@ -7675,6 +8768,7 @@ export const leads = [
   {
     name: "Caio Fontenele",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position:
       "Innovation, Brand & Portfolio Senior Director | Heinz, International Developed Markets",
     linkedin: "http://www.linkedin.com/in/caio-fontenele-4a136214",
@@ -7683,6 +8777,7 @@ export const leads = [
   {
     name: "Miranda Noorden",
     company: "The Monty Bojangles Co",
+    category: "Confectionery",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/miranda-van-noorden-604023126",
     email: "mvannoorden@themontybojanglesco.com",
@@ -7690,6 +8785,7 @@ export const leads = [
   {
     name: "Tara Heath",
     company: "HiPP Organic (UK)",
+    category: "Baby & Kids Food",
     position: "Brand And Product Marketing Lead Manager",
     linkedin: "http://www.linkedin.com/in/tara-heath-991816107",
     email: "tara.heath@hipp.co.uk",
@@ -7697,6 +8793,7 @@ export const leads = [
   {
     name: "Jonathan Craft",
     company: "Pecan Deluxe Candy Company",
+    category: "Confectionery",
     position: "Marketing & E-commerce Coordinator",
     linkedin: "http://www.linkedin.com/in/jonny-craft",
     email: "jonathan_craft@pecandeluxe.com",
@@ -7704,6 +8801,7 @@ export const leads = [
   {
     name: "Caitlin B",
     company: "Freedom Confectionery Limited/LLC",
+    category: "Confectionery",
     position: "Marketing Assistant",
     linkedin: "http://www.linkedin.com/in/caitlin-b-496982177",
     email: "caitlin.b@freedommallows.com",
@@ -7711,6 +8809,7 @@ export const leads = [
   {
     name: "Patrick Cmgr",
     company: "HCL",
+    category: "Other",
     position: "Head Of Sales And Marketing",
     linkedin: "http://www.linkedin.com/in/patrick-lewis-cmgr-mcmi",
     email: "",
@@ -7718,6 +8817,7 @@ export const leads = [
   {
     name: "Ujjayini Bezbaruah",
     company: "Lee Kum Kee Europe",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager, Foodservice & Trade, Europe",
     linkedin: "http://www.linkedin.com/in/ujjayini-bezbaruah-7099239",
     email: "ujjayini.bezbaruah@uk.lkk.com",
@@ -7725,6 +8825,7 @@ export const leads = [
   {
     name: "Paige Tye",
     company: "iPRO Hydrate",
+    category: "Drinks",
     position: "Marketing Assistant",
     linkedin: "http://www.linkedin.com/in/paige-tye-9552a319b",
     email: "p.tye@londonmet.ac.uk",
@@ -7732,6 +8833,7 @@ export const leads = [
   {
     name: "Oliver Brown",
     company: "Ingredion Incorporated",
+    category: "Other",
     position: "Emea Marketing Communication & Content Lead",
     linkedin: "http://www.linkedin.com/in/oliver-brown-6a3669b7",
     email: "oliver.brown@ingredion.com",
@@ -7739,6 +8841,7 @@ export const leads = [
   {
     name: "Lauren Paton",
     company: "Greggs",
+    category: "Bakery & Bread",
     position: "Retail Marketing Franchise Support Manager",
     linkedin: "http://www.linkedin.com/in/lauren-paton-915999a7",
     email: "lauren.paton@greggs.co.uk",
@@ -7746,6 +8849,7 @@ export const leads = [
   {
     name: "Jonathan Wright",
     company: "Birds Eye UK & IE",
+    category: "Grocery & Food Brands",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/jonathan-wright-1933888a",
     email: "jonathan.wright@birdseye.co.uk",
@@ -7753,6 +8857,7 @@ export const leads = [
   {
     name: "Sarah Iles",
     company: "Godminster",
+    category: "Dairy & Alternatives",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/sarah-norris-marketing",
     email: "sarah@godminster.com",
@@ -7760,6 +8865,7 @@ export const leads = [
   {
     name: "Alice Aird",
     company: "Olivado",
+    category: "Grocery & Food Brands",
     position: "Head Of Global Marketing",
     linkedin: "http://www.linkedin.com/in/alice-a-84b33b1a",
     email: "alice@olivado.com",
@@ -7767,6 +8873,7 @@ export const leads = [
   {
     name: "Simon Davies",
     company: "Roberts of Port Dinorwic Limited",
+    category: "Bakery & Bread",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/simon-davies-81188b20",
     email: "simon.davies@roberts-wales.co.uk",
@@ -7774,6 +8881,7 @@ export const leads = [
   {
     name: "Isobel Broglio",
     company: "ChicP | B Corp™",
+    category: "Grocery & Food Brands",
     position: "Social Media And Content Manager",
     linkedin: "http://www.linkedin.com/in/isobel-de-broglio-608ab5205",
     email: "",
@@ -7781,6 +8889,7 @@ export const leads = [
   {
     name: "Natasha Crawford",
     company: "Scrumbles",
+    category: "Other",
     position: "Senior Marketing Manager",
     linkedin: "http://www.linkedin.com/in/natasha-crawford-a074b4119",
     email: "natasha@scrumbles.co.uk",
@@ -7788,6 +8897,7 @@ export const leads = [
   {
     name: "Oni Barrington-stewart",
     company: "Konditor",
+    category: "Bakery & Bread",
     position: "Social Media Assistant",
     linkedin: "http://www.linkedin.com/in/oniada",
     email: "oni@konditor.co.uk",
@@ -7795,6 +8905,7 @@ export const leads = [
   {
     name: "Lushanthi Edirisooriya",
     company: "Soreen",
+    category: "Bakery & Bread",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/lushanthi-edirisooriya-6304427b",
     email: "lushanthi.edirisooriya@soreen.com",
@@ -7802,6 +8913,7 @@ export const leads = [
   {
     name: "Sharpham Park",
     company: "Sharpham Park",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/sharpham-park-67079272",
     email: "sharpham@sharphampark.com",
@@ -7809,6 +8921,7 @@ export const leads = [
   {
     name: "Natalie Denyer",
     company: "Dinner Ladies",
+    category: "Grocery & Food Brands",
     position: "Head Of Creative And Marketing",
     linkedin: "http://www.linkedin.com/in/natalie-denyer-49605853",
     email: "natalie@dinnerladiesltd.com",
@@ -7816,6 +8929,7 @@ export const leads = [
   {
     name: "Katie Nolden",
     company: "Lindt & Sprungli UK",
+    category: "Confectionery",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/katienolden",
     email: "",
@@ -7823,6 +8937,7 @@ export const leads = [
   {
     name: "Jade Seaton",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Senior Shopper Marketing Manager",
     linkedin: "http://www.linkedin.com/in/jade-seaton-4900145b",
     email: "jade.seaton@kraftheinz.com",
@@ -7830,6 +8945,7 @@ export const leads = [
   {
     name: "The Savanna",
     company: "The Savanna",
+    category: "Casual Dining & Restaurants",
     position: "Social Media Manager",
     linkedin: "http://www.linkedin.com/in/the-savanna-6a993817a",
     email: "",
@@ -7837,6 +8953,7 @@ export const leads = [
   {
     name: "Allwyn Kitchen",
     company: "KP Snacks",
+    category: "Snacks & Crisps",
     position: "Senior Marketing Finance Manager",
     linkedin: "http://www.linkedin.com/in/allwyn-kitchen-24318351",
     email: "allwyn.kitchen@kpsnacks.com",
@@ -7844,6 +8961,7 @@ export const leads = [
   {
     name: "Helen Davey",
     company: "Lindt & Sprungli UK",
+    category: "Confectionery",
     position: "Senior Brand Manager-gifting",
     linkedin: "http://www.linkedin.com/in/helen-davey-02394310",
     email: "hdavey@lindt.com",
@@ -7851,6 +8969,7 @@ export const leads = [
   {
     name: "Richard Collins",
     company: "Ramsden International",
+    category: "Other",
     position: "Trading & Marketing Director",
     linkedin: "http://www.linkedin.com/in/richard-collins-303993172",
     email: "",
@@ -7858,6 +8977,7 @@ export const leads = [
   {
     name: "Andrea Zaina",
     company: "Piccolo (Organic Baby & Toddler Food)",
+    category: "Baby & Kids Food",
     position: "Head Of Digital Marketing",
     linkedin: "http://www.linkedin.com/in/zainaandrea",
     email: "andrea@piccolofoods.uk",
@@ -7865,6 +8985,7 @@ export const leads = [
   {
     name: "Nuala Gallagher",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Brand And Marketing Director Destination Brands",
     linkedin: "http://www.linkedin.com/in/nuala-gallagher-73006424",
     email: "nualagallagher@greeneking.co.uk",
@@ -7872,6 +8993,7 @@ export const leads = [
   {
     name: "Abhishek Raj",
     company: "India Sweet House",
+    category: "Confectionery",
     position: "Online Sales Marketing Manager",
     linkedin: "http://www.linkedin.com/in/abhishek-g-raj-1699a6181",
     email: "abhishek@indiasweethouse.in",
@@ -7879,6 +9001,7 @@ export const leads = [
   {
     name: "Ella Kavanagh",
     company: "Little's Coffee | Certified B Corp",
+    category: "Coffee & Tea",
     position: "Marketing Lead",
     linkedin: "http://www.linkedin.com/in/ella-kavanagh-873247156",
     email: "ella@wearelittles.com",
@@ -7886,6 +9009,7 @@ export const leads = [
   {
     name: "Georgie Clarke-gifford",
     company: "Rollagranola",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/georgina-clarke-gifford",
     email: "georgie@rollagranola.com",
@@ -7893,6 +9017,7 @@ export const leads = [
   {
     name: "Erin Husband",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Marketing Executive",
     linkedin: "http://www.linkedin.com/in/erin-husband-a653881ba",
     email: "erinhusband@greeneking.co.uk",
@@ -7900,6 +9025,7 @@ export const leads = [
   {
     name: "Faye Murphy",
     company: "Mindful Chef | B Corp",
+    category: "Grocery & Food Brands",
     position: "Head Of Brand Communications",
     linkedin: "http://www.linkedin.com/in/fayegeorginamurphy",
     email: "faye@mindfulchef.com",
@@ -7907,6 +9033,7 @@ export const leads = [
   {
     name: "John Mulvey",
     company: "Emmi Group",
+    category: "Dairy & Alternatives",
     position: "Head Of Marketing Uk",
     linkedin: "http://www.linkedin.com/in/john-mulvey-5466704b",
     email: "john.mulvey@emmi.com",
@@ -7914,6 +9041,7 @@ export const leads = [
   {
     name: "Becky Maddison",
     company: "Greggs",
+    category: "Bakery & Bread",
     position: "Brand Strategy And Paid Media Lead",
     linkedin: "http://www.linkedin.com/in/becky-maddison-795b7796",
     email: "becky.maddison@greggs.co.uk",
@@ -7921,6 +9049,7 @@ export const leads = [
   {
     name: "Christopher Bird",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Commercial Finance Business Partner - Brewing And Brands",
     linkedin: "http://www.linkedin.com/in/christopher-bird-6a278864",
     email: "",
@@ -7928,6 +9057,7 @@ export const leads = [
   {
     name: "Jake Macleod",
     company: "Black Lines Drinks",
+    category: "Drinks",
     position: "Head Of Marketing & Creative",
     linkedin: "http://www.linkedin.com/in/jake-macleod-7b0381129",
     email: "jake@blacklinesdrinks.com",
@@ -7935,6 +9065,7 @@ export const leads = [
   {
     name: "Julita Kluz",
     company: "Las Iguanas",
+    category: "Casual Dining & Restaurants",
     position: "Social Media And Event Coordinator, Front Of House Staff",
     linkedin: "http://www.linkedin.com/in/julita-kluz-85a253257",
     email: "",
@@ -7942,6 +9073,7 @@ export const leads = [
   {
     name: "Alvaro Moniz-spark",
     company: "Lindt & Sprungli UK",
+    category: "Confectionery",
     position: "Senior Customer Marketing Manager",
     linkedin: "http://www.linkedin.com/in/am-spark",
     email: "amoniz-spark@lindt.com",
@@ -7949,6 +9081,7 @@ export const leads = [
   {
     name: "Irine Gujabidze",
     company: "Whatever Brands",
+    category: "Grocery & Food Brands",
     position: "Head Of Growth Marketing",
     linkedin: "http://www.linkedin.com/in/irinegujabidze",
     email: "irine@whateverbrands.com",
@@ -7956,6 +9089,7 @@ export const leads = [
   {
     name: "Lauren Ellis",
     company: "Pure",
+    category: "Other",
     position: "Social Media Marketing Manager",
     linkedin: "http://www.linkedin.com/in/lauren-ellis-961084155",
     email: "",
@@ -7963,6 +9097,7 @@ export const leads = [
   {
     name: "Freddie Emmett",
     company: "JUBEL",
+    category: "Beer & Brewing",
     position: "Social Media Assistant",
     linkedin: "http://www.linkedin.com/in/freddieemmett",
     email: "freddie@jubelbeer.com",
@@ -7970,6 +9105,7 @@ export const leads = [
   {
     name: "Chris Young",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Marketing Projects (greene King Pubs)",
     linkedin: "http://www.linkedin.com/in/chris-young-79230a152",
     email: "chrisyoung@greeneking.co.uk",
@@ -7977,6 +9113,7 @@ export const leads = [
   {
     name: "Rhiannon Lowe",
     company: "IBC Simply",
+    category: "Other",
     position: "Senior Marketing Executive",
     linkedin: "http://www.linkedin.com/in/rhiannon-lowe19",
     email: "rhiannon.lowe@ibcsimply.com",
@@ -7984,6 +9121,7 @@ export const leads = [
   {
     name: "Charlotte Anson",
     company: "Birmingham Brewing Company",
+    category: "Beer & Brewing",
     position: "Director Of Brand And Beer Experience",
     linkedin: "http://www.linkedin.com/in/charlotte-anson-26251b52",
     email: "charlotte@birminghambrewingcompany.co.uk",
@@ -7991,6 +9129,7 @@ export const leads = [
   {
     name: "Hannah Tandy",
     company: "The Wine Society",
+    category: "Wine & Spirits",
     position: "Marketing Campaign Manager",
     linkedin: "http://www.linkedin.com/in/hannahtandy",
     email: "tandyh@thewinesociety.com",
@@ -7998,6 +9137,7 @@ export const leads = [
   {
     name: "Tom Curran",
     company: "Brick Brewery",
+    category: "Beer & Brewing",
     position: "Marketing, Events & Content Creation",
     linkedin: "http://www.linkedin.com/in/tomcurran95",
     email: "",
@@ -8005,6 +9145,7 @@ export const leads = [
   {
     name: "Nanziba Siddiquee",
     company: "Euro Foods Group",
+    category: "Grocery & Food Brands",
     position: "Social Media Manager",
     linkedin: "http://www.linkedin.com/in/nanziba-siddiquee-738269253",
     email: "n.siddiquee@eurofoods.co.uk",
@@ -8012,6 +9153,7 @@ export const leads = [
   {
     name: "Emily Cole",
     company: "G Spot",
+    category: "Casual Dining & Restaurants",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/eescole",
     email: "emily@thisisgspot.com",
@@ -8019,6 +9161,7 @@ export const leads = [
   {
     name: "Jenny Pace",
     company: "Fitzbillies",
+    category: "Bakery & Bread",
     position: "Marketing & Ecommerce Director",
     linkedin: "http://www.linkedin.com/in/jenny-pace-8b6a6159",
     email: "jenny@fitzbillies.com",
@@ -8026,6 +9169,7 @@ export const leads = [
   {
     name: "Leo Fisher",
     company: "Grubby",
+    category: "Grocery & Food Brands",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/leo-fisher",
     email: "leo@grubby.co.uk",
@@ -8033,6 +9177,7 @@ export const leads = [
   {
     name: "Charlotte Fleming",
     company: "Prime Time",
+    category: "Grocery & Food Brands",
     position: "Senior Marketing Manager",
     linkedin: "http://www.linkedin.com/in/charlotteafleming",
     email: "charlotte@primetimebeers.com",
@@ -8040,6 +9185,7 @@ export const leads = [
   {
     name: "Thryth Jarvis",
     company: "The Tofoo Co",
+    category: "Grocery & Food Brands",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/thryth-jarvis-a970aa112",
     email: "thryth.jarvis@tofoo.co.uk",
@@ -8047,6 +9193,7 @@ export const leads = [
   {
     name: "Connie Chapman",
     company: "GNAW Chocolate",
+    category: "Confectionery",
     position: "Sales And Marketing Administrator",
     linkedin: "http://www.linkedin.com/in/connie-chapman-745394141",
     email: "",
@@ -8054,6 +9201,7 @@ export const leads = [
   {
     name: "Jack Vandersteen",
     company: "Redefine Meat",
+    category: "Grocery & Food Brands",
     position: "Trade Marketing Manager",
     linkedin: "http://www.linkedin.com/in/jack-vandersteen-b97187114",
     email: "jack@redefinemeat.com",
@@ -8061,6 +9209,7 @@ export const leads = [
   {
     name: "Courtney Heary",
     company: "Market Halls",
+    category: "Casual Dining & Restaurants",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/courtney-heary-09b808107",
     email: "courtney@markethalls.co.uk",
@@ -8068,6 +9217,7 @@ export const leads = [
   {
     name: "Simran Sablok",
     company: "Creams Cafe",
+    category: "Casual Dining & Restaurants",
     position: "Chief Marketing Officer",
     linkedin: "http://www.linkedin.com/in/simran-sablok-9929683",
     email: "simran.sablok@creamscafe.com",
@@ -8075,6 +9225,7 @@ export const leads = [
   {
     name: "Helen Burrett",
     company: "JPL Flavours",
+    category: "Other",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/helen-burrett-66ab9156",
     email: "helen.burrett@jpl-flavours.com",
@@ -8082,6 +9233,7 @@ export const leads = [
   {
     name: "Liz Jacobs",
     company: "Soreen",
+    category: "Bakery & Bread",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/liz-jacobs-2573122b",
     email: "liz.jacobs@soreen.com",
@@ -8089,6 +9241,7 @@ export const leads = [
   {
     name: "Gemma Syrett",
     company: "DR. OETKER (UK) LIMITED",
+    category: "Grocery & Food Brands",
     position: "Senior Brand Manager - Chicago Town",
     linkedin: "http://www.linkedin.com/in/gemma-syrett-26300ab",
     email: "gemma.syrett@oetker.co.uk",
@@ -8096,6 +9249,7 @@ export const leads = [
   {
     name: "Connor Whelan",
     company: "One Good Thing",
+    category: "Grocery & Food Brands",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/connorawhelan",
     email: "connor.whelan@weareogt.com",
@@ -8103,6 +9257,7 @@ export const leads = [
   {
     name: "Carine Munch",
     company: "PizzaExpress",
+    category: "Casual Dining & Restaurants",
     position: "Head Of Brand & Marcomms",
     linkedin: "http://www.linkedin.com/in/carine-munch-00246671",
     email: "carine.munch@pizzaexpress.com",
@@ -8110,6 +9265,7 @@ export const leads = [
   {
     name: "Natalie Gangeswaran",
     company: "PizzaExpress",
+    category: "Casual Dining & Restaurants",
     position: "Senior Brand Manager - Retail, Delivery & International",
     linkedin: "http://www.linkedin.com/in/natalielpaul",
     email: "natalie.gangeswaran@pizzaexpress.com",
@@ -8117,6 +9273,7 @@ export const leads = [
   {
     name: "Jemma Holmes",
     company: "PizzaExpress",
+    category: "Casual Dining & Restaurants",
     position: "International Senior Marketing Manager",
     linkedin: "http://www.linkedin.com/in/js18",
     email: "jemma.holmes@pizzaexpress.com",
@@ -8124,6 +9281,7 @@ export const leads = [
   {
     name: "Eleanor Matthews",
     company: "Novo Farina Ltd",
+    category: "Bakery & Bread",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/eleanor-matthews-849b7b2a3",
     email: "",
@@ -8131,6 +9289,7 @@ export const leads = [
   {
     name: "Georgia Lightbody",
     company: "Emmi Group",
+    category: "Dairy & Alternatives",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/georgia-lightbody-0a2806116",
     email: "georgia.lightbody@emmi.com",
@@ -8138,6 +9297,7 @@ export const leads = [
   {
     name: "Clare Gane",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/clare-gane-3b738135",
     email: "",
@@ -8145,6 +9305,7 @@ export const leads = [
   {
     name: "John Mcdougall",
     company: "KP Snacks",
+    category: "Snacks & Crisps",
     position: "Senior Brand Manager - Nik Nak’s And Heritage Portfolio",
     linkedin: "http://www.linkedin.com/in/john-mcdougall-9a8736b2",
     email: "john.mcdougall@kpsnacks.com",
@@ -8152,6 +9313,7 @@ export const leads = [
   {
     name: "Emily Ribeiro",
     company: "Federal Cafe & Bar",
+    category: "Casual Dining & Restaurants",
     position: "Social Media Manager",
     linkedin: "http://www.linkedin.com/in/emily-ribeiro-2b096928",
     email: "emily@federalcafe.co.uk",
@@ -8159,6 +9321,7 @@ export const leads = [
   {
     name: "Jo Gurr",
     company: "Produced in Kent",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/jo-gurr-a9007b1b",
     email: "jo.gurr@producedinkent.co.uk",
@@ -8166,6 +9329,7 @@ export const leads = [
   {
     name: "Charlotte Brown",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Senior Marketing Manager - L&t",
     linkedin: "http://www.linkedin.com/in/charlotte-brown-91664b104",
     email: "charlottebrown@greeneking.co.uk",
@@ -8173,6 +9337,7 @@ export const leads = [
   {
     name: "Laura Thornber",
     company: "HEALTHY FOOD BRANDS LIMITED",
+    category: "Health & Wellness Food",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/laura-thornber-3043926b",
     email: "",
@@ -8180,6 +9345,7 @@ export const leads = [
   {
     name: "Matilde Weilbacher",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/matilde-weilbacher-0b7aa212a",
     email: "matilde.weilbacher@kraftheinz.com",
@@ -8187,6 +9353,7 @@ export const leads = [
   {
     name: "Jenny Jones",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/jenny-jones-a625495",
     email: "jenny.jones@kraftheinz.com",
@@ -8194,6 +9361,7 @@ export const leads = [
   {
     name: "Rhodri Badham",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Food & Drink Brand Partner - London",
     linkedin: "http://www.linkedin.com/in/rhodri-badham-9b916091",
     email: "rhodribadham@greeneking.co.uk",
@@ -8201,6 +9369,7 @@ export const leads = [
   {
     name: "Charlotte Griffiths",
     company: "Gousto",
+    category: "Grocery & Food Brands",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/charlotte-c-griffiths",
     email: "charlotte.griffiths@gousto.co.uk",
@@ -8208,6 +9377,7 @@ export const leads = [
   {
     name: "Chloe Bell",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Junior Brand Manager - Beanz",
     linkedin: "http://www.linkedin.com/in/chloe-bell-411497151",
     email: "chloe.bell@kraftheinz.com",
@@ -8215,6 +9385,7 @@ export const leads = [
   {
     name: "Ellen Barnes",
     company: "Creative Nature Superfoods",
+    category: "Health & Wellness Food",
     position: "Brand & Marketing Manager",
     linkedin: "http://www.linkedin.com/in/ellen-barnes-b44390157",
     email: "ellen@creative-nature.uk.com",
@@ -8222,6 +9393,7 @@ export const leads = [
   {
     name: "William Paterson",
     company: "Huel",
+    category: "Health & Wellness Food",
     position: "Global Marketing Director",
     linkedin: "http://www.linkedin.com/in/william-paterson",
     email: "william@huel.com",
@@ -8229,6 +9401,7 @@ export const leads = [
   {
     name: "Hannah Winterbourne",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Senior Heinz Comms & Brand Build Manager International",
     linkedin: "http://www.linkedin.com/in/hannah-winterbourne-45653059",
     email: "hannah.winterbourne@kraftheinz.com",
@@ -8236,6 +9409,7 @@ export const leads = [
   {
     name: "Mark Dimech",
     company: "Samworth Brothers",
+    category: "Grocery & Food Brands",
     position: "Head Of Brand And Communications",
     linkedin: "http://www.linkedin.com/in/mark-dimech-64914914",
     email: "mark.dimech@samworthbrothers.co.uk",
@@ -8243,6 +9417,7 @@ export const leads = [
   {
     name: "Gemma O'dwyer",
     company: "Virgin Wines",
+    category: "Wine & Spirits",
     position: "Sales & Marketing Manager",
     linkedin: "http://www.linkedin.com/in/gemma-o-dwyer-5a95b272",
     email: "gemma.odwyer@virginwines.co.uk",
@@ -8250,6 +9425,7 @@ export const leads = [
   {
     name: "Farah Jaleel",
     company: "Ecotone",
+    category: "Grocery & Food Brands",
     position: "Shopper & E-commerce Marketing Executive",
     linkedin: "http://www.linkedin.com/in/farah-jaleel-369a83147",
     email: "farah.jaleel@ecotone.bio",
@@ -8257,6 +9433,7 @@ export const leads = [
   {
     name: "Jordan Powis",
     company: "KP Snacks",
+    category: "Snacks & Crisps",
     position: "Assistant Brand Manager - Kp Nuts",
     linkedin: "http://www.linkedin.com/in/jordan-powis-690a46141",
     email: "",
@@ -8264,6 +9441,7 @@ export const leads = [
   {
     name: "Katherine Hambrier",
     company: "Pollen + Grace",
+    category: "Health & Wellness Food",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/katherine-hambrier-8b1aab145",
     email: "katie@pollenandgrace.com",
@@ -8271,6 +9449,7 @@ export const leads = [
   {
     name: "Izzy Hancock",
     company: "KP Snacks",
+    category: "Snacks & Crisps",
     position: "Assistant Brand Manager",
     linkedin: "http://www.linkedin.com/in/izzy-hancock",
     email: "izzy.hancock@kpsnacks.com",
@@ -8278,6 +9457,7 @@ export const leads = [
   {
     name: "Artemis Argyrides",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Foodservice Marketing Lead, Northern Europe",
     linkedin: "http://www.linkedin.com/in/artemis-argyrides-a3372bab",
     email: "artemis.argyrides@kraftheinz.com",
@@ -8285,6 +9465,7 @@ export const leads = [
   {
     name: "Jason Thompson",
     company: "BRECKENHOLME Trading Company Ltd",
+    category: "Other",
     position: "Product Development Manager, With Brand And Commercial Sales",
     linkedin: "http://www.linkedin.com/in/jason-thompson-6b612278",
     email: "jason@breckenholme.co.uk",
@@ -8292,6 +9473,7 @@ export const leads = [
   {
     name: "Liam Andrews",
     company: "Lucky Saint | B Corp™",
+    category: "Beer & Brewing",
     position:
       "Customer Marketing Lead At Lucky Saint | Marketing Society’s Brand",
     linkedin: "http://www.linkedin.com/in/liamrsandrews",
@@ -8300,6 +9482,7 @@ export const leads = [
   {
     name: "Phoebe Buckley",
     company: "THIS™",
+    category: "Grocery & Food Brands",
     position: "Senior Marketing Manager",
     linkedin: "http://www.linkedin.com/in/phoebe-buckley-1044",
     email: "phoebe@this.co",
@@ -8307,6 +9490,7 @@ export const leads = [
   {
     name: "Angele Villet",
     company: "Lindt & Sprungli UK",
+    category: "Confectionery",
     position: "Marketing Director Uk",
     linkedin: "http://www.linkedin.com/in/angeleisnard",
     email: "avillet@lindt.com",
@@ -8314,6 +9498,7 @@ export const leads = [
   {
     name: "Thiago Rapp",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position:
       "Taste Elevation (sauces) Marketing & Media Director, Northern Europe",
     linkedin: "http://www.linkedin.com/in/thiago-sequeira-rapp-3226b631",
@@ -8322,6 +9507,7 @@ export const leads = [
   {
     name: "Olivia Matthews",
     company: "Franco Manca",
+    category: "Casual Dining & Restaurants",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/olivia-matthews-1098x",
     email: "olivia.matthews@francomanca.co.uk",
@@ -8329,6 +9515,7 @@ export const leads = [
   {
     name: "Imogen Smith",
     company: "Flower and White Ltd",
+    category: "Confectionery",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/imogen-s-aa001898",
     email: "imogen@flowerandwhite.co.uk",
@@ -8336,6 +9523,7 @@ export const leads = [
   {
     name: "Angelina Harrisson",
     company: "tossed",
+    category: "Casual Dining & Restaurants",
     position: "Brand Director",
     linkedin: "http://www.linkedin.com/in/angelina-harrisson-2142a737",
     email: "angelina@tosseduk.com",
@@ -8343,6 +9531,7 @@ export const leads = [
   {
     name: "Rebecca Sawtell",
     company: "Miss Millie's",
+    category: "Casual Dining & Restaurants",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/rebecca-sawtell-37990229",
     email: "rebecca.sawtell@missmillies.co.uk",
@@ -8350,6 +9539,7 @@ export const leads = [
   {
     name: "Catherine Wells",
     company: "SushiDog",
+    category: "Casual Dining & Restaurants",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/catherine-wells-a6a58918b",
     email: "catherine@sushidog.co.uk",
@@ -8357,6 +9547,7 @@ export const leads = [
   {
     name: "Derek Stellason",
     company: "iPRO Hydrate",
+    category: "Drinks",
     position: "International Marketing Manager",
     linkedin: "http://www.linkedin.com/in/derek-stellason-774b8017b",
     email: "",
@@ -8364,6 +9555,7 @@ export const leads = [
   {
     name: "Daniel Wheeler",
     company: "Life Health Foods Europe",
+    category: "Health & Wellness Food",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/daniel-wheeler-410a8720",
     email: "daniel.wheeler@lhf.co.uk",
@@ -8371,6 +9563,7 @@ export const leads = [
   {
     name: "Andrew Barrie",
     company: "Nursery Kitchen",
+    category: "Baby & Kids Food",
     position: "Marketing Intern",
     linkedin: "http://www.linkedin.com/in/andrew-barrie-a158ba306",
     email: "andrew@nurserykitchen.co.uk",
@@ -8378,6 +9571,7 @@ export const leads = [
   {
     name: "Abbie Lord",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Social Media Manager",
     linkedin: "http://www.linkedin.com/in/abbie-lord-012b921aa",
     email: "abbielord@greeneking.co.uk",
@@ -8385,6 +9579,7 @@ export const leads = [
   {
     name: "Linda Morrish",
     company: "Wiltshire Farm Foods",
+    category: "Grocery & Food Brands",
     position: "Community Marketing Manager",
     linkedin: "http://www.linkedin.com/in/linda-morrish-71390321a",
     email: "",
@@ -8392,6 +9587,7 @@ export const leads = [
   {
     name: "Nicola Jackson",
     company: "Baxters Food Group",
+    category: "Grocery & Food Brands",
     position: "Interim Trade And Brand Activation Manager",
     linkedin: "http://www.linkedin.com/in/nicola-jackson-22668468",
     email: "nicola.jackson@baxters.com",
@@ -8399,6 +9595,7 @@ export const leads = [
   {
     name: "Antoinette Llb",
     company: "Love Joes",
+    category: "Snacks & Crisps",
     position: "Head Of Commercial Sales And Marketing",
     linkedin: "http://www.linkedin.com/in/antoinette-koumi-llb-86468258",
     email: "toni@lovejoes.co.uk",
@@ -8406,6 +9603,7 @@ export const leads = [
   {
     name: "Nathan Wadlow",
     company: "Virgin Wines",
+    category: "Wine & Spirits",
     position: "Brand And Digital Marketing Director",
     linkedin: "http://www.linkedin.com/in/nathanwadlow",
     email: "nathan.wadlow@virginwines.co.uk",
@@ -8413,6 +9611,7 @@ export const leads = [
   {
     name: "Emeraude Carlier",
     company: "MOJU",
+    category: "Drinks",
     position: "Senior Brand Manager - International Market",
     linkedin: "http://www.linkedin.com/in/emeraude-carlier-521613a4",
     email: "",
@@ -8420,6 +9619,7 @@ export const leads = [
   {
     name: "Ilan Arkin",
     company: "KP Snacks",
+    category: "Snacks & Crisps",
     position: "Head Of Brand - Taste Portfolio & Shopper Marketing",
     linkedin: "http://www.linkedin.com/in/ilan-arkin-56791034",
     email: "ilan.arkin@kpsnacks.com",
@@ -8427,6 +9627,7 @@ export const leads = [
   {
     name: "M Varatharajah",
     company: "Ruby's Food Products",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/m-v-606469185",
     email: "",
@@ -8434,6 +9635,7 @@ export const leads = [
   {
     name: "Ross Richardson",
     company: "Ginsters",
+    category: "Bakery & Bread",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/ross-richardson-2a780aa6",
     email: "ross.richardson@ginsters.co.uk",
@@ -8441,6 +9643,7 @@ export const leads = [
   {
     name: "Lorna Beckett",
     company: "Kinnerton Confectionery",
+    category: "Confectionery",
     position: "Junior Brand Manager",
     linkedin: "http://www.linkedin.com/in/lorna-beckett-25607532",
     email: "",
@@ -8448,6 +9651,7 @@ export const leads = [
   {
     name: "Sophie Harrison",
     company: "Florette UK & Ireland",
+    category: "Grocery & Food Brands",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/sophbharrison",
     email: "soharrison@florette.com",
@@ -8455,6 +9659,7 @@ export const leads = [
   {
     name: "Hannah Bugeau",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/hannahbugeau",
     email: "",
@@ -8462,6 +9667,7 @@ export const leads = [
   {
     name: "Hannah Hayden",
     company: "Belazu | B Corp™",
+    category: "Grocery & Food Brands",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/hannah-hayden-0655aaa5",
     email: "hannah.hayden@belazu.com",
@@ -8469,6 +9675,7 @@ export const leads = [
   {
     name: "Lily Mcenroe",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/lily-mcenroe-140724107",
     email: "lilymcenroe@greeneking.co.uk",
@@ -8476,6 +9683,7 @@ export const leads = [
   {
     name: "Abigail Hughes",
     company: "Hain Celestial UK",
+    category: "Grocery & Food Brands",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/abigail-india-hughes-467550157",
     email: "abigail.hughes@haindaniels.com",
@@ -8483,6 +9691,7 @@ export const leads = [
   {
     name: "Edit Petkova",
     company: "Lindt & Sprungli UK",
+    category: "Confectionery",
     position: "Customer Marketing Manager",
     linkedin: "http://www.linkedin.com/in/edit-petkova-511515b2",
     email: "epetkova@lindt.com",
@@ -8490,6 +9699,7 @@ export const leads = [
   {
     name: "Lauren Adams",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Marketing Executive",
     linkedin: "http://www.linkedin.com/in/lauren-adams-9399811a4",
     email: "laurenadams@greeneking.co.uk",
@@ -8497,6 +9707,7 @@ export const leads = [
   {
     name: "John Alderman",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/john-alderman-940893a",
     email: "alderman.j@kraftheinzcompany.com",
@@ -8504,6 +9715,7 @@ export const leads = [
   {
     name: "Ariella Bloom",
     company: "Piccolo (Organic Baby & Toddler Food)",
+    category: "Baby & Kids Food",
     position: "Assistant Brand Manager",
     linkedin: "http://www.linkedin.com/in/ariella-bloom-b346391bb",
     email: "ariella@piccolofoods.uk",
@@ -8511,6 +9723,7 @@ export const leads = [
   {
     name: "Allison Sands",
     company: "Gran Luchito | B Corp",
+    category: "Grocery & Food Brands",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/allison-sands-944b4654",
     email: "allison@luchito.com",
@@ -8518,6 +9731,7 @@ export const leads = [
   {
     name: "Luke Brophy",
     company: "Revolution Bars Group PLC",
+    category: "Casual Dining & Restaurants",
     position:
       "National Bar Brands Business Development Manager (revolution & Revolución De Cuba)",
     linkedin: "http://www.linkedin.com/in/lbrophy92",
@@ -8526,6 +9740,7 @@ export const leads = [
   {
     name: "Noora Paerssinen",
     company: "Better Nature",
+    category: "Grocery & Food Brands",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/nooraparssinen",
     email: "noora@betternaturetempeh.co",
@@ -8533,6 +9748,7 @@ export const leads = [
   {
     name: "Ash Greenwood",
     company: "Spitting Pig",
+    category: "Other",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/ash-greenwood-0b0572b3",
     email: "",
@@ -8540,6 +9756,7 @@ export const leads = [
   {
     name: "Maisie Whittam",
     company: "The Chuckling Cheese Company",
+    category: "Dairy & Alternatives",
     position: "Msc Digital Marketing, Marketing Manager",
     linkedin: "http://www.linkedin.com/in/maisie-whittam-93b743b7",
     email: "maisie@chucklingcheese.co.uk",
@@ -8547,6 +9764,7 @@ export const leads = [
   {
     name: "Jacklyn Case",
     company: "NH Case",
+    category: "Other",
     position: "Sales & Marketing Director",
     linkedin: "http://www.linkedin.com/in/jacklyn-case-60b08a40",
     email: "jacklyn.case@nhcase.com",
@@ -8554,6 +9772,7 @@ export const leads = [
   {
     name: "Noa Mallet",
     company: "LA VIE™",
+    category: "Grocery & Food Brands",
     position: "Junior Brand Manager",
     linkedin: "http://www.linkedin.com/in/noa-mallet",
     email: "noa@laviefoods.com",
@@ -8561,6 +9780,7 @@ export const leads = [
   {
     name: "Sravya Medipally",
     company: "Vibrant Foods",
+    category: "Grocery & Food Brands",
     position: "Assistant Brand Manager",
     linkedin: "http://www.linkedin.com/in/sravya-medipally-a1a191196",
     email: "",
@@ -8568,6 +9788,7 @@ export const leads = [
   {
     name: "Sophia Szopa",
     company: "Müller UK & Ireland",
+    category: "Dairy & Alternatives",
     position: "Assistant Brand Manager",
     linkedin: "http://www.linkedin.com/in/sophia-szopa-1a591926b",
     email: "sophia.szopa@muller.co.uk",
@@ -8575,6 +9796,7 @@ export const leads = [
   {
     name: "Justine Legros",
     company: "Tilda® | B Corp™",
+    category: "Grocery & Food Brands",
     position: "Ready-to-heat Portfolio Marketing Manager",
     linkedin: "http://www.linkedin.com/in/justine-l-69730075",
     email: "justine@tilda.com",
@@ -8582,6 +9804,7 @@ export const leads = [
   {
     name: "Charlotte Greaves",
     company: "Müller UK & Ireland",
+    category: "Dairy & Alternatives",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/charlotte-gre197",
     email: "charlotte.greaves@muller.co.uk",
@@ -8589,6 +9812,7 @@ export const leads = [
   {
     name: "Lauren Pinder-ambrose",
     company: "Müller UK & Ireland",
+    category: "Dairy & Alternatives",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/lauren-pinder-ambrose-6b149a1a5",
     email: "lauren.pinderambrose@muller.co.uk",
@@ -8596,6 +9820,7 @@ export const leads = [
   {
     name: "Debra Scarfe",
     company: "Sherriffs Foods",
+    category: "Grocery & Food Brands",
     position: "Technical & Marketing Executive",
     linkedin: "http://www.linkedin.com/in/debra-scarfe-64308937",
     email: "",
@@ -8603,6 +9828,7 @@ export const leads = [
   {
     name: "Sarah Hodges",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/sarah-hodges-3010508",
     email: "hodges.s@kraftheinzcompany.com",
@@ -8610,6 +9836,7 @@ export const leads = [
   {
     name: "Georgina Jolley",
     company: "Lola's Cupcakes",
+    category: "Bakery & Bread",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/georgina-jolley-b03ab4104",
     email: "",
@@ -8617,6 +9844,7 @@ export const leads = [
   {
     name: "Mark Watson",
     company: "Princes Limited",
+    category: "Grocery & Food Brands",
     position: "Senior Category Marketing Manager",
     linkedin: "http://www.linkedin.com/in/mark-watson-36676b14",
     email: "mark.watson@princes.co.uk",
@@ -8624,6 +9852,7 @@ export const leads = [
   {
     name: "Stephanie Chan",
     company: "Vinopolis",
+    category: "Wine & Spirits",
     position: "Manager, Marketing Communications",
     linkedin: "http://www.linkedin.com/in/stephanie-chan-8922969",
     email: "",
@@ -8631,6 +9860,7 @@ export const leads = [
   {
     name: "Trisha Rasor",
     company: "Crown Foods Ltd",
+    category: "Grocery & Food Brands",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/trisha-rasor-b2892621",
     email: "trisha@crownfoods.co.uk",
@@ -8638,6 +9868,7 @@ export const leads = [
   {
     name: "Louisa Parrillo",
     company: "Ingredion Incorporated",
+    category: "Other",
     position:
       "Strategic Marketing Lead - Dairy & Alternatives + Emerging Markets",
     linkedin: "http://www.linkedin.com/in/louisaparrillo",
@@ -8646,6 +9877,7 @@ export const leads = [
   {
     name: "Phillip Shaw",
     company: "Tiffin Sandwiches",
+    category: "Casual Dining & Restaurants",
     position: "Marketing Co-ordinator",
     linkedin: "http://www.linkedin.com/in/phillip-shaw-144233143",
     email: "phillip@tiffinsandwiches.co.uk",
@@ -8653,6 +9885,7 @@ export const leads = [
   {
     name: "Alexia Guppy",
     company: "Nurture Brands",
+    category: "Health & Wellness Food",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/alexia-guppy-132b29149",
     email: "alexia@nurturebrands.com",
@@ -8660,6 +9893,7 @@ export const leads = [
   {
     name: "Abigail Hylton",
     company: "BatchdUK",
+    category: "Other",
     position: "Head Of Marketing & Social Media",
     linkedin: "http://www.linkedin.com/in/abigail-hylton-2444aa10a",
     email: "abigail@batchd.co.uk",
@@ -8667,6 +9901,7 @@ export const leads = [
   {
     name: "Anita Osborne",
     company: "Lyre's Spirit Co",
+    category: "Drinks",
     position: "Sales & Marketing Manager Eu/uk",
     linkedin: "http://www.linkedin.com/in/anita-osborne-83615b154",
     email: "anita@lyres.co",
@@ -8674,6 +9909,7 @@ export const leads = [
   {
     name: "Paul Donegan",
     company: "ATURA Proteins (Deltagen UK Ltd)",
+    category: "Health & Wellness Food",
     position: "Commercial Development And Marketing Manager",
     linkedin: "http://www.linkedin.com/in/doneganpaul",
     email: "paul.donegan@aturaproteins.com",
@@ -8681,6 +9917,7 @@ export const leads = [
   {
     name: "Stephanie Gibbons",
     company: "Chococo",
+    category: "Confectionery",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/stephanie-gibbons-91744468",
     email: "",
@@ -8688,6 +9925,7 @@ export const leads = [
   {
     name: "Sarah Eassom",
     company: "Nursery Kitchen",
+    category: "Baby & Kids Food",
     position: "Head Of Sales & Marketing",
     linkedin: "http://www.linkedin.com/in/saraheassom",
     email: "sarah@nurserykitchen.co.uk",
@@ -8695,6 +9933,7 @@ export const leads = [
   {
     name: "Jenny Dixon",
     company: "Vive",
+    category: "Health & Wellness Food",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/jenny-dixon-b4a781133",
     email: "jenny@eatvive.com",
@@ -8702,6 +9941,7 @@ export const leads = [
   {
     name: "Dom Lowdell",
     company: "Kraft Heinz",
+    category: "Grocery & Food Brands",
     position: "Head Of Marketing Foodservice International (emea, Apac, Latam)",
     linkedin: "http://www.linkedin.com/in/domlowdell",
     email: "dominic.lowdell@kraftheinz.com",
@@ -8709,6 +9949,7 @@ export const leads = [
   {
     name: "Gemma Stoney",
     company: "Nestlé Professional",
+    category: "Grocery & Food Brands",
     position: "Digital Marketing Manager",
     linkedin: "http://www.linkedin.com/in/gemma-stoney-704896154",
     email: "gemma.stoney@uk.nestle.com",
@@ -8716,6 +9957,7 @@ export const leads = [
   {
     name: "Tamara Khan",
     company: "JUICEBABY",
+    category: "Drinks",
     position: "Social Media Manager",
     linkedin: "http://www.linkedin.com/in/tamara-khan-944451156",
     email: "",
@@ -8723,6 +9965,7 @@ export const leads = [
   {
     name: "Holly Heaps",
     company: "Huel",
+    category: "Health & Wellness Food",
     position: "Junior Marketing Manager",
     linkedin: "http://www.linkedin.com/in/holly-heaps",
     email: "holly.heaps@huel.com",
@@ -8730,6 +9973,7 @@ export const leads = [
   {
     name: "Jon Marchant",
     company: "MOJU",
+    category: "Drinks",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/jon-marchant-8370649",
     email: "jon@mojudrinks.com",
@@ -8737,6 +9981,7 @@ export const leads = [
   {
     name: "Bethan Miles",
     company: "NOMADIC",
+    category: "Dairy & Alternatives",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/bethan-miles-603375a1",
     email: "bethan@nomadic.ie",
@@ -8744,6 +9989,7 @@ export const leads = [
   {
     name: "Avi Zulkarnaen",
     company: "Lotus Bakeries",
+    category: "Bakery & Bread",
     position: "Global Digital Marketing Manager",
     linkedin: "http://www.linkedin.com/in/avi-zulkarnaen-56048a3a",
     email: "avi.zulkarnaen@lotusbakeries.com",
@@ -8751,6 +9997,7 @@ export const leads = [
   {
     name: "Hannah Cooke",
     company: "Pure",
+    category: "Other",
     position: "Digital Marketing Manager",
     linkedin: "http://www.linkedin.com/in/hannah-cooke-b0ba296b",
     email: "hannah@pure.co.uk",
@@ -8758,6 +10005,7 @@ export const leads = [
   {
     name: "Jane Ahern",
     company: "PizzaExpress",
+    category: "Casual Dining & Restaurants",
     position: "Head Of Brand Development",
     linkedin: "http://www.linkedin.com/in/jane-ahern-47705b13",
     email: "",
@@ -8765,6 +10013,7 @@ export const leads = [
   {
     name: "Rhian James-williams",
     company: "Ingredion Incorporated",
+    category: "Other",
     position: "Global Marketing Communications Manager",
     linkedin: "http://www.linkedin.com/in/rhianwilliams",
     email: "rhian.jameswilliams@ingredion.com",
@@ -8772,6 +10021,7 @@ export const leads = [
   {
     name: "Ej Williams",
     company: "Greggs",
+    category: "Bakery & Bread",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/ej-williams-94a10430",
     email: "ej.williams@greggs.co.uk",
@@ -8779,6 +10029,7 @@ export const leads = [
   {
     name: "Shannon Lochrie",
     company: "Cool Beans",
+    category: "Grocery & Food Brands",
     position: "Graphic Designer And Social Media Manager",
     linkedin: "http://www.linkedin.com/in/shannon-lochrie-471631212",
     email: "shannon@eatcoolbeans.com",
@@ -8786,6 +10037,7 @@ export const leads = [
   {
     name: "Stephanie Shaw",
     company: "Birds Eye UK & IE",
+    category: "Grocery & Food Brands",
     position: "Cluster Project Manager - Local Brands",
     linkedin: "http://www.linkedin.com/in/stephanie-shaw-a4233b27",
     email: "stephanie.shaw@birdseye.co.uk",
@@ -8793,6 +10045,7 @@ export const leads = [
   {
     name: "Anna Massie",
     company: "Macphie UK",
+    category: "Other",
     position: "Head Of Marketing & Communications",
     linkedin: "http://www.linkedin.com/in/anna-massie-8a96071a",
     email: "anna.massie@macphie.com",
@@ -8800,6 +10053,7 @@ export const leads = [
   {
     name: "Tyler Morrish",
     company: "Luscombe Drinks",
+    category: "Drinks",
     position: "Senior Marketing Executive",
     linkedin: "http://www.linkedin.com/in/tyler-james-morrish-9032a9171",
     email: "tyler.morrish@luscombe.co.uk",
@@ -8807,6 +10061,7 @@ export const leads = [
   {
     name: "Adam Wakefield",
     company: "JULIENNE BRUNO®",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/adam-wakefield-2321a72b",
     email: "",
@@ -8814,6 +10069,7 @@ export const leads = [
   {
     name: "Laura Greenhorn",
     company: "Carambar & Co",
+    category: "Confectionery",
     position: "Brand Manager- Terry's Chocolate Orange",
     linkedin: "http://www.linkedin.com/in/lauragreenhorn",
     email: "laura.greenhorn@terryschocolate.com",
@@ -8821,6 +10077,7 @@ export const leads = [
   {
     name: "Lauryn Squire",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Marketing Planning Manager",
     linkedin: "http://www.linkedin.com/in/lauryn-squire-090882136",
     email: "laurynsquire@greeneking.co.uk",
@@ -8828,6 +10085,7 @@ export const leads = [
   {
     name: "Sam Hinchliffe",
     company: "Doughlicious The London Dough Co.",
+    category: "Bakery & Bread",
     position: "Global Marketing Director",
     linkedin: "http://www.linkedin.com/in/samhinchliffe",
     email: "sam@doughlicious.co.uk",
@@ -8835,6 +10093,7 @@ export const leads = [
   {
     name: "Megan Love",
     company: "Mr Organic | Certified B Corporation",
+    category: "Grocery & Food Brands",
     position: "Sales & Marketing Manager",
     linkedin: "http://www.linkedin.com/in/megan-love-8a73b389",
     email: "megan@mr-organic.com",
@@ -8842,6 +10101,7 @@ export const leads = [
   {
     name: "Sally Mcim",
     company: "The Dalesman Group",
+    category: "Bakery & Bread",
     position: "Marketing & Communications Manager",
     linkedin: "http://www.linkedin.com/in/sallytaylor1",
     email: "sally.taylor@thedalesmangroup.co.uk",
@@ -8849,6 +10109,7 @@ export const leads = [
   {
     name: "Joe Farrar",
     company: "The Coconut Collab",
+    category: "Dairy & Alternatives",
     position: "Senior Brand Manager",
     linkedin: "http://www.linkedin.com/in/joe-farrar-1b513556",
     email: "joe.farrar@coconutco.co.uk",
@@ -8856,6 +10117,7 @@ export const leads = [
   {
     name: "Vikki O'neill",
     company: "wagamama",
+    category: "Casual Dining & Restaurants",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/vikki-o-neill-b0a135",
     email: "",
@@ -8863,6 +10125,7 @@ export const leads = [
   {
     name: "Emma Helden",
     company: "Gousto",
+    category: "Grocery & Food Brands",
     position: "Senior Product Marketing Manager",
     linkedin: "http://www.linkedin.com/in/emma-helden-61212a47",
     email: "emma.helden@gousto.co.uk",
@@ -8870,6 +10133,7 @@ export const leads = [
   {
     name: "Meera Gangani",
     company: "FrieslandCampina",
+    category: "Dairy & Alternatives",
     position: "Brand Manager - Physical Availability",
     linkedin: "http://www.linkedin.com/in/meeragangani",
     email: "meera.gangani@frieslandcampina.com",
@@ -8877,6 +10141,7 @@ export const leads = [
   {
     name: "Kevin Walton",
     company: "The Original Baker",
+    category: "Bakery & Bread",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/kevin-walton-18622a83",
     email: "kevin.walton@theoriginalbaker.co.uk",
@@ -8884,6 +10149,7 @@ export const leads = [
   {
     name: "Ada Szoka",
     company: "Las Iguanas",
+    category: "Casual Dining & Restaurants",
     position: "Social Media Coordinator",
     linkedin: "http://www.linkedin.com/in/ada-szoka-502822123",
     email: "",
@@ -8891,6 +10157,7 @@ export const leads = [
   {
     name: "Saima Begum",
     company: "wagamama",
+    category: "Casual Dining & Restaurants",
     position: "Waitress, Brand Ambassador, And Content Creator",
     linkedin: "http://www.linkedin.com/in/saima-begum-61a316207",
     email: "saimab@wagamama.com",
@@ -8898,6 +10165,7 @@ export const leads = [
   {
     name: "Daniel Shell",
     company: "Lyre's Spirit Co",
+    category: "Drinks",
     position: "Uk Brand Ambassador",
     linkedin: "http://www.linkedin.com/in/daniel-shell-20138014",
     email: "daniel.shell@lyres.com",
@@ -8905,6 +10173,7 @@ export const leads = [
   {
     name: "Davina Green",
     company: "Bells Food Group",
+    category: "Grocery & Food Brands",
     position: "Receptionist / Marketing Support",
     linkedin: "http://www.linkedin.com/in/davinagreencreative",
     email: "davina.green@bellsfoodgroup.co.uk",
@@ -8912,6 +10181,7 @@ export const leads = [
   {
     name: "Lily Convey",
     company: "LOVE CORN",
+    category: "Snacks & Crisps",
     position: "Senior Marketing Manager",
     linkedin: "http://www.linkedin.com/in/lily-convey-07550583",
     email: "lily@lovecorn.com",
@@ -8919,6 +10189,7 @@ export const leads = [
   {
     name: "Andree Persson",
     company: "SXOLLIE Cider",
+    category: "Beer & Brewing",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/andr%c3%a9e-persson-20937452",
     email: "",
@@ -8926,6 +10197,7 @@ export const leads = [
   {
     name: "Jessie Kenneth",
     company: "Pip & Nut | B Corp",
+    category: "Grocery & Food Brands",
     position: "Head Of Brand",
     linkedin: "http://www.linkedin.com/in/jessiekenneth",
     email: "jessie@pipandnut.com",
@@ -8933,6 +10205,7 @@ export const leads = [
   {
     name: "Lucy Smith",
     company: "Ramsden International",
+    category: "Other",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/lucyellesmith",
     email: "lucy.smith@ramsden-international.com",
@@ -8940,6 +10213,7 @@ export const leads = [
   {
     name: "Lucy Cowham",
     company: "BOSH!",
+    category: "Grocery & Food Brands",
     position: "Brand Partnerships Account Manager",
     linkedin: "http://www.linkedin.com/in/lucy-cowham-1416a3172",
     email: "lucy.cowham@bosh.tv",
@@ -8947,6 +10221,7 @@ export const leads = [
   {
     name: "Anna Acim",
     company: "The FoodFellas",
+    category: "Grocery & Food Brands",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/anna-c-acim-279110a5",
     email: "",
@@ -8954,6 +10229,7 @@ export const leads = [
   {
     name: "Sarah House",
     company: "Acai Berry Foods",
+    category: "Health & Wellness Food",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/sarah-house-71916013",
     email: "sarah@acaiberryfoods.com",
@@ -8961,6 +10237,7 @@ export const leads = [
   {
     name: "Oana Dorofte",
     company: "GDK (German Doner Kebab)",
+    category: "Casual Dining & Restaurants",
     position: "Head Of Brand Standards And Compliance",
     linkedin: "http://www.linkedin.com/in/oana-dorofte-53994252",
     email: "oana.dorofte@gdk.com",
@@ -8968,6 +10245,7 @@ export const leads = [
   {
     name: "Gillian Nash",
     company: "GDK (German Doner Kebab)",
+    category: "Casual Dining & Restaurants",
     position: "Marketing Manager - Uk",
     linkedin: "http://www.linkedin.com/in/gillian-nash-208956b1",
     email: "gillian@gdk.com",
@@ -8975,6 +10253,7 @@ export const leads = [
   {
     name: "Bonnie Stevens-mccann",
     company: "Three Spirit",
+    category: "Drinks",
     position: "Brand Manager",
     linkedin: "http://www.linkedin.com/in/bonnie-stevens-mccann-798a60137",
     email: "bonnie@threespiritdrinks.com",
@@ -8982,6 +10261,7 @@ export const leads = [
   {
     name: "David Spencer",
     company: "Greene King",
+    category: "Beer & Brewing",
     position: "Head Of Marketing - Old Speckled Hen And Strategic Projects",
     linkedin: "http://www.linkedin.com/in/davidrobertspencer",
     email: "davidspencer@greeneking.co.uk",
@@ -8989,6 +10269,7 @@ export const leads = [
   {
     name: "Nayan Patel",
     company: "Cofresh Snack Foods Limited",
+    category: "Snacks & Crisps",
     position: "Marketing Executive",
     linkedin: "http://www.linkedin.com/in/nayan-patel-43903b3b",
     email: "nayan.patel@cofresh.co.uk",
@@ -8996,6 +10277,7 @@ export const leads = [
   {
     name: "Marloes Rots",
     company: "Hain Celestial UK",
+    category: "Grocery & Food Brands",
     position: "Senior Marketing Manager Soup",
     linkedin: "http://www.linkedin.com/in/marloesrots",
     email: "marloes.rots@hain.com",
@@ -9003,6 +10285,7 @@ export const leads = [
   {
     name: "Bethan Owen",
     company: "Swizzels",
+    category: "Confectionery",
     position: "Digital Marketing Manager",
     linkedin: "http://www.linkedin.com/in/bethan-owen-7311b9b3",
     email: "bethan.owen@swizzels-matlow.com",
@@ -9010,6 +10293,7 @@ export const leads = [
   {
     name: "Jenny Taylor",
     company: "Cityglen Pub Company",
+    category: "Casual Dining & Restaurants",
     position: "Marketing Executive",
     linkedin: "http://www.linkedin.com/in/jentaylor3",
     email: "",
@@ -9017,6 +10301,7 @@ export const leads = [
   {
     name: "Karla Courtney",
     company: "Eva's Original Chimneys",
+    category: "Bakery & Bread",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/karlacourtney",
     email: "karla@originalchimneys.com",
@@ -9024,6 +10309,7 @@ export const leads = [
   {
     name: "Rebecca Curtis",
     company: "Riverford Organic Farmers",
+    category: "Grocery & Food Brands",
     position: "Brand Director",
     linkedin: "http://www.linkedin.com/in/rebecca-curtis-00280316",
     email: "rebeccacurtis@riverford.co.uk",
@@ -9031,6 +10317,7 @@ export const leads = [
   {
     name: "Lucy Tinning",
     company: "SERVED®",
+    category: "Drinks",
     position: "Social Media And Content Executive",
     linkedin: "http://www.linkedin.com/in/lucy-tinning-7aa76322b",
     email: "lucy@serveddrinks.co.uk",
@@ -9038,6 +10325,7 @@ export const leads = [
   {
     name: "Mike Smith",
     company: "Buttermilk Confections",
+    category: "Confectionery",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/mike-smith-50534688",
     email: "mike@buttermilk.co.uk",
@@ -9045,6 +10333,7 @@ export const leads = [
   {
     name: "Rhian Smith",
     company: "Princes Limited",
+    category: "Grocery & Food Brands",
     position: "Brand Marketing Manager",
     linkedin: "http://www.linkedin.com/in/rhiansmith01",
     email: "rhian.smith@princes.co.uk",
@@ -9052,6 +10341,7 @@ export const leads = [
   {
     name: "Doug Macdonald",
     company: "Las Iguanas",
+    category: "Casual Dining & Restaurants",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/dougmacd",
     email: "",
@@ -9059,6 +10349,7 @@ export const leads = [
   {
     name: "Rachael Mcwilliam",
     company: "Jacksons",
+    category: "Snacks & Crisps",
     position: "Marketing Manager",
     linkedin: "http://www.linkedin.com/in/rachael-mcwilliam-a946853a",
     email: "rachaelmcwilliam@jacksonsbread.co.uk",
@@ -9066,6 +10357,7 @@ export const leads = [
   {
     name: "Anna Beheshti",
     company: "Tilda® | B Corp™",
+    category: "Grocery & Food Brands",
     position: "Head Of Marketing",
     linkedin: "http://www.linkedin.com/in/anna-beheshti-88bb3b48",
     email: "anna@tilda.com",
@@ -9073,6 +10365,7 @@ export const leads = [
   {
     name: "Nicola Randall",
     company: "Beyond the Bean Ltd",
+    category: "Coffee & Tea",
     position: "Marketing Director",
     linkedin: "http://www.linkedin.com/in/nicola-randall-37b82430",
     email: "",
