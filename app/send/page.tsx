@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { Send, CheckCircle, Loader2, Wifi, WifiOff } from "lucide-react";
 import Link from "next/link";
 import { appendEmailRecord } from "@/lib/storage";
@@ -9,7 +10,13 @@ import { getMicrosoftUser, sendEmailViaGraph } from "@/lib/graphClient";
 type MsUser = { name: string; email: string } | null;
 
 export default function SendEmailPage() {
-  const [form, setForm] = useState({ to: "", toName: "", subject: "", body: "" });
+  const searchParams = useSearchParams();
+  const [form, setForm] = useState({
+    to: searchParams.get("to") || "",
+    toName: searchParams.get("name") || "",
+    subject: "",
+    body: "",
+  });
   const [msUser, setMsUser] = useState<MsUser>(null);
   const [sending, setSending] = useState(false);
   const [success, setSuccess] = useState(false);

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Link from "next/link";
 import { Search, X } from "lucide-react";
 import { leads } from "@/lib/leads-data";
 import type { BrandCategory } from "@/lib/types";
@@ -162,12 +163,12 @@ export default function ContactsPage() {
                     </td>
                     <td className="px-6 py-4">
                       {l.email ? (
-                        <a
-                          href={`mailto:${l.email}`}
+                        <Link
+                          href={`/send?to=${encodeURIComponent(l.email)}&name=${encodeURIComponent(l.name || "")}`}
                           className="inline-flex items-center px-3 py-1.5 bg-coral-500 hover:bg-coral-600 text-white text-xs font-medium rounded-lg transition-colors"
                         >
                           Email
-                        </a>
+                        </Link>
                       ) : (
                         <span className="text-navy-200">—</span>
                       )}
