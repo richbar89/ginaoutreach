@@ -32,7 +32,7 @@ export default function InboxPage() {
   const [refreshing, setRefreshing] = useState(false);
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [error, setError] = useState("");
-  const msUser = getMicrosoftUser();
+  const [msUser] = useState(() => getMicrosoftUser());
 
   const fetchMessages = useCallback(async (quiet = false) => {
     if (quiet) setRefreshing(true);
