@@ -9,6 +9,7 @@ import {
   Settings,
   Zap,
   Send,
+  Inbox,
 } from "lucide-react";
 
 const navSections = [
@@ -19,6 +20,7 @@ const navSections = [
       { href: "/contacts", label: "Contacts", icon: Users, exact: false },
       { href: "/campaigns", label: "Campaigns", icon: Megaphone, exact: false },
       { href: "/send", label: "Quick Send", icon: Send, exact: false },
+      { href: "/inbox", label: "Inbox", icon: Inbox, exact: false },
     ],
   },
 ];
