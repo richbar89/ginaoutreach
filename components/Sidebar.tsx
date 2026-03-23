@@ -5,11 +5,10 @@ import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Users,
-  BarChart2,
-  Eye,
   Megaphone,
-  Bell,
+  Settings,
   Zap,
+  Send,
 } from "lucide-react";
 
 const navSections = [
@@ -18,15 +17,8 @@ const navSections = [
     items: [
       { href: "/", label: "Dashboard", icon: LayoutDashboard, exact: true },
       { href: "/contacts", label: "Contacts", icon: Users, exact: false },
-    ],
-  },
-  {
-    label: "Intelligence",
-    items: [
-      { href: "/meta-analytics", label: "Meta Analytics", icon: BarChart2, exact: false },
-      { href: "/competitors", label: "Competitor Tracker", icon: Eye, exact: false },
-      { href: "/influencer-tracker", label: "Influencer Tracker", icon: Megaphone, exact: false },
-      { href: "/ad-alerts", label: "Ad Alerts", icon: Bell, exact: false },
+      { href: "/campaigns", label: "Campaigns", icon: Megaphone, exact: false },
+      { href: "/send", label: "Quick Send", icon: Send, exact: false },
     ],
   },
 ];
@@ -99,6 +91,26 @@ export default function Sidebar() {
         ))}
       </nav>
 
+      {/* Settings link */}
+      <div className="px-4 pb-4">
+        <Link
+          href="/settings"
+          className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ${
+            pathname === "/settings"
+              ? "bg-coral-500 text-white"
+              : "hover:bg-white/5"
+          }`}
+          style={
+            pathname === "/settings"
+              ? { boxShadow: "0 4px 12px rgba(232,113,90,0.35)" }
+              : { color: "rgba(255,255,255,0.4)" }
+          }
+        >
+          <Settings size={16} strokeWidth={pathname === "/settings" ? 2.5 : 1.75} />
+          Settings
+        </Link>
+      </div>
+
       {/* Footer */}
       <div className="px-5 py-5" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
         <div className="flex items-center gap-3">
@@ -110,7 +122,7 @@ export default function Sidebar() {
           </div>
           <div>
             <p className="text-xs font-medium" style={{ color: "rgba(255,255,255,0.45)" }}>
-              Gina's workspace
+              Gina&apos;s workspace
             </p>
             <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.2)" }}>
               GinaOS v1.0
