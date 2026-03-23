@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import Link from "next/link";
 import { RefreshCw, Loader2, MailOpen, WifiOff } from "lucide-react";
 import {
@@ -10,6 +10,7 @@ import {
   markMessageAsRead,
 } from "@/lib/graphClient";
 import type { InboxMessage, MessageDetail } from "@/lib/graphClient";
+import { getEmailLog } from "@/lib/storage";
 import InitialsAvatar from "@/components/InitialsAvatar";
 
 function timeAgo(dateStr: string): string {
@@ -32,7 +33,21 @@ export default function InboxPage() {
   const [refreshing, setRefreshing] = useState(false);
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [error, setError] = useState("");
+  const [showAll, setShowAll] = useState(false);
   const [msUser] = useState(() => getMicrosoftUser());
+
+  // Build set of addresses we've emailed — used to filter replies
+  const contactedAddresses = useMemo(() => {
+    const log = getEmailLog();
+    return new Set(log.map((r) => r.contactEmail.toLowerCase()));
+  }, []);
+
+  const visibleMessages = useMemo(() => {
+    if (showAll) return messages;
+    return messages.filter((m) =>
+      contactedAddresses.has(m.from.emailAddress.address.toLowerCase())
+    );
+  }, [messages, showAll, contactedAddresses]);
 
   const fetchMessages = useCallback(async (quiet = false) => {
     if (quiet) setRefreshing(true);
@@ -80,7 +95,7 @@ export default function InboxPage() {
     }
   };
 
-  const unreadCount = messages.filter((m) => !m.isRead).length;
+  const unreadCount = visibleMessages.filter((m) => !m.isRead).length;
 
   if (!msUser) {
     return (
@@ -108,31 +123,56 @@ export default function InboxPage() {
         style={{ width: 340, minHeight: 0 }}
       >
         {/* Header */}
-        <div className="px-5 py-4 border-b border-cream-200 bg-white flex items-center justify-between flex-shrink-0">
-          <div className="flex items-center gap-2.5">
-            <div className="flex items-center gap-3 mb-0">
-              <div className="h-px w-6 bg-coral-400" />
-              <span className="text-[11px] font-bold uppercase tracking-widest text-coral-500">
-                Inbox
-              </span>
+        <div className="px-5 py-4 border-b border-cream-200 bg-white flex-shrink-0">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-2">
+                <div className="h-px w-6 bg-coral-400" />
+                <span className="text-[11px] font-bold uppercase tracking-widest text-coral-500">
+                  Inbox
+                </span>
+              </div>
+              {unreadCount > 0 && (
+                <span className="px-1.5 py-0.5 bg-coral-500 text-white text-[10px] font-bold rounded-full leading-none">
+                  {unreadCount}
+                </span>
+              )}
             </div>
-            {unreadCount > 0 && (
-              <span className="px-1.5 py-0.5 bg-coral-500 text-white text-[10px] font-bold rounded-full leading-none">
-                {unreadCount}
-              </span>
-            )}
+            <button
+              onClick={() => fetchMessages(true)}
+              disabled={refreshing}
+              title="Refresh"
+              className="p-1.5 hover:bg-cream-100 rounded-lg transition-colors"
+            >
+              <RefreshCw
+                size={13}
+                className={`text-navy-400 ${refreshing ? "animate-spin" : ""}`}
+              />
+            </button>
           </div>
-          <button
-            onClick={() => fetchMessages(true)}
-            disabled={refreshing}
-            title="Refresh"
-            className="p-1.5 hover:bg-cream-100 rounded-lg transition-colors"
-          >
-            <RefreshCw
-              size={13}
-              className={`text-navy-400 ${refreshing ? "animate-spin" : ""}`}
-            />
-          </button>
+          {/* Filter toggle */}
+          <div className="flex gap-1 p-0.5 bg-cream-100 rounded-lg">
+            <button
+              onClick={() => setShowAll(false)}
+              className={`flex-1 text-[11px] font-semibold py-1.5 rounded-md transition-all ${
+                !showAll
+                  ? "bg-white text-navy-800 shadow-sm"
+                  : "text-navy-400 hover:text-navy-600"
+              }`}
+            >
+              Replies
+            </button>
+            <button
+              onClick={() => setShowAll(true)}
+              className={`flex-1 text-[11px] font-semibold py-1.5 rounded-md transition-all ${
+                showAll
+                  ? "bg-white text-navy-800 shadow-sm"
+                  : "text-navy-400 hover:text-navy-600"
+              }`}
+            >
+              All Mail
+            </button>
+          </div>
         </div>
 
         {/* Message list */}
@@ -143,12 +183,14 @@ export default function InboxPage() {
             </div>
           ) : error ? (
             <div className="p-6 text-sm text-red-500 text-center">{error}</div>
-          ) : messages.length === 0 ? (
+          ) : visibleMessages.length === 0 ? (
             <div className="p-8 text-sm text-navy-400 text-center">
-              No messages yet.
+              {showAll
+                ? "No messages in inbox."
+                : "No replies from contacted leads yet."}
             </div>
           ) : (
-            messages.map((msg) => {
+            visibleMessages.map((msg) => {
               const isActive = selected?.id === msg.id;
               return (
                 <button
