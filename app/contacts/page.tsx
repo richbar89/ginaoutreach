@@ -130,9 +130,18 @@ export default function ContactsPage() {
               filtered.map((l, i) => {
                 const colours = l.category ? CATEGORY_COLOURS[l.category as BrandCategory] : null;
                 return (
-                  <tr key={i} className="hover:bg-cream-50 transition-colors">
+                  <tr key={i} className="hover:bg-cream-50 transition-colors group">
                     <td className="px-6 py-4 font-medium text-navy-900">
-                      {l.name || <span className="text-navy-200">—</span>}
+                      {l.email ? (
+                        <Link
+                          href={`/contacts/${encodeURIComponent(l.email)}`}
+                          className="hover:text-coral-600 transition-colors"
+                        >
+                          {l.name || <span className="text-navy-200">—</span>}
+                        </Link>
+                      ) : (
+                        l.name || <span className="text-navy-200">—</span>
+                      )}
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
