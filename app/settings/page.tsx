@@ -33,13 +33,8 @@ export default function SettingsPage() {
     const stored = localStorage.getItem("azure_client_id") || "";
     setSavedClientId(stored);
     setClientId(stored);
-    if (stored) {
-      getMicrosoftUser()
-        .then(setMsUser)
-        .finally(() => setLoading(false));
-    } else {
-      setLoading(false);
-    }
+    setMsUser(getMicrosoftUser());
+    setLoading(false);
   }, []);
 
   const saveClientId = () => {

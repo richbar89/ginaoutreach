@@ -23,7 +23,7 @@ export default function SendEmailPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    getMicrosoftUser().then(setMsUser);
+    setMsUser(getMicrosoftUser());
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {

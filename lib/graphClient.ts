@@ -7,25 +7,27 @@ export async function signInWithMicrosoft(): Promise<AccountInfo> {
   const msal = await getMsalInstance();
   if (!msal) throw new Error("Configure an Azure Client ID in Settings first.");
   const result = await msal.loginPopup({ scopes: GRAPH_SCOPES });
+  // Cache user info in localStorage so all pages can read it without re-initialising MSAL
+  localStorage.setItem("ms_user_email", result.account.username);
+  localStorage.setItem("ms_user_name", result.account.name || result.account.username);
   return result.account;
 }
 
 export async function signOutFromMicrosoft(): Promise<void> {
   const msal = await getMsalInstance();
+  localStorage.removeItem("ms_user_email");
+  localStorage.removeItem("ms_user_name");
   if (!msal) return;
   const account = msal.getAllAccounts()[0];
   if (account) await msal.logoutPopup({ account });
 }
 
-export async function getMicrosoftUser(): Promise<{ name: string; email: string } | null> {
-  const msal = await getMsalInstance();
-  if (!msal) return null;
-  const accounts = msal.getAllAccounts();
-  if (!accounts.length) return null;
-  return {
-    name: accounts[0].name || accounts[0].username,
-    email: accounts[0].username,
-  };
+export function getMicrosoftUser(): { name: string; email: string } | null {
+  if (typeof window === "undefined") return null;
+  const email = localStorage.getItem("ms_user_email");
+  const name = localStorage.getItem("ms_user_name");
+  if (!email) return null;
+  return { email, name: name || email };
 }
 
 async function acquireToken(): Promise<string> {

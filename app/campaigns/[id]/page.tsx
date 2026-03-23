@@ -47,7 +47,7 @@ export default function CampaignDetailPage() {
       log.filter((r) => r.campaignId === id).map((r) => r.contactEmail)
     );
     setSent(alreadySent);
-    getMicrosoftUser().then(setMsUser);
+    setMsUser(getMicrosoftUser());
   }, [id, router]);
 
   if (!campaign) return null;
