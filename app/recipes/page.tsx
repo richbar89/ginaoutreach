@@ -4,15 +4,15 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   BookImage, Plus, Search, ExternalLink, Pencil, Trash2,
-  CalendarDays, Tag, X, Loader2,
+  CalendarDays, Tag, X, Loader2, Download,
 } from "lucide-react";
-import { getRecipes, upsertRecipe, deleteRecipe } from "@/lib/storage";
+import { getRecipes, upsertRecipe, deleteRecipe, saveRecipes } from "@/lib/storage";
 import type { Recipe } from "@/lib/types";
 
 const CATEGORIES = [
-  "Breakfast", "Brunch", "Lunch", "Dinner", "Snacks",
-  "Desserts", "Drinks", "Cocktails", "Baking", "Salads",
-  "Pasta", "Soups", "Other",
+  "Breakfast", "Lunch", "Dinner", "Side Dishes",
+  "Snacks & Desserts", "Sweet Treats", "Christmas",
+  "Drinks", "Cocktails", "Other",
 ];
 
 const EMPTY: Omit<Recipe, "id" | "createdAt"> = {
@@ -327,11 +327,37 @@ export default function RecipesPage() {
   const [filterCategory, setFilterCategory] = useState("All");
   const [editingRecipe, setEditingRecipe] = useState<Recipe | null | "new">(null);
   const [mounted, setMounted] = useState(false);
+  const [importing, setImporting] = useState(false);
+  const [importMsg, setImportMsg] = useState("");
 
   useEffect(() => {
     setRecipes(getRecipes());
     setMounted(true);
   }, []);
+
+  const handleImport = async () => {
+    setImporting(true);
+    setImportMsg("");
+    try {
+      const res = await fetch("/api/import-recipes");
+      const data = await res.json();
+      if (data.error) {
+        setImportMsg(`Error: ${data.error}`);
+        return;
+      }
+      // Merge: keep existing recipes, add imported ones that don't already exist (by URL)
+      const existing = getRecipes();
+      const existingUrls = new Set(existing.map((r: Recipe) => r.url));
+      const newOnes = (data.recipes as Recipe[]).filter((r) => !existingUrls.has(r.url));
+      saveRecipes([...existing, ...newOnes]);
+      setRecipes(getRecipes());
+      setImportMsg(`Imported ${newOnes.length} recipes (${data.count} found on site).`);
+    } catch {
+      setImportMsg("Import failed. Check your connection.");
+    } finally {
+      setImporting(false);
+    }
+  };
 
   const handleSave = (recipe: Recipe) => {
     upsertRecipe(recipe);
@@ -381,14 +407,31 @@ export default function RecipesPage() {
               {recipes.length} {recipes.length === 1 ? "recipe" : "recipes"} saved
             </p>
           </div>
-          <button
-            onClick={() => setEditingRecipe("new")}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold rounded-xl transition-colors mt-1"
-          >
-            <Plus size={15} /> Add Recipe
-          </button>
+          <div className="flex items-center gap-2 mt-1">
+            <button
+              onClick={handleImport}
+              disabled={importing}
+              className="inline-flex items-center gap-2 px-5 py-2.5 border border-cream-300 hover:border-navy-300 text-navy-600 hover:text-navy-900 text-sm font-semibold rounded-xl transition-colors disabled:opacity-60"
+            >
+              {importing ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
+              {importing ? "Importing…" : "Import from Website"}
+            </button>
+            <button
+              onClick={() => setEditingRecipe("new")}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold rounded-xl transition-colors"
+            >
+              <Plus size={15} /> Add Recipe
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* Import feedback */}
+      {importMsg && (
+        <div className={`mb-4 px-4 py-3 rounded-xl text-sm font-medium ${importMsg.startsWith("Error") ? "bg-red-50 text-red-700 border border-red-200" : "bg-green-50 text-green-700 border border-green-200"}`}>
+          {importMsg}
+        </div>
+      )}
 
       {/* Filters */}
       <div className="flex items-center gap-3 mb-6 flex-wrap">
