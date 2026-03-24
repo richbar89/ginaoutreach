@@ -10,6 +10,7 @@ import {
   Zap,
   Send,
   Inbox,
+  TrendingUp,
 } from "lucide-react";
 
 const navSections = [
@@ -21,6 +22,12 @@ const navSections = [
       { href: "/campaigns", label: "Campaigns", icon: Megaphone, exact: false },
       { href: "/send", label: "Quick Send", icon: Send, exact: false },
       { href: "/inbox", label: "Inbox", icon: Inbox, exact: false },
+    ],
+  },
+  {
+    label: "Intelligence",
+    items: [
+      { href: "/ads", label: "Meta Ad Alerts", icon: TrendingUp, exact: false },
     ],
   },
 ];
