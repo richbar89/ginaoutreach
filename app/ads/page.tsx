@@ -72,19 +72,6 @@ export default function AdsPage() {
     refreshStatuses();
   };
 
-  const testOne = async () => {
-    setScanError("");
-    const company = allCompanies[0]?.company;
-    if (!company) return;
-    try {
-      const res = await fetch(`/api/meta-ads?company=${encodeURIComponent(company)}`);
-      const data = await res.json();
-      setScanError(`Test (${company}): ${JSON.stringify(data)}`);
-    } catch (e) {
-      setScanError(`Test failed: ${e instanceof Error ? e.message : "unknown"}`);
-    }
-  };
-
   const stopScan = () => {
     abortRef.current?.abort();
     setScanning(false);
@@ -154,12 +141,6 @@ export default function AdsPage() {
             ) : (
               <>
                 <button
-                  onClick={testOne}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 border border-cream-200 hover:border-navy-200 text-navy-600 text-sm font-medium rounded-xl transition-colors"
-                >
-                  Test API
-                </button>
-                <button
                   onClick={startScan}
                   className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold rounded-xl transition-colors"
                 >
@@ -172,10 +153,9 @@ export default function AdsPage() {
         </div>
       </div>
 
-      {/* API error / test output */}
+      {/* Scan error */}
       {scanError && (
         <div className="mb-6 px-5 py-4 bg-red-50 border border-red-200 rounded-2xl">
-          <p className="text-xs font-semibold text-red-700 mb-1">API Response</p>
           <p className="text-xs text-red-600 font-mono break-all">{scanError}</p>
         </div>
       )}
