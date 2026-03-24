@@ -10,6 +10,7 @@ import {
 import InitialsAvatar from "@/components/InitialsAvatar";
 import { getContacts, upsertContact, getContactEmailLog } from "@/lib/storage";
 import { leads } from "@/lib/leads-data";
+import { getCachedAdStatus } from "@/lib/metaAds";
 import type { StoredContact, EmailRecord } from "@/lib/types";
 
 function weeksAgo(dateStr: string) {
@@ -29,6 +30,28 @@ function formatDate(iso: string) {
     day: "2-digit", month: "short", year: "numeric",
     hour: "2-digit", minute: "2-digit",
   });
+}
+
+function AdStatusBadge({ company }: { company?: string }) {
+  if (!company) return null;
+  const status = getCachedAdStatus(company);
+  if (!status) return (
+    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-gray-100 text-gray-400 text-xs font-medium rounded-full">
+      Meta ads not yet checked
+    </span>
+  );
+  if (status.hasAds) return (
+    <Link href="/ads" className="inline-flex items-center gap-1.5 px-3 py-1 bg-coral-100 text-coral-700 text-xs font-semibold rounded-full hover:bg-coral-200 transition-colors">
+      <span className="w-1.5 h-1.5 rounded-full bg-coral-500 animate-pulse inline-block" />
+      Running Meta ads
+    </Link>
+  );
+  return (
+    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-gray-100 text-gray-500 text-xs font-medium rounded-full">
+      <span className="w-1.5 h-1.5 rounded-full bg-gray-400 inline-block" />
+      No active Meta ads
+    </span>
+  );
 }
 
 function RecencyAlert({ firstName, history }: { firstName: string; history: EmailRecord[] }) {
@@ -143,19 +166,22 @@ function LeadProfile({ email }: { email: string }) {
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-2 flex-shrink-0">
-            {lead.linkedin && (
-              <a href={lead.linkedin.startsWith("http") ? lead.linkedin : `https://${lead.linkedin}`}
-                target="_blank" rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 border border-cream-200 hover:border-navy-200 text-navy-600 text-xs font-medium rounded-xl transition-all">
-                <Linkedin size={13} /> LinkedIn
-              </a>
-            )}
-            <Link
-              href={`/send?to=${encodeURIComponent(lead.email)}&name=${encodeURIComponent(lead.name)}`}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-coral-500 hover:bg-coral-600 text-white text-xs font-semibold rounded-xl transition-colors">
-              <Send size={13} /> Send Email
-            </Link>
+          <div className="flex flex-col items-end gap-2 flex-shrink-0">
+            <div className="flex items-center gap-2">
+              {lead.linkedin && (
+                <a href={lead.linkedin.startsWith("http") ? lead.linkedin : `https://${lead.linkedin}`}
+                  target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 border border-cream-200 hover:border-navy-200 text-navy-600 text-xs font-medium rounded-xl transition-all">
+                  <Linkedin size={13} /> LinkedIn
+                </a>
+              )}
+              <Link
+                href={`/send?to=${encodeURIComponent(lead.email)}&name=${encodeURIComponent(lead.name)}`}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-coral-500 hover:bg-coral-600 text-white text-xs font-semibold rounded-xl transition-colors">
+                <Send size={13} /> Send Email
+              </Link>
+            </div>
+            <AdStatusBadge company={lead.company} />
           </div>
         </div>
       </div>
@@ -234,6 +260,7 @@ function StoredContactProfile({ contact: initial }: { contact: StoredContact }) 
                   <Linkedin size={12} /> LinkedIn
                 </a>
               )}
+              <AdStatusBadge company={contact.company} />
               <span className="text-xs text-navy-400">Added {formatDate(contact.createdAt)}</span>
             </div>
           </div>

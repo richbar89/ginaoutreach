@@ -4,7 +4,9 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import { Search, X } from "lucide-react";
 import { leads } from "@/lib/leads-data";
+import { getAllCachedStatuses } from "@/lib/metaAds";
 import type { BrandCategory } from "@/lib/types";
+import type { AdStatus } from "@/lib/metaAds";
 
 const CATEGORIES: BrandCategory[] = [
   "Snacks & Crisps",
@@ -38,9 +40,28 @@ const CATEGORY_COLOURS: Record<BrandCategory, { bg: string; text: string }> = {
   "Other":                       { bg: "bg-gray-100",    text: "text-gray-600" },
 };
 
+function AdBadge({ status }: { status: AdStatus | null | undefined }) {
+  if (!status) return <span className="text-navy-200 text-xs">—</span>;
+  if (status.hasAds) {
+    return (
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-coral-100 text-coral-700 text-xs font-medium rounded-full whitespace-nowrap">
+        <span className="w-1.5 h-1.5 rounded-full bg-coral-500 animate-pulse inline-block" />
+        Running ads
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-gray-100 text-gray-500 text-xs font-medium rounded-full whitespace-nowrap">
+      <span className="w-1.5 h-1.5 rounded-full bg-gray-400 inline-block" />
+      No ads
+    </span>
+  );
+}
+
 export default function ContactsPage() {
   const [query, setQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<BrandCategory | "All">("All");
+  const [adStatuses] = useState<Record<string, AdStatus>>(() => getAllCachedStatuses());
 
   const filtered = useMemo(() => {
     let result = leads;
@@ -115,6 +136,7 @@ export default function ContactsPage() {
               <th className="text-left px-6 py-4 text-xs font-semibold text-navy-400 uppercase tracking-widest">Name</th>
               <th className="text-left px-6 py-4 text-xs font-semibold text-navy-400 uppercase tracking-widest">Company</th>
               <th className="text-left px-6 py-4 text-xs font-semibold text-navy-400 uppercase tracking-widest">Position</th>
+              <th className="text-left px-6 py-4 text-xs font-semibold text-navy-400 uppercase tracking-widest">Meta Ads</th>
               <th className="text-left px-6 py-4 text-xs font-semibold text-navy-400 uppercase tracking-widest">LinkedIn</th>
               <th className="text-left px-6 py-4 text-xs font-semibold text-navy-400 uppercase tracking-widest">Email</th>
             </tr>
@@ -122,7 +144,7 @@ export default function ContactsPage() {
           <tbody className="divide-y divide-cream-50">
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-6 py-12 text-center text-sm text-navy-300">
+                <td colSpan={6} className="px-6 py-12 text-center text-sm text-navy-300">
                   No contacts match your search.
                 </td>
               </tr>
@@ -155,6 +177,9 @@ export default function ContactsPage() {
                     </td>
                     <td className="px-6 py-4 text-navy-400">
                       {l.position || <span className="text-navy-200">—</span>}
+                    </td>
+                    <td className="px-6 py-4">
+                      <AdBadge status={l.company ? adStatuses[l.company] : undefined} />
                     </td>
                     <td className="px-6 py-4">
                       {l.linkedin ? (
