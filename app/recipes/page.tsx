@@ -411,10 +411,11 @@ export default function RecipesPage() {
             <button
               onClick={handleImport}
               disabled={importing}
+              title="Fetches all recipes from ginabnutrition.com and downloads images to GinaOS (takes ~60 seconds)"
               className="inline-flex items-center gap-2 px-5 py-2.5 border border-cream-300 hover:border-navy-300 text-navy-600 hover:text-navy-900 text-sm font-semibold rounded-xl transition-colors disabled:opacity-60"
             >
               {importing ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
-              {importing ? "Importing…" : "Import from Website"}
+              {importing ? "Downloading images…" : "Import from Website"}
             </button>
             <button
               onClick={() => setEditingRecipe("new")}
@@ -427,7 +428,13 @@ export default function RecipesPage() {
       </div>
 
       {/* Import feedback */}
-      {importMsg && (
+      {importing && (
+        <div className="mb-4 px-4 py-3 rounded-xl text-sm font-medium bg-amber-50 text-amber-700 border border-amber-200 flex items-center gap-2">
+          <Loader2 size={14} className="animate-spin flex-shrink-0" />
+          Downloading all recipe images — this takes about 60 seconds. Don&apos;t close the tab.
+        </div>
+      )}
+      {!importing && importMsg && (
         <div className={`mb-4 px-4 py-3 rounded-xl text-sm font-medium ${importMsg.startsWith("Error") ? "bg-red-50 text-red-700 border border-red-200" : "bg-green-50 text-green-700 border border-green-200"}`}>
           {importMsg}
         </div>

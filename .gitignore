@@ -37,3 +37,6 @@ next-env.d.ts
 
 # database
 /data/*.db
+
+# Downloaded recipe images (stored on Replit, not in git)
+/public/recipe-images/
