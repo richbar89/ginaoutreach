@@ -11,6 +11,7 @@ import {
   Send,
   Inbox,
   TrendingUp,
+  BarChart2,
 } from "lucide-react";
 
 const navSections = [
@@ -28,6 +29,7 @@ const navSections = [
     label: "Intelligence",
     items: [
       { href: "/ads", label: "Meta Ad Alerts", icon: TrendingUp, exact: false },
+      { href: "/analytics", label: "My Analytics", icon: BarChart2, exact: false },
     ],
   },
 ];
