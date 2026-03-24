@@ -61,21 +61,21 @@ export async function checkCompanyAds(company: string): Promise<AdStatus> {
 
 export async function scanCompanies(
   companies: string[],
-  onProgress: (done: number, total: number, current: string) => void,
+  onProgress: (done: number, total: number, current: string, error?: string) => void,
   signal: AbortSignal
 ): Promise<void> {
-  // Only check companies with no valid cache entry
   const toCheck = companies.filter((c) => !getCachedAdStatus(c));
 
   for (let i = 0; i < toCheck.length; i++) {
     if (signal.aborted) break;
     const company = toCheck[i];
+    let error: string | undefined;
     try {
       await checkCompanyAds(company);
-    } catch {
-      // Silently skip failures — don't block the scan
+    } catch (e) {
+      error = e instanceof Error ? e.message : "Unknown error";
     }
-    onProgress(i + 1, toCheck.length, company);
+    onProgress(i + 1, toCheck.length, company, error);
     if (i < toCheck.length - 1) {
       await new Promise((r) => setTimeout(r, 250));
     }
