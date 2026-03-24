@@ -6,12 +6,15 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Missing company param" }, { status: 400 });
   }
 
-  const appId = process.env.META_APP_ID;
-  const appSecret = process.env.META_APP_SECRET;
+  const accessToken =
+    process.env.META_ACCESS_TOKEN ||
+    (process.env.META_APP_ID && process.env.META_APP_SECRET
+      ? `${process.env.META_APP_ID}|${process.env.META_APP_SECRET}`
+      : null);
 
-  if (!appId || !appSecret) {
+  if (!accessToken) {
     return NextResponse.json(
-      { error: "META_APP_ID / META_APP_SECRET not configured in environment" },
+      { error: "META_ACCESS_TOKEN not configured in environment" },
       { status: 500 }
     );
   }
@@ -23,7 +26,7 @@ export async function GET(req: NextRequest) {
     ad_active_status: "ACTIVE",
     fields: "id,page_name,ad_snapshot_url",
     limit: "5",
-    access_token: `${appId}|${appSecret}`,
+    access_token: accessToken,
   });
 
   try {
