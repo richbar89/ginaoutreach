@@ -1,4 +1,4 @@
-import type { Campaign, StoredContact, EmailRecord } from "./types";
+import type { Campaign, StoredContact, EmailRecord, ScheduledPost, Recipe } from "./types";
 
 // ── Campaigns ──────────────────────────────────────────────
 
@@ -54,6 +54,52 @@ export function getContactEmailLog(email: string): EmailRecord[] {
   return getEmailLog().filter(
     (r) => r.contactEmail === email.toLowerCase()
   );
+}
+
+// ── Scheduled Posts ─────────────────────────────────────────
+
+export function getScheduledPosts(): ScheduledPost[] {
+  if (typeof window === "undefined") return [];
+  return JSON.parse(localStorage.getItem("ginaos_scheduled_posts") || "[]");
+}
+
+export function saveScheduledPosts(posts: ScheduledPost[]): void {
+  localStorage.setItem("ginaos_scheduled_posts", JSON.stringify(posts));
+}
+
+export function upsertScheduledPost(post: ScheduledPost): void {
+  const all = getScheduledPosts();
+  const idx = all.findIndex((p) => p.id === post.id);
+  if (idx >= 0) all[idx] = post;
+  else all.push(post);
+  saveScheduledPosts(all);
+}
+
+export function deleteScheduledPost(id: string): void {
+  saveScheduledPosts(getScheduledPosts().filter((p) => p.id !== id));
+}
+
+// ── Recipes ─────────────────────────────────────────────────
+
+export function getRecipes(): Recipe[] {
+  if (typeof window === "undefined") return [];
+  return JSON.parse(localStorage.getItem("ginaos_recipes") || "[]");
+}
+
+export function saveRecipes(recipes: Recipe[]): void {
+  localStorage.setItem("ginaos_recipes", JSON.stringify(recipes));
+}
+
+export function upsertRecipe(recipe: Recipe): void {
+  const all = getRecipes();
+  const idx = all.findIndex((r) => r.id === recipe.id);
+  if (idx >= 0) all[idx] = recipe;
+  else all.unshift(recipe);
+  saveRecipes(all);
+}
+
+export function deleteRecipe(id: string): void {
+  saveRecipes(getRecipes().filter((r) => r.id !== id));
 }
 
 // ── Merge tags ─────────────────────────────────────────────

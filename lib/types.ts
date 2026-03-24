@@ -50,3 +50,36 @@ export type EmailRecord = {
     campaignId?: string;
     campaignName?: string;
 };
+
+// ── Content Planner ─────────────────────────────────────────
+
+export type Platform = "instagram" | "tiktok" | "facebook";
+export type MediaType = "photo" | "reel" | "carousel" | "story";
+export type PostStatus = "idea" | "scheduled" | "posted";
+
+export type ScheduledPost = {
+    id: string;
+    date: string; // YYYY-MM-DD
+    time?: string; // HH:MM
+    platforms: Platform[];
+    mediaType: MediaType;
+    caption?: string;
+    status: PostStatus;
+    recipeId?: string;
+    recipeTitle?: string;
+    notes?: string;
+    createdAt: string;
+};
+
+// ── Recipe Library ──────────────────────────────────────────
+
+export type Recipe = {
+    id: string;
+    title: string;
+    url: string;
+    imageUrl?: string;
+    description?: string;
+    category: string;
+    tags: string[];
+    createdAt: string;
+};
