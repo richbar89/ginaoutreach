@@ -210,13 +210,8 @@ export default function AnalyticsPage() {
         <div className="bg-white border border-cream-200 rounded-2xl p-16 text-center shadow-sm">
           <BarChart2 size={40} className="text-cream-300 mx-auto mb-4" />
           <h2 className="font-serif text-xl font-bold text-navy-800 mb-2">Connect your Instagram</h2>
-          <p className="text-sm text-navy-400 max-w-sm mx-auto mb-6">
+          <p className="text-sm text-navy-400 max-w-sm mx-auto mb-8">
             Fetch your recent post data and let AI analyse what&apos;s working — best times, top content types, and specific recommendations.
-          </p>
-          <p className="text-xs text-navy-300 max-w-md mx-auto mb-6">
-            Your <code className="bg-cream-100 px-1 rounded">META_ACCESS_TOKEN</code> needs these extra permissions:{" "}
-            <strong>instagram_basic</strong>, <strong>instagram_manage_insights</strong>,{" "}
-            <strong>pages_read_engagement</strong>, <strong>pages_show_list</strong>
           </p>
           <button
             onClick={fetchData}
@@ -469,17 +464,6 @@ export default function AnalyticsPage() {
         </>
       )}
 
-      {/* Permission reminder */}
-      {!profile && !loading && !error && (
-        <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-2xl">
-          <p className="text-xs font-semibold text-amber-800 mb-1">Before connecting</p>
-          <p className="text-xs text-amber-700">
-            Regenerate your <strong>META_ACCESS_TOKEN</strong> in the Facebook Graph API Explorer with:{" "}
-            <code>instagram_basic</code>, <code>instagram_manage_insights</code>,{" "}
-            <code>pages_read_engagement</code>, <code>pages_show_list</code>. Then update the secret in Replit.
-          </p>
-        </div>
-      )}
     </div>
   );
 }
