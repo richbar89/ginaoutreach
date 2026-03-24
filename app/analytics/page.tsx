@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   BarChart2, RefreshCw, Sparkles, Heart, MessageCircle,
-  Eye, Bookmark, Users, Image, Video, Layers, ExternalLink,
-  AlertCircle, Loader2,
+  Eye, Bookmark, Image, Video, Layers, ExternalLink,
+  AlertCircle, Loader2, LogIn, LogOut,
 } from "lucide-react";
 
 type Post = {
@@ -30,6 +30,8 @@ type Profile = {
   profile_picture_url?: string;
   biography?: string;
 };
+
+type ConnectionStatus = "checking" | "connected" | "disconnected";
 
 function mediaTypeLabel(t: string) {
   if (t === "VIDEO") return "Reel";
@@ -62,7 +64,19 @@ function StatCard({
   );
 }
 
+function getOAuthError(code: string | null): string {
+  switch (code) {
+    case "auth_cancelled": return "Facebook login was cancelled.";
+    case "token_exchange": return "Could not exchange login code for a token. Try again.";
+    case "config": return "App is missing META_APP_ID or META_APP_SECRET in Replit Secrets.";
+    case "server": return "An unexpected server error occurred during login.";
+    default: return "Something went wrong. Please try connecting again.";
+  }
+}
+
 export default function AnalyticsPage() {
+  const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>("checking");
+  const [connectedName, setConnectedName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -70,7 +84,7 @@ export default function AnalyticsPage() {
   const [analysis, setAnalysis] = useState("");
   const [analysing, setAnalysing] = useState(false);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     setError("");
     setAnalysis("");
@@ -88,6 +102,54 @@ export default function AnalyticsPage() {
     } finally {
       setLoading(false);
     }
+  }, []);
+
+  // On mount: handle OAuth redirect params, then check connection status
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const connected = params.get("connected");
+    const errorCode = params.get("error");
+
+    if (connected || errorCode) {
+      window.history.replaceState({}, "", "/analytics");
+    }
+
+    if (errorCode) {
+      setError(getOAuthError(errorCode));
+      setConnectionStatus("disconnected");
+      return;
+    }
+
+    const checkStatus = async () => {
+      try {
+        const res = await fetch("/api/auth/instagram/status");
+        const data = await res.json();
+        if (data.connected) {
+          setConnectionStatus("connected");
+          setConnectedName(data.name || "");
+          fetchData();
+        } else {
+          setConnectionStatus("disconnected");
+          if (data.expired) {
+            setError("Your Instagram connection has expired. Please reconnect.");
+          }
+        }
+      } catch {
+        setConnectionStatus("disconnected");
+      }
+    };
+
+    checkStatus();
+  }, [fetchData]);
+
+  const disconnect = async () => {
+    await fetch("/api/auth/instagram/disconnect", { method: "POST" });
+    setConnectionStatus("disconnected");
+    setConnectedName("");
+    setProfile(null);
+    setPosts([]);
+    setAnalysis("");
+    setError("");
   };
 
   const runAnalysis = async () => {
@@ -122,7 +184,6 @@ export default function AnalyticsPage() {
     }
   };
 
-  // Compute stats
   const avgLikes = posts.length
     ? Math.round(posts.reduce((s, p) => s + p.like_count, 0) / posts.length)
     : 0;
@@ -160,7 +221,11 @@ export default function AnalyticsPage() {
               My Analytics
             </h1>
             <p className="mt-2 text-navy-500 text-base">
-              {profile ? `@${profile.username} · ${profile.followers_count?.toLocaleString()} followers` : "Connect your Instagram to get started"}
+              {profile
+                ? `@${profile.username} · ${profile.followers_count?.toLocaleString()} followers`
+                : connectionStatus === "connected"
+                ? `Connected as ${connectedName}`
+                : "Connect your Instagram to get started"}
             </p>
           </div>
           <div className="flex items-center gap-2 mt-1">
@@ -173,14 +238,25 @@ export default function AnalyticsPage() {
                 AI Analysis
               </button>
             )}
-            <button
-              onClick={fetchData}
-              disabled={loading}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-60"
-            >
-              {loading ? <Loader2 size={14} className="animate-spin" /> : <RefreshCw size={14} />}
-              {posts.length ? "Refresh" : "Connect Instagram"}
-            </button>
+            {connectionStatus === "connected" && (
+              <button
+                onClick={fetchData}
+                disabled={loading}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-60"
+              >
+                {loading ? <Loader2 size={14} className="animate-spin" /> : <RefreshCw size={14} />}
+                Refresh
+              </button>
+            )}
+            {connectionStatus === "connected" && (
+              <button
+                onClick={disconnect}
+                className="inline-flex items-center gap-2 px-4 py-2.5 border border-cream-300 text-navy-500 hover:text-navy-800 hover:border-navy-300 text-sm font-semibold rounded-xl transition-colors"
+              >
+                <LogOut size={14} />
+                Disconnect
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -192,38 +268,47 @@ export default function AnalyticsPage() {
           <div>
             <p className="text-sm font-semibold text-red-800">Error</p>
             <p className="text-xs text-red-600 mt-0.5">{error}</p>
-            {error.includes("permission") || error.includes("token") ? (
-              <p className="text-xs text-red-500 mt-2">
-                Regenerate your META_ACCESS_TOKEN with these permissions:{" "}
-                <code className="bg-red-100 px-1 rounded">instagram_basic</code>{" "}
-                <code className="bg-red-100 px-1 rounded">instagram_manage_insights</code>{" "}
-                <code className="bg-red-100 px-1 rounded">pages_read_engagement</code>{" "}
-                <code className="bg-red-100 px-1 rounded">pages_show_list</code>
-              </p>
-            ) : null}
           </div>
         </div>
       )}
 
-      {/* Empty state */}
-      {!profile && !loading && !error && (
+      {/* Checking connection */}
+      {connectionStatus === "checking" && (
+        <div className="flex items-center justify-center py-24">
+          <Loader2 size={20} className="animate-spin text-navy-300" />
+        </div>
+      )}
+
+      {/* Disconnected — connect prompt */}
+      {connectionStatus === "disconnected" && (
         <div className="bg-white border border-cream-200 rounded-2xl p-16 text-center shadow-sm">
-          <BarChart2 size={40} className="text-cream-300 mx-auto mb-4" />
-          <h2 className="font-serif text-xl font-bold text-navy-800 mb-2">Connect your Instagram</h2>
-          <p className="text-sm text-navy-400 max-w-sm mx-auto mb-8">
-            Fetch your recent post data and let AI analyse what&apos;s working — best times, top content types, and specific recommendations.
+          <div className="w-16 h-16 rounded-2xl bg-[#1877F2]/10 flex items-center justify-center mx-auto mb-5">
+            <svg viewBox="0 0 24 24" fill="#1877F2" className="w-8 h-8">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+            </svg>
+          </div>
+          <h2 className="font-serif text-2xl font-bold text-navy-800 mb-2">
+            Connect your Instagram
+          </h2>
+          <p className="text-sm text-navy-400 max-w-sm mx-auto mb-8 leading-relaxed">
+            Log in with Facebook to connect your Instagram Business or Creator account.
+            GinaOS will analyse your recent posts and tell you what&apos;s working.
           </p>
-          <button
-            onClick={fetchData}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold rounded-xl transition-colors"
+          <a
+            href="/api/auth/facebook"
+            className="inline-flex items-center gap-2.5 px-7 py-3.5 bg-[#1877F2] hover:bg-[#166FE5] text-white text-sm font-semibold rounded-xl transition-colors shadow-sm"
           >
-            <RefreshCw size={14} /> Fetch My Data
-          </button>
+            <LogIn size={15} />
+            Continue with Facebook
+          </a>
+          <p className="text-xs text-navy-300 mt-5">
+            You&apos;ll be redirected to Facebook to grant access, then brought back here automatically.
+          </p>
         </div>
       )}
 
       {/* Loading skeleton */}
-      {loading && (
+      {connectionStatus === "connected" && loading && (
         <div className="space-y-4">
           <div className="grid grid-cols-4 gap-4">
             {[...Array(4)].map((_, i) => (
@@ -369,7 +454,6 @@ export default function AnalyticsPage() {
                         {mediaTypeIcon(post.media_type)}
                       </div>
                     )}
-                    {/* Hover overlay */}
                     <div className="absolute inset-0 bg-navy-900/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1">
                       <div className="flex items-center gap-1 text-white text-xs font-semibold">
                         <Heart size={11} /> {post.like_count?.toLocaleString()}
@@ -388,7 +472,6 @@ export default function AnalyticsPage() {
                         </div>
                       ) : null}
                     </div>
-                    {/* Type badge */}
                     <div className="absolute top-1.5 left-1.5 flex items-center gap-0.5 px-1.5 py-0.5 bg-black/50 rounded text-white text-[9px] font-medium">
                       {mediaTypeIcon(post.media_type)}
                       <span className="ml-0.5">{mediaTypeLabel(post.media_type)}</span>
@@ -463,7 +546,6 @@ export default function AnalyticsPage() {
           </div>
         </>
       )}
-
     </div>
   );
 }

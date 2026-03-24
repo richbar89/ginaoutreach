@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 export async function GET(req: NextRequest) {
-  const accessToken = process.env.META_ACCESS_TOKEN;
+  const cookieStore = await cookies();
+  const cookieToken = cookieStore.get("ig_user_token")?.value;
+  const accessToken = cookieToken || process.env.META_ACCESS_TOKEN;
+
   if (!accessToken) {
-    return NextResponse.json({ error: "META_ACCESS_TOKEN not configured" }, { status: 500 });
+    return NextResponse.json({ error: "Not connected. Please connect your Instagram account." }, { status: 401 });
   }
 
   try {
