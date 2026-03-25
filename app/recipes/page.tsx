@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import NextImage from "next/image";
 import { useRouter } from "next/navigation";
 import {
   BookImage, Plus, Search, ExternalLink, Pencil, Trash2,
@@ -229,27 +230,12 @@ function RecipeModal({
 }
 
 function RecipeImage({ imageUrl, title }: { imageUrl?: string; title: string }) {
-  const isExternal = !!imageUrl?.startsWith("http");
-  const proxySrc = isExternal
-    ? `/api/recipe-image?url=${encodeURIComponent(imageUrl!)}`
-    : (imageUrl || "");
+  const [failed, setFailed] = useState(false);
 
-  const [src, setSrc] = useState(proxySrc);
-  const [attempt, setAttempt] = useState(0);
+  // Reset if imageUrl changes
+  useEffect(() => setFailed(false), [imageUrl]);
 
-  const handleError = () => {
-    if (attempt === 0 && isExternal) {
-      // Proxy failed → try direct with no-referrer
-      setSrc(imageUrl!);
-      setAttempt(1);
-    } else {
-      // All failed → show placeholder
-      setSrc("");
-      setAttempt(2);
-    }
-  };
-
-  if (!src) {
+  if (!imageUrl || failed) {
     return (
       <div className="w-full h-full flex items-center justify-center">
         <BookImage size={28} className="text-cream-300" />
@@ -257,14 +243,28 @@ function RecipeImage({ imageUrl, title }: { imageUrl?: string; title: string }) 
     );
   }
 
+  // Local file — plain img tag
+  if (!imageUrl.startsWith("http")) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={imageUrl}
+        alt={title}
+        onError={() => setFailed(true)}
+        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+      />
+    );
+  }
+
+  // External URL — use Next.js Image (fetches server-side, served from our domain)
   return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src={src}
+    <NextImage
+      src={imageUrl}
       alt={title}
-      referrerPolicy="no-referrer"
-      onError={handleError}
-      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+      fill
+      sizes="(max-width: 768px) 50vw, 25vw"
+      className="object-cover group-hover:scale-105 transition-transform duration-300"
+      onError={() => setFailed(true)}
     />
   );
 }
