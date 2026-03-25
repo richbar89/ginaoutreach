@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import NextImage from "next/image";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import {
   BookImage, Plus, Search, ExternalLink, Pencil, Trash2,
-  CalendarDays, Tag, X, Loader2, Download,
+  CalendarDays, Tag, X, Loader2, Download, ImagePlus,
 } from "lucide-react";
 import { getRecipes, upsertRecipe, deleteRecipe, saveRecipes } from "@/lib/storage";
 import type { Recipe } from "@/lib/types";
@@ -16,10 +15,9 @@ const CATEGORIES = [
   "Drinks", "Cocktails", "Other",
 ];
 
-const EMPTY: Omit<Recipe, "id" | "createdAt"> = {
+const EMPTY: Omit<Recipe, "id" | "createdAt" | "images" | "imageUrl"> = {
   title: "",
   url: "",
-  imageUrl: "",
   description: "",
   category: "Other",
   tags: [],
@@ -34,18 +32,21 @@ function RecipeModal({
   onSave: (r: Recipe) => void;
   onClose: () => void;
 }) {
-  const [form, setForm] = useState<Omit<Recipe, "id" | "createdAt">>(
+  // Stable ID for the lifetime of this modal (so uploads work before first save)
+  const [recipeId] = useState(() => initial?.id || crypto.randomUUID());
+  const [form, setForm] = useState<Omit<Recipe, "id" | "createdAt" | "images" | "imageUrl">>(
     initial ? {
       title: initial.title,
       url: initial.url,
-      imageUrl: initial.imageUrl || "",
       description: initial.description || "",
       category: initial.category,
       tags: initial.tags,
     } : { ...EMPTY }
   );
+  const [images, setImages] = useState<string[]>(initial?.images || []);
+  const [uploading, setUploading] = useState(false);
   const [tagInput, setTagInput] = useState("");
-  const [previewing, setPreviewing] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const set = (k: keyof typeof form, v: string | string[]) =>
     setForm((p) => ({ ...p, [k]: v }));
@@ -61,11 +62,44 @@ function RecipeModal({
   const removeTag = (t: string) =>
     set("tags", form.tags.filter((x) => x !== t));
 
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    setUploading(true);
+    try {
+      const uploaded: string[] = [];
+      for (const file of files) {
+        const fd = new FormData();
+        fd.append("file", file);
+        fd.append("recipeId", recipeId);
+        const res = await fetch("/api/upload-recipe-image", { method: "POST", body: fd });
+        if (res.ok) {
+          const data = await res.json();
+          uploaded.push(data.path);
+        }
+      }
+      setImages((prev) => [...prev, ...uploaded]);
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  const handleRemoveImage = async (path: string, index: number) => {
+    setImages((prev) => prev.filter((_, i) => i !== index));
+    const filename = path.split("/").pop() || "";
+    await fetch(
+      `/api/upload-recipe-image?recipeId=${recipeId}&filename=${encodeURIComponent(filename)}`,
+      { method: "DELETE" }
+    );
+  };
+
   const handleSave = () => {
     if (!form.title.trim()) return;
     onSave({
       ...form,
-      id: initial?.id || crypto.randomUUID(),
+      images,
+      id: recipeId,
       createdAt: initial?.createdAt || new Date().toISOString(),
     });
   };
@@ -110,37 +144,55 @@ function RecipeModal({
             />
           </div>
 
-          {/* Image URL */}
+          {/* Photos */}
           <div>
             <label className="block text-xs font-semibold text-navy-600 mb-1.5 uppercase tracking-wide">
-              Image URL
+              Photos
             </label>
-            <div className="flex gap-2">
-              <input
-                value={form.imageUrl}
-                onChange={(e) => { set("imageUrl", e.target.value); setPreviewing(false); }}
-                placeholder="https://... (right-click image on website → Copy Image Address)"
-                type="url"
-                className="flex-1 px-3.5 py-2.5 border border-cream-200 rounded-xl text-sm text-navy-800 placeholder-navy-300 focus:outline-none focus:ring-2 focus:ring-coral-300 focus:border-transparent"
-              />
-              {form.imageUrl && (
-                <button
-                  onClick={() => setPreviewing((p) => !p)}
-                  className="px-3 py-2 border border-cream-200 rounded-xl text-xs text-navy-500 hover:border-navy-300 transition-colors"
-                >
-                  {previewing ? "Hide" : "Preview"}
-                </button>
-              )}
-            </div>
-            {previewing && form.imageUrl && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={form.imageUrl}
-                alt=""
-                className="mt-2 h-32 w-full object-cover rounded-xl border border-cream-200"
-                onError={() => setPreviewing(false)}
-              />
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleUpload}
+              className="hidden"
+            />
+            {images.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-2">
+                {images.map((src, i) => (
+                  <div
+                    key={src}
+                    className="relative group w-20 h-20 rounded-xl overflow-hidden border border-cream-200 flex-shrink-0"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={src} alt="" className="w-full h-full object-cover" />
+                    <button
+                      onClick={() => handleRemoveImage(src, i)}
+                      className="absolute inset-0 flex items-center justify-center bg-navy-900/60 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <X size={16} className="text-white" />
+                    </button>
+                    {i === 0 && (
+                      <span className="absolute bottom-1 left-1 text-[9px] font-bold bg-white/90 text-navy-700 px-1 rounded">
+                        Cover
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
             )}
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploading}
+              className="inline-flex items-center gap-2 px-4 py-2.5 border border-dashed border-cream-300 hover:border-coral-300 hover:bg-coral-50 text-navy-500 hover:text-coral-600 text-sm rounded-xl transition-colors disabled:opacity-60"
+            >
+              {uploading ? <Loader2 size={14} className="animate-spin" /> : <ImagePlus size={14} />}
+              {uploading ? "Uploading…" : "Add Photos"}
+            </button>
+            <p className="mt-1.5 text-[11px] text-navy-400">
+              Stored on GinaOS — right-click any thumbnail to save for Stories. First photo is the cover.
+            </p>
           </div>
 
           {/* Category */}
@@ -229,13 +281,14 @@ function RecipeModal({
   );
 }
 
-function RecipeImage({ imageUrl, title }: { imageUrl?: string; title: string }) {
+function RecipeImage({ imageUrl, images, title }: { imageUrl?: string; images?: string[]; title: string }) {
+  // Prefer first uploaded image, fall back to legacy imageUrl
+  const src = images?.[0] || imageUrl;
   const [failed, setFailed] = useState(false);
 
-  // Reset if imageUrl changes
-  useEffect(() => setFailed(false), [imageUrl]);
+  useEffect(() => setFailed(false), [src]);
 
-  if (!imageUrl || failed) {
+  if (!src || failed) {
     return (
       <div className="w-full h-full flex items-center justify-center">
         <BookImage size={28} className="text-cream-300" />
@@ -243,28 +296,14 @@ function RecipeImage({ imageUrl, title }: { imageUrl?: string; title: string }) 
     );
   }
 
-  // Local file — plain img tag
-  if (!imageUrl.startsWith("http")) {
-    return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
-        src={imageUrl}
-        alt={title}
-        onError={() => setFailed(true)}
-        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-      />
-    );
-  }
-
-  // External URL — use Next.js Image (fetches server-side, served from our domain)
+  // All uploaded images are local paths (not http)
   return (
-    <NextImage
-      src={imageUrl}
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
       alt={title}
-      fill
-      sizes="(max-width: 768px) 50vw, 25vw"
-      className="object-cover group-hover:scale-105 transition-transform duration-300"
       onError={() => setFailed(true)}
+      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
     />
   );
 }
@@ -274,21 +313,76 @@ function RecipeCard({
   onEdit,
   onDelete,
   onSchedule,
+  onUploadImage,
 }: {
   recipe: Recipe;
   onEdit: () => void;
   onDelete: () => void;
   onSchedule: () => void;
+  onUploadImage: (file: File) => Promise<void>;
 }) {
+  const [uploading, setUploading] = useState(false);
+  const cardFileRef = useRef<HTMLInputElement>(null);
+  // Only count locally-uploaded images — broken imageUrl from imports doesn't count
+  const hasImage = (recipe.images?.length ?? 0) > 0;
+
+  const handleCardUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      await onUploadImage(file);
+    } finally {
+      setUploading(false);
+      if (cardFileRef.current) cardFileRef.current.value = "";
+    }
+  };
+
   return (
     <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm group hover:shadow-md transition-shadow">
       {/* Thumbnail */}
       <div className="aspect-[4/3] bg-cream-100 overflow-hidden relative">
-        <RecipeImage imageUrl={recipe.imageUrl} title={recipe.title} />
+        <RecipeImage imageUrl={recipe.imageUrl} images={recipe.images} title={recipe.title} />
         {/* Category chip */}
         <span className="absolute top-2 left-2 px-2 py-0.5 bg-white/90 backdrop-blur-sm text-navy-700 text-[10px] font-semibold rounded-lg">
           {recipe.category}
         </span>
+        {/* Upload overlay */}
+        <input
+          ref={cardFileRef}
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={handleCardUpload}
+          className="hidden"
+        />
+        {!hasImage ? (
+          // No image yet — show prominent upload prompt
+          <button
+            onClick={() => cardFileRef.current?.click()}
+            disabled={uploading}
+            className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-cream-50/80 hover:bg-coral-50/80 transition-colors"
+          >
+            {uploading
+              ? <Loader2 size={20} className="text-coral-400 animate-spin" />
+              : <ImagePlus size={20} className="text-coral-400" />}
+            <span className="text-[11px] font-semibold text-coral-500">
+              {uploading ? "Uploading…" : "Add Photo"}
+            </span>
+          </button>
+        ) : (
+          // Has image — always-visible camera button bottom-right
+          <button
+            onClick={() => cardFileRef.current?.click()}
+            disabled={uploading}
+            title="Add more photos"
+            className="absolute bottom-2 right-2 p-1.5 rounded-lg bg-white/90 backdrop-blur-sm text-navy-500 hover:text-coral-500 transition-colors disabled:opacity-60"
+          >
+            {uploading
+              ? <Loader2 size={13} className="animate-spin" />
+              : <ImagePlus size={13} />}
+          </button>
+        )}
       </div>
 
       {/* Content */}
@@ -408,6 +502,18 @@ export default function RecipesPage() {
 
   const handleSchedule = (recipe: Recipe) => {
     router.push(`/scheduler?recipeId=${recipe.id}&recipeTitle=${encodeURIComponent(recipe.title)}`);
+  };
+
+  const handleCardUpload = async (recipe: Recipe, file: File) => {
+    const fd = new FormData();
+    fd.append("file", file);
+    fd.append("recipeId", recipe.id);
+    const res = await fetch("/api/upload-recipe-image", { method: "POST", body: fd });
+    if (res.ok) {
+      const { path } = await res.json();
+      upsertRecipe({ ...recipe, images: [...(recipe.images || []), path] });
+      setRecipes(getRecipes());
+    }
   };
 
   const categories = ["All", ...Array.from(new Set(recipes.map((r) => r.category)))];
@@ -544,6 +650,7 @@ export default function RecipesPage() {
               onEdit={() => setEditingRecipe(recipe)}
               onDelete={() => handleDelete(recipe.id)}
               onSchedule={() => handleSchedule(recipe)}
+              onUploadImage={(file) => handleCardUpload(recipe, file)}
             />
           ))}
         </div>

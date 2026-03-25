@@ -78,6 +78,7 @@ export type Recipe = {
     title: string;
     url: string;
     imageUrl?: string;
+    images?: string[];      // uploaded local paths, e.g. /recipe-images/[id]/photo.jpg
     description?: string;
     category: string;
     tags: string[];
