@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile, mkdir, unlink } from "node:fs/promises";
-import { join, basename } from "node:path";
+import { basename } from "node:path";
+import { getSupabase } from "@/lib/supabase";
 
-const DIR = (recipeId: string) =>
-  join(process.cwd(), "public", "recipe-images", recipeId);
+const BUCKET = "recipe-images";
 
 export async function POST(req: NextRequest) {
   const formData = await req.formData();
@@ -14,15 +13,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Missing file or recipeId" }, { status: 400 });
   }
 
-  // Sanitise filename: timestamp prefix + stripped original name
   const safeName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
-  const dir = DIR(recipeId);
-  await mkdir(dir, { recursive: true });
+  const storagePath = `${recipeId}/${safeName}`;
 
-  const buffer = Buffer.from(await file.arrayBuffer());
-  await writeFile(join(dir, safeName), buffer);
+  const supabase = getSupabase();
+  const { error } = await supabase.storage
+    .from(BUCKET)
+    .upload(storagePath, file, { contentType: file.type, upsert: false });
 
-  return NextResponse.json({ path: `/api/uploaded-image/${recipeId}/${safeName}` });
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  const { data } = supabase.storage.from(BUCKET).getPublicUrl(storagePath);
+  return NextResponse.json({ path: data.publicUrl });
 }
 
 export async function DELETE(req: NextRequest) {
@@ -33,14 +35,10 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: "Missing params" }, { status: 400 });
   }
 
-  // Prevent path traversal
-  const safe = basename(filename);
-  const filePath = join(DIR(recipeId), safe);
+  const storagePath = `${recipeId}/${basename(filename)}`;
+  const supabase = getSupabase();
+  const { error } = await supabase.storage.from(BUCKET).remove([storagePath]);
 
-  try {
-    await unlink(filePath);
-    return NextResponse.json({ ok: true });
-  } catch {
-    return NextResponse.json({ error: "File not found" }, { status: 404 });
-  }
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  return NextResponse.json({ ok: true });
 }
