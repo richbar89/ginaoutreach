@@ -589,8 +589,8 @@ export default function RecipesPage() {
       setImportMsg(
         `Done — ${imported.length} recipes imported. ${newCount > 0 ? `${newCount} new.` : "All up to date."}`
       );
-    } catch {
-      setImportMsg("Import failed. Check your connection.");
+    } catch (err) {
+      setImportMsg(`Import failed: ${err instanceof Error ? err.message : String(err)}`);
     } finally {
       setImporting(false);
     }
