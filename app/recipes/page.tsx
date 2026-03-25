@@ -246,7 +246,11 @@ function RecipeCard({
         {recipe.imageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={recipe.imageUrl}
+            src={
+              recipe.imageUrl.startsWith("http")
+                ? `/api/recipe-image?url=${encodeURIComponent(recipe.imageUrl)}`
+                : recipe.imageUrl
+            }
             alt={recipe.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
@@ -415,7 +419,7 @@ export default function RecipesPage() {
               className="inline-flex items-center gap-2 px-5 py-2.5 border border-cream-300 hover:border-navy-300 text-navy-600 hover:text-navy-900 text-sm font-semibold rounded-xl transition-colors disabled:opacity-60"
             >
               {importing ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
-              {importing ? "Downloading images…" : "Import from Website"}
+              {importing ? "Importing…" : "Import from Website"}
             </button>
             <button
               onClick={() => setEditingRecipe("new")}
@@ -431,7 +435,7 @@ export default function RecipesPage() {
       {importing && (
         <div className="mb-4 px-4 py-3 rounded-xl text-sm font-medium bg-amber-50 text-amber-700 border border-amber-200 flex items-center gap-2">
           <Loader2 size={14} className="animate-spin flex-shrink-0" />
-          Downloading all recipe images — this takes about 60 seconds. Don&apos;t close the tab.
+          Fetching recipes from ginabnutrition.com…
         </div>
       )}
       {!importing && importMsg && (
