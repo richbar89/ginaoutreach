@@ -81,25 +81,26 @@ export function deleteScheduledPost(id: string): void {
 
 // ── Recipes ─────────────────────────────────────────────────
 
-export function getRecipes(): Recipe[] {
-  if (typeof window === "undefined") return [];
-  return JSON.parse(localStorage.getItem("ginaos_recipes") || "[]");
+export async function getRecipes(): Promise<Recipe[]> {
+  try {
+    const res = await fetch("/api/recipes");
+    if (!res.ok) return [];
+    return res.json();
+  } catch {
+    return [];
+  }
 }
 
-export function saveRecipes(recipes: Recipe[]): void {
-  localStorage.setItem("ginaos_recipes", JSON.stringify(recipes));
+export async function upsertRecipe(recipe: Recipe): Promise<void> {
+  await fetch("/api/recipes", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(recipe),
+  });
 }
 
-export function upsertRecipe(recipe: Recipe): void {
-  const all = getRecipes();
-  const idx = all.findIndex((r) => r.id === recipe.id);
-  if (idx >= 0) all[idx] = recipe;
-  else all.unshift(recipe);
-  saveRecipes(all);
-}
-
-export function deleteRecipe(id: string): void {
-  saveRecipes(getRecipes().filter((r) => r.id !== id));
+export async function deleteRecipe(id: string): Promise<void> {
+  await fetch(`/api/recipes/${id}`, { method: "DELETE" });
 }
 
 // ── Merge tags ─────────────────────────────────────────────

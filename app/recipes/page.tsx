@@ -6,7 +6,7 @@ import {
   BookImage, Plus, Search, ExternalLink, Pencil, Trash2,
   CalendarDays, Tag, X, Loader2, Download, ImagePlus,
 } from "lucide-react";
-import { getRecipes, upsertRecipe, deleteRecipe, saveRecipes } from "@/lib/storage";
+import { getRecipes, upsertRecipe, deleteRecipe } from "@/lib/storage";
 import type { Recipe } from "@/lib/types";
 
 const CATEGORIES = [
@@ -533,8 +533,32 @@ export default function RecipesPage() {
   const [importMsg, setImportMsg] = useState("");
 
   useEffect(() => {
-    setRecipes(getRecipes());
-    setMounted(true);
+    const init = async () => {
+      // One-time migration: push any localStorage recipes into the DB
+      try {
+        const local = localStorage.getItem("ginaos_recipes");
+        if (local) {
+          const localRecipes = JSON.parse(local) as Recipe[];
+          if (localRecipes.length > 0) {
+            const db = await getRecipes();
+            const dbIds = new Set(db.map((r) => r.id));
+            const toMigrate = localRecipes.filter((r) => !dbIds.has(r.id));
+            if (toMigrate.length > 0) {
+              const BATCH = 20;
+              for (let i = 0; i < toMigrate.length; i += BATCH) {
+                await Promise.all(toMigrate.slice(i, i + BATCH).map(upsertRecipe));
+              }
+            }
+            localStorage.removeItem("ginaos_recipes");
+          }
+        }
+      } catch (e) {
+        console.error("Migration error:", e);
+      }
+      setRecipes(await getRecipes());
+      setMounted(true);
+    };
+    init();
   }, []);
 
   const handleImport = async () => {
@@ -543,21 +567,26 @@ export default function RecipesPage() {
     try {
       const res = await fetch("/api/import-recipes");
       const data = await res.json();
-      if (data.error) {
-        setImportMsg(`Error: ${data.error}`);
-        return;
-      }
-      // Merge: overwrite existing recipes by URL (so re-import always refreshes images)
-      const existing = getRecipes();
+      if (data.error) { setImportMsg(`Error: ${data.error}`); return; }
+
       const imported = data.recipes as Recipe[];
-      const importedByUrl = new Map(imported.map((r) => [r.url, r]));
-      // Keep manual entries that aren't from the site, update everything from the import
-      const kept = existing.filter((r) => !importedByUrl.has(r.url));
-      saveRecipes([...kept, ...imported]);
-      setRecipes(getRecipes());
-      const added = imported.length - (existing.length - kept.length);
+      const existing = await getRecipes();
+
+      // Delete existing recipes whose URLs are being replaced by the import
+      const importedUrls = new Set(imported.map((r) => r.url));
+      const toDelete = existing.filter((r) => importedUrls.has(r.url));
+      await Promise.all(toDelete.map((r) => deleteRecipe(r.id)));
+
+      // Upsert all imported recipes in batches
+      const BATCH = 20;
+      for (let i = 0; i < imported.length; i += BATCH) {
+        await Promise.all(imported.slice(i, i + BATCH).map(upsertRecipe));
+      }
+
+      setRecipes(await getRecipes());
+      const newCount = imported.length - toDelete.length;
       setImportMsg(
-        `Done — ${imported.length} recipes imported. ${added > 0 ? `${added} new.` : "All up to date."}`
+        `Done — ${imported.length} recipes imported. ${newCount > 0 ? `${newCount} new.` : "All up to date."}`
       );
     } catch {
       setImportMsg("Import failed. Check your connection.");
@@ -566,16 +595,16 @@ export default function RecipesPage() {
     }
   };
 
-  const handleSave = (recipe: Recipe) => {
-    upsertRecipe(recipe);
-    setRecipes(getRecipes());
+  const handleSave = async (recipe: Recipe) => {
+    await upsertRecipe(recipe);
+    setRecipes(await getRecipes());
     setEditingRecipe(null);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (!confirm("Delete this recipe?")) return;
-    deleteRecipe(id);
-    setRecipes(getRecipes());
+    await deleteRecipe(id);
+    setRecipes(await getRecipes());
   };
 
   const handleSchedule = (recipe: Recipe) => {
@@ -595,16 +624,16 @@ export default function RecipesPage() {
       }
     }
     if (uploaded.length) {
-      upsertRecipe({ ...recipe, images: [...(recipe.images || []), ...uploaded] });
-      setRecipes(getRecipes());
+      await upsertRecipe({ ...recipe, images: [...(recipe.images || []), ...uploaded] });
+      setRecipes(await getRecipes());
     }
   };
 
   const handleRemoveImage = async (recipe: Recipe, index: number) => {
     const images = recipe.images || [];
     const path = images[index];
-    upsertRecipe({ ...recipe, images: images.filter((_, i) => i !== index) });
-    setRecipes(getRecipes());
+    await upsertRecipe({ ...recipe, images: images.filter((_, i) => i !== index) });
+    setRecipes(await getRecipes());
     if (path) {
       const filename = path.split("/").pop() || "";
       await fetch(
