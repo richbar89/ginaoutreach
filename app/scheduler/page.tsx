@@ -337,9 +337,8 @@ function SchedulerInner() {
 
   useEffect(() => {
     const allPosts = getScheduledPosts();
-    const allRecipes = getRecipes();
     setPosts(allPosts);
-    setRecipes(allRecipes);
+    getRecipes().then((r) => setRecipes(r));
     setMounted(true);
 
     // Handle ?recipeId=... from recipe library
