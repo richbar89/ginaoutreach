@@ -339,7 +339,7 @@ function GalleryModal({
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex flex-col bg-navy-950">
+    <div className="fixed inset-0 z-[100] flex flex-col bg-navy-900">
       {/* Header */}
       <div className="flex items-center gap-3 px-4 py-4 bg-white border-b border-cream-100 flex-shrink-0">
         <button
@@ -544,10 +544,20 @@ export default function RecipesPage() {
   const [search, setSearch] = useState("");
   const [filterCategory, setFilterCategory] = useState("All");
   const [editingRecipe, setEditingRecipe] = useState<Recipe | null | "new">(null);
-  const [galleryRecipeId, setGalleryRecipeId] = useState<string | null>(null);
+  const [galleryRecipe, setGalleryRecipe] = useState<Recipe | null>(null);
   const [mounted, setMounted] = useState(false);
   const [importing, setImporting] = useState(false);
   const [importMsg, setImportMsg] = useState("");
+
+  // Keep gallery in sync when recipes update (e.g. after image upload)
+  useEffect(() => {
+    if (galleryRecipe) {
+      const fresh = recipes.find(r => r.id === galleryRecipe.id);
+      if (fresh) setGalleryRecipe(fresh);
+      else setGalleryRecipe(null);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [recipes]);
 
   useEffect(() => {
     const init = async () => {
@@ -799,7 +809,7 @@ export default function RecipesPage() {
               onDelete={() => handleDelete(recipe.id)}
               onSchedule={() => handleSchedule(recipe)}
               onUploadImage={(files) => handleCardUpload(recipe, files)}
-              onOpenGallery={() => setGalleryRecipeId(recipe.id)}
+              onOpenGallery={() => setGalleryRecipe(recipe)}
             />
           ))}
         </div>
@@ -814,19 +824,14 @@ export default function RecipesPage() {
         />
       )}
 
-      {/* Gallery modal — reads fresh recipe from state on every render */}
-      {galleryRecipeId && (() => {
-        const gr = recipes.find(r => r.id === galleryRecipeId);
-        if (!gr) return null;
-        return (
-          <GalleryModal
-            recipe={gr}
-            onClose={() => setGalleryRecipeId(null)}
-            onAddImages={(files) => handleCardUpload(gr, files)}
-            onRemoveImage={(index) => handleRemoveImage(gr, index)}
-          />
-        );
-      })()}
+      {galleryRecipe && (
+        <GalleryModal
+          recipe={galleryRecipe}
+          onClose={() => setGalleryRecipe(null)}
+          onAddImages={(files) => handleCardUpload(galleryRecipe, files)}
+          onRemoveImage={(index) => handleRemoveImage(galleryRecipe, index)}
+        />
+      )}
     </div>
   );
 }
