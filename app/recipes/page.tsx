@@ -246,11 +246,7 @@ function RecipeCard({
         {recipe.imageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={
-              recipe.imageUrl.startsWith("http")
-                ? `/api/recipe-image?url=${encodeURIComponent(recipe.imageUrl)}`
-                : recipe.imageUrl
-            }
+            src={recipe.imageUrl}
             alt={recipe.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
@@ -349,13 +345,18 @@ export default function RecipesPage() {
         setImportMsg(`Error: ${data.error}`);
         return;
       }
-      // Merge: keep existing recipes, add imported ones that don't already exist (by URL)
+      // Merge: overwrite existing recipes by URL (so re-import always refreshes images)
       const existing = getRecipes();
-      const existingUrls = new Set(existing.map((r: Recipe) => r.url));
-      const newOnes = (data.recipes as Recipe[]).filter((r) => !existingUrls.has(r.url));
-      saveRecipes([...existing, ...newOnes]);
+      const imported = data.recipes as Recipe[];
+      const importedByUrl = new Map(imported.map((r) => [r.url, r]));
+      // Keep manual entries that aren't from the site, update everything from the import
+      const kept = existing.filter((r) => !importedByUrl.has(r.url));
+      saveRecipes([...kept, ...imported]);
       setRecipes(getRecipes());
-      setImportMsg(`Imported ${newOnes.length} recipes (${data.count} found on site).`);
+      const added = imported.length - (existing.length - kept.length);
+      setImportMsg(
+        `Done — ${imported.length} recipes imported. ${added > 0 ? `${added} new.` : "All up to date."}`
+      );
     } catch {
       setImportMsg("Import failed. Check your connection.");
     } finally {
@@ -435,7 +436,7 @@ export default function RecipesPage() {
       {importing && (
         <div className="mb-4 px-4 py-3 rounded-xl text-sm font-medium bg-amber-50 text-amber-700 border border-amber-200 flex items-center gap-2">
           <Loader2 size={14} className="animate-spin flex-shrink-0" />
-          Fetching recipes from ginabnutrition.com…
+          Downloading all recipe images to GinaOS — takes about 60 seconds. Don&apos;t close the tab.
         </div>
       )}
       {!importing && importMsg && (
