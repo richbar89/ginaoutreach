@@ -31,11 +31,6 @@ async function downloadImage(remoteUrl: string, id: string): Promise<string> {
   if (!remoteUrl) return "";
   try {
     const res = await fetch(remoteUrl, {
-      headers: {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        "Referer": "https://ginabnutrition.com/",
-        "Accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
-      },
       signal: AbortSignal.timeout(15000),
     });
 
