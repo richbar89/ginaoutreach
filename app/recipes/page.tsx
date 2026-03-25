@@ -400,17 +400,16 @@ function RecipeCard({
   onDelete,
   onSchedule,
   onUploadImage,
-  onRemoveImage,
+  onOpenGallery,
 }: {
   recipe: Recipe;
   onEdit: () => void;
   onDelete: () => void;
   onSchedule: () => void;
   onUploadImage: (files: FileList) => Promise<void>;
-  onRemoveImage: (index: number) => Promise<void>;
+  onOpenGallery: () => void;
 }) {
   const [uploading, setUploading] = useState(false);
-  const [showGallery, setShowGallery] = useState(false);
   const cardFileRef = useRef<HTMLInputElement>(null);
   const images = recipe.images || [];
   const hasImage = images.length > 0;
@@ -423,7 +422,6 @@ function RecipeCard({
   };
 
   return (
-    <>
     <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm group hover:shadow-md transition-shadow">
       {/* Thumbnail */}
       <div className="aspect-[4/3] bg-cream-100 overflow-hidden relative">
@@ -446,18 +444,12 @@ function RecipeCard({
         ) : (
           // Has images — tap thumbnail to open gallery
           <>
-            <button
-              onClick={() => setShowGallery(true)}
-              className="absolute inset-0"
-              aria-label="View photos"
-            />
-            {/* Photo count badge */}
+            <button onClick={onOpenGallery} className="absolute inset-0" aria-label="View photos" />
             {images.length > 1 && (
               <span className="absolute bottom-2 left-2 flex items-center gap-1 px-2 py-1 bg-navy-900/70 text-white text-[10px] font-semibold rounded-lg pointer-events-none">
                 <BookImage size={10} /> {images.length} photos
               </span>
             )}
-            {/* Download cover */}
             <a
               href={`${images[0]}?dl=1`}
               download
@@ -526,15 +518,6 @@ function RecipeCard({
         </div>
       </div>
     </div>
-    {showGallery && (
-      <GalleryModal
-        recipe={recipe}
-        onClose={() => setShowGallery(false)}
-        onAddImages={onUploadImage}
-        onRemoveImage={onRemoveImage}
-      />
-    )}
-    </>
   );
 }
 
@@ -544,6 +527,7 @@ export default function RecipesPage() {
   const [search, setSearch] = useState("");
   const [filterCategory, setFilterCategory] = useState("All");
   const [editingRecipe, setEditingRecipe] = useState<Recipe | null | "new">(null);
+  const [galleryRecipeId, setGalleryRecipeId] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
   const [importing, setImporting] = useState(false);
   const [importMsg, setImportMsg] = useState("");
@@ -765,13 +749,13 @@ export default function RecipesPage() {
               onDelete={() => handleDelete(recipe.id)}
               onSchedule={() => handleSchedule(recipe)}
               onUploadImage={(files) => handleCardUpload(recipe, files)}
-              onRemoveImage={(index) => handleRemoveImage(recipe, index)}
+              onOpenGallery={() => setGalleryRecipeId(recipe.id)}
             />
           ))}
         </div>
       )}
 
-      {/* Modal */}
+      {/* Edit modal */}
       {editingRecipe !== null && (
         <RecipeModal
           initial={editingRecipe === "new" ? undefined : editingRecipe}
@@ -779,6 +763,20 @@ export default function RecipesPage() {
           onClose={() => setEditingRecipe(null)}
         />
       )}
+
+      {/* Gallery modal — reads fresh recipe from state on every render */}
+      {galleryRecipeId && (() => {
+        const gr = recipes.find(r => r.id === galleryRecipeId);
+        if (!gr) return null;
+        return (
+          <GalleryModal
+            recipe={gr}
+            onClose={() => setGalleryRecipeId(null)}
+            onAddImages={(files) => handleCardUpload(gr, files)}
+            onRemoveImage={(index) => handleRemoveImage(gr, index)}
+          />
+        );
+      })()}
     </div>
   );
 }
