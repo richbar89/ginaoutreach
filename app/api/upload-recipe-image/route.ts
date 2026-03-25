@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
   const buffer = Buffer.from(await file.arrayBuffer());
   await writeFile(join(dir, safeName), buffer);
 
-  return NextResponse.json({ path: `/recipe-images/${recipeId}/${safeName}` });
+  return NextResponse.json({ path: `/api/uploaded-image/${recipeId}/${safeName}` });
 }
 
 export async function DELETE(req: NextRequest) {
