@@ -320,22 +320,33 @@ function GalleryModal({
   onRemoveImage: (index: number) => Promise<void>;
 }) {
   const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
   const images = recipe.images || [];
 
   const handleFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files?.length) return;
     setUploading(true);
-    try { await onAddImages(e.target.files); }
-    finally { setUploading(false); if (fileRef.current) fileRef.current.value = ""; }
+    setUploadError("");
+    try {
+      await onAddImages(e.target.files);
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : "Upload failed");
+    } finally {
+      setUploading(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-navy-950/95 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[100] flex flex-col bg-navy-950">
       {/* Header */}
-      <div className="flex items-center gap-3 px-4 py-3 bg-white border-b border-cream-100 flex-shrink-0">
-        <button onClick={onClose} className="p-1.5 text-navy-400 hover:text-navy-700 flex-shrink-0">
-          <X size={20} />
+      <div className="flex items-center gap-3 px-4 py-4 bg-white border-b border-cream-100 flex-shrink-0">
+        <button
+          onClick={onClose}
+          className="flex items-center gap-2 px-4 py-2.5 bg-navy-100 hover:bg-navy-200 active:bg-navy-300 text-navy-700 text-sm font-semibold rounded-xl flex-shrink-0 transition-colors"
+        >
+          <X size={16} /> Close
         </button>
         <h3 className="font-serif font-bold text-navy-900 text-base truncate flex-1">
           {recipe.title}
@@ -344,12 +355,18 @@ function GalleryModal({
         <button
           onClick={() => fileRef.current?.click()}
           disabled={uploading}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-coral-500 hover:bg-coral-600 text-white text-xs font-semibold rounded-lg flex-shrink-0 disabled:opacity-60"
+          className="inline-flex items-center gap-1.5 px-3 py-2.5 bg-coral-500 hover:bg-coral-600 active:bg-coral-700 text-white text-xs font-semibold rounded-xl flex-shrink-0 disabled:opacity-60"
         >
           {uploading ? <Loader2 size={12} className="animate-spin" /> : <ImagePlus size={12} />}
           {uploading ? "Uploading…" : "Add Photos"}
         </button>
       </div>
+
+      {uploadError && (
+        <div className="px-4 py-2 bg-red-50 border-b border-red-200 text-red-700 text-xs font-medium flex-shrink-0">
+          {uploadError}
+        </div>
+      )}
 
       {/* Grid */}
       <div className="flex-1 overflow-y-auto p-4">
@@ -622,6 +639,9 @@ export default function RecipesPage() {
       if (res.ok) {
         const { path } = await res.json();
         uploaded.push(path);
+      } else {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error ?? `Upload failed (${res.status})`);
       }
     }
     if (uploaded.length) {
