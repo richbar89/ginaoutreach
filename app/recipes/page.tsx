@@ -228,6 +228,47 @@ function RecipeModal({
   );
 }
 
+function RecipeImage({ imageUrl, title }: { imageUrl?: string; title: string }) {
+  const isExternal = !!imageUrl?.startsWith("http");
+  const proxySrc = isExternal
+    ? `/api/recipe-image?url=${encodeURIComponent(imageUrl!)}`
+    : (imageUrl || "");
+
+  const [src, setSrc] = useState(proxySrc);
+  const [attempt, setAttempt] = useState(0);
+
+  const handleError = () => {
+    if (attempt === 0 && isExternal) {
+      // Proxy failed → try direct with no-referrer
+      setSrc(imageUrl!);
+      setAttempt(1);
+    } else {
+      // All failed → show placeholder
+      setSrc("");
+      setAttempt(2);
+    }
+  };
+
+  if (!src) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <BookImage size={28} className="text-cream-300" />
+      </div>
+    );
+  }
+
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
+      alt={title}
+      referrerPolicy="no-referrer"
+      onError={handleError}
+      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+    />
+  );
+}
+
 function RecipeCard({
   recipe,
   onEdit,
@@ -243,19 +284,7 @@ function RecipeCard({
     <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm group hover:shadow-md transition-shadow">
       {/* Thumbnail */}
       <div className="aspect-[4/3] bg-cream-100 overflow-hidden relative">
-        {recipe.imageUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={recipe.imageUrl}
-            alt={recipe.title}
-            referrerPolicy="no-referrer"
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <BookImage size={28} className="text-cream-300" />
-          </div>
-        )}
+        <RecipeImage imageUrl={recipe.imageUrl} title={recipe.title} />
         {/* Category chip */}
         <span className="absolute top-2 left-2 px-2 py-0.5 bg-white/90 backdrop-blur-sm text-navy-700 text-[10px] font-semibold rounded-lg">
           {recipe.category}
