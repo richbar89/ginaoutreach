@@ -308,37 +308,122 @@ function RecipeImage({ imageUrl, images, title }: { imageUrl?: string; images?: 
   );
 }
 
+function GalleryModal({
+  recipe,
+  onClose,
+  onAddImages,
+  onRemoveImage,
+}: {
+  recipe: Recipe;
+  onClose: () => void;
+  onAddImages: (files: FileList) => Promise<void>;
+  onRemoveImage: (index: number) => Promise<void>;
+}) {
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const images = recipe.images || [];
+
+  const handleFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files?.length) return;
+    setUploading(true);
+    try { await onAddImages(e.target.files); }
+    finally { setUploading(false); if (fileRef.current) fileRef.current.value = ""; }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex flex-col bg-navy-950/95 backdrop-blur-sm">
+      {/* Header */}
+      <div className="flex items-center gap-3 px-4 py-3 bg-white border-b border-cream-100 flex-shrink-0">
+        <button onClick={onClose} className="p-1.5 text-navy-400 hover:text-navy-700 flex-shrink-0">
+          <X size={20} />
+        </button>
+        <h3 className="font-serif font-bold text-navy-900 text-base truncate flex-1">
+          {recipe.title}
+        </h3>
+        <input ref={fileRef} type="file" accept="image/*" multiple onChange={handleFiles} className="hidden" />
+        <button
+          onClick={() => fileRef.current?.click()}
+          disabled={uploading}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-coral-500 hover:bg-coral-600 text-white text-xs font-semibold rounded-lg flex-shrink-0 disabled:opacity-60"
+        >
+          {uploading ? <Loader2 size={12} className="animate-spin" /> : <ImagePlus size={12} />}
+          {uploading ? "Uploading…" : "Add Photos"}
+        </button>
+      </div>
+
+      {/* Grid */}
+      <div className="flex-1 overflow-y-auto p-4">
+        {images.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-full gap-3 text-white/40">
+            <BookImage size={40} />
+            <p className="text-sm">No photos yet — tap Add Photos above</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {images.map((src, i) => (
+              <div key={src} className="relative aspect-square rounded-xl overflow-hidden bg-navy-800 group">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={src} alt="" className="w-full h-full object-cover" />
+                {i === 0 && (
+                  <span className="absolute top-2 left-2 text-[9px] font-bold bg-white/90 text-navy-700 px-1.5 py-0.5 rounded">
+                    Cover
+                  </span>
+                )}
+                {/* Remove */}
+                <button
+                  onClick={() => onRemoveImage(i)}
+                  className="absolute top-2 right-2 p-1 rounded-lg bg-navy-900/70 text-white opacity-0 group-hover:opacity-100 active:opacity-100 transition-opacity"
+                >
+                  <X size={13} />
+                </button>
+                {/* Download */}
+                <a
+                  href={`${src}?dl=1`}
+                  download
+                  className="absolute bottom-2 right-2 flex items-center gap-1 px-2 py-1.5 rounded-lg bg-white/90 text-navy-600 hover:text-coral-500 text-[11px] font-semibold transition-colors"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Download size={12} /> Save
+                </a>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function RecipeCard({
   recipe,
   onEdit,
   onDelete,
   onSchedule,
   onUploadImage,
+  onRemoveImage,
 }: {
   recipe: Recipe;
   onEdit: () => void;
   onDelete: () => void;
   onSchedule: () => void;
-  onUploadImage: (file: File) => Promise<void>;
+  onUploadImage: (files: FileList) => Promise<void>;
+  onRemoveImage: (index: number) => Promise<void>;
 }) {
   const [uploading, setUploading] = useState(false);
+  const [showGallery, setShowGallery] = useState(false);
   const cardFileRef = useRef<HTMLInputElement>(null);
-  // Only count locally-uploaded images — broken imageUrl from imports doesn't count
-  const hasImage = (recipe.images?.length ?? 0) > 0;
+  const images = recipe.images || [];
+  const hasImage = images.length > 0;
 
   const handleCardUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    if (!e.target.files?.length) return;
     setUploading(true);
-    try {
-      await onUploadImage(file);
-    } finally {
-      setUploading(false);
-      if (cardFileRef.current) cardFileRef.current.value = "";
-    }
+    try { await onUploadImage(e.target.files); }
+    finally { setUploading(false); if (cardFileRef.current) cardFileRef.current.value = ""; }
   };
 
   return (
+    <>
     <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm group hover:shadow-md transition-shadow">
       {/* Thumbnail */}
       <div className="aspect-[4/3] bg-cream-100 overflow-hidden relative">
@@ -347,41 +432,41 @@ function RecipeCard({
         <span className="absolute top-2 left-2 px-2 py-0.5 bg-white/90 backdrop-blur-sm text-navy-700 text-[10px] font-semibold rounded-lg">
           {recipe.category}
         </span>
-        {/* Upload overlay */}
-        <input
-          ref={cardFileRef}
-          type="file"
-          accept="image/*"
-          multiple
-          onChange={handleCardUpload}
-          className="hidden"
-        />
+        <input ref={cardFileRef} type="file" accept="image/*" multiple onChange={handleCardUpload} className="hidden" />
         {!hasImage ? (
-          // No image yet — show prominent upload prompt
+          // No image — big upload prompt
           <button
             onClick={() => cardFileRef.current?.click()}
             disabled={uploading}
             className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-cream-50/80 hover:bg-coral-50/80 transition-colors"
           >
-            {uploading
-              ? <Loader2 size={20} className="text-coral-400 animate-spin" />
-              : <ImagePlus size={20} className="text-coral-400" />}
-            <span className="text-[11px] font-semibold text-coral-500">
-              {uploading ? "Uploading…" : "Add Photo"}
-            </span>
+            {uploading ? <Loader2 size={20} className="text-coral-400 animate-spin" /> : <ImagePlus size={20} className="text-coral-400" />}
+            <span className="text-[11px] font-semibold text-coral-500">{uploading ? "Uploading…" : "Add Photo"}</span>
           </button>
         ) : (
-          // Has image — always-visible camera button bottom-right
-          <button
-            onClick={() => cardFileRef.current?.click()}
-            disabled={uploading}
-            title="Add more photos"
-            className="absolute bottom-2 right-2 p-1.5 rounded-lg bg-white/90 backdrop-blur-sm text-navy-500 hover:text-coral-500 transition-colors disabled:opacity-60"
-          >
-            {uploading
-              ? <Loader2 size={13} className="animate-spin" />
-              : <ImagePlus size={13} />}
-          </button>
+          // Has images — tap thumbnail to open gallery
+          <>
+            <button
+              onClick={() => setShowGallery(true)}
+              className="absolute inset-0"
+              aria-label="View photos"
+            />
+            {/* Photo count badge */}
+            {images.length > 1 && (
+              <span className="absolute bottom-2 left-2 flex items-center gap-1 px-2 py-1 bg-navy-900/70 text-white text-[10px] font-semibold rounded-lg pointer-events-none">
+                <BookImage size={10} /> {images.length} photos
+              </span>
+            )}
+            {/* Download cover */}
+            <a
+              href={`${images[0]}?dl=1`}
+              download
+              onClick={(e) => e.stopPropagation()}
+              className="absolute bottom-2 right-2 flex items-center gap-1 px-2 py-1.5 rounded-lg bg-white/90 text-navy-600 hover:text-coral-500 text-[10px] font-semibold transition-colors"
+            >
+              <Download size={11} /> Save
+            </a>
+          </>
         )}
       </div>
 
@@ -441,6 +526,15 @@ function RecipeCard({
         </div>
       </div>
     </div>
+    {showGallery && (
+      <GalleryModal
+        recipe={recipe}
+        onClose={() => setShowGallery(false)}
+        onAddImages={onUploadImage}
+        onRemoveImage={onRemoveImage}
+      />
+    )}
+    </>
   );
 }
 
@@ -504,15 +598,35 @@ export default function RecipesPage() {
     router.push(`/scheduler?recipeId=${recipe.id}&recipeTitle=${encodeURIComponent(recipe.title)}`);
   };
 
-  const handleCardUpload = async (recipe: Recipe, file: File) => {
-    const fd = new FormData();
-    fd.append("file", file);
-    fd.append("recipeId", recipe.id);
-    const res = await fetch("/api/upload-recipe-image", { method: "POST", body: fd });
-    if (res.ok) {
-      const { path } = await res.json();
-      upsertRecipe({ ...recipe, images: [...(recipe.images || []), path] });
+  const handleCardUpload = async (recipe: Recipe, files: FileList) => {
+    const uploaded: string[] = [];
+    for (const file of Array.from(files)) {
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("recipeId", recipe.id);
+      const res = await fetch("/api/upload-recipe-image", { method: "POST", body: fd });
+      if (res.ok) {
+        const { path } = await res.json();
+        uploaded.push(path);
+      }
+    }
+    if (uploaded.length) {
+      upsertRecipe({ ...recipe, images: [...(recipe.images || []), ...uploaded] });
       setRecipes(getRecipes());
+    }
+  };
+
+  const handleRemoveImage = async (recipe: Recipe, index: number) => {
+    const images = recipe.images || [];
+    const path = images[index];
+    upsertRecipe({ ...recipe, images: images.filter((_, i) => i !== index) });
+    setRecipes(getRecipes());
+    if (path) {
+      const filename = path.split("/").pop() || "";
+      await fetch(
+        `/api/upload-recipe-image?recipeId=${recipe.id}&filename=${encodeURIComponent(filename)}`,
+        { method: "DELETE" }
+      );
     }
   };
 
@@ -650,7 +764,8 @@ export default function RecipesPage() {
               onEdit={() => setEditingRecipe(recipe)}
               onDelete={() => handleDelete(recipe.id)}
               onSchedule={() => handleSchedule(recipe)}
-              onUploadImage={(file) => handleCardUpload(recipe, file)}
+              onUploadImage={(files) => handleCardUpload(recipe, files)}
+              onRemoveImage={(index) => handleRemoveImage(recipe, index)}
             />
           ))}
         </div>

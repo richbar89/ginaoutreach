@@ -17,9 +17,12 @@ export async function GET(
     return new NextResponse("Forbidden", { status: 403 });
   }
 
+  const download = _req.nextUrl.searchParams.get("dl") === "1";
+  const filename = path[path.length - 1] ?? "image";
+
   try {
     const data = await readFile(full);
-    const ext = relative.split(".").pop()?.toLowerCase() ?? "jpg";
+    const ext = filename.split(".").pop()?.toLowerCase() ?? "jpg";
     const mime =
       ext === "png" ? "image/png"
       : ext === "gif" ? "image/gif"
@@ -30,6 +33,7 @@ export async function GET(
       headers: {
         "Content-Type": mime,
         "Cache-Control": "public, max-age=31536000, immutable",
+        ...(download ? { "Content-Disposition": `attachment; filename="${filename}"` } : {}),
       },
     });
   } catch {
