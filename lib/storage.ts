@@ -92,11 +92,15 @@ export async function getRecipes(): Promise<Recipe[]> {
 }
 
 export async function upsertRecipe(recipe: Recipe): Promise<void> {
-  await fetch("/api/recipes", {
+  const res = await fetch("/api/recipes", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(recipe),
   });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error ?? `HTTP ${res.status}`);
+  }
 }
 
 export async function deleteRecipe(id: string): Promise<void> {

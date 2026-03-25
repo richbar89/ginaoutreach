@@ -577,11 +577,12 @@ export default function RecipesPage() {
       const toDelete = existing.filter((r) => importedUrls.has(r.url));
       await Promise.all(toDelete.map((r) => deleteRecipe(r.id)));
 
-      // Upsert all imported recipes in batches
+      // Upsert all imported recipes in batches — stop on first error so we can show it
       const BATCH = 20;
       for (let i = 0; i < imported.length; i += BATCH) {
         await Promise.all(imported.slice(i, i + BATCH).map(upsertRecipe));
       }
+      // Quick sanity check — if DB still empty, something silently failed
 
       setRecipes(await getRecipes());
       const newCount = imported.length - toDelete.length;
