@@ -65,22 +65,7 @@ export type ScheduledPost = {
     mediaType: MediaType;
     caption?: string;
     status: PostStatus;
-    recipeId?: string;
-    recipeTitle?: string;
     notes?: string;
     createdAt: string;
 };
 
-// ── Recipe Library ──────────────────────────────────────────
-
-export type Recipe = {
-    id: string;
-    title: string;
-    url: string;
-    imageUrl?: string;
-    images?: string[];      // uploaded local paths, e.g. /recipe-images/[id]/photo.jpg
-    description?: string;
-    category: string;
-    tags: string[];
-    createdAt: string;
-};

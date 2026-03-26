@@ -1,0 +1,26 @@
+
+> email-app@0.1.0 dev
+> next dev -p 5000 -H 0.0.0.0
+
+[1G[0K  [1m[38;2;173;127;168m▲ Next.js 14.2.5[39m[22m
+  - Local:        http://localhost:5000
+  - Network:      http://0.0.0.0:5000
+
+ [32m[1m✓[22m[39m Starting...
+ [32m[1m✓[22m[39m Ready in 3s
+ [37m[1m○[22m[39m Compiling / ...
+ [32m[1m✓[22m[39m Compiled / in 2.6s (534 modules)
+ GET / [32m200[39m in 2758ms
+ [32m[1m✓[22m[39m Compiled in 203ms (267 modules)
+ [32m[1m✓[22m[39m Compiled in 919ms (534 modules)
+ [32m[1m✓[22m[39m Compiled in 131ms (267 modules)
+ [32m[1m✓[22m[39m Compiled in 160ms (267 modules)
+ [32m[1m✓[22m[39m Compiled in 154ms (267 modules)
+ [32m[1m✓[22m[39m Compiled in 114ms (267 modules)
+ [32m[1m✓[22m[39m Compiled in 183ms (267 modules)
+ [32m[1m✓[22m[39m Compiled in 312ms (534 modules)
+ [32m[1m✓[22m[39m Compiled in 147ms (267 modules)
+ [32m[1m✓[22m[39m Compiled in 146ms (267 modules)
+ [32m[1m✓[22m[39m Compiled in 192ms (534 modules)
+ [32m[1m✓[22m[39m Compiled in 225ms (267 modules)
+ [32m[1m✓[22m[39m Compiled in 237ms (534 modules)

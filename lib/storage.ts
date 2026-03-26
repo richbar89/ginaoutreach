@@ -1,4 +1,4 @@
-import type { Campaign, StoredContact, EmailRecord, ScheduledPost, Recipe } from "./types";
+import type { Campaign, StoredContact, EmailRecord, ScheduledPost } from "./types";
 
 // ── Campaigns ──────────────────────────────────────────────
 
@@ -77,34 +77,6 @@ export function upsertScheduledPost(post: ScheduledPost): void {
 
 export function deleteScheduledPost(id: string): void {
   saveScheduledPosts(getScheduledPosts().filter((p) => p.id !== id));
-}
-
-// ── Recipes ─────────────────────────────────────────────────
-
-export async function getRecipes(): Promise<Recipe[]> {
-  try {
-    const res = await fetch("/api/recipes");
-    if (!res.ok) return [];
-    return res.json();
-  } catch {
-    return [];
-  }
-}
-
-export async function upsertRecipe(recipe: Recipe): Promise<void> {
-  const res = await fetch("/api/recipes", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(recipe),
-  });
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}));
-    throw new Error(body.error ?? `HTTP ${res.status}`);
-  }
-}
-
-export async function deleteRecipe(id: string): Promise<void> {
-  await fetch(`/api/recipes/${id}`, { method: "DELETE" });
 }
 
 // ── Merge tags ─────────────────────────────────────────────

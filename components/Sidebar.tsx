@@ -12,8 +12,6 @@ import {
   Inbox,
   TrendingUp,
   BarChart2,
-  CalendarDays,
-  BookImage,
 } from "lucide-react";
 
 const navSections = [
@@ -25,13 +23,6 @@ const navSections = [
       { href: "/campaigns", label: "Campaigns", icon: Megaphone, exact: false },
       { href: "/send", label: "Quick Send", icon: Send, exact: false },
       { href: "/inbox", label: "Inbox", icon: Inbox, exact: false },
-    ],
-  },
-  {
-    label: "Content",
-    items: [
-      { href: "/scheduler", label: "Content Planner", icon: CalendarDays, exact: false },
-      { href: "/recipes", label: "Recipe Library", icon: BookImage, exact: false },
     ],
   },
   {
