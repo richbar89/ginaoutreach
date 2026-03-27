@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Send, Users, TrendingUp, Bell, ChevronRight, Clock } from "lucide-react";
+import { Send, Users, TrendingUp, Bell, ChevronRight, Clock, Zap } from "lucide-react";
 import { getEmailLog, getContacts, getDeals } from "@/lib/storage";
 import type { Deal } from "@/lib/types";
 
@@ -10,16 +10,60 @@ const DEAL_STAGE_LABELS: Record<string, string> = {
   pitched: "Pitched", replied: "Replied", negotiating: "Negotiating",
   contracted: "Contracted", delivered: "Delivered", paid: "Paid",
 };
-const DEAL_STAGE_COLOURS: Record<string, string> = {
-  pitched:     "bg-blue-50 text-blue-600",
-  replied:     "bg-indigo-50 text-indigo-600",
-  negotiating: "bg-amber-50 text-amber-700",
-  contracted:  "bg-violet-50 text-violet-700",
-  delivered:   "bg-teal-50 text-teal-700",
-  paid:        "bg-emerald-50 text-emerald-700",
+
+const DEAL_CARD_COLOURS = [
+  { bg: "#EFF6FF", border: "#BFDBFE" },
+  { bg: "#F5F3FF", border: "#DDD6FE" },
+  { bg: "#ECFDF5", border: "#A7F3D0" },
+  { bg: "#FFF7ED", border: "#FED7AA" },
+  { bg: "#FDF4FF", border: "#E9D5FF" },
+  { bg: "#F0FDFA", border: "#99F6E4" },
+];
+
+const DEAL_STAGE_BADGE: Record<string, string> = {
+  pitched:     "bg-blue-100 text-blue-700",
+  replied:     "bg-indigo-100 text-indigo-700",
+  negotiating: "bg-amber-100 text-amber-700",
+  contracted:  "bg-violet-100 text-violet-700",
+  delivered:   "bg-teal-100 text-teal-700",
+  paid:        "bg-emerald-100 text-emerald-700",
 };
 
+const TOP_BRANDS = [
+  { name: "Myprotein",    runningAds: true },
+  { name: "HelloFresh",   runningAds: false },
+  { name: "Grenade",      runningAds: true },
+  { name: "Huel",         runningAds: false },
+  { name: "Bulk Powders", runningAds: false },
+];
+
 type FollowUp = { email: string; name: string; subject: string; daysAgo: number };
+
+function InstagramIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+      <circle cx="12" cy="12" r="4"/>
+      <circle cx="17.5" cy="6.5" r="1" fill="white" stroke="none"/>
+    </svg>
+  );
+}
+
+function TikTokIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="white">
+      <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.79 1.52V6.77a4.85 4.85 0 01-1.02-.08z"/>
+    </svg>
+  );
+}
+
+function FacebookIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="white">
+      <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+    </svg>
+  );
+}
 
 export default function DashboardPage() {
   const [contactCount, setContactCount] = useState(0);
@@ -57,33 +101,29 @@ export default function DashboardPage() {
     setDeals(getDeals());
   }, []);
 
-  const activeDeals = deals.filter(d => d.status !== "paid");
-  const recentDeals = deals.slice(0, 6);
-
   const today = new Date().toLocaleDateString("en-GB", {
     weekday: "long", day: "numeric", month: "long", year: "numeric",
   });
+
+  const recentDeals = deals.slice(0, 6);
+  const activeDeals = deals.filter(d => d.status !== "paid");
 
   return (
     <div className="h-full flex flex-col overflow-hidden" style={{ background: "var(--blush)" }}>
 
       {/* Header */}
       <div
-        className="flex items-center justify-between px-8 pt-7 pb-5 flex-shrink-0"
+        className="flex items-center justify-between px-8 pt-6 pb-5 flex-shrink-0"
         style={{ borderBottom: "1px solid var(--border)" }}
       >
         <div>
-          <p className="text-[11px] font-medium uppercase tracking-widest text-navy-400 mb-1.5">
-            {today}
-          </p>
-          <h1 className="font-serif text-[28px] font-bold text-navy-900 leading-none">
-            Good morning, Gina.
-          </h1>
+          <p className="text-[11px] font-semibold uppercase tracking-widest text-navy-400 mb-1">{today}</p>
+          <h1 className="text-3xl font-black tracking-tight text-navy-900">Good morning, Gina.</h1>
         </div>
         <div className="flex items-center gap-2.5">
           <Link
             href="/contacts"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-white border text-navy-700 text-sm font-medium rounded-xl transition-all hover:border-coral-300 hover:shadow-sm"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-white border text-navy-700 text-sm font-semibold rounded-xl transition-all hover:border-coral-300 hover:shadow-sm"
             style={{ borderColor: "var(--border)" }}
           >
             <Users size={14} />
@@ -91,7 +131,7 @@ export default function DashboardPage() {
           </Link>
           <Link
             href="/send"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold rounded-xl transition-all shadow-sm"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-coral-500 hover:bg-coral-600 text-white text-sm font-bold rounded-xl transition-all shadow-sm"
           >
             <Send size={14} />
             Quick Send
@@ -99,154 +139,242 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-4 gap-4 px-8 py-5 flex-shrink-0">
-        {[
-          { label: "Contacts", value: contactCount, sub: "in database" },
-          { label: "Emails Sent", value: emailsSent, sub: "logged" },
-          { label: "Active Deals", value: activeDeals.length, sub: "in pipeline" },
-          {
-            label: "Follow-ups Due",
-            value: followUps.length,
-            sub: followUps.length > 0 ? "need chasing" : "all clear",
-            highlight: followUps.length > 0,
-          },
-        ].map((s) => (
+      {/* Main grid */}
+      <div className="flex-1 min-h-0 grid grid-cols-2 gap-4 p-5">
+
+        {/* ── LEFT COLUMN ── */}
+        <div className="flex flex-col gap-4 min-h-0">
+
+          {/* Analytics Card */}
           <div
-            key={s.label}
-            className="bg-white rounded-2xl px-5 py-4 border transition-shadow hover:shadow-sm"
+            className="rounded-2xl p-5 flex-shrink-0"
+            style={{ background: "linear-gradient(135deg, #0A1628 0%, #0F2D6B 60%, #1A3A8A 100%)" }}
+          >
+            {/* Title */}
+            <div className="flex items-center justify-between mb-4">
+              <p className="text-blue-300 text-[11px] font-bold uppercase tracking-widest">Analytics</p>
+              <span className="text-[10px] text-blue-400 bg-blue-900/40 px-2 py-0.5 rounded-full border border-blue-800/50">Live placeholders</span>
+            </div>
+
+            {/* Avg views */}
+            <div className="mb-5 pb-5" style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+              <p className="text-blue-300 text-xs font-medium mb-1">Avg. Views per Post — last 7 days</p>
+              <div className="flex items-end gap-3">
+                <p className="text-white text-5xl font-black tracking-tight leading-none">—</p>
+                <p className="text-blue-400 text-xs mb-1">Connect Meta API to populate</p>
+              </div>
+            </div>
+
+            {/* Follower counts */}
+            <div className="grid grid-cols-3 gap-3">
+              {/* Instagram */}
+              <div className="rounded-xl p-3" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                <div
+                  className="w-7 h-7 rounded-lg flex items-center justify-center mb-2.5"
+                  style={{ background: "linear-gradient(135deg, #F58529 0%, #DD2A7B 50%, #8134AF 100%)" }}
+                >
+                  <InstagramIcon />
+                </div>
+                <p className="text-white text-2xl font-black leading-none mb-0.5">555K</p>
+                <p className="text-blue-400 text-[10px] font-semibold">Instagram</p>
+              </div>
+
+              {/* TikTok */}
+              <div className="rounded-xl p-3" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                <div
+                  className="w-7 h-7 rounded-lg flex items-center justify-center mb-2.5"
+                  style={{ background: "linear-gradient(135deg, #010101 0%, #69C9D0 100%)" }}
+                >
+                  <TikTokIcon />
+                </div>
+                <p className="text-white text-2xl font-black leading-none mb-0.5">200K</p>
+                <p className="text-blue-400 text-[10px] font-semibold">TikTok</p>
+              </div>
+
+              {/* Facebook */}
+              <div className="rounded-xl p-3" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                <div
+                  className="w-7 h-7 rounded-lg flex items-center justify-center mb-2.5"
+                  style={{ background: "#1877F2" }}
+                >
+                  <FacebookIcon />
+                </div>
+                <p className="text-white text-2xl font-black leading-none mb-0.5">190K</p>
+                <p className="text-blue-400 text-[10px] font-semibold">Facebook</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Top Brands + Ads Alerts */}
+          <div
+            className="flex-1 min-h-0 bg-white rounded-2xl border flex flex-col overflow-hidden"
             style={{ borderColor: "var(--border)" }}
           >
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-navy-400 mb-2">
-              {s.label}
-            </p>
-            <p
-              className="font-serif text-[32px] font-bold leading-none"
-              style={{ color: s.highlight ? "#2563EB" : "#0F172A" }}
+            <div
+              className="flex items-center justify-between px-5 py-4 flex-shrink-0"
+              style={{ borderBottom: "1px solid var(--border)" }}
             >
-              {s.value}
-            </p>
-            <p className="text-[11px] text-navy-400 mt-1.5">{s.sub}</p>
-          </div>
-        ))}
-      </div>
-
-      {/* Widgets */}
-      <div className="flex-1 min-h-0 grid grid-cols-2 gap-4 px-8 pb-7">
-
-        {/* Follow-up Reminders */}
-        <div
-          className="bg-white rounded-2xl border flex flex-col overflow-hidden"
-          style={{ borderColor: "var(--border)" }}
-        >
-          <div
-            className="flex items-center justify-between px-5 py-3.5 flex-shrink-0"
-            style={{ borderBottom: "1px solid var(--border)" }}
-          >
-            <div className="flex items-center gap-2">
-              <Bell size={14} className="text-coral-500" />
-              <span className="text-sm font-semibold text-navy-900">Follow-up Reminders</span>
+              <div className="flex items-center gap-2">
+                <Zap size={15} className="text-coral-500" />
+                <span className="text-base font-black text-navy-900">Top Brands</span>
+              </div>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-navy-400">Ads Alerts</span>
             </div>
-            <Link href="/contacts" className="text-[11px] text-navy-400 hover:text-coral-500 transition-colors font-medium">
-              View contacts →
-            </Link>
-          </div>
-
-          {followUps.length === 0 ? (
-            <div className="flex-1 flex flex-col items-center justify-center text-center p-6">
-              <Clock size={24} className="text-navy-200 mb-3" />
-              <p className="text-sm text-navy-400">No follow-ups due.</p>
-              <p className="text-xs text-navy-300 mt-1">Contacts emailed 5+ days ago appear here.</p>
-            </div>
-          ) : (
             <div className="flex-1 overflow-y-auto scrollbar-thin divide-y" style={{ borderColor: "var(--border)" }}>
-              {followUps.map((f) => (
-                <div
-                  key={f.email}
-                  className="flex items-center gap-3 px-5 py-3 hover:bg-navy-50/40 transition-colors"
-                >
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-navy-900 truncate">{f.name}</p>
-                    <p className="text-xs text-navy-400 truncate">{f.subject}</p>
+              {TOP_BRANDS.map((brand, i) => (
+                <div key={brand.name} className="flex items-center gap-3 px-5 py-3.5 hover:bg-navy-50/40 transition-colors">
+                  <div
+                    className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 text-white text-[11px] font-black"
+                    style={{
+                      background: ["#3B82F6","#8B5CF6","#10B981","#F59E0B","#EF4444"][i % 5],
+                    }}
+                  >
+                    {brand.name[0]}
                   </div>
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    <span
-                      className={`text-[10px] font-bold px-2 py-1 rounded-full ${
-                        f.daysAgo >= 14 ? "bg-red-100 text-red-600" : "bg-amber-100 text-amber-700"
-                      }`}
-                    >
-                      {f.daysAgo}d ago
+                  <span className="flex-1 font-bold text-navy-900 text-sm">{brand.name}</span>
+                  {brand.runningAds ? (
+                    <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200 px-2 py-1 rounded-full">
+                      <span className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse" />
+                      Running Ads
                     </span>
-                    <Link
-                      href={`/send?to=${encodeURIComponent(f.email)}&name=${encodeURIComponent(f.name)}`}
-                      className="p-1.5 hover:bg-coral-50 rounded-lg transition-colors"
-                    >
-                      <ChevronRight size={13} className="text-navy-400" />
-                    </Link>
-                  </div>
+                  ) : (
+                    <span className="text-[10px] font-medium text-navy-300">No ads</span>
+                  )}
                 </div>
               ))}
             </div>
-          )}
+          </div>
         </div>
 
-        {/* Deal Pipeline */}
-        <div
-          className="bg-white rounded-2xl border flex flex-col overflow-hidden"
-          style={{ borderColor: "var(--border)" }}
-        >
+        {/* ── RIGHT COLUMN ── */}
+        <div className="flex flex-col gap-4 min-h-0">
+
+          {/* Deal Pipeline */}
           <div
-            className="flex items-center justify-between px-5 py-3.5 flex-shrink-0"
-            style={{ borderBottom: "1px solid var(--border)" }}
+            className="flex-1 min-h-0 bg-white rounded-2xl border flex flex-col overflow-hidden"
+            style={{ borderColor: "var(--border)" }}
           >
-            <div className="flex items-center gap-2">
-              <TrendingUp size={14} className="text-coral-500" />
-              <span className="text-sm font-semibold text-navy-900">Deal Pipeline</span>
+            <div
+              className="flex items-center justify-between px-5 py-4 flex-shrink-0"
+              style={{ borderBottom: "1px solid var(--border)" }}
+            >
+              <div className="flex items-center gap-2">
+                <TrendingUp size={15} className="text-coral-500" />
+                <span className="text-base font-black text-navy-900">Deal Pipeline</span>
+                {activeDeals.length > 0 && (
+                  <span className="text-[10px] font-bold bg-coral-100 text-coral-600 px-2 py-0.5 rounded-full">
+                    {activeDeals.length} active
+                  </span>
+                )}
+              </div>
+              <Link href="/pipeline" className="text-[11px] text-navy-400 hover:text-coral-500 transition-colors font-semibold">
+                View all →
+              </Link>
             </div>
-            <Link href="/pipeline" className="text-[11px] text-navy-400 hover:text-coral-500 transition-colors font-medium">
-              View all →
-            </Link>
+
+            {deals.length === 0 ? (
+              <div className="flex-1 flex flex-col items-center justify-center text-center p-6">
+                <TrendingUp size={28} className="text-navy-200 mb-3" />
+                <p className="text-sm font-semibold text-navy-400">No deals yet.</p>
+                <p className="text-xs text-navy-300 mt-1">Positive replies in your inbox get flagged automatically.</p>
+              </div>
+            ) : (
+              <div className="flex-1 overflow-y-auto scrollbar-thin p-3 space-y-2">
+                {recentDeals.map((deal, i) => {
+                  const colours = DEAL_CARD_COLOURS[i % DEAL_CARD_COLOURS.length];
+                  return (
+                    <div
+                      key={deal.id}
+                      className="rounded-xl px-4 py-3 flex items-center gap-3"
+                      style={{ background: colours.bg, border: `1px solid ${colours.border}` }}
+                    >
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-black text-navy-900 truncate">
+                          {deal.company || deal.contactName}
+                        </p>
+                        {deal.company && (
+                          <p className="text-xs text-navy-500 font-medium truncate">{deal.contactName}</p>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        {deal.value && (
+                          <span className="text-xs font-black text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-lg">
+                            {deal.value}
+                          </span>
+                        )}
+                        <span className={`text-[10px] font-bold uppercase tracking-wide px-2 py-1 rounded-full ${DEAL_STAGE_BADGE[deal.status] || "bg-navy-100 text-navy-600"}`}>
+                          {DEAL_STAGE_LABELS[deal.status] || deal.status}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
-          {deals.length === 0 ? (
-            <div className="flex-1 flex flex-col items-center justify-center text-center p-6">
-              <TrendingUp size={24} className="text-navy-200 mb-3" />
-              <p className="text-sm text-navy-400">No deals yet.</p>
-              <p className="text-xs text-navy-300 mt-1">Positive replies in your inbox get flagged automatically.</p>
+          {/* Follow-up Reminders */}
+          <div
+            className="flex-1 min-h-0 bg-white rounded-2xl border flex flex-col overflow-hidden"
+            style={{ borderColor: "var(--border)" }}
+          >
+            <div
+              className="flex items-center justify-between px-5 py-4 flex-shrink-0"
+              style={{ borderBottom: "1px solid var(--border)" }}
+            >
+              <div className="flex items-center gap-2">
+                <Bell size={15} className="text-coral-500" />
+                <span className="text-base font-black text-navy-900">Follow-up Reminders</span>
+                {followUps.length > 0 && (
+                  <span className="text-[10px] font-bold bg-red-100 text-red-600 px-2 py-0.5 rounded-full">
+                    {followUps.length} due
+                  </span>
+                )}
+              </div>
+              <Link href="/contacts" className="text-[11px] text-navy-400 hover:text-coral-500 transition-colors font-semibold">
+                View contacts →
+              </Link>
             </div>
-          ) : (
-            <div className="flex-1 overflow-y-auto scrollbar-thin divide-y" style={{ borderColor: "var(--border)" }}>
-              {recentDeals.map((deal) => (
-                <div
-                  key={deal.id}
-                  className="flex items-center gap-3 px-5 py-3 hover:bg-navy-50/40 transition-colors"
-                >
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-navy-900 truncate">
-                      {deal.company || deal.contactName}
-                    </p>
-                    <p className="text-xs text-navy-400 truncate">{deal.contactName}</p>
-                  </div>
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    {deal.value && (
-                      <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-lg">
-                        {deal.value}
+
+            {followUps.length === 0 ? (
+              <div className="flex-1 flex flex-col items-center justify-center text-center p-6">
+                <Clock size={24} className="text-navy-200 mb-3" />
+                <p className="text-sm font-semibold text-navy-400">All up to date.</p>
+                <p className="text-xs text-navy-300 mt-1">Contacts emailed 5+ days ago appear here.</p>
+              </div>
+            ) : (
+              <div className="flex-1 overflow-y-auto scrollbar-thin divide-y" style={{ borderColor: "var(--border)" }}>
+                {followUps.map((f) => (
+                  <div
+                    key={f.email}
+                    className="flex items-center gap-3 px-5 py-3 hover:bg-navy-50/40 transition-colors"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-black text-navy-900 truncate">{f.name}</p>
+                      <p className="text-xs text-navy-400 font-medium truncate">{f.subject}</p>
+                    </div>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <span
+                        className={`text-[10px] font-bold px-2 py-1 rounded-full ${
+                          f.daysAgo >= 14 ? "bg-red-100 text-red-600" : "bg-amber-100 text-amber-700"
+                        }`}
+                      >
+                        {f.daysAgo}d ago
                       </span>
-                    )}
-                    <span
-                      className={`text-[10px] font-bold uppercase tracking-wide px-2 py-1 rounded-full ${
-                        DEAL_STAGE_COLOURS[deal.status] || "bg-navy-100 text-navy-600"
-                      }`}
-                    >
-                      {DEAL_STAGE_LABELS[deal.status] || deal.status}
-                    </span>
+                      <Link
+                        href={`/send?to=${encodeURIComponent(f.email)}&name=${encodeURIComponent(f.name)}`}
+                        className="p-1.5 hover:bg-coral-50 rounded-lg transition-colors"
+                      >
+                        <ChevronRight size={13} className="text-navy-400" />
+                      </Link>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+                ))}
+              </div>
+            )}
+          </div>
 
+        </div>
       </div>
     </div>
   );
