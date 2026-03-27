@@ -17,20 +17,19 @@ export default function RootLayout({
       <body
         className="antialiased"
         style={{
-          background: "linear-gradient(135deg, #E8C9CF 0%, #DEC6E2 45%, #C6C8E6 100%)",
+          background: "#C2ADCC",
           minHeight: "100vh",
-          padding: "12px",
+          padding: "20px",
         }}
       >
         {/* Floating app window */}
         <div
           className="flex overflow-hidden"
           style={{
-            height: "calc(100vh - 24px)",
-            borderRadius: "16px",
+            height: "calc(100vh - 40px)",
+            borderRadius: "20px",
             boxShadow:
-              "0 1px 1px rgba(0,0,0,0.04), 0 4px 8px rgba(0,0,0,0.06), 0 16px 32px rgba(0,0,0,0.10), 0 40px 64px rgba(0,0,0,0.06)",
-            border: "1px solid rgba(255,255,255,0.6)",
+              "0 2px 2px rgba(0,0,0,0.05), 0 6px 12px rgba(0,0,0,0.08), 0 20px 40px rgba(0,0,0,0.14), 0 48px 72px rgba(0,0,0,0.10)",
             overflow: "hidden",
           }}
         >

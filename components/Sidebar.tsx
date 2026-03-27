@@ -48,7 +48,7 @@ export default function Sidebar() {
       style={{
         background: "var(--sidebar)",
         borderRight: "1px solid #EDD9D0",
-        borderRadius: "16px 0 0 16px",
+        borderRadius: "20px 0 0 20px",
       }}
     >
       {/* Logo */}
