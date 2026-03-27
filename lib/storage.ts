@@ -1,4 +1,4 @@
-import type { Campaign, StoredContact, EmailRecord, ScheduledPost, EmailTemplate, Deal } from "./types";
+import type { Campaign, StoredContact, EmailRecord, ScheduledPost, EmailTemplate, Deal, MediaKit } from "./types";
 
 // ── Campaigns ──────────────────────────────────────────────
 
@@ -134,6 +134,34 @@ export function upsertDeal(deal: Deal): void {
 
 export function deleteDeal(id: string): void {
   saveDeals(getDeals().filter((d) => d.id !== id));
+}
+
+// ── Media Kit ───────────────────────────────────────────────
+
+const MEDIA_KIT_KEY = "ginaos_media_kit";
+
+export const DEFAULT_MEDIA_KIT: MediaKit = {
+  name: "",
+  handle: "",
+  tagline: "",
+  bio: "",
+  email: "",
+  rates: [
+    { label: "Instagram Story", price: "" },
+    { label: "Instagram Reel", price: "" },
+    { label: "Instagram Feed Post", price: "" },
+  ],
+  pastBrands: [],
+};
+
+export function getMediaKit(): MediaKit {
+  if (typeof window === "undefined") return { ...DEFAULT_MEDIA_KIT };
+  const stored = localStorage.getItem(MEDIA_KIT_KEY);
+  return stored ? { ...DEFAULT_MEDIA_KIT, ...JSON.parse(stored) } : { ...DEFAULT_MEDIA_KIT };
+}
+
+export function saveMediaKit(kit: MediaKit): void {
+  localStorage.setItem(MEDIA_KIT_KEY, JSON.stringify(kit));
 }
 
 // ── Merge tags ─────────────────────────────────────────────

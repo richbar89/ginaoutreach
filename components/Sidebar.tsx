@@ -13,6 +13,7 @@ import {
   TrendingUp,
   BarChart2,
   FileText,
+  BookOpen,
 } from "lucide-react";
 
 const navSections = [
@@ -26,6 +27,7 @@ const navSections = [
       { href: "/inbox", label: "Inbox", icon: Inbox, exact: false },
       { href: "/templates", label: "Templates", icon: FileText, exact: false },
       { href: "/pipeline", label: "Deal Pipeline", icon: TrendingUp, exact: false },
+      { href: "/media-kit", label: "Media Kit", icon: BookOpen, exact: false },
     ],
   },
   {

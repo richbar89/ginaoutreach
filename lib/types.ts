@@ -83,6 +83,34 @@ export type Deal = {
   updatedAt: string;
 };
 
+// ── Media Kit ────────────────────────────────────────────────
+
+export type MediaKit = {
+  name: string;
+  handle: string;
+  tagline: string;
+  bio: string;
+  email: string;
+  profileImageUrl?: string;
+  // Instagram — auto-populated from Meta API
+  igFollowers?: number;
+  igEngagementRate?: string;
+  igAvgLikes?: number;
+  igPostCount?: number;
+  igLastRefreshed?: string;
+  // TikTok — manual entry
+  ttFollowers?: string;
+  ttAvgViews?: string;
+  // Rates
+  rates: { label: string; price: string }[];
+  // Past brand work
+  pastBrands: { name: string }[];
+  // Audience demographics (optional)
+  audienceAge?: string;
+  audienceGender?: string;
+  audienceTopLocation?: string;
+};
+
 // ── Content Planner ─────────────────────────────────────────
 
 export type Platform = "instagram" | "tiktok" | "facebook";
