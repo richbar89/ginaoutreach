@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import Link from "next/link";
-import { RefreshCw, Loader2, MailOpen, WifiOff } from "lucide-react";
+import { RefreshCw, Loader2, MailOpen, WifiOff, Sparkles, TrendingUp, Check } from "lucide-react";
 import {
   getMicrosoftUser,
   getInboxMessages,
@@ -10,7 +10,8 @@ import {
   markMessageAsRead,
 } from "@/lib/graphClient";
 import type { InboxMessage, MessageDetail } from "@/lib/graphClient";
-import { getEmailLog } from "@/lib/storage";
+import { getEmailLog, upsertDeal, getDeals } from "@/lib/storage";
+import type { Deal } from "@/lib/types";
 import InitialsAvatar from "@/components/InitialsAvatar";
 
 function timeAgo(dateStr: string): string {
@@ -35,6 +36,9 @@ export default function InboxPage() {
   const [error, setError] = useState("");
   const [showAll, setShowAll] = useState(false);
   const [msUser] = useState(() => getMicrosoftUser());
+  const [classifying, setClassifying] = useState(false);
+  const [classification, setClassification] = useState<{ positive: boolean; confidence: number; reason: string } | null>(null);
+  const [pipelineAdded, setPipelineAdded] = useState<string | null>(null); // deal id just added
 
   // Build set of addresses we've emailed — used to filter replies
   const contactedAddresses = useMemo(() => {
@@ -79,6 +83,8 @@ export default function InboxPage() {
   const handleSelect = async (msg: InboxMessage) => {
     setLoadingDetail(true);
     setSelected(null);
+    setClassification(null);
+    setPipelineAdded(null);
     try {
       const detail = await getMessageDetail(msg.id);
       setSelected(detail);
@@ -88,11 +94,48 @@ export default function InboxPage() {
           prev.map((m) => (m.id === msg.id ? { ...m, isRead: true } : m))
         );
       }
+      // Only classify replies from contacts we've emailed
+      if (contactedAddresses.has(msg.from.emailAddress.address.toLowerCase())) {
+        setClassifying(true);
+        fetch("/api/classify-reply", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ subject: detail.subject, body: detail.body.content?.slice(0, 1000) }),
+        })
+          .then((r) => r.json())
+          .then((data) => setClassification(data))
+          .catch(() => {})
+          .finally(() => setClassifying(false));
+      }
     } catch {
       // silently fail on detail load
     } finally {
       setLoadingDetail(false);
     }
+  };
+
+  const handleAddToPipeline = (msg: InboxMessage) => {
+    const emailLog = getEmailLog();
+    const logEntry = emailLog.find(r => r.contactEmail === msg.from.emailAddress.address.toLowerCase());
+    const existingDeals = getDeals();
+    const alreadyExists = existingDeals.some(d => d.contactEmail === msg.from.emailAddress.address.toLowerCase());
+    if (alreadyExists) {
+      setPipelineAdded("exists");
+      return;
+    }
+    const now = new Date().toISOString();
+    const deal: Deal = {
+      id: crypto.randomUUID(),
+      contactEmail: msg.from.emailAddress.address.toLowerCase(),
+      contactName: msg.from.emailAddress.name || msg.from.emailAddress.address,
+      company: msg.from.emailAddress.name || "",
+      status: "replied",
+      notes: logEntry ? `Re: ${logEntry.subject}` : "",
+      createdAt: now,
+      updatedAt: now,
+    };
+    upsertDeal(deal);
+    setPipelineAdded(deal.id);
   };
 
   const unreadCount = visibleMessages.filter((m) => !m.isRead).length;
@@ -288,6 +331,42 @@ export default function InboxPage() {
                 </span>
               </div>
             </div>
+
+            {/* AI classification banner */}
+            {classifying && (
+              <div className="mb-5 flex items-center gap-2.5 px-4 py-3 bg-cream-50 border border-cream-200 rounded-xl text-xs text-navy-400">
+                <Loader2 size={13} className="animate-spin text-coral-400 flex-shrink-0" />
+                Analysing reply sentiment…
+              </div>
+            )}
+            {!classifying && classification?.positive && (
+              <div className="mb-5 flex items-center justify-between gap-4 px-4 py-3.5 bg-emerald-50 border border-emerald-200 rounded-xl">
+                <div className="flex items-center gap-2.5">
+                  <Sparkles size={15} className="text-emerald-600 flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-emerald-800">Positive reply detected</p>
+                    <p className="text-xs text-emerald-600 mt-0.5">{classification.reason}</p>
+                  </div>
+                </div>
+                {pipelineAdded === "exists" ? (
+                  <span className="flex-shrink-0 text-xs text-emerald-600 font-medium">Already in pipeline</span>
+                ) : pipelineAdded ? (
+                  <span className="flex-shrink-0 inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-100 border border-emerald-200 px-3 py-1.5 rounded-lg">
+                    <Check size={12} /> Added to pipeline
+                  </span>
+                ) : (
+                  <button
+                    onClick={() => {
+                      const msgObj = messages.find(m => m.id === selected.id);
+                      if (msgObj) handleAddToPipeline(msgObj);
+                    }}
+                    className="flex-shrink-0 inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg transition-colors"
+                  >
+                    <TrendingUp size={12} /> Add to Pipeline
+                  </button>
+                )}
+              </div>
+            )}
 
             {/* Body */}
             <pre className="text-sm text-navy-800 whitespace-pre-wrap font-sans leading-relaxed">

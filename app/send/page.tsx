@@ -2,10 +2,11 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { Send, CheckCircle, Loader2, Wifi, WifiOff } from "lucide-react";
+import { Send, CheckCircle, Loader2, Wifi, WifiOff, FileText, ChevronDown } from "lucide-react";
 import Link from "next/link";
-import { appendEmailRecord } from "@/lib/storage";
+import { appendEmailRecord, getTemplates, applyMerge } from "@/lib/storage";
 import { getMicrosoftUser, sendEmailViaGraph } from "@/lib/graphClient";
+import type { EmailTemplate } from "@/lib/types";
 
 type MsUser = { name: string; email: string } | null;
 
@@ -21,17 +22,33 @@ function SendEmailForm() {
   const [sending, setSending] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const [templates, setTemplates] = useState<EmailTemplate[]>([]);
+  const [showTemplates, setShowTemplates] = useState(false);
 
   useEffect(() => {
     setMsUser(getMicrosoftUser());
+    setTemplates(getTemplates());
   }, []);
+
+  const loadTemplate = (t: EmailTemplate) => {
+    const contact = {
+      name: form.toName,
+      email: form.to,
+      company: "",
+    };
+    setForm((f) => ({
+      ...f,
+      subject: applyMerge(t.subject, contact),
+      body: applyMerge(t.body, contact),
+    }));
+    setShowTemplates(false);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
     if (msUser) {
-      // Send via Microsoft Graph
       setSending(true);
       try {
         await sendEmailViaGraph({
@@ -49,7 +66,6 @@ function SendEmailForm() {
         setSending(false);
       }
     } else {
-      // Fallback: open mail client
       const mailto =
         `mailto:${encodeURIComponent(form.to)}` +
         `?subject=${encodeURIComponent(form.subject)}` +
@@ -83,7 +99,6 @@ function SendEmailForm() {
                 : "Fill in the details — your mail app will open ready to send."}
             </p>
           </div>
-          {/* Connection indicator */}
           <div className="flex-shrink-0 mt-1">
             {msUser ? (
               <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 border border-emerald-100 px-2.5 py-1.5 rounded-full">
@@ -102,6 +117,50 @@ function SendEmailForm() {
           </div>
         </div>
       </div>
+
+      {/* Template picker */}
+      {templates.length > 0 && (
+        <div className="mb-5 relative">
+          <button
+            type="button"
+            onClick={() => setShowTemplates(!showTemplates)}
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-cream-200 hover:border-navy-200 text-navy-700 text-sm font-medium rounded-xl transition-all shadow-sm"
+          >
+            <FileText size={14} className="text-navy-400" />
+            Use a template
+            <ChevronDown size={13} className={`text-navy-400 transition-transform ${showTemplates ? "rotate-180" : ""}`} />
+          </button>
+          {showTemplates && (
+            <div className="absolute top-full left-0 mt-1.5 w-72 bg-white border border-cream-200 rounded-xl shadow-lg z-20 overflow-hidden">
+              {templates.map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => loadTemplate(t)}
+                  className="w-full text-left px-4 py-3 hover:bg-coral-50 border-b border-cream-100 last:border-b-0 transition-colors"
+                >
+                  <p className="text-sm font-semibold text-navy-800">{t.name}</p>
+                  <p className="text-xs text-navy-400 truncate mt-0.5">{t.subject}</p>
+                </button>
+              ))}
+              <div className="px-4 py-2.5 bg-cream-50 border-t border-cream-100">
+                <Link href="/templates" className="text-xs text-coral-500 hover:underline font-medium">
+                  Manage templates →
+                </Link>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {templates.length === 0 && (
+        <div className="mb-5">
+          <Link href="/templates" className="inline-flex items-center gap-1.5 text-xs text-navy-400 hover:text-coral-500 transition-colors">
+            <FileText size={12} />
+            Create email templates to speed up outreach →
+          </Link>
+        </div>
+      )}
 
       {success && (
         <div className="mb-6 flex items-center gap-3 px-4 py-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-700 text-sm font-medium">
@@ -165,9 +224,14 @@ function SendEmailForm() {
         </div>
 
         <div className="px-7 py-5">
-          <label className="block text-xs font-semibold text-navy-400 mb-2 uppercase tracking-widest">
-            Message <span className="text-coral-400">*</span>
-          </label>
+          <div className="flex items-center justify-between mb-2">
+            <label className="block text-xs font-semibold text-navy-400 uppercase tracking-widest">
+              Message <span className="text-coral-400">*</span>
+            </label>
+            <p className="text-[10px] text-navy-400">
+              Use <span className="font-mono text-coral-500">[FirstName]</span> <span className="font-mono text-coral-500">[BusinessName]</span> <span className="font-mono text-coral-500">[Signature]</span>
+            </p>
+          </div>
           <textarea
             required
             rows={14}

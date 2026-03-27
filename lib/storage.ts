@@ -1,4 +1,4 @@
-import type { Campaign, StoredContact, EmailRecord, ScheduledPost } from "./types";
+import type { Campaign, StoredContact, EmailRecord, ScheduledPost, EmailTemplate, Deal } from "./types";
 
 // ── Campaigns ──────────────────────────────────────────────
 
@@ -79,15 +79,80 @@ export function deleteScheduledPost(id: string): void {
   saveScheduledPosts(getScheduledPosts().filter((p) => p.id !== id));
 }
 
+// ── Email Templates ─────────────────────────────────────────
+
+export function getTemplates(): EmailTemplate[] {
+  if (typeof window === "undefined") return [];
+  return JSON.parse(localStorage.getItem("ginaos_templates") || "[]");
+}
+
+export function saveTemplates(templates: EmailTemplate[]): void {
+  localStorage.setItem("ginaos_templates", JSON.stringify(templates));
+}
+
+export function upsertTemplate(template: EmailTemplate): void {
+  const all = getTemplates();
+  const idx = all.findIndex((t) => t.id === template.id);
+  if (idx >= 0) all[idx] = template;
+  else all.unshift(template);
+  saveTemplates(all);
+}
+
+export function deleteTemplate(id: string): void {
+  saveTemplates(getTemplates().filter((t) => t.id !== id));
+}
+
+// ── Signature ───────────────────────────────────────────────
+
+export function getSignature(): string {
+  if (typeof window === "undefined") return "";
+  return localStorage.getItem("ginaos_signature") || "";
+}
+
+export function saveSignature(sig: string): void {
+  localStorage.setItem("ginaos_signature", sig);
+}
+
+// ── Deal Pipeline ───────────────────────────────────────────
+
+export function getDeals(): Deal[] {
+  if (typeof window === "undefined") return [];
+  return JSON.parse(localStorage.getItem("ginaos_deals") || "[]");
+}
+
+export function saveDeals(deals: Deal[]): void {
+  localStorage.setItem("ginaos_deals", JSON.stringify(deals));
+}
+
+export function upsertDeal(deal: Deal): void {
+  const all = getDeals();
+  const idx = all.findIndex((d) => d.id === deal.id);
+  if (idx >= 0) all[idx] = deal;
+  else all.unshift(deal);
+  saveDeals(all);
+}
+
+export function deleteDeal(id: string): void {
+  saveDeals(getDeals().filter((d) => d.id !== id));
+}
+
 // ── Merge tags ─────────────────────────────────────────────
 
 export function applyMerge(
   template: string,
-  contact: { name?: string; email?: string; position?: string; company?: string }
+  contact: { name?: string; email?: string; position?: string; company?: string },
+  signature?: string
 ): string {
+  const firstName = contact.name ? contact.name.split(" ")[0] : "";
+  const sig = signature ?? (typeof window !== "undefined" ? getSignature() : "");
   return template
+    // legacy double-brace format
     .replace(/\{\{name\}\}/g, contact.name || "")
     .replace(/\{\{email\}\}/g, contact.email || "")
     .replace(/\{\{position\}\}/g, contact.position || "")
-    .replace(/\{\{company\}\}/g, contact.company || "");
+    .replace(/\{\{company\}\}/g, contact.company || "")
+    // new bracket format
+    .replace(/\[FirstName\]/g, firstName)
+    .replace(/\[BusinessName\]/g, contact.company || "")
+    .replace(/\[Signature\]/g, sig);
 }

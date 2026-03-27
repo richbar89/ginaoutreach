@@ -51,6 +51,38 @@ export type EmailRecord = {
     campaignName?: string;
 };
 
+// ── Email Templates ──────────────────────────────────────────
+
+export type EmailTemplate = {
+  id: string;
+  name: string;
+  subject: string;
+  body: string;
+  createdAt: string;
+};
+
+// ── Deal Pipeline ────────────────────────────────────────────
+
+export type DealStatus =
+  | "pitched"
+  | "replied"
+  | "negotiating"
+  | "contracted"
+  | "delivered"
+  | "paid";
+
+export type Deal = {
+  id: string;
+  contactEmail: string;
+  contactName: string;
+  company: string;
+  status: DealStatus;
+  value?: string;
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 // ── Content Planner ─────────────────────────────────────────
 
 export type Platform = "instagram" | "tiktok" | "facebook";

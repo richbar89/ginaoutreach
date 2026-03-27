@@ -17,6 +17,7 @@ import {
   getMicrosoftUser,
 } from "@/lib/graphClient";
 import { resetMsalInstance } from "@/lib/msalInstance";
+import { getSignature, saveSignature } from "@/lib/storage";
 
 type MsUser = { name: string; email: string } | null;
 
@@ -28,14 +29,23 @@ export default function SettingsPage() {
   const [signing, setSigning] = useState(false);
   const [error, setError] = useState("");
   const [showInstructions, setShowInstructions] = useState(false);
+  const [signature, setSignature] = useState("");
+  const [sigSaved, setSigSaved] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem("azure_client_id") || "";
     setSavedClientId(stored);
     setClientId(stored);
     setMsUser(getMicrosoftUser());
+    setSignature(getSignature());
     setLoading(false);
   }, []);
+
+  const handleSaveSignature = () => {
+    saveSignature(signature);
+    setSigSaved(true);
+    setTimeout(() => setSigSaved(false), 2500);
+  };
 
   const saveClientId = () => {
     const trimmed = clientId.trim();
@@ -184,6 +194,32 @@ export default function SettingsPage() {
               {error}
             </p>
           )}
+        </div>
+      </div>
+
+      {/* Signature */}
+      <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm mb-6">
+        <div className="px-7 py-5 border-b border-cream-100">
+          <p className="text-sm font-semibold text-navy-800">Email Signature</p>
+          <p className="text-xs text-navy-400 mt-1">
+            Saved once and inserted wherever you use the <span className="font-mono text-coral-600">[Signature]</span> merge tag in templates.
+          </p>
+        </div>
+        <div className="px-7 py-6 space-y-4">
+          <textarea
+            rows={5}
+            value={signature}
+            onChange={(e) => setSignature(e.target.value)}
+            placeholder={`Best,\nGina\n\nFood & Drinks Content Creator\ngina@example.com | @ginanutrition`}
+            className="input-base resize-y text-sm font-mono leading-relaxed"
+          />
+          <button
+            onClick={handleSaveSignature}
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold rounded-xl transition-colors"
+          >
+            {sigSaved ? <CheckCircle size={14} /> : null}
+            {sigSaved ? "Saved!" : "Save Signature"}
+          </button>
         </div>
       </div>
 
