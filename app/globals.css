@@ -1,14 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=Instrument+Serif:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=Nunito:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --coral:  #e8715a;
-  --stone:  #1C1917;
-  --cream:  #FAF9F7;
-  --border: #E7E5E4;
+  --rose:     #C96878;
+  --blush:    #FBF8F6;
+  --border:   #EDD9D0;
+  --text:     #35261F;
+  --muted:    #916F64;
+  --sidebar:  #FBF7F4;
 }
 
 * {
@@ -16,31 +18,41 @@
 }
 
 body {
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: 'Nunito', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
-  background-color: var(--cream);
-  color: #1C1917;
+  background-color: var(--blush);
+  color: var(--text);
+}
+
+/* Serif headings feel editorial and elegant */
+h1, h2, h3 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  letter-spacing: -0.01em;
 }
 
 @layer utilities {
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: #44403C transparent;
+    scrollbar-color: #E5D8D4 transparent;
   }
 
   .font-display {
-    font-family: 'Instrument Serif', Georgia, serif;
+    font-family: 'Cormorant Garamond', Georgia, serif;
   }
 
   .input-base {
-    @apply w-full px-3.5 py-2.5 bg-white border border-[#E7E5E4] rounded-xl text-sm text-navy-800 placeholder:text-navy-400 focus:outline-none focus:ring-2 focus:ring-coral-400/40 focus:border-coral-400 transition;
+    @apply w-full px-4 py-2.5 bg-white border border-[#EDD9D0] rounded-2xl text-sm text-navy-800
+           placeholder:text-navy-400 focus:outline-none focus:ring-2 focus:ring-coral-300/50
+           focus:border-coral-400 transition font-sans;
   }
 
   .btn-primary {
-    @apply inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 disabled:bg-navy-200 disabled:text-navy-400 text-white text-sm font-medium rounded-xl transition-colors;
+    @apply inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600
+           disabled:bg-cream-200 disabled:text-navy-400 text-white text-sm font-semibold
+           rounded-2xl transition-colors font-sans tracking-wide;
   }
 
   .card {
-    @apply bg-white border border-[#E7E5E4] rounded-2xl;
+    @apply bg-white border border-[#EDD9D0] rounded-3xl shadow-sm;
   }
 }

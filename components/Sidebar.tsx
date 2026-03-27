@@ -7,13 +7,13 @@ import {
   Users,
   Megaphone,
   Settings,
-  Zap,
   Send,
   Inbox,
   TrendingUp,
   BarChart2,
   FileText,
   BookOpen,
+  Sparkles,
 } from "lucide-react";
 
 const navSections = [
@@ -44,61 +44,75 @@ export default function Sidebar() {
 
   return (
     <aside
-      className="w-64 flex-shrink-0 flex flex-col h-full"
-      style={{ background: "#1C1917" }}
+      className="w-60 flex-shrink-0 flex flex-col h-full"
+      style={{
+        background: "var(--sidebar)",
+        borderRight: "1px solid #EDD9D0",
+      }}
     >
       {/* Logo */}
-      <div className="px-6 py-7" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-        <div className="flex items-center gap-3">
+      <div className="px-6 pt-8 pb-6" style={{ borderBottom: "1px solid #EDD9D0" }}>
+        <div className="flex items-center gap-2.5">
           <div
-            className="w-9 h-9 bg-coral-500 rounded-xl flex items-center justify-center flex-shrink-0"
-            style={{ boxShadow: "0 4px 14px rgba(232,113,90,0.4)" }}
+            className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
+            style={{ background: "linear-gradient(135deg, #E8A4B0 0%, #C96878 100%)" }}
           >
-            <Zap size={16} className="text-white" strokeWidth={2.5} />
+            <Sparkles size={13} className="text-white" strokeWidth={2} />
           </div>
           <div>
-            <span className="text-white font-serif text-lg font-bold leading-none tracking-tight">
+            <span
+              className="font-serif text-xl font-semibold leading-none tracking-tight"
+              style={{ color: "#35261F" }}
+            >
               GinaOS
             </span>
-            <p className="text-[10px] mt-0.5 tracking-widest uppercase" style={{ color: "rgba(255,255,255,0.25)" }}>
-              Outreach Suite
+            <p className="text-[9px] mt-0.5 tracking-[0.15em] uppercase font-sans" style={{ color: "#B39389" }}>
+              Creator Suite
             </p>
           </div>
         </div>
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 px-4 py-6 overflow-y-auto scrollbar-thin space-y-7">
+      <nav className="flex-1 px-3 py-5 overflow-y-auto scrollbar-thin space-y-6">
         {navSections.map((section) => (
           <div key={section.label}>
             <p
-              className="px-3 mb-2.5 text-[10px] font-bold uppercase tracking-widest"
-              style={{ color: "rgba(255,255,255,0.2)" }}
+              className="px-3 mb-2 text-[9px] font-bold uppercase tracking-[0.18em] font-sans"
+              style={{ color: "#D0BAB4" }}
             >
               {section.label}
             </p>
-            <div className="space-y-1">
+            <div className="space-y-0.5">
               {section.items.map(({ href, label, icon: Icon, exact }) => {
-                const active = exact
-                  ? pathname === href
-                  : pathname.startsWith(href);
+                const active = exact ? pathname === href : pathname.startsWith(href);
                 return (
                   <Link
                     key={href}
                     href={href}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ${
-                      active
-                        ? "bg-coral-500 text-white"
-                        : "hover:bg-white/5"
-                    }`}
+                    className="flex items-center gap-3 px-3 py-2 rounded-2xl text-[13px] font-medium transition-all duration-150 font-sans group"
                     style={
                       active
-                        ? { boxShadow: "0 4px 12px rgba(232,113,90,0.35)" }
-                        : { color: "rgba(255,255,255,0.4)" }
+                        ? {
+                            background: "linear-gradient(135deg, #F9E6EA 0%, #F2C9D1 100%)",
+                            color: "#B04D5E",
+                            fontWeight: 600,
+                          }
+                        : { color: "#916F64" }
                     }
                   >
-                    <Icon size={16} strokeWidth={active ? 2.5 : 1.75} />
+                    <Icon
+                      size={15}
+                      strokeWidth={active ? 2 : 1.5}
+                      style={{ opacity: active ? 1 : 0.7 }}
+                    />
                     {label}
+                    {active && (
+                      <div
+                        className="ml-auto w-1.5 h-1.5 rounded-full"
+                        style={{ background: "#C96878" }}
+                      />
+                    )}
                   </Link>
                 );
               })}
@@ -108,40 +122,42 @@ export default function Sidebar() {
       </nav>
 
       {/* Settings link */}
-      <div className="px-4 pb-4">
-        <Link
-          href="/settings"
-          className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ${
-            pathname === "/settings"
-              ? "bg-coral-500 text-white"
-              : "hover:bg-white/5"
-          }`}
-          style={
-            pathname === "/settings"
-              ? { boxShadow: "0 4px 12px rgba(232,113,90,0.35)" }
-              : { color: "rgba(255,255,255,0.4)" }
-          }
-        >
-          <Settings size={16} strokeWidth={pathname === "/settings" ? 2.5 : 1.75} />
-          Settings
-        </Link>
+      <div className="px-3 pb-3" style={{ borderTop: "1px solid #EDD9D0" }}>
+        <div className="pt-3">
+          <Link
+            href="/settings"
+            className="flex items-center gap-3 px-3 py-2 rounded-2xl text-[13px] font-medium transition-all duration-150 font-sans"
+            style={
+              pathname === "/settings"
+                ? {
+                    background: "linear-gradient(135deg, #F9E6EA 0%, #F2C9D1 100%)",
+                    color: "#B04D5E",
+                    fontWeight: 600,
+                  }
+                : { color: "#916F64" }
+            }
+          >
+            <Settings size={15} strokeWidth={pathname === "/settings" ? 2 : 1.5} style={{ opacity: pathname === "/settings" ? 1 : 0.7 }} />
+            Settings
+          </Link>
+        </div>
       </div>
 
       {/* Footer */}
-      <div className="px-5 py-5" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-        <div className="flex items-center gap-3">
+      <div className="px-5 py-4" style={{ borderTop: "1px solid #EDD9D0" }}>
+        <div className="flex items-center gap-2.5">
           <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-            style={{ background: "rgba(232,113,90,0.15)" }}
+            className="w-7 h-7 rounded-xl flex items-center justify-center flex-shrink-0"
+            style={{ background: "linear-gradient(135deg, #F2C9D1 0%, #E8A4B0 100%)" }}
           >
-            <span className="text-coral-400 text-xs font-bold font-serif">G</span>
+            <span className="text-white text-[11px] font-bold font-serif">G</span>
           </div>
           <div>
-            <p className="text-xs font-medium" style={{ color: "rgba(255,255,255,0.45)" }}>
-              Gina&apos;s workspace
+            <p className="text-xs font-semibold font-sans" style={{ color: "#503C36" }}>
+              Gina Burgess
             </p>
-            <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.2)" }}>
-              GinaOS v1.0
+            <p className="text-[10px] font-sans" style={{ color: "#B39389" }}>
+              @ginanutrition
             </p>
           </div>
         </div>
