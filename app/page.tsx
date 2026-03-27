@@ -225,25 +225,27 @@ export default function DashboardPage() {
                 <p className="text-xs text-navy-300 mt-1">Add brands to monitor in Settings.</p>
               </div>
             ) : (
-              <div className="flex-1 overflow-y-auto scrollbar-thin divide-y" style={{ borderColor: "var(--border)" }}>
+              <div className="flex-1 grid grid-cols-2 content-start p-3 gap-2 overflow-hidden">
                 {brands.map((brand, i) => (
-                  <div key={brand.name + i} className="flex items-center gap-3 px-5 py-3.5 hover:bg-navy-50/40 transition-colors">
+                  <div
+                    key={brand.name + i}
+                    className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-navy-50/40 transition-colors border"
+                    style={{ borderColor: "var(--border)" }}
+                  >
                     <div
-                      className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 text-white text-[11px] font-black"
+                      className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 text-white text-[10px] font-black"
                       style={{ background: BRAND_AVATAR_COLOURS[i % BRAND_AVATAR_COLOURS.length] }}
                     >
                       {brand.name[0]?.toUpperCase()}
                     </div>
-                    <span className="flex-1 font-bold text-navy-900 text-sm">{brand.name}</span>
+                    <span className="flex-1 font-bold text-navy-900 text-xs truncate">{brand.name}</span>
                     {brand.runningAds ? (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-1 rounded-full">
-                        <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                        Running Ads
+                      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600" title="Running Ads">
+                        <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse flex-shrink-0" />
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-red-50 text-red-500 border border-red-200 px-2 py-1 rounded-full">
-                        <span className="w-1.5 h-1.5 bg-red-400 rounded-full" />
-                        No Ads
+                      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-red-400" title="No Ads">
+                        <span className="w-2 h-2 bg-red-400 rounded-full flex-shrink-0" />
                       </span>
                     )}
                   </div>
