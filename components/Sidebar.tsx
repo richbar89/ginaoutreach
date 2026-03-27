@@ -45,7 +45,7 @@ export default function Sidebar() {
   return (
     <aside
       className="w-64 flex-shrink-0 flex flex-col h-full"
-      style={{ background: "#0d1829" }}
+      style={{ background: "#1C1917" }}
     >
       {/* Logo */}
       <div className="px-6 py-7" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
