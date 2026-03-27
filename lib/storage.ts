@@ -1,4 +1,4 @@
-import type { Campaign, StoredContact, EmailRecord, ScheduledPost, EmailTemplate, Deal, MediaKit } from "./types";
+import type { Campaign, StoredContact, EmailRecord, ScheduledPost, EmailTemplate, Deal, MediaKit, Brand } from "./types";
 
 // ── Campaigns ──────────────────────────────────────────────
 
@@ -162,6 +162,17 @@ export function getMediaKit(): MediaKit {
 
 export function saveMediaKit(kit: MediaKit): void {
   localStorage.setItem(MEDIA_KIT_KEY, JSON.stringify(kit));
+}
+
+// ── Brand Monitor ───────────────────────────────────────────
+
+export function getBrands(): Brand[] {
+  if (typeof window === "undefined") return [];
+  return JSON.parse(localStorage.getItem("ginaos_brands") || "[]");
+}
+
+export function saveBrands(brands: Brand[]): void {
+  localStorage.setItem("ginaos_brands", JSON.stringify(brands));
 }
 
 // ── Merge tags ─────────────────────────────────────────────

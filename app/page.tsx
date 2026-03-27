@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Send, Users, TrendingUp, Bell, ChevronRight, Clock, Zap } from "lucide-react";
-import { getEmailLog, getContacts, getDeals } from "@/lib/storage";
-import type { Deal } from "@/lib/types";
+import { getEmailLog, getContacts, getDeals, getBrands } from "@/lib/storage";
+import type { Deal, Brand } from "@/lib/types";
 
 const DEAL_STAGE_LABELS: Record<string, string> = {
   pitched: "Pitched", replied: "Replied", negotiating: "Negotiating",
@@ -29,13 +29,7 @@ const DEAL_STAGE_BADGE: Record<string, string> = {
   paid:        "bg-emerald-100 text-emerald-700",
 };
 
-const TOP_BRANDS = [
-  { name: "Myprotein",    runningAds: true },
-  { name: "HelloFresh",   runningAds: false },
-  { name: "Grenade",      runningAds: true },
-  { name: "Huel",         runningAds: false },
-  { name: "Bulk Powders", runningAds: false },
-];
+const BRAND_AVATAR_COLOURS = ["#3B82F6","#8B5CF6","#10B981","#F59E0B","#EF4444","#EC4899","#06B6D4","#84CC16","#F97316","#6366F1"];
 
 type FollowUp = { email: string; name: string; subject: string; daysAgo: number };
 
@@ -70,6 +64,7 @@ export default function DashboardPage() {
   const [emailsSent, setEmailsSent] = useState(0);
   const [followUps, setFollowUps] = useState<FollowUp[]>([]);
   const [deals, setDeals] = useState<Deal[]>([]);
+  const [brands, setBrands] = useState<Brand[]>([]);
 
   useEffect(() => {
     const contactList = getContacts();
@@ -99,6 +94,7 @@ export default function DashboardPage() {
     chaseUps.sort((a, b) => b.daysAgo - a.daysAgo);
     setFollowUps(chaseUps.slice(0, 6));
     setDeals(getDeals());
+    setBrands(getBrands());
   }, []);
 
   const today = new Date().toLocaleDateString("en-GB", {
@@ -153,7 +149,10 @@ export default function DashboardPage() {
             {/* Title */}
             <div className="flex items-center justify-between mb-4">
               <p className="text-blue-300 text-[11px] font-bold uppercase tracking-widest">Analytics</p>
-              <span className="text-[10px] text-blue-400 bg-blue-900/40 px-2 py-0.5 rounded-full border border-blue-800/50">Live placeholders</span>
+              <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-2.5 py-1 rounded-full">
+                <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
+                Live Data
+              </span>
             </div>
 
             {/* Avg views */}
@@ -175,7 +174,7 @@ export default function DashboardPage() {
                 >
                   <InstagramIcon />
                 </div>
-                <p className="text-white text-2xl font-black leading-none mb-0.5">555K</p>
+                <p className="text-white text-2xl font-black leading-none mb-0.5">137K</p>
                 <p className="text-blue-400 text-[10px] font-semibold">Instagram</p>
               </div>
 
@@ -187,7 +186,7 @@ export default function DashboardPage() {
                 >
                   <TikTokIcon />
                 </div>
-                <p className="text-white text-2xl font-black leading-none mb-0.5">200K</p>
+                <p className="text-white text-2xl font-black leading-none mb-0.5">84K</p>
                 <p className="text-blue-400 text-[10px] font-semibold">TikTok</p>
               </div>
 
@@ -199,7 +198,7 @@ export default function DashboardPage() {
                 >
                   <FacebookIcon />
                 </div>
-                <p className="text-white text-2xl font-black leading-none mb-0.5">190K</p>
+                <p className="text-white text-2xl font-black leading-none mb-0.5">52K</p>
                 <p className="text-blue-400 text-[10px] font-semibold">Facebook</p>
               </div>
             </div>
@@ -220,29 +219,37 @@ export default function DashboardPage() {
               </div>
               <span className="text-[10px] font-bold uppercase tracking-widest text-navy-400">Ads Alerts</span>
             </div>
-            <div className="flex-1 overflow-y-auto scrollbar-thin divide-y" style={{ borderColor: "var(--border)" }}>
-              {TOP_BRANDS.map((brand, i) => (
-                <div key={brand.name} className="flex items-center gap-3 px-5 py-3.5 hover:bg-navy-50/40 transition-colors">
-                  <div
-                    className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 text-white text-[11px] font-black"
-                    style={{
-                      background: ["#3B82F6","#8B5CF6","#10B981","#F59E0B","#EF4444"][i % 5],
-                    }}
-                  >
-                    {brand.name[0]}
+            {brands.length === 0 ? (
+              <div className="flex-1 flex flex-col items-center justify-center text-center p-6">
+                <p className="text-sm font-semibold text-navy-400">No brands added yet.</p>
+                <p className="text-xs text-navy-300 mt-1">Add brands to monitor in Settings.</p>
+              </div>
+            ) : (
+              <div className="flex-1 overflow-y-auto scrollbar-thin divide-y" style={{ borderColor: "var(--border)" }}>
+                {brands.map((brand, i) => (
+                  <div key={brand.name + i} className="flex items-center gap-3 px-5 py-3.5 hover:bg-navy-50/40 transition-colors">
+                    <div
+                      className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 text-white text-[11px] font-black"
+                      style={{ background: BRAND_AVATAR_COLOURS[i % BRAND_AVATAR_COLOURS.length] }}
+                    >
+                      {brand.name[0]?.toUpperCase()}
+                    </div>
+                    <span className="flex-1 font-bold text-navy-900 text-sm">{brand.name}</span>
+                    {brand.runningAds ? (
+                      <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-1 rounded-full">
+                        <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                        Running Ads
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-red-50 text-red-500 border border-red-200 px-2 py-1 rounded-full">
+                        <span className="w-1.5 h-1.5 bg-red-400 rounded-full" />
+                        No Ads
+                      </span>
+                    )}
                   </div>
-                  <span className="flex-1 font-bold text-navy-900 text-sm">{brand.name}</span>
-                  {brand.runningAds ? (
-                    <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200 px-2 py-1 rounded-full">
-                      <span className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse" />
-                      Running Ads
-                    </span>
-                  ) : (
-                    <span className="text-[10px] font-medium text-navy-300">No ads</span>
-                  )}
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 

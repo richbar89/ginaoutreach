@@ -111,6 +111,13 @@ export type MediaKit = {
   audienceTopLocation?: string;
 };
 
+// ── Brand Monitor ────────────────────────────────────────────
+
+export type Brand = {
+  name: string;
+  runningAds: boolean;
+};
+
 // ── Content Planner ─────────────────────────────────────────
 
 export type Platform = "instagram" | "tiktok" | "facebook";

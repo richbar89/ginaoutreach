@@ -17,7 +17,8 @@ import {
   getMicrosoftUser,
 } from "@/lib/graphClient";
 import { resetMsalInstance } from "@/lib/msalInstance";
-import { getSignature, saveSignature } from "@/lib/storage";
+import { getSignature, saveSignature, getBrands, saveBrands } from "@/lib/storage";
+import type { Brand } from "@/lib/types";
 
 type MsUser = { name: string; email: string } | null;
 
@@ -31,6 +32,8 @@ export default function SettingsPage() {
   const [showInstructions, setShowInstructions] = useState(false);
   const [signature, setSignature] = useState("");
   const [sigSaved, setSigSaved] = useState(false);
+  const [brands, setBrands] = useState<Brand[]>(Array.from({ length: 10 }, () => ({ name: "", runningAds: false })));
+  const [brandsSaved, setBrandsSaved] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem("azure_client_id") || "";
@@ -38,6 +41,8 @@ export default function SettingsPage() {
     setClientId(stored);
     setMsUser(getMicrosoftUser());
     setSignature(getSignature());
+    const stored = getBrands();
+    setBrands(Array.from({ length: 10 }, (_, i) => stored[i] ?? { name: "", runningAds: false }));
     setLoading(false);
   }, []);
 
@@ -45,6 +50,16 @@ export default function SettingsPage() {
     saveSignature(signature);
     setSigSaved(true);
     setTimeout(() => setSigSaved(false), 2500);
+  };
+
+  const handleSaveBrands = () => {
+    saveBrands(brands.filter(b => b.name.trim()));
+    setBrandsSaved(true);
+    setTimeout(() => setBrandsSaved(false), 2500);
+  };
+
+  const updateBrand = (i: number, patch: Partial<Brand>) => {
+    setBrands(prev => prev.map((b, idx) => idx === i ? { ...b, ...patch } : b));
   };
 
   const saveClientId = () => {
@@ -219,6 +234,51 @@ export default function SettingsPage() {
           >
             {sigSaved ? <CheckCircle size={14} /> : null}
             {sigSaved ? "Saved!" : "Save Signature"}
+          </button>
+        </div>
+      </div>
+
+      {/* Brand Monitor */}
+      <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm mb-6">
+        <div className="px-7 py-5 border-b border-cream-100">
+          <p className="text-sm font-bold text-navy-800">Brand Monitor</p>
+          <p className="text-xs text-navy-400 mt-1">
+            Track up to 10 brands and flag whether they&apos;re running ads. These appear on your dashboard.
+          </p>
+        </div>
+        <div className="px-7 py-6">
+          <div className="grid grid-cols-2 gap-x-6 gap-y-3 mb-5">
+            {brands.map((brand, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <span className="text-[11px] font-bold text-navy-400 w-4 flex-shrink-0">{i + 1}</span>
+                <input
+                  type="text"
+                  value={brand.name}
+                  onChange={(e) => updateBrand(i, { name: e.target.value })}
+                  placeholder={`Brand ${i + 1}`}
+                  className="input-base flex-1 text-sm"
+                />
+                <button
+                  onClick={() => updateBrand(i, { runningAds: !brand.runningAds })}
+                  className={`flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold border transition-all ${
+                    brand.runningAds
+                      ? "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100"
+                      : "bg-red-50 text-red-500 border-red-200 hover:bg-red-100"
+                  }`}
+                  title="Toggle ads status"
+                >
+                  <span className={`w-2 h-2 rounded-full flex-shrink-0 ${brand.runningAds ? "bg-emerald-500" : "bg-red-400"}`} />
+                  {brand.runningAds ? "Ads on" : "No ads"}
+                </button>
+              </div>
+            ))}
+          </div>
+          <button
+            onClick={handleSaveBrands}
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold rounded-xl transition-colors"
+          >
+            {brandsSaved ? <CheckCircle size={14} /> : null}
+            {brandsSaved ? "Saved!" : "Save Brands"}
           </button>
         </div>
       </div>
