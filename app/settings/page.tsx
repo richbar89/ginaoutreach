@@ -41,8 +41,8 @@ export default function SettingsPage() {
     setClientId(stored);
     setMsUser(getMicrosoftUser());
     setSignature(getSignature());
-    const stored = getBrands();
-    setBrands(Array.from({ length: 10 }, (_, i) => stored[i] ?? { name: "", runningAds: false }));
+    const storedBrands = getBrands();
+    setBrands(Array.from({ length: 10 }, (_, i) => storedBrands[i] ?? { name: "", runningAds: false }));
     setLoading(false);
   }, []);
 
