@@ -17,7 +17,7 @@ export default function RootLayout({
       <body
         className="antialiased"
         style={{
-          background: "#C2ADCC",
+          background: "#3A5EA0",
           minHeight: "100vh",
           padding: "20px",
         }}

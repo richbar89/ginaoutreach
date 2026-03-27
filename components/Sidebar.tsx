@@ -47,27 +47,27 @@ export default function Sidebar() {
       className="w-60 flex-shrink-0 flex flex-col h-full"
       style={{
         background: "var(--sidebar)",
-        borderRight: "1px solid #EDD9D0",
+        borderRight: "1px solid var(--border)",
         borderRadius: "20px 0 0 20px",
       }}
     >
       {/* Logo */}
-      <div className="px-6 pt-8 pb-6" style={{ borderBottom: "1px solid #EDD9D0" }}>
+      <div className="px-6 pt-7 pb-5" style={{ borderBottom: "1px solid var(--border)" }}>
         <div className="flex items-center gap-2.5">
           <div
             className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
-            style={{ background: "linear-gradient(135deg, #E8A4B0 0%, #C96878 100%)" }}
+            style={{ background: "linear-gradient(135deg, #60A5FA 0%, #2563EB 100%)" }}
           >
             <Sparkles size={13} className="text-white" strokeWidth={2} />
           </div>
           <div>
             <span
-              className="font-serif text-xl font-semibold leading-none tracking-tight"
-              style={{ color: "#35261F" }}
+              className="font-serif text-xl font-bold leading-none tracking-tight"
+              style={{ color: "#0F172A" }}
             >
               GinaOS
             </span>
-            <p className="text-[9px] mt-0.5 tracking-[0.15em] uppercase font-sans" style={{ color: "#B39389" }}>
+            <p className="text-[9px] mt-0.5 tracking-[0.15em] uppercase font-sans" style={{ color: "#94A3B8" }}>
               Creator Suite
             </p>
           </div>
@@ -80,7 +80,7 @@ export default function Sidebar() {
           <div key={section.label}>
             <p
               className="px-3 mb-2 text-[9px] font-bold uppercase tracking-[0.18em] font-sans"
-              style={{ color: "#D0BAB4" }}
+              style={{ color: "#CBD5E1" }}
             >
               {section.label}
             </p>
@@ -91,15 +91,15 @@ export default function Sidebar() {
                   <Link
                     key={href}
                     href={href}
-                    className="flex items-center gap-3 px-3 py-2 rounded-2xl text-[13px] font-medium transition-all duration-150 font-sans group"
+                    className="flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] font-medium transition-all duration-150 font-sans"
                     style={
                       active
                         ? {
-                            background: "linear-gradient(135deg, #F9E6EA 0%, #F2C9D1 100%)",
-                            color: "#B04D5E",
+                            background: "linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%)",
+                            color: "#2563EB",
                             fontWeight: 600,
                           }
-                        : { color: "#916F64" }
+                        : { color: "#64748B" }
                     }
                   >
                     <Icon
@@ -111,7 +111,7 @@ export default function Sidebar() {
                     {active && (
                       <div
                         className="ml-auto w-1.5 h-1.5 rounded-full"
-                        style={{ background: "#C96878" }}
+                        style={{ background: "#3B82F6" }}
                       />
                     )}
                   </Link>
@@ -123,19 +123,19 @@ export default function Sidebar() {
       </nav>
 
       {/* Settings link */}
-      <div className="px-3 pb-3" style={{ borderTop: "1px solid #EDD9D0" }}>
+      <div className="px-3 pb-3" style={{ borderTop: "1px solid var(--border)" }}>
         <div className="pt-3">
           <Link
             href="/settings"
-            className="flex items-center gap-3 px-3 py-2 rounded-2xl text-[13px] font-medium transition-all duration-150 font-sans"
+            className="flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] font-medium transition-all duration-150 font-sans"
             style={
               pathname === "/settings"
                 ? {
-                    background: "linear-gradient(135deg, #F9E6EA 0%, #F2C9D1 100%)",
-                    color: "#B04D5E",
+                    background: "linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%)",
+                    color: "#2563EB",
                     fontWeight: 600,
                   }
-                : { color: "#916F64" }
+                : { color: "#64748B" }
             }
           >
             <Settings size={15} strokeWidth={pathname === "/settings" ? 2 : 1.5} style={{ opacity: pathname === "/settings" ? 1 : 0.7 }} />
@@ -145,19 +145,19 @@ export default function Sidebar() {
       </div>
 
       {/* Footer */}
-      <div className="px-5 py-4" style={{ borderTop: "1px solid #EDD9D0" }}>
+      <div className="px-5 py-4" style={{ borderTop: "1px solid var(--border)" }}>
         <div className="flex items-center gap-2.5">
           <div
             className="w-7 h-7 rounded-xl flex items-center justify-center flex-shrink-0"
-            style={{ background: "linear-gradient(135deg, #F2C9D1 0%, #E8A4B0 100%)" }}
+            style={{ background: "linear-gradient(135deg, #BFDBFE 0%, #60A5FA 100%)" }}
           >
             <span className="text-white text-[11px] font-bold font-serif">G</span>
           </div>
           <div>
-            <p className="text-xs font-semibold font-sans" style={{ color: "#503C36" }}>
+            <p className="text-xs font-semibold font-sans" style={{ color: "#334155" }}>
               Gina Burgess
             </p>
-            <p className="text-[10px] font-sans" style={{ color: "#B39389" }}>
+            <p className="text-[10px] font-sans" style={{ color: "#94A3B8" }}>
               @ginanutrition
             </p>
           </div>

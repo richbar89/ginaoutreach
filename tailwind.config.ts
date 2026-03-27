@@ -9,41 +9,42 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Nunito", "system-ui", "sans-serif"],
-        serif: ["Cormorant Garamond", "Georgia", "serif"],
+        sans: ["Outfit", "system-ui", "sans-serif"],
+        serif: ["Syne", "system-ui", "sans-serif"],
+        display: ["Syne", "system-ui", "sans-serif"],
       },
       colors: {
-        // Dusty rose — primary accent throughout the app
+        // Blue — primary accent throughout the app
         coral: {
-          50:  "#FCF3F5",
-          100: "#F9E6EA",
-          200: "#F2C9D1",
-          300: "#E8A4B0",
-          400: "#D97A8A",
-          500: "#C96878",
-          600: "#B04D5E",
-          700: "#8F3A4A",
-          800: "#752F3D",
-          900: "#5E2633",
+          50:  "#EFF6FF",
+          100: "#DBEAFE",
+          200: "#BFDBFE",
+          300: "#93C5FD",
+          400: "#60A5FA",
+          500: "#3B82F6",
+          600: "#2563EB",
+          700: "#1D4ED8",
+          800: "#1E40AF",
+          900: "#1E3A8A",
         },
-        // Warm rosewood — replaces navy across entire app (all text, borders, UI)
+        // Slate — text, borders, UI
         navy: {
-          50:  "#FAF7F6",
-          100: "#F3EDEB",
-          200: "#E5D8D4",
-          300: "#D0BAB4",
-          400: "#B39389",
-          500: "#916F64",
-          600: "#6F524A",
-          700: "#503C36",
-          800: "#35261F",
-          900: "#1E1410",
+          50:  "#F8FAFC",
+          100: "#F1F5F9",
+          200: "#E2E8F0",
+          300: "#CBD5E1",
+          400: "#94A3B8",
+          500: "#64748B",
+          600: "#475569",
+          700: "#334155",
+          800: "#1E293B",
+          900: "#0F172A",
         },
-        // Soft blush ivory — backgrounds and surfaces
+        // Light blue-gray — backgrounds and surfaces
         cream: {
-          50:  "#FBF8F6",
-          100: "#F5EDE8",
-          200: "#EDD9D0",
+          50:  "#F7F9FF",
+          100: "#EEF2FF",
+          200: "#DDE5F5",
         },
       },
     },

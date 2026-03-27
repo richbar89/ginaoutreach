@@ -1,16 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=Nunito:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --rose:     #C96878;
-  --blush:    #FBF8F6;
-  --border:   #EDD9D0;
-  --text:     #35261F;
-  --muted:    #916F64;
-  --sidebar:  #FBF7F4;
+  --blue:     #3B82F6;
+  --blush:    #F7F9FF;
+  --border:   #E2E8F0;
+  --text:     #0F172A;
+  --muted:    #64748B;
+  --sidebar:  #F0F4FD;
 }
 
 * {
@@ -18,41 +18,40 @@
 }
 
 body {
-  font-family: 'Nunito', system-ui, sans-serif;
+  font-family: 'Outfit', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   background-color: var(--blush);
   color: var(--text);
 }
 
-/* Serif headings feel editorial and elegant */
 h1, h2, h3 {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  letter-spacing: -0.01em;
+  font-family: 'Syne', system-ui, sans-serif;
+  letter-spacing: -0.02em;
 }
 
 @layer utilities {
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: #E5D8D4 transparent;
+    scrollbar-color: #CBD5E1 transparent;
   }
 
   .font-display {
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: 'Syne', system-ui, sans-serif;
   }
 
   .input-base {
-    @apply w-full px-4 py-2.5 bg-white border border-[#EDD9D0] rounded-2xl text-sm text-navy-800
+    @apply w-full px-4 py-2.5 bg-white border border-[#E2E8F0] rounded-2xl text-sm text-navy-800
            placeholder:text-navy-400 focus:outline-none focus:ring-2 focus:ring-coral-300/50
            focus:border-coral-400 transition font-sans;
   }
 
   .btn-primary {
     @apply inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600
-           disabled:bg-cream-200 disabled:text-navy-400 text-white text-sm font-semibold
-           rounded-2xl transition-colors font-sans tracking-wide;
+           disabled:bg-navy-100 disabled:text-navy-400 text-white text-sm font-semibold
+           rounded-2xl transition-colors font-sans;
   }
 
   .card {
-    @apply bg-white border border-[#EDD9D0] rounded-3xl shadow-sm;
+    @apply bg-white border border-[#E2E8F0] rounded-3xl shadow-sm;
   }
 }
