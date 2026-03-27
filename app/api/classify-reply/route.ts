@@ -29,7 +29,7 @@ Reply with JSON only: {"positive": true/false, "confidence": 0-100, "reason": "o
     });
 
     const text = message.content[0].type === "text" ? message.content[0].text : "";
-    const parsed = JSON.parse(text.match(/\{.*\}/s)?.[0] || "{}");
+    const parsed = JSON.parse(text.match(/\{[\s\S]*\}/)?.[0] || "{}");
 
     return NextResponse.json({
       positive: parsed.positive ?? false,
