@@ -62,7 +62,7 @@ export default function Sidebar() {
           </div>
           <div>
             <span
-              className="font-serif text-xl font-bold leading-none tracking-tight"
+              className="font-display text-xl font-bold leading-none tracking-tight"
               style={{ color: "#0F172A" }}
             >
               GinaOS

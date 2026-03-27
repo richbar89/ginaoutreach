@@ -9,9 +9,9 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Outfit", "system-ui", "sans-serif"],
-        serif: ["Syne", "system-ui", "sans-serif"],
-        display: ["Syne", "system-ui", "sans-serif"],
+        sans: ["Urbanist", "system-ui", "sans-serif"],
+        serif: ["Urbanist", "system-ui", "sans-serif"],
+        display: ["Urbanist", "system-ui", "sans-serif"],
       },
       colors: {
         // Blue — primary accent throughout the app
