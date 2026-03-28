@@ -5,12 +5,12 @@
 @tailwind utilities;
 
 :root {
-  --blue:     #3B82F6;
-  --blush:    #F7F9FF;
-  --border:   #E2E8F0;
-  --text:     #0F172A;
-  --muted:    #64748B;
-  --sidebar:  #F0F4FD;
+  --green:    #A0C172;
+  --blush:    #F6FAF0;
+  --border:   #D5E9BE;
+  --text:     #171E12;
+  --muted:    #6B7A5C;
+  --sidebar:  #EEF6E2;
 }
 
 * {
@@ -33,7 +33,7 @@ h1, h2, h3 {
 @layer utilities {
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: #CBD5E1 transparent;
+    scrollbar-color: #C5DBA0 transparent;
   }
 
   .font-display {
@@ -41,7 +41,7 @@ h1, h2, h3 {
   }
 
   .input-base {
-    @apply w-full px-4 py-2.5 bg-white border border-[#E2E8F0] rounded-2xl text-sm text-navy-800
+    @apply w-full px-4 py-2.5 bg-white border border-[#D5E9BE] rounded-2xl text-sm text-navy-800
            placeholder:text-navy-400 focus:outline-none focus:ring-2 focus:ring-coral-300/50
            focus:border-coral-400 transition font-sans;
   }
@@ -53,6 +53,6 @@ h1, h2, h3 {
   }
 
   .card {
-    @apply bg-white border border-[#E2E8F0] rounded-3xl shadow-sm;
+    @apply bg-white border border-[#D5E9BE] rounded-3xl shadow-sm;
   }
 }

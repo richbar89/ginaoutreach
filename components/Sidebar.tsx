@@ -44,7 +44,7 @@ export default function Sidebar() {
 
   return (
     <aside
-      className="w-60 flex-shrink-0 flex flex-col h-full"
+      className="w-64 flex-shrink-0 flex flex-col h-full"
       style={{
         background: "var(--sidebar)",
         borderRight: "1px solid var(--border)",
@@ -53,21 +53,21 @@ export default function Sidebar() {
     >
       {/* Logo */}
       <div className="px-6 pt-7 pb-5" style={{ borderBottom: "1px solid var(--border)" }}>
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-3">
           <div
-            className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
-            style={{ background: "linear-gradient(135deg, #60A5FA 0%, #2563EB 100%)" }}
+            className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+            style={{ background: "linear-gradient(135deg, #B3D47E 0%, #6E9140 100%)" }}
           >
-            <Sparkles size={13} className="text-white" strokeWidth={2} />
+            <Sparkles size={15} className="text-white" strokeWidth={2.5} />
           </div>
           <div>
             <span
-              className="font-display text-xl font-bold leading-none tracking-tight"
-              style={{ color: "#0F172A" }}
+              className="font-display text-2xl font-black leading-none tracking-tight"
+              style={{ color: "#171E12" }}
             >
               GinaOS
             </span>
-            <p className="text-[9px] mt-0.5 tracking-[0.15em] uppercase font-sans" style={{ color: "#94A3B8" }}>
+            <p className="text-[9px] mt-0.5 tracking-[0.18em] uppercase font-sans font-bold" style={{ color: "#94A385" }}>
               Creator Suite
             </p>
           </div>
@@ -75,12 +75,12 @@ export default function Sidebar() {
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 px-3 py-5 overflow-y-auto scrollbar-thin space-y-6">
+      <nav className="flex-1 px-3 py-5 overflow-y-auto scrollbar-thin space-y-5">
         {navSections.map((section) => (
           <div key={section.label}>
             <p
-              className="px-3 mb-2 text-[9px] font-bold uppercase tracking-[0.18em] font-sans"
-              style={{ color: "#CBD5E1" }}
+              className="px-3 mb-2 text-[10px] font-black uppercase tracking-[0.2em] font-sans"
+              style={{ color: "#BFC9B4" }}
             >
               {section.label}
             </p>
@@ -91,27 +91,26 @@ export default function Sidebar() {
                   <Link
                     key={href}
                     href={href}
-                    className="flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] font-medium transition-all duration-150 font-sans"
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-150 font-sans"
                     style={
                       active
                         ? {
-                            background: "linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%)",
-                            color: "#2563EB",
-                            fontWeight: 600,
+                            background: "linear-gradient(135deg, #E8F3D5 0%, #CFE4AA 100%)",
+                            color: "#4A6B2E",
+                            fontWeight: 800,
                           }
-                        : { color: "#64748B" }
+                        : { color: "#6B7A5C", fontWeight: 600 }
                     }
                   >
                     <Icon
-                      size={15}
-                      strokeWidth={active ? 2 : 1.5}
-                      style={{ opacity: active ? 1 : 0.7 }}
+                      size={16}
+                      strokeWidth={active ? 2.5 : 1.75}
                     />
                     {label}
                     {active && (
                       <div
                         className="ml-auto w-1.5 h-1.5 rounded-full"
-                        style={{ background: "#3B82F6" }}
+                        style={{ background: "#A0C172" }}
                       />
                     )}
                   </Link>
@@ -127,18 +126,18 @@ export default function Sidebar() {
         <div className="pt-3">
           <Link
             href="/settings"
-            className="flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] font-medium transition-all duration-150 font-sans"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-150 font-sans"
             style={
               pathname === "/settings"
                 ? {
-                    background: "linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%)",
-                    color: "#2563EB",
-                    fontWeight: 600,
+                    background: "linear-gradient(135deg, #E8F3D5 0%, #CFE4AA 100%)",
+                    color: "#4A6B2E",
+                    fontWeight: 800,
                   }
-                : { color: "#64748B" }
+                : { color: "#6B7A5C", fontWeight: 600 }
             }
           >
-            <Settings size={15} strokeWidth={pathname === "/settings" ? 2 : 1.5} style={{ opacity: pathname === "/settings" ? 1 : 0.7 }} />
+            <Settings size={16} strokeWidth={pathname === "/settings" ? 2.5 : 1.75} />
             Settings
           </Link>
         </div>
@@ -146,18 +145,18 @@ export default function Sidebar() {
 
       {/* Footer */}
       <div className="px-5 py-4" style={{ borderTop: "1px solid var(--border)" }}>
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-3">
           <div
-            className="w-7 h-7 rounded-xl flex items-center justify-center flex-shrink-0"
-            style={{ background: "linear-gradient(135deg, #BFDBFE 0%, #60A5FA 100%)" }}
+            className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
+            style={{ background: "linear-gradient(135deg, #CFE4AA 0%, #8AAD58 100%)" }}
           >
-            <span className="text-white text-[11px] font-bold font-serif">G</span>
+            <span className="text-white text-sm font-black">G</span>
           </div>
           <div>
-            <p className="text-xs font-semibold font-sans" style={{ color: "#334155" }}>
+            <p className="text-sm font-bold font-sans" style={{ color: "#3A4531" }}>
               Gina Burgess
             </p>
-            <p className="text-[10px] font-sans" style={{ color: "#94A3B8" }}>
+            <p className="text-[11px] font-semibold font-sans" style={{ color: "#94A385" }}>
               @ginanutrition
             </p>
           </div>
