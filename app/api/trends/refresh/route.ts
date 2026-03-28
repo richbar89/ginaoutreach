@@ -17,6 +17,7 @@ interface ApifyPost {
   productType?: string;   // "clips" = Reel
   url?: string;
   ownerUsername?: string;
+  ownerFollowersCount?: number;
 }
 
 // Poll an Apify run until SUCCEEDED or FAILED (max ~5 min)
@@ -79,7 +80,7 @@ export async function POST(req: NextRequest) {
           directUrls: influencers.map((i) => `https://www.instagram.com/${i.handle}/`),
           resultsType: "posts",
           resultsLimit: 20,
-          addParentData: false,
+          addParentData: true,
         }),
       }
     );
@@ -107,12 +108,16 @@ export async function POST(req: NextRequest) {
 
     let saved = 0;
     let flagged = 0;
+    const updatedFollowers = new Map<string, number>();
 
     for (const post of apifyPosts) {
       const handle = post.ownerUsername?.toLowerCase();
       if (!handle) continue;
 
-      const followers = followerMap.get(handle) ?? 0;
+      // Use live follower count from Apify if available, fall back to stored value
+      const liveFollowers = post.ownerFollowersCount;
+      if (liveFollowers) updatedFollowers.set(handle, liveFollowers);
+      const followers = liveFollowers ?? followerMap.get(handle) ?? 0;
 
       // Reels have videoViewCount; images/carousels use likesCount as proxy
       const views = post.videoViewCount ?? 0;
@@ -167,11 +172,15 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Update last_scraped_at
-    await sb
-      .from("trend_influencers")
-      .update({ last_scraped_at: new Date().toISOString() })
-      .in("handle", influencers.map((i) => i.handle));
+    // Update last_scraped_at and live follower counts
+    const now = new Date().toISOString();
+    await Promise.all(
+      influencers.map((i) => {
+        const patch: Record<string, unknown> = { last_scraped_at: now };
+        if (updatedFollowers.has(i.handle)) patch.followers = updatedFollowers.get(i.handle);
+        return sb.from("trend_influencers").update(patch).eq("handle", i.handle);
+      })
+    );
 
     if (logId) {
       await sb
