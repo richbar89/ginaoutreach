@@ -11,6 +11,8 @@ import {
   getAllCachedStatuses,
   getCachedAdStatus,
   checkCompanyAds,
+  canForceScan,
+  nextForceScanAt,
 } from "@/lib/metaAds";
 import type { AdStatus } from "@/lib/metaAds";
 
@@ -33,6 +35,15 @@ function formatChecked(dateStr: string) {
   return `${days}d ago`;
 }
 
+function formatCountdown(date: Date): string {
+  const diff = date.getTime() - Date.now();
+  if (diff <= 0) return "now";
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  if (h > 0) return `${h}h ${m}m`;
+  return `${m}m`;
+}
+
 type Filter = "all" | "running" | "none" | "unchecked";
 
 export default function AdsPage() {
@@ -41,15 +52,25 @@ export default function AdsPage() {
   const [progress, setProgress] = useState({ done: 0, total: 0, current: "" });
   const [scanError, setScanError] = useState("");
   const [filter, setFilter] = useState<Filter>("all");
+  const [forceScanAvailable, setForceScanAvailable] = useState(true);
+  const [nextScanTime, setNextScanTime] = useState<Date | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
   const refreshStatuses = useCallback(() => {
     setStatuses(getAllCachedStatuses());
   }, []);
 
+  const refreshCooldown = useCallback(() => {
+    setForceScanAvailable(canForceScan());
+    setNextScanTime(nextForceScanAt());
+  }, []);
+
   useEffect(() => {
     refreshStatuses();
-  }, [refreshStatuses]);
+    refreshCooldown();
+    const interval = setInterval(refreshCooldown, 60000);
+    return () => clearInterval(interval);
+  }, [refreshStatuses, refreshCooldown]);
 
   const startScan = async () => {
     const controller = new AbortController();
@@ -65,11 +86,13 @@ export default function AdsPage() {
         if (error) setScanError(`"${current}": ${error}`);
         refreshStatuses();
       },
-      controller.signal
+      controller.signal,
+      allCached
     );
 
     setScanning(false);
     refreshStatuses();
+    refreshCooldown();
   };
 
   const stopScan = () => {
@@ -140,13 +163,30 @@ export default function AdsPage() {
               </button>
             ) : (
               <>
-                <button
-                  onClick={startScan}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold rounded-xl transition-colors"
-                >
-                  <Play size={14} />
-                  {allCached ? "Rescan All" : "Scan All"}
-                </button>
+                {allCached && !forceScanAvailable ? (
+                  <div className="flex flex-col items-end gap-1">
+                    <button
+                      disabled
+                      className="inline-flex items-center gap-2 px-5 py-2.5 bg-cream-200 text-navy-400 text-sm font-semibold rounded-xl cursor-not-allowed"
+                    >
+                      <RefreshCw size={14} />
+                      Rescan All
+                    </button>
+                    {nextScanTime && (
+                      <span className="text-[11px] text-navy-400">
+                        Available in {formatCountdown(nextScanTime)}
+                      </span>
+                    )}
+                  </div>
+                ) : (
+                  <button
+                    onClick={startScan}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold rounded-xl transition-colors"
+                  >
+                    <Play size={14} />
+                    {allCached ? "Rescan All" : "Scan All"}
+                  </button>
+                )}
               </>
             )}
           </div>
@@ -330,6 +370,11 @@ export default function AdsPage() {
             run a scan
           </button>{" "}
           to see who&apos;s running ads. Takes ~{Math.ceil(unchecked.length * 0.25 / 60)} min.
+        </p>
+      )}
+      {!scanning && allCached && !forceScanAvailable && nextScanTime && (
+        <p className="mt-4 text-xs text-navy-400 text-center">
+          All companies scanned · next rescan available in {formatCountdown(nextScanTime)}
         </p>
       )}
     </div>

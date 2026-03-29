@@ -1,7 +1,9 @@
 const CACHE_KEY = "meta_ads_cache";
 const PAGE_ID_CACHE_KEY = "meta_page_id_cache";
+const FORCE_SCAN_KEY = "meta_ads_last_force_scan";
 const TTL_MS = 3 * 24 * 60 * 60 * 1000; // 3 days
 const PAGE_ID_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
+const FORCE_SCAN_COOLDOWN_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 export type AdStatus = {
   hasAds: boolean;
@@ -36,6 +38,25 @@ function getPageIdCache(): PageIdCache {
 
 function savePageIdCache(cache: PageIdCache) {
   localStorage.setItem(PAGE_ID_CACHE_KEY, JSON.stringify(cache));
+}
+
+export function canForceScan(): boolean {
+  if (typeof window === "undefined") return false;
+  const last = localStorage.getItem(FORCE_SCAN_KEY);
+  if (!last) return true;
+  return Date.now() - Number(last) > FORCE_SCAN_COOLDOWN_MS;
+}
+
+export function nextForceScanAt(): Date | null {
+  if (typeof window === "undefined") return null;
+  const last = localStorage.getItem(FORCE_SCAN_KEY);
+  if (!last) return null;
+  const next = Number(last) + FORCE_SCAN_COOLDOWN_MS;
+  return next > Date.now() ? new Date(next) : null;
+}
+
+function recordForceScan() {
+  localStorage.setItem(FORCE_SCAN_KEY, String(Date.now()));
 }
 
 export function getCachedAdStatus(company: string): AdStatus | null {
@@ -113,9 +134,11 @@ export async function checkCompanyAds(company: string): Promise<AdStatus> {
 export async function scanCompanies(
   companies: string[],
   onProgress: (done: number, total: number, current: string, error?: string) => void,
-  signal: AbortSignal
+  signal: AbortSignal,
+  force = false
 ): Promise<void> {
-  const toCheck = companies.filter((c) => !getCachedAdStatus(c));
+  const toCheck = force ? companies : companies.filter((c) => !getCachedAdStatus(c));
+  if (force) recordForceScan();
 
   for (let i = 0; i < toCheck.length; i++) {
     if (signal.aborted) break;
