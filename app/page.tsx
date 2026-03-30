@@ -144,23 +144,23 @@ export default function DashboardPage() {
           {/* Analytics Card */}
           <div
             className="rounded-2xl p-5 flex-shrink-0"
-            style={{ background: "linear-gradient(135deg, #1A2410 0%, #2D4A18 60%, #3D6122 100%)" }}
+            style={{ background: "linear-gradient(135deg, #0D1B2A 0%, #162540 55%, #1C3358 100%)" }}
           >
             {/* Title */}
             <div className="flex items-center justify-between mb-4">
-              <p className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "#A0C172" }}>Analytics</p>
-              <span className="inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-1 rounded-full" style={{ color: "#A0C172", background: "rgba(160,193,114,0.15)", border: "1px solid rgba(160,193,114,0.3)" }}>
-                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#A0C172" }} />
+              <p className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "#93B8D4" }}>Analytics</p>
+              <span className="inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-1 rounded-full" style={{ color: "#F08050", background: "rgba(232,98,42,0.15)", border: "1px solid rgba(232,98,42,0.3)" }}>
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#E8622A" }} />
                 Live Data
               </span>
             </div>
 
             {/* Avg views */}
             <div className="mb-5 pb-5" style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
-              <p className="text-xs font-medium mb-1" style={{ color: "#A0C172" }}>Avg. Views per Post — last 7 days</p>
+              <p className="text-xs font-medium mb-1" style={{ color: "#93B8D4" }}>Avg. Views per Post — last 7 days</p>
               <div className="flex items-end gap-3">
                 <p className="text-white text-5xl font-black tracking-tight leading-none">—</p>
-                <p className="text-xs mb-1" style={{ color: "#7A9E52" }}>Connect Meta API to populate</p>
+                <p className="text-xs mb-1" style={{ color: "#5A88A8" }}>Connect Meta API to populate</p>
               </div>
             </div>
 
@@ -175,7 +175,7 @@ export default function DashboardPage() {
                   <InstagramIcon />
                 </div>
                 <p className="text-white text-2xl font-black leading-none mb-0.5">137K</p>
-                <p className="text-[10px] font-semibold" style={{ color: "#7A9E52" }}>Instagram</p>
+                <p className="text-[10px] font-semibold" style={{ color: "#93B8D4" }}>Instagram</p>
               </div>
 
               {/* TikTok */}
@@ -187,7 +187,7 @@ export default function DashboardPage() {
                   <TikTokIcon />
                 </div>
                 <p className="text-white text-2xl font-black leading-none mb-0.5">84K</p>
-                <p className="text-[10px] font-semibold" style={{ color: "#7A9E52" }}>TikTok</p>
+                <p className="text-[10px] font-semibold" style={{ color: "#93B8D4" }}>TikTok</p>
               </div>
 
               {/* Facebook */}
@@ -199,7 +199,7 @@ export default function DashboardPage() {
                   <FacebookIcon />
                 </div>
                 <p className="text-white text-2xl font-black leading-none mb-0.5">52K</p>
-                <p className="text-[10px] font-semibold" style={{ color: "#7A9E52" }}>Facebook</p>
+                <p className="text-[10px] font-semibold" style={{ color: "#93B8D4" }}>Facebook</p>
               </div>
             </div>
           </div>
