@@ -47,28 +47,28 @@ export default function Sidebar() {
     <aside
       className="w-64 flex-shrink-0 flex flex-col h-full"
       style={{
-        background: "var(--sidebar)",
-        borderRight: "1px solid var(--border)",
+        background: "#FFFFFF",
+        borderRight: "1px solid #E5E7EB",
         borderRadius: "20px 0 0 20px",
       }}
     >
       {/* Logo */}
-      <div className="px-6 pt-7 pb-5" style={{ borderBottom: "1px solid var(--border)" }}>
+      <div className="px-6 pt-7 pb-5" style={{ borderBottom: "1px solid #E5E7EB" }}>
         <div className="flex items-center gap-3">
           <div
             className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-            style={{ background: "linear-gradient(135deg, #B3D47E 0%, #6E9140 100%)" }}
+            style={{ background: "linear-gradient(135deg, #F7A882 0%, #E8622A 100%)" }}
           >
             <Sparkles size={15} className="text-white" strokeWidth={2.5} />
           </div>
           <div>
             <span
               className="font-display text-2xl font-black leading-none tracking-tight"
-              style={{ color: "#171E12" }}
+              style={{ color: "#111111" }}
             >
               GinaOS
             </span>
-            <p className="text-[9px] mt-0.5 tracking-[0.18em] uppercase font-sans font-bold" style={{ color: "#94A385" }}>
+            <p className="text-[9px] mt-0.5 tracking-[0.18em] uppercase font-sans font-bold" style={{ color: "#9CA3AF" }}>
               Creator Suite
             </p>
           </div>
@@ -81,7 +81,7 @@ export default function Sidebar() {
           <div key={section.label}>
             <p
               className="px-3 mb-2 text-[10px] font-black uppercase tracking-[0.2em] font-sans"
-              style={{ color: "#BFC9B4" }}
+              style={{ color: "#D1D5DB" }}
             >
               {section.label}
             </p>
@@ -96,11 +96,11 @@ export default function Sidebar() {
                     style={
                       active
                         ? {
-                            background: "linear-gradient(135deg, #E8F3D5 0%, #CFE4AA 100%)",
-                            color: "#4A6B2E",
-                            fontWeight: 800,
+                            background: "#FEF0EB",
+                            color: "#C04A1A",
+                            fontWeight: 700,
                           }
-                        : { color: "#6B7A5C", fontWeight: 600 }
+                        : { color: "#6B7280", fontWeight: 600 }
                     }
                   >
                     <Icon
@@ -111,7 +111,7 @@ export default function Sidebar() {
                     {active && (
                       <div
                         className="ml-auto w-1.5 h-1.5 rounded-full"
-                        style={{ background: "#A0C172" }}
+                        style={{ background: "#E8622A" }}
                       />
                     )}
                   </Link>
@@ -123,7 +123,7 @@ export default function Sidebar() {
       </nav>
 
       {/* Settings link */}
-      <div className="px-3 pb-3" style={{ borderTop: "1px solid var(--border)" }}>
+      <div className="px-3 pb-3" style={{ borderTop: "1px solid #E5E7EB" }}>
         <div className="pt-3">
           <Link
             href="/settings"
@@ -131,11 +131,11 @@ export default function Sidebar() {
             style={
               pathname === "/settings"
                 ? {
-                    background: "linear-gradient(135deg, #E8F3D5 0%, #CFE4AA 100%)",
-                    color: "#4A6B2E",
-                    fontWeight: 800,
+                    background: "#FEF0EB",
+                    color: "#C04A1A",
+                    fontWeight: 700,
                   }
-                : { color: "#6B7A5C", fontWeight: 600 }
+                : { color: "#6B7280", fontWeight: 600 }
             }
           >
             <Settings size={16} strokeWidth={pathname === "/settings" ? 2.5 : 1.75} />
@@ -145,19 +145,19 @@ export default function Sidebar() {
       </div>
 
       {/* Footer */}
-      <div className="px-5 py-4" style={{ borderTop: "1px solid var(--border)" }}>
+      <div className="px-5 py-4" style={{ borderTop: "1px solid #E5E7EB" }}>
         <div className="flex items-center gap-3">
           <div
             className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
-            style={{ background: "linear-gradient(135deg, #CFE4AA 0%, #8AAD58 100%)" }}
+            style={{ background: "linear-gradient(135deg, #F7A882 0%, #E8622A 100%)" }}
           >
             <span className="text-white text-sm font-black">G</span>
           </div>
           <div>
-            <p className="text-sm font-bold font-sans" style={{ color: "#3A4531" }}>
+            <p className="text-sm font-bold font-sans" style={{ color: "#1F2937" }}>
               Gina Burgess
             </p>
-            <p className="text-[11px] font-semibold font-sans" style={{ color: "#94A385" }}>
+            <p className="text-[11px] font-semibold font-sans" style={{ color: "#9CA3AF" }}>
               @ginanutrition
             </p>
           </div>
