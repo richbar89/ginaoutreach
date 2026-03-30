@@ -33,9 +33,9 @@ const BRAND_AVATAR_COLOURS = ["#3B82F6","#8B5CF6","#10B981","#F59E0B","#EF4444",
 
 type FollowUp = { email: string; name: string; subject: string; daysAgo: number };
 
-function InstagramIcon() {
+function InstagramIcon({ size = 28 }: { size?: number }) {
   return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
       <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
       <circle cx="12" cy="12" r="4"/>
       <circle cx="17.5" cy="6.5" r="1" fill="white" stroke="none"/>
@@ -43,17 +43,17 @@ function InstagramIcon() {
   );
 }
 
-function TikTokIcon() {
+function TikTokIcon({ size = 26 }: { size?: number }) {
   return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="white">
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="white">
       <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.79 1.52V6.77a4.85 4.85 0 01-1.02-.08z"/>
     </svg>
   );
 }
 
-function FacebookIcon() {
+function FacebookIcon({ size = 26 }: { size?: number }) {
   return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="white">
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="white">
       <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
     </svg>
   );
@@ -165,41 +165,47 @@ export default function DashboardPage() {
             </div>
 
             {/* Follower counts */}
-            <div className="grid grid-cols-3 gap-3">
+            <div className="flex flex-col gap-2.5">
               {/* Instagram */}
-              <div className="rounded-xl p-3" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
+              <div className="flex items-center gap-4 rounded-xl px-4 py-3" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
                 <div
-                  className="w-7 h-7 rounded-lg flex items-center justify-center mb-2.5"
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
                   style={{ background: "linear-gradient(135deg, #F58529 0%, #DD2A7B 50%, #8134AF 100%)" }}
                 >
-                  <InstagramIcon />
+                  <InstagramIcon size={28} />
                 </div>
-                <p className="text-white text-2xl font-black leading-none mb-0.5">137K</p>
-                <p className="text-[10px] font-semibold" style={{ color: "#93B8D4" }}>Instagram</p>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "#93B8D4" }}>Instagram</p>
+                </div>
+                <p className="text-white text-4xl font-black leading-none tracking-tight">137K</p>
               </div>
 
               {/* TikTok */}
-              <div className="rounded-xl p-3" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
+              <div className="flex items-center gap-4 rounded-xl px-4 py-3" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
                 <div
-                  className="w-7 h-7 rounded-lg flex items-center justify-center mb-2.5"
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
                   style={{ background: "linear-gradient(135deg, #010101 0%, #69C9D0 100%)" }}
                 >
-                  <TikTokIcon />
+                  <TikTokIcon size={26} />
                 </div>
-                <p className="text-white text-2xl font-black leading-none mb-0.5">84K</p>
-                <p className="text-[10px] font-semibold" style={{ color: "#93B8D4" }}>TikTok</p>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "#93B8D4" }}>TikTok</p>
+                </div>
+                <p className="text-white text-4xl font-black leading-none tracking-tight">84K</p>
               </div>
 
               {/* Facebook */}
-              <div className="rounded-xl p-3" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
+              <div className="flex items-center gap-4 rounded-xl px-4 py-3" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
                 <div
-                  className="w-7 h-7 rounded-lg flex items-center justify-center mb-2.5"
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
                   style={{ background: "#1877F2" }}
                 >
-                  <FacebookIcon />
+                  <FacebookIcon size={26} />
                 </div>
-                <p className="text-white text-2xl font-black leading-none mb-0.5">52K</p>
-                <p className="text-[10px] font-semibold" style={{ color: "#93B8D4" }}>Facebook</p>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "#93B8D4" }}>Facebook</p>
+                </div>
+                <p className="text-white text-4xl font-black leading-none tracking-tight">52K</p>
               </div>
             </div>
           </div>
