@@ -165,47 +165,47 @@ export default function DashboardPage() {
             </div>
 
             {/* Follower counts */}
-            <div className="flex flex-col gap-2.5">
+            <div className="grid grid-cols-3 gap-2.5">
               {/* Instagram */}
-              <div className="flex items-center gap-4 rounded-xl px-4 py-3" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
+              <div className="flex flex-col items-center gap-3 rounded-xl py-4 px-3" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
                 <div
                   className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
                   style={{ background: "linear-gradient(135deg, #F58529 0%, #DD2A7B 50%, #8134AF 100%)" }}
                 >
                   <InstagramIcon size={28} />
                 </div>
-                <div className="flex-1 min-w-0">
+                <div className="text-center">
+                  <p className="text-white text-3xl font-black leading-none tracking-tight mb-1">137K</p>
                   <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "#93B8D4" }}>Instagram</p>
                 </div>
-                <p className="text-white text-4xl font-black leading-none tracking-tight">137K</p>
               </div>
 
               {/* TikTok */}
-              <div className="flex items-center gap-4 rounded-xl px-4 py-3" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
+              <div className="flex flex-col items-center gap-3 rounded-xl py-4 px-3" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
                 <div
                   className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
                   style={{ background: "linear-gradient(135deg, #010101 0%, #69C9D0 100%)" }}
                 >
                   <TikTokIcon size={26} />
                 </div>
-                <div className="flex-1 min-w-0">
+                <div className="text-center">
+                  <p className="text-white text-3xl font-black leading-none tracking-tight mb-1">84K</p>
                   <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "#93B8D4" }}>TikTok</p>
                 </div>
-                <p className="text-white text-4xl font-black leading-none tracking-tight">84K</p>
               </div>
 
               {/* Facebook */}
-              <div className="flex items-center gap-4 rounded-xl px-4 py-3" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
+              <div className="flex flex-col items-center gap-3 rounded-xl py-4 px-3" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
                 <div
                   className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
                   style={{ background: "#1877F2" }}
                 >
                   <FacebookIcon size={26} />
                 </div>
-                <div className="flex-1 min-w-0">
+                <div className="text-center">
+                  <p className="text-white text-3xl font-black leading-none tracking-tight mb-1">52K</p>
                   <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "#93B8D4" }}>Facebook</p>
                 </div>
-                <p className="text-white text-4xl font-black leading-none tracking-tight">52K</p>
               </div>
             </div>
           </div>
