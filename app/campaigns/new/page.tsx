@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useCallback, useEffect, useMemo } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Papa from "papaparse";
 import { Upload, Plus, X, Check, ArrowRight, ArrowLeft, Users, Mail, Search } from "lucide-react";
 import InitialsAvatar from "@/components/InitialsAvatar";
-import { getCampaigns, saveCampaigns, getContacts } from "@/lib/storage";
-import type { Contact, StoredContact } from "@/lib/types";
+import { getCampaigns, saveCampaigns } from "@/lib/storage";
+import { leads as ALL_LEADS } from "@/lib/leads-data";
+import type { Contact } from "@/lib/types";
 
 type Step = 1 | 2 | 3;
 type ContactTab = "csv" | "manual" | "contacts";
@@ -31,7 +32,6 @@ export default function NewCampaignPage() {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [csvError, setCsvError] = useState("");
   const [manual, setManual] = useState({ name: "", email: "", position: "", company: "" });
-  const [storedContacts, setStoredContacts] = useState<StoredContact[]>([]);
   const [contactSearch, setContactSearch] = useState("");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
@@ -40,20 +40,16 @@ export default function NewCampaignPage() {
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
 
-  useEffect(() => {
-    setStoredContacts(getContacts());
-  }, []);
-
   const filteredStored = useMemo(() => {
-    if (!contactSearch.trim()) return storedContacts;
+    if (!contactSearch.trim()) return ALL_LEADS;
     const q = contactSearch.toLowerCase();
-    return storedContacts.filter(
+    return ALL_LEADS.filter(
       (c) =>
         c.name.toLowerCase().includes(q) ||
         c.email.toLowerCase().includes(q) ||
         c.company.toLowerCase().includes(q)
     );
-  }, [storedContacts, contactSearch]);
+  }, [contactSearch]);
 
   const addContacts = (newOnes: Contact[]) => {
     setContacts((prev) => {
@@ -94,8 +90,8 @@ export default function NewCampaignPage() {
   };
 
   const addFromContacts = () => {
-    const toAdd = storedContacts
-      .filter((c) => selectedIds.has(c.id))
+    const toAdd = ALL_LEADS
+      .filter((c) => selectedIds.has(c.email))
       .map(({ name, email, position, company }) => ({ name, email, position, company }));
     addContacts(toAdd);
     setSelectedIds(new Set());
@@ -181,11 +177,9 @@ export default function NewCampaignPage() {
             <button className={tabClass("contacts")} onClick={() => setTab("contacts")}>
               <Users size={13} className="inline mr-1.5" />
               From Contacts
-              {storedContacts.length > 0 && (
-                <span className="ml-1.5 px-1.5 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full font-medium">
-                  {storedContacts.length}
-                </span>
-              )}
+              <span className="ml-1.5 px-1.5 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full font-medium">
+                {ALL_LEADS.length}
+              </span>
             </button>
           </div>
 
@@ -246,73 +240,62 @@ export default function NewCampaignPage() {
           {/* From contacts tab */}
           {tab === "contacts" && (
             <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
-              {storedContacts.length === 0 ? (
-                <div className="p-8 text-center">
-                  <p className="text-sm text-slate-500 mb-2">No contacts saved yet.</p>
-                  <a href="/contacts" className="text-xs text-blue-600 hover:underline">
-                    Go to Contacts to add some →
-                  </a>
+              <div className="px-4 py-3 border-b border-slate-100">
+                <div className="relative">
+                  <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input
+                    type="text"
+                    placeholder="Search contacts..."
+                    value={contactSearch}
+                    onChange={(e) => setContactSearch(e.target.value)}
+                    className="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
                 </div>
-              ) : (
-                <>
-                  <div className="px-4 py-3 border-b border-slate-100">
-                    <div className="relative">
-                      <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              </div>
+              <div className="max-h-60 overflow-y-auto divide-y divide-slate-50">
+                {filteredStored.map((c) => {
+                  const isAdded = contacts.some((x) => x.email.toLowerCase() === c.email.toLowerCase());
+                  const isSelected = selectedIds.has(c.email);
+                  return (
+                    <label
+                      key={c.email}
+                      className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors ${
+                        isAdded ? "opacity-50 cursor-not-allowed" : "hover:bg-slate-50"
+                      }`}
+                    >
                       <input
-                        type="text"
-                        placeholder="Search contacts..."
-                        value={contactSearch}
-                        onChange={(e) => setContactSearch(e.target.value)}
-                        className="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        type="checkbox"
+                        disabled={isAdded}
+                        checked={isSelected || isAdded}
+                        onChange={(e) => {
+                          setSelectedIds((prev) => {
+                            const next = new Set(prev);
+                            if (e.target.checked) next.add(c.email); else next.delete(c.email);
+                            return next;
+                          });
+                        }}
+                        className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
                       />
-                    </div>
-                  </div>
-                  <div className="max-h-60 overflow-y-auto divide-y divide-slate-50">
-                    {filteredStored.map((c) => {
-                      const isAdded = contacts.some((x) => x.email.toLowerCase() === c.email.toLowerCase());
-                      const isSelected = selectedIds.has(c.id);
-                      return (
-                        <label
-                          key={c.id}
-                          className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors ${
-                            isAdded ? "opacity-50 cursor-not-allowed" : "hover:bg-slate-50"
-                          }`}
-                        >
-                          <input
-                            type="checkbox"
-                            disabled={isAdded}
-                            checked={isSelected || isAdded}
-                            onChange={(e) => {
-                              setSelectedIds((prev) => {
-                                const next = new Set(prev);
-                                if (e.target.checked) next.add(c.id); else next.delete(c.id);
-                                return next;
-                              });
-                            }}
-                            className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
-                          />
-                          <InitialsAvatar name={c.name} email={c.email} size="sm" />
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-slate-800 truncate">{c.name || c.email}</p>
-                            {c.name && <p className="text-xs text-slate-400 truncate">{c.email}</p>}
-                          </div>
-                          {isAdded && <span className="text-xs text-slate-400">Added</span>}
-                        </label>
-                      );
-                    })}
-                  </div>
-                  {selectedIds.size > 0 && (
-                    <div className="px-4 py-3 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
-                      <span className="text-xs text-slate-500">{selectedIds.size} selected</span>
-                      <button
-                        onClick={addFromContacts}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors"
-                      >
-                        <Plus size={12} />Add to campaign
-                      </button>
-                    </div>
-                  )}
-                </>
+                      <InitialsAvatar name={c.name} email={c.email} size="sm" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-slate-800 truncate">{c.name || c.email}</p>
+                        <p className="text-xs text-slate-400 truncate">{c.company} {c.position ? "· " + c.position : ""}</p>
+                      </div>
+                      {isAdded && <span className="text-xs text-slate-400">Added</span>}
+                    </label>
+                  );
+                })}
+              </div>
+              {selectedIds.size > 0 && (
+                <div className="px-4 py-3 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
+                  <span className="text-xs text-slate-500">{selectedIds.size} selected</span>
+                  <button
+                    onClick={addFromContacts}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors"
+                  >
+                    <Plus size={12} />Add to campaign
+                  </button>
+                </div>
               )}
             </div>
           )}
