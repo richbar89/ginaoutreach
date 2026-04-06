@@ -3,7 +3,6 @@
  * Each function takes a Supabase client (from useDb()) as its first argument.
  */
 
-import type { ReturnType } from "react";
 import { createSupabaseClient } from "./supabase";
 import type { Campaign, Deal, EmailRecord, EmailTemplate, ScheduledPost, MediaKit, Brand } from "./types";
 import { DEFAULT_MEDIA_KIT } from "./storage";
