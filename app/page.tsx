@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Send, Users, TrendingUp, Bell, ChevronRight, Clock, Zap } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
 import { getEmailLog, getContacts, getDeals, getBrands } from "@/lib/storage";
 import type { Deal, Brand } from "@/lib/types";
 
@@ -60,6 +61,8 @@ function FacebookIcon({ size = 26 }: { size?: number }) {
 }
 
 export default function DashboardPage() {
+  const { user } = useUser();
+  const firstName = user?.firstName || user?.fullName?.split(" ")[0] || "there";
   const [contactCount, setContactCount] = useState(0);
   const [emailsSent, setEmailsSent] = useState(0);
   const [followUps, setFollowUps] = useState<FollowUp[]>([]);
@@ -114,7 +117,7 @@ export default function DashboardPage() {
       >
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-widest text-navy-400 mb-1">{today}</p>
-          <h1 className="text-3xl font-black tracking-tight text-navy-900">Good morning, Gina.</h1>
+          <h1 className="text-3xl font-black tracking-tight text-navy-900">Good morning, {firstName}.</h1>
         </div>
         <div className="flex items-center gap-2.5">
           <Link

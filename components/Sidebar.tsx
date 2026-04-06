@@ -15,6 +15,7 @@ import {
   BookOpen,
   Sparkles,
 } from "lucide-react";
+import { useUser, SignOutButton } from "@clerk/nextjs";
 
 const navSections = [
   {
@@ -42,6 +43,11 @@ const navSections = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { user } = useUser();
+
+  const displayName = user?.fullName || user?.firstName || user?.emailAddresses?.[0]?.emailAddress || "You";
+  const displayHandle = user?.emailAddresses?.[0]?.emailAddress || "";
+  const initials = displayName.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2);
 
   return (
     <aside
@@ -148,19 +154,31 @@ export default function Sidebar() {
       <div className="px-5 py-4" style={{ borderTop: "1px solid #E5E7EB" }}>
         <div className="flex items-center gap-3">
           <div
-            className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
+            className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden"
             style={{ background: "linear-gradient(135deg, #F7A882 0%, #E8622A 100%)" }}
           >
-            <span className="text-white text-sm font-black">G</span>
+            {user?.imageUrl ? (
+              <img src={user.imageUrl} alt={displayName} className="w-full h-full object-cover" />
+            ) : (
+              <span className="text-white text-sm font-black">{initials}</span>
+            )}
           </div>
-          <div>
-            <p className="text-sm font-bold font-sans" style={{ color: "#1F2937" }}>
-              Gina Burgess
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-bold font-sans truncate" style={{ color: "#1F2937" }}>
+              {displayName}
             </p>
-            <p className="text-[11px] font-semibold font-sans" style={{ color: "#9CA3AF" }}>
-              @ginanutrition
+            <p className="text-[11px] font-semibold font-sans truncate" style={{ color: "#9CA3AF" }}>
+              {displayHandle}
             </p>
           </div>
+          <SignOutButton>
+            <button
+              title="Sign out"
+              className="text-xs text-gray-400 hover:text-red-500 transition-colors flex-shrink-0"
+            >
+              ↪
+            </button>
+          </SignOutButton>
         </div>
       </div>
     </aside>
