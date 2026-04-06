@@ -17,12 +17,19 @@ import {
   getMicrosoftUser,
 } from "@/lib/graphClient";
 import { resetMsalInstance } from "@/lib/msalInstance";
-import { getSignature, saveSignature, getBrands, saveBrands } from "@/lib/storage";
+import { useDb } from "@/lib/useDb";
+import {
+  dbGetSignature,
+  dbSaveSignature,
+  dbGetBrands,
+  dbSaveBrands,
+} from "@/lib/db";
 import type { Brand } from "@/lib/types";
 
 type MsUser = { name: string; email: string } | null;
 
 export default function SettingsPage() {
+  const getDb = useDb();
   const [clientId, setClientId] = useState("");
   const [savedClientId, setSavedClientId] = useState("");
   const [msUser, setMsUser] = useState<MsUser>(null);
@@ -40,20 +47,26 @@ export default function SettingsPage() {
     setSavedClientId(stored);
     setClientId(stored);
     setMsUser(getMicrosoftUser());
-    setSignature(getSignature());
-    const storedBrands = getBrands();
-    setBrands(Array.from({ length: 10 }, (_, i) => storedBrands[i] ?? { name: "", runningAds: false }));
-    setLoading(false);
-  }, []);
+    (async () => {
+      const db = await getDb();
+      const sig = await dbGetSignature(db);
+      setSignature(sig);
+      const storedBrands = await dbGetBrands(db);
+      setBrands(Array.from({ length: 10 }, (_, i) => storedBrands[i] ?? { name: "", runningAds: false }));
+      setLoading(false);
+    })();
+  }, [getDb]);
 
-  const handleSaveSignature = () => {
-    saveSignature(signature);
+  const handleSaveSignature = async () => {
+    const db = await getDb();
+    await dbSaveSignature(db, signature);
     setSigSaved(true);
     setTimeout(() => setSigSaved(false), 2500);
   };
 
-  const handleSaveBrands = () => {
-    saveBrands(brands.filter(b => b.name.trim()));
+  const handleSaveBrands = async () => {
+    const db = await getDb();
+    await dbSaveBrands(db, brands.filter(b => b.name.trim()));
     setBrandsSaved(true);
     setTimeout(() => setBrandsSaved(false), 2500);
   };

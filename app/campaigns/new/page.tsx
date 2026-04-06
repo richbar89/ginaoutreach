@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import Papa from "papaparse";
 import { Upload, Plus, X, Check, ArrowRight, ArrowLeft, Users, Mail, Search } from "lucide-react";
 import InitialsAvatar from "@/components/InitialsAvatar";
-import { getCampaigns, saveCampaigns } from "@/lib/storage";
+import { useDb } from "@/lib/useDb";
+import { dbGetCampaigns, dbSaveCampaign } from "@/lib/db";
 import { leads as ALL_LEADS } from "@/lib/leads-data";
 import type { Contact } from "@/lib/types";
 
@@ -24,6 +25,7 @@ function applyMerge(template: string, contact: Contact) {
 
 export default function NewCampaignPage() {
   const router = useRouter();
+  const getDb = useDb();
   const [step, setStep] = useState<Step>(1);
   const [tab, setTab] = useState<ContactTab>("csv");
   const [dragging, setDragging] = useState(false);
@@ -111,7 +113,7 @@ export default function NewCampaignPage() {
 
   const insertTag = (tag: string) => setBody((prev) => prev + tag);
 
-  const saveCampaign = () => {
+  const saveCampaign = async () => {
     const campaign = {
       id: crypto.randomUUID(),
       name: campaignName,
@@ -120,8 +122,10 @@ export default function NewCampaignPage() {
       contacts,
       createdAt: new Date().toISOString(),
     };
-    const existing = getCampaigns();
-    saveCampaigns([campaign, ...existing]);
+    const db = await getDb();
+    const existing = await dbGetCampaigns(db);
+    await dbSaveCampaign(db, campaign);
+    void existing; // existing fetched to maintain order parity; new campaign saved directly
     router.push(`/campaigns/${campaign.id}`);
   };
 

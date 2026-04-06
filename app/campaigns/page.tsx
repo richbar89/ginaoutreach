@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Plus, MailOpen, Trash2, ChevronRight, Users } from "lucide-react";
+import { useDb } from "@/lib/useDb";
+import { dbGetCampaigns, dbDeleteCampaign } from "@/lib/db";
 import type { Campaign } from "@/lib/types";
 
 function formatDate(iso: string) {
@@ -14,18 +16,23 @@ function formatDate(iso: string) {
 }
 
 export default function CampaignsPage() {
+  const getDb = useDb();
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
 
   useEffect(() => {
-    const stored = localStorage.getItem("mailflow_campaigns");
-    if (stored) setCampaigns(JSON.parse(stored));
-  }, []);
+    (async () => {
+      const db = await getDb();
+      const data = await dbGetCampaigns(db);
+      setCampaigns(data);
+    })();
+  }, [getDb]);
 
-  const deleteCampaign = (id: string) => {
+  const deleteCampaign = async (id: string) => {
     if (!confirm("Delete this campaign?")) return;
     const updated = campaigns.filter((c) => c.id !== id);
     setCampaigns(updated);
-    localStorage.setItem("mailflow_campaigns", JSON.stringify(updated));
+    const db = await getDb();
+    await dbDeleteCampaign(db, id);
   };
 
   return (

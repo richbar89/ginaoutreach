@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { Plus, Trash2, ChevronRight, X, Check, Pencil, TrendingUp } from "lucide-react";
-import { getDeals, upsertDeal, deleteDeal } from "@/lib/storage";
+import { useDb } from "@/lib/useDb";
+import { dbGetDeals, dbUpsertDeal, dbDeleteDeal } from "@/lib/db";
 import type { Deal, DealStatus } from "@/lib/types";
 import InitialsAvatar from "@/components/InitialsAvatar";
 
@@ -104,21 +105,42 @@ function DealModal({
 }
 
 export default function PipelinePage() {
+  const getDb = useDb();
   const [deals, setDeals] = useState<Deal[]>([]);
   const [editing, setEditing] = useState<Deal | "new" | null>(null);
 
-  useEffect(() => { setDeals(getDeals()); }, []);
+  useEffect(() => {
+    (async () => {
+      const db = await getDb();
+      const data = await dbGetDeals(db);
+      setDeals(data);
+    })();
+  }, [getDb]);
 
-  const refresh = () => setDeals(getDeals());
+  const handleSave = async (d: Deal) => {
+    const db = await getDb();
+    await dbUpsertDeal(db, d);
+    const updated = await dbGetDeals(db);
+    setDeals(updated);
+    setEditing(null);
+  };
 
-  const handleSave = (d: Deal) => { upsertDeal(d); refresh(); setEditing(null); };
-  const handleDelete = (id: string) => { if (!confirm("Remove this deal?")) return; deleteDeal(id); refresh(); };
+  const handleDelete = async (id: string) => {
+    if (!confirm("Remove this deal?")) return;
+    const db = await getDb();
+    await dbDeleteDeal(db, id);
+    const updated = await dbGetDeals(db);
+    setDeals(updated);
+  };
 
-  const advanceStage = (deal: Deal) => {
+  const advanceStage = async (deal: Deal) => {
     const idx = STAGES.findIndex(s => s.key === deal.status);
     if (idx >= STAGES.length - 1) return;
-    upsertDeal({ ...deal, status: STAGES[idx + 1].key, updatedAt: new Date().toISOString() });
-    refresh();
+    const updatedDeal = { ...deal, status: STAGES[idx + 1].key, updatedAt: new Date().toISOString() };
+    const db = await getDb();
+    await dbUpsertDeal(db, updatedDeal);
+    const updated = await dbGetDeals(db);
+    setDeals(updated);
   };
 
   const totalValue = deals

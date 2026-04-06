@@ -10,7 +10,8 @@ import {
   markMessageAsRead,
 } from "@/lib/graphClient";
 import type { InboxMessage, MessageDetail } from "@/lib/graphClient";
-import { getEmailLog, upsertDeal, getDeals } from "@/lib/storage";
+import { useDb } from "@/lib/useDb";
+import { dbGetEmailLog, dbGetDeals, dbUpsertDeal } from "@/lib/db";
 import type { Deal } from "@/lib/types";
 import InitialsAvatar from "@/components/InitialsAvatar";
 
@@ -28,6 +29,7 @@ function timeAgo(dateStr: string): string {
 }
 
 export default function InboxPage() {
+  const getDb = useDb();
   const [messages, setMessages] = useState<InboxMessage[]>([]);
   const [selected, setSelected] = useState<MessageDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -41,10 +43,15 @@ export default function InboxPage() {
   const [pipelineAdded, setPipelineAdded] = useState<string | null>(null); // deal id just added
 
   // Build set of addresses we've emailed — used to filter replies
-  const contactedAddresses = useMemo(() => {
-    const log = getEmailLog();
-    return new Set(log.map((r) => r.contactEmail.toLowerCase()));
-  }, []);
+  const [contactedAddresses, setContactedAddresses] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    (async () => {
+      const db = await getDb();
+      const log = await dbGetEmailLog(db);
+      setContactedAddresses(new Set(log.map((r) => r.contactEmail.toLowerCase())));
+    })();
+  }, [getDb]);
 
   const visibleMessages = useMemo(() => {
     if (showAll) return messages;
@@ -114,10 +121,11 @@ export default function InboxPage() {
     }
   };
 
-  const handleAddToPipeline = (msg: InboxMessage) => {
-    const emailLog = getEmailLog();
+  const handleAddToPipeline = async (msg: InboxMessage) => {
+    const db = await getDb();
+    const emailLog = await dbGetEmailLog(db);
     const logEntry = emailLog.find(r => r.contactEmail === msg.from.emailAddress.address.toLowerCase());
-    const existingDeals = getDeals();
+    const existingDeals = await dbGetDeals(db);
     const alreadyExists = existingDeals.some(d => d.contactEmail === msg.from.emailAddress.address.toLowerCase());
     if (alreadyExists) {
       setPipelineAdded("exists");
@@ -134,7 +142,7 @@ export default function InboxPage() {
       createdAt: now,
       updatedAt: now,
     };
-    upsertDeal(deal);
+    await dbUpsertDeal(db, deal);
     setPipelineAdded(deal.id);
   };
 

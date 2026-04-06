@@ -5,10 +5,13 @@ import {
   RefreshCw, Link2, Plus, Trash2, Loader2, CheckCircle,
   Instagram, Eye, Copy, ExternalLink,
 } from "lucide-react";
-import { getMediaKit, saveMediaKit } from "@/lib/storage";
+import { useDb } from "@/lib/useDb";
+import { dbGetMediaKit, dbSaveMediaKit } from "@/lib/db";
+import { DEFAULT_MEDIA_KIT } from "@/lib/storage";
 import type { MediaKit } from "@/lib/types";
 
 export default function MediaKitPage() {
+  const getDb = useDb();
   const [kit, setKit] = useState<MediaKit | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [refreshMsg, setRefreshMsg] = useState("");
@@ -20,16 +23,21 @@ export default function MediaKitPage() {
   const [sqlError, setSqlError] = useState("");
 
   useEffect(() => {
-    setKit(getMediaKit());
-  }, []);
+    (async () => {
+      const db = await getDb();
+      const data = await dbGetMediaKit(db);
+      setKit(data ?? DEFAULT_MEDIA_KIT);
+    })();
+  }, [getDb]);
 
   const update = (patch: Partial<MediaKit>) => {
     setKit((k) => k ? { ...k, ...patch } : k);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!kit) return;
-    saveMediaKit(kit);
+    const db = await getDb();
+    await dbSaveMediaKit(db, kit);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };
@@ -74,7 +82,7 @@ export default function MediaKitPage() {
 
   const generateLink = async () => {
     if (!kit) return;
-    saveMediaKit(kit);
+    await handleSave();
     setGenerating(true);
     setSqlError("");
     try {

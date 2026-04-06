@@ -4,7 +4,9 @@ import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Send, CheckCircle, Loader2, Wifi, WifiOff, FileText, ChevronDown } from "lucide-react";
 import Link from "next/link";
-import { appendEmailRecord, getTemplates, applyMerge } from "@/lib/storage";
+import { useDb } from "@/lib/useDb";
+import { dbAppendEmailRecord, dbGetTemplates } from "@/lib/db";
+import { applyMerge } from "@/lib/storage";
 import { getMicrosoftUser, sendEmailViaGraph } from "@/lib/graphClient";
 import type { EmailTemplate } from "@/lib/types";
 
@@ -12,6 +14,7 @@ type MsUser = { name: string; email: string } | null;
 
 function SendEmailForm() {
   const searchParams = useSearchParams();
+  const getDb = useDb();
   const [form, setForm] = useState({
     to: searchParams.get("to") || "",
     toName: searchParams.get("name") || "",
@@ -27,8 +30,12 @@ function SendEmailForm() {
 
   useEffect(() => {
     setMsUser(getMicrosoftUser());
-    setTemplates(getTemplates());
-  }, []);
+    (async () => {
+      const db = await getDb();
+      const data = await dbGetTemplates(db);
+      setTemplates(data);
+    })();
+  }, [getDb]);
 
   const loadTemplate = (t: EmailTemplate) => {
     const contact = {
@@ -56,7 +63,8 @@ function SendEmailForm() {
           subject: form.subject,
           body: form.body,
         });
-        appendEmailRecord({ contactEmail: form.to, subject: form.subject, body: form.body });
+        const db = await getDb();
+        await dbAppendEmailRecord(db, { contactEmail: form.to, subject: form.subject, body: form.body });
         setSuccess(true);
         setForm({ to: "", toName: "", subject: "", body: "" });
         setTimeout(() => setSuccess(false), 5000);
@@ -71,7 +79,8 @@ function SendEmailForm() {
         `?subject=${encodeURIComponent(form.subject)}` +
         `&body=${encodeURIComponent(form.body)}`;
       window.location.href = mailto;
-      appendEmailRecord({ contactEmail: form.to, subject: form.subject, body: form.body });
+      const db = await getDb();
+      await dbAppendEmailRecord(db, { contactEmail: form.to, subject: form.subject, body: form.body });
       setSuccess(true);
       setTimeout(() => setSuccess(false), 4000);
     }

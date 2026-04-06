@@ -8,9 +8,11 @@ import {
   AlertTriangle, Send, Building2, Briefcase, Clock, CheckCircle,
 } from "lucide-react";
 import InitialsAvatar from "@/components/InitialsAvatar";
-import { getContacts, upsertContact, getContactEmailLog } from "@/lib/storage";
+import { getContacts, upsertContact } from "@/lib/storage";
 import { leads } from "@/lib/leads-data";
 import { getCachedAdStatus } from "@/lib/metaAds";
+import { useDb } from "@/lib/useDb";
+import { dbGetContactEmailLog } from "@/lib/db";
 import type { StoredContact, EmailRecord } from "@/lib/types";
 
 function weeksAgo(dateStr: string) {
@@ -125,14 +127,25 @@ function EmailHistory({ history, email, name }: { history: EmailRecord[]; email:
 
 // Lead profile (read-only, from leads-data.ts)
 function LeadProfile({ email }: { email: string }) {
+  const getDb = useDb();
   const lead = leads.find((l) => l.email.toLowerCase() === email.toLowerCase());
+  const [history, setHistory] = useState<EmailRecord[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const db = await getDb();
+      const log = await dbGetContactEmailLog(db, email);
+      setHistory(log);
+    })();
+  }, [email, getDb]);
+
   if (!lead) return (
     <div className="p-10 text-center">
       <p className="text-navy-400 text-sm mb-4">Contact not found.</p>
       <Link href="/contacts" className="text-coral-500 text-sm hover:underline">Back to contacts</Link>
     </div>
   );
-  const history = getContactEmailLog(email);
+
   const firstName = lead.name.split(" ")[0];
   return (
     <div className="p-8 max-w-3xl mx-auto">
@@ -192,13 +205,22 @@ function LeadProfile({ email }: { email: string }) {
 
 // Stored contact profile (editable)
 function StoredContactProfile({ contact: initial }: { contact: StoredContact }) {
+  const getDb = useDb();
   const [contact, setContact] = useState(initial);
-  const [history] = useState<EmailRecord[]>(() => getContactEmailLog(initial.email));
+  const [history, setHistory] = useState<EmailRecord[]>([]);
   const [editingField, setEditingField] = useState<string | null>(null);
   const [editValue, setEditValue] = useState("");
   const [notes, setNotes] = useState(initial.notes || "");
   const [notesDirty, setNotesDirty] = useState(false);
   const firstName = contact.name.split(" ")[0];
+
+  useEffect(() => {
+    (async () => {
+      const db = await getDb();
+      const log = await dbGetContactEmailLog(db, initial.email);
+      setHistory(log);
+    })();
+  }, [initial.email, getDb]);
 
   const saveField = (field: keyof StoredContact) => {
     const updated = { ...contact, [field]: editValue };

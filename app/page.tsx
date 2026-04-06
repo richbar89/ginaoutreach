@@ -4,7 +4,13 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Send, Users, TrendingUp, Bell, ChevronRight, Clock, Zap } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
-import { getEmailLog, getContacts, getDeals, getBrands } from "@/lib/storage";
+import { useDb } from "@/lib/useDb";
+import {
+  dbGetEmailLog,
+  dbGetDeals,
+  dbGetBrands,
+} from "@/lib/db";
+import { leads } from "@/lib/leads-data";
 import type { Deal, Brand } from "@/lib/types";
 
 const DEAL_STAGE_LABELS: Record<string, string> = {
@@ -63,42 +69,47 @@ function FacebookIcon({ size = 26 }: { size?: number }) {
 export default function DashboardPage() {
   const { user } = useUser();
   const firstName = user?.firstName || user?.fullName?.split(" ")[0] || "there";
-  const [contactCount, setContactCount] = useState(0);
+  const getDb = useDb();
+  const [contactCount] = useState(leads.length);
   const [emailsSent, setEmailsSent] = useState(0);
   const [followUps, setFollowUps] = useState<FollowUp[]>([]);
   const [deals, setDeals] = useState<Deal[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
 
   useEffect(() => {
-    const contactList = getContacts();
-    setContactCount(contactList.length);
+    (async () => {
+      const db = await getDb();
+      const log = await dbGetEmailLog(db);
+      setEmailsSent(log.length);
 
-    const log = getEmailLog();
-    setEmailsSent(log.length);
-
-    const latestPerContact = new Map<string, { sentAt: string; subject: string; name: string }>();
-    for (const r of log) {
-      const existing = latestPerContact.get(r.contactEmail);
-      if (!existing || r.sentAt > existing.sentAt) {
-        const contact = contactList.find(c => c.email.toLowerCase() === r.contactEmail);
-        latestPerContact.set(r.contactEmail, {
-          sentAt: r.sentAt, subject: r.subject,
-          name: contact?.name || r.contactEmail,
-        });
+      const latestPerContact = new Map<string, { sentAt: string; subject: string; name: string }>();
+      for (const r of log) {
+        const existing = latestPerContact.get(r.contactEmail);
+        if (!existing || r.sentAt > existing.sentAt) {
+          const contact = leads.find(c => c.email.toLowerCase() === r.contactEmail);
+          latestPerContact.set(r.contactEmail, {
+            sentAt: r.sentAt, subject: r.subject,
+            name: contact?.name || r.contactEmail,
+          });
+        }
       }
-    }
 
-    const now = Date.now();
-    const chaseUps: FollowUp[] = [];
-    for (const [email, { sentAt, subject, name }] of latestPerContact.entries()) {
-      const daysAgo = Math.floor((now - new Date(sentAt).getTime()) / 86400000);
-      if (daysAgo >= 5) chaseUps.push({ email, name, subject, daysAgo });
-    }
-    chaseUps.sort((a, b) => b.daysAgo - a.daysAgo);
-    setFollowUps(chaseUps.slice(0, 6));
-    setDeals(getDeals());
-    setBrands(getBrands());
-  }, []);
+      const now = Date.now();
+      const chaseUps: FollowUp[] = [];
+      for (const [email, { sentAt, subject, name }] of latestPerContact.entries()) {
+        const daysAgo = Math.floor((now - new Date(sentAt).getTime()) / 86400000);
+        if (daysAgo >= 5) chaseUps.push({ email, name, subject, daysAgo });
+      }
+      chaseUps.sort((a, b) => b.daysAgo - a.daysAgo);
+      setFollowUps(chaseUps.slice(0, 6));
+
+      const dealsData = await dbGetDeals(db);
+      setDeals(dealsData);
+
+      const brandsData = await dbGetBrands(db);
+      setBrands(brandsData);
+    })();
+  }, [getDb]);
 
   const today = new Date().toLocaleDateString("en-GB", {
     weekday: "long", day: "numeric", month: "long", year: "numeric",

@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { Plus, Pencil, Trash2, FileText, X, Check } from "lucide-react";
-import { getTemplates, upsertTemplate, deleteTemplate } from "@/lib/storage";
+import { useDb } from "@/lib/useDb";
+import { dbGetTemplates, dbUpsertTemplate, dbDeleteTemplate } from "@/lib/db";
 import type { EmailTemplate } from "@/lib/types";
 
 const MERGE_TAGS = [
@@ -131,23 +132,32 @@ function TemplateModal({
 }
 
 export default function TemplatesPage() {
+  const getDb = useDb();
   const [templates, setTemplates] = useState<EmailTemplate[]>([]);
   const [editing, setEditing] = useState<EmailTemplate | "new" | null>(null);
 
   useEffect(() => {
-    setTemplates(getTemplates());
-  }, []);
+    (async () => {
+      const db = await getDb();
+      const data = await dbGetTemplates(db);
+      setTemplates(data);
+    })();
+  }, [getDb]);
 
-  const handleSave = (t: EmailTemplate) => {
-    upsertTemplate(t);
-    setTemplates(getTemplates());
+  const handleSave = async (t: EmailTemplate) => {
+    const db = await getDb();
+    await dbUpsertTemplate(db, t);
+    const updated = await dbGetTemplates(db);
+    setTemplates(updated);
     setEditing(null);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (!confirm("Delete this template?")) return;
-    deleteTemplate(id);
-    setTemplates(getTemplates());
+    const db = await getDb();
+    await dbDeleteTemplate(db, id);
+    const updated = await dbGetTemplates(db);
+    setTemplates(updated);
   };
 
   return (

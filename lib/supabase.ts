@@ -1,13 +1,11 @@
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import { createClient } from "@supabase/supabase-js";
 
-let _client: SupabaseClient | null = null;
+const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-export function getSupabase() {
-  if (!_client) {
-    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    if (!url || !key) throw new Error("Supabase env vars not set");
-    _client = createClient(url, key);
-  }
-  return _client;
+/** Returns a Supabase client authenticated with the current user's Clerk JWT */
+export function createSupabaseClient(token: string) {
+  return createClient(url, anon, {
+    global: { headers: { Authorization: `Bearer ${token}` } },
+  });
 }
