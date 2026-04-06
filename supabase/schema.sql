@@ -1,7 +1,7 @@
 -- ─────────────────────────────────────────────────────────────
--- GinaOS — Supabase schema
+-- Outreach SaaS — Supabase schema
 -- user_id is the Clerk user ID (e.g. "user_2abc...")
--- Run this once in the Supabase SQL editor
+-- Safe to re-run: drops existing policies before recreating
 -- ─────────────────────────────────────────────────────────────
 
 -- Campaigns
@@ -15,6 +15,7 @@ create table if not exists campaigns (
   created_at   timestamptz not null default now()
 );
 alter table campaigns enable row level security;
+drop policy if exists "own campaigns" on campaigns;
 create policy "own campaigns" on campaigns for all
   using ((auth.jwt() ->> 'sub') = user_id);
 
@@ -30,6 +31,7 @@ create table if not exists email_log (
   campaign_name  text
 );
 alter table email_log enable row level security;
+drop policy if exists "own email_log" on email_log;
 create policy "own email_log" on email_log for all
   using ((auth.jwt() ->> 'sub') = user_id);
 
@@ -47,6 +49,7 @@ create table if not exists deals (
   updated_at     timestamptz not null default now()
 );
 alter table deals enable row level security;
+drop policy if exists "own deals" on deals;
 create policy "own deals" on deals for all
   using ((auth.jwt() ->> 'sub') = user_id);
 
@@ -60,6 +63,7 @@ create table if not exists templates (
   created_at  timestamptz not null default now()
 );
 alter table templates enable row level security;
+drop policy if exists "own templates" on templates;
 create policy "own templates" on templates for all
   using ((auth.jwt() ->> 'sub') = user_id);
 
@@ -77,6 +81,7 @@ create table if not exists scheduled_posts (
   created_at  timestamptz not null default now()
 );
 alter table scheduled_posts enable row level security;
+drop policy if exists "own scheduled_posts" on scheduled_posts;
 create policy "own scheduled_posts" on scheduled_posts for all
   using ((auth.jwt() ->> 'sub') = user_id);
 
@@ -88,6 +93,7 @@ create table if not exists brands (
   running_ads  boolean not null default false
 );
 alter table brands enable row level security;
+drop policy if exists "own brands" on brands;
 create policy "own brands" on brands for all
   using ((auth.jwt() ->> 'sub') = user_id);
 
@@ -98,6 +104,7 @@ create table if not exists user_settings (
   media_kit  jsonb not null default '{}'
 );
 alter table user_settings enable row level security;
+drop policy if exists "own settings" on user_settings;
 create policy "own settings" on user_settings for all
   using ((auth.jwt() ->> 'sub') = user_id);
 
