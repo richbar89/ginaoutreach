@@ -40,3 +40,4 @@ next-env.d.ts
 
 # Downloaded recipe images (stored on Replit, not in git)
 /public/recipe-images/
+.local/
