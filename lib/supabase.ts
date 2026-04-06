@@ -9,3 +9,8 @@ export function createSupabaseClient(token: string) {
     global: { headers: { Authorization: `Bearer ${token}` } },
   });
 }
+
+/** Returns an unauthenticated Supabase client for server-side API routes */
+export function getSupabase() {
+  return createClient(url, anon);
+}
