@@ -33,7 +33,13 @@ export default function NewCampaignPage() {
   const [csvError, setCsvError] = useState("");
   const [manual, setManual] = useState({ name: "", email: "", position: "", company: "" });
   const [contactSearch, setContactSearch] = useState("");
+  const [industryFilter, setIndustryFilter] = useState("All");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+
+  const industries = useMemo(() => {
+    const set = new Set(ALL_LEADS.map((l) => l.industry).filter(Boolean));
+    return ["All", ...Array.from(set).sort()];
+  }, []);
 
   // Step 2
   const [campaignName, setCampaignName] = useState("");
@@ -41,15 +47,21 @@ export default function NewCampaignPage() {
   const [body, setBody] = useState("");
 
   const filteredStored = useMemo(() => {
-    if (!contactSearch.trim()) return ALL_LEADS;
-    const q = contactSearch.toLowerCase();
-    return ALL_LEADS.filter(
-      (c) =>
-        c.name.toLowerCase().includes(q) ||
-        c.email.toLowerCase().includes(q) ||
-        c.company.toLowerCase().includes(q)
-    );
-  }, [contactSearch]);
+    let result = ALL_LEADS;
+    if (industryFilter !== "All") {
+      result = result.filter((c) => c.industry === industryFilter);
+    }
+    if (contactSearch.trim()) {
+      const q = contactSearch.toLowerCase();
+      result = result.filter(
+        (c) =>
+          c.name.toLowerCase().includes(q) ||
+          c.email.toLowerCase().includes(q) ||
+          c.company.toLowerCase().includes(q)
+      );
+    }
+    return result;
+  }, [contactSearch, industryFilter]);
 
   const addContacts = (newOnes: Contact[]) => {
     setContacts((prev) => {
@@ -240,8 +252,8 @@ export default function NewCampaignPage() {
           {/* From contacts tab */}
           {tab === "contacts" && (
             <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
-              <div className="px-4 py-3 border-b border-slate-100">
-                <div className="relative">
+              <div className="px-4 py-3 border-b border-slate-100 flex gap-2">
+                <div className="relative flex-1">
                   <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                   <input
                     type="text"
@@ -251,6 +263,15 @@ export default function NewCampaignPage() {
                     className="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
+                <select
+                  value={industryFilter}
+                  onChange={(e) => setIndustryFilter(e.target.value)}
+                  className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  {industries.map((ind) => (
+                    <option key={ind} value={ind}>{ind}</option>
+                  ))}
+                </select>
               </div>
               <div className="max-h-60 overflow-y-auto divide-y divide-slate-50">
                 {filteredStored.map((c) => {
