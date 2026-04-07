@@ -17,6 +17,11 @@ import {
   getMicrosoftUser,
 } from "@/lib/graphClient";
 import { resetMsalInstance } from "@/lib/msalInstance";
+import {
+  signInWithGoogle,
+  signOutFromGoogle,
+  getGoogleUser,
+} from "@/lib/googleClient";
 import { useDb } from "@/lib/useDb";
 import {
   dbGetSignature,
@@ -26,15 +31,16 @@ import {
 } from "@/lib/db";
 import type { Brand } from "@/lib/types";
 
-type MsUser = { name: string; email: string } | null;
+type ConnectedUser = { name: string; email: string } | null;
 
 export default function SettingsPage() {
   const getDb = useDb();
   const [clientId, setClientId] = useState("");
   const [savedClientId, setSavedClientId] = useState("");
-  const [msUser, setMsUser] = useState<MsUser>(null);
+  const [msUser, setMsUser] = useState<ConnectedUser>(null);
+  const [gUser, setGUser] = useState<ConnectedUser>(null);
   const [loading, setLoading] = useState(true);
-  const [signing, setSigning] = useState(false);
+  const [signing, setSigning] = useState<"ms" | "google" | null>(null);
   const [error, setError] = useState("");
   const [showInstructions, setShowInstructions] = useState(false);
   const [signature, setSignature] = useState("");
@@ -47,6 +53,7 @@ export default function SettingsPage() {
     setSavedClientId(stored);
     setClientId(stored);
     setMsUser(getMicrosoftUser());
+    setGUser(getGoogleUser());
     (async () => {
       const db = await getDb();
       const sig = await dbGetSignature(db);
@@ -84,31 +91,51 @@ export default function SettingsPage() {
     setError("");
   };
 
-  const handleConnect = async () => {
+  const handleConnectMicrosoft = async () => {
     setError("");
-    setSigning(true);
+    setSigning("ms");
     try {
       const account = await signInWithMicrosoft();
       setMsUser({ name: account.name || account.username, email: account.username });
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : "Sign-in failed.";
-      // User cancelled popup — don't show error
       if (!msg.toLowerCase().includes("cancelled") && !msg.toLowerCase().includes("user_cancelled")) {
         setError(msg);
       }
     } finally {
-      setSigning(false);
+      setSigning(null);
     }
   };
 
-  const handleDisconnect = async () => {
-    setSigning(true);
+  const handleDisconnectMicrosoft = async () => {
+    setSigning("ms");
     try {
       await signOutFromMicrosoft();
       setMsUser(null);
     } finally {
-      setSigning(false);
+      setSigning(null);
     }
+  };
+
+  const handleConnectGoogle = async () => {
+    setError("");
+    setSigning("google");
+    try {
+      const user = await signInWithGoogle();
+      setGUser(user);
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : "Sign-in failed.";
+      if (!msg.toLowerCase().includes("cancelled")) {
+        setError(msg);
+      }
+    } finally {
+      setSigning(null);
+    }
+  };
+
+  const handleDisconnectGoogle = () => {
+    signOutFromGoogle();
+    setGUser(null);
   };
 
   return (
@@ -125,8 +152,60 @@ export default function SettingsPage() {
           Account
         </h1>
         <p className="mt-2 text-navy-500 text-base">
-          Connect your Microsoft 365 account to send emails directly from GinaOS.
+          Connect your email account to send outreach directly from your own address.
         </p>
+      </div>
+
+      {/* Gmail Connection Card */}
+      <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm mb-6">
+        <div className="px-7 py-5 border-b border-cream-100 flex items-center gap-3">
+          {/* Gmail / Google logo */}
+          <svg width="20" height="20" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+          </svg>
+          <span className="text-sm font-semibold text-navy-800">Gmail</span>
+          <span className="text-xs text-navy-400">— @gmail.com addresses</span>
+          {gUser && (
+            <span className="ml-auto inline-flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 border border-emerald-100 px-2.5 py-1 rounded-full">
+              <CheckCircle size={11} />
+              Connected
+            </span>
+          )}
+        </div>
+        <div className="px-7 py-6">
+          {loading ? (
+            <div className="flex items-center gap-2 text-sm text-navy-400">
+              <Loader2 size={14} className="animate-spin" />
+              Checking connection…
+            </div>
+          ) : gUser ? (
+            <div className="flex items-center justify-between p-4 bg-emerald-50 border border-emerald-100 rounded-xl">
+              <div>
+                <p className="text-sm font-semibold text-navy-900">{gUser.name}</p>
+                <p className="text-xs text-navy-400 mt-0.5">{gUser.email}</p>
+              </div>
+              <button
+                onClick={handleDisconnectGoogle}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-navy-500 hover:text-red-600 border border-cream-200 hover:border-red-200 bg-white rounded-xl transition-all"
+              >
+                <LogOut size={12} />
+                Disconnect
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={handleConnectGoogle}
+              disabled={signing === "google"}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition-colors"
+            >
+              {signing === "google" ? <Loader2 size={15} className="animate-spin" /> : <LogIn size={15} />}
+              {signing === "google" ? "Connecting…" : "Connect Gmail"}
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Microsoft Connection Card */}
@@ -189,27 +268,27 @@ export default function SettingsPage() {
                 <p className="text-xs text-navy-400 mt-0.5">{msUser.email}</p>
               </div>
               <button
-                onClick={handleDisconnect}
-                disabled={signing}
+                onClick={handleDisconnectMicrosoft}
+                disabled={signing === "ms"}
                 className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-navy-500 hover:text-red-600 border border-cream-200 hover:border-red-200 bg-white rounded-xl transition-all"
               >
-                {signing ? <Loader2 size={12} className="animate-spin" /> : <LogOut size={12} />}
+                {signing === "ms" ? <Loader2 size={12} className="animate-spin" /> : <LogOut size={12} />}
                 Disconnect
               </button>
             </div>
           ) : (
             <div>
               <button
-                onClick={handleConnect}
-                disabled={signing || !savedClientId}
+                onClick={handleConnectMicrosoft}
+                disabled={signing === "ms" || !savedClientId}
                 className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition-colors"
               >
-                {signing ? (
+                {signing === "ms" ? (
                   <Loader2 size={15} className="animate-spin" />
                 ) : (
                   <LogIn size={15} />
                 )}
-                {signing ? "Signing in…" : "Connect Microsoft Account"}
+                {signing === "ms" ? "Signing in…" : "Connect Microsoft Account"}
               </button>
               {!savedClientId && (
                 <p className="mt-2 text-xs text-navy-400">Save a Client ID above first.</p>

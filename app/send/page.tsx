@@ -8,9 +8,10 @@ import { useDb } from "@/lib/useDb";
 import { dbAppendEmailRecord, dbGetTemplates } from "@/lib/db";
 import { applyMerge } from "@/lib/storage";
 import { getMicrosoftUser, sendEmailViaGraph } from "@/lib/graphClient";
+import { getGoogleUser, sendEmailViaGmail } from "@/lib/googleClient";
 import type { EmailTemplate } from "@/lib/types";
 
-type MsUser = { name: string; email: string } | null;
+type ConnectedUser = { name: string; email: string } | null;
 
 function SendEmailForm() {
   const searchParams = useSearchParams();
@@ -21,7 +22,8 @@ function SendEmailForm() {
     subject: "",
     body: "",
   });
-  const [msUser, setMsUser] = useState<MsUser>(null);
+  const [msUser, setMsUser] = useState<ConnectedUser>(null);
+  const [gUser, setGUser] = useState<ConnectedUser>(null);
   const [sending, setSending] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
@@ -30,6 +32,7 @@ function SendEmailForm() {
 
   useEffect(() => {
     setMsUser(getMicrosoftUser());
+    setGUser(getGoogleUser());
     (async () => {
       const db = await getDb();
       const data = await dbGetTemplates(db);
@@ -55,14 +58,14 @@ function SendEmailForm() {
     e.preventDefault();
     setError("");
 
-    if (msUser) {
+    if (gUser || msUser) {
       setSending(true);
       try {
-        await sendEmailViaGraph({
-          to: form.to,
-          subject: form.subject,
-          body: form.body,
-        });
+        if (gUser) {
+          await sendEmailViaGmail({ to: form.to, subject: form.subject, body: form.body });
+        } else {
+          await sendEmailViaGraph({ to: form.to, subject: form.subject, body: form.body });
+        }
         const db = await getDb();
         await dbAppendEmailRecord(db, { contactEmail: form.to, subject: form.subject, body: form.body });
         setSuccess(true);
@@ -103,16 +106,18 @@ function SendEmailForm() {
               Send an Email
             </h1>
             <p className="mt-2 text-navy-500 text-base">
-              {msUser
+              {gUser
+                ? `Sending from ${gUser.email} via Gmail.`
+                : msUser
                 ? `Sending from ${msUser.email} via Microsoft 365.`
                 : "Fill in the details — your mail app will open ready to send."}
             </p>
           </div>
           <div className="flex-shrink-0 mt-1">
-            {msUser ? (
+            {gUser || msUser ? (
               <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 border border-emerald-100 px-2.5 py-1.5 rounded-full">
                 <Wifi size={11} />
-                Microsoft connected
+                {gUser ? "Gmail connected" : "Microsoft connected"}
               </span>
             ) : (
               <Link
@@ -120,7 +125,7 @@ function SendEmailForm() {
                 className="inline-flex items-center gap-1.5 text-xs font-medium text-navy-400 hover:text-coral-500 bg-cream-100 hover:bg-coral-50 border border-cream-200 hover:border-coral-200 px-2.5 py-1.5 rounded-full transition-all"
               >
                 <WifiOff size={11} />
-                Connect Microsoft
+                Connect email
               </Link>
             )}
           </div>
@@ -174,7 +179,9 @@ function SendEmailForm() {
       {success && (
         <div className="mb-6 flex items-center gap-3 px-4 py-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-700 text-sm font-medium">
           <CheckCircle size={16} className="text-emerald-500 flex-shrink-0" />
-          {msUser
+          {gUser
+            ? "Email sent successfully via Gmail."
+            : msUser
             ? "Email sent successfully via Microsoft 365."
             : "Your mail app should have opened. Check your browser's pop-up settings if not."}
         </div>
@@ -253,7 +260,7 @@ function SendEmailForm() {
 
         <div className="px-7 py-5 flex items-center justify-between bg-cream-50 rounded-b-2xl">
           <p className="text-xs text-navy-400">
-            {msUser ? "Sends directly via Outlook" : "Opens your default mail app to send"}
+            {gUser ? "Sends directly via Gmail" : msUser ? "Sends directly via Outlook" : "Opens your default mail app to send"}
           </p>
           <button
             type="submit"
@@ -265,9 +272,7 @@ function SendEmailForm() {
             ) : (
               <Send size={15} />
             )}
-            {msUser
-              ? sending ? "Sending…" : "Send via Outlook"
-              : "Open in Mail App"}
+            {sending ? "Sending…" : gUser ? "Send via Gmail" : msUser ? "Send via Outlook" : "Open in Mail App"}
           </button>
         </div>
       </form>
