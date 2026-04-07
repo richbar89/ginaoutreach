@@ -14,3 +14,9 @@ export function createSupabaseClient(token: string) {
 export function getSupabase() {
   return createClient(url, anon);
 }
+
+/** Returns a Supabase client with service role — bypasses RLS. Admin use only. */
+export function getSupabaseAdmin() {
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+  return createClient(url, serviceKey);
+}

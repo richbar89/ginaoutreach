@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import Sidebar from "@/components/Sidebar";
+import AnnouncementBanner from "@/components/AnnouncementBanner";
 
 export const metadata: Metadata = {
-  title: "GinaOS",
-  description: "Creator outreach suite",
+  title: "Collabi",
+  description: "Empowering creators",
 };
 
 export default function RootLayout({
@@ -32,10 +33,13 @@ export default function RootLayout({
           >
             <Sidebar />
             <main
-              className="flex-1 overflow-y-auto"
+              className="flex-1 flex flex-col overflow-hidden"
               style={{ background: "rgba(255,255,255,0.72)", backdropFilter: "blur(2px)" }}
             >
-              {children}
+              <AnnouncementBanner />
+              <div className="flex-1 overflow-y-auto">
+                {children}
+              </div>
             </main>
           </div>
         </body>

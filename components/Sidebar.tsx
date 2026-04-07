@@ -14,8 +14,11 @@ import {
   FileText,
   BookOpen,
   Sparkles,
+  ShieldCheck,
 } from "lucide-react";
 import { useUser, SignOutButton } from "@clerk/nextjs";
+
+const ADMIN_USER_ID = process.env.NEXT_PUBLIC_ADMIN_USER_ID;
 
 const navSections = [
   {
@@ -44,6 +47,7 @@ const navSections = [
 export default function Sidebar() {
   const pathname = usePathname();
   const { user } = useUser();
+  const isAdmin = !!user && user.id === ADMIN_USER_ID;
 
   const displayName = user?.fullName || user?.firstName || user?.emailAddresses?.[0]?.emailAddress || "You";
   const displayHandle = user?.emailAddresses?.[0]?.emailAddress || "";
@@ -127,6 +131,33 @@ export default function Sidebar() {
           </div>
         ))}
       </nav>
+
+      {/* Admin section */}
+      {isAdmin && (
+        <div>
+          <p
+            className="px-3 mb-2 text-[10px] font-black uppercase tracking-[0.2em] font-sans"
+            style={{ color: "#D1D5DB" }}
+          >
+            Admin
+          </p>
+          <Link
+            href="/admin"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-150 font-sans"
+            style={
+              pathname.startsWith("/admin")
+                ? { background: "#FEF0EB", color: "#C04A1A", fontWeight: 700 }
+                : { color: "#6B7280", fontWeight: 600 }
+            }
+          >
+            <ShieldCheck size={16} strokeWidth={pathname.startsWith("/admin") ? 2.5 : 1.75} />
+            Admin Dashboard
+            {pathname.startsWith("/admin") && (
+              <div className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: "#E8622A" }} />
+            )}
+          </Link>
+        </div>
+      )}
 
       {/* Settings link */}
       <div className="px-3 pb-3" style={{ borderTop: "1px solid #E5E7EB" }}>

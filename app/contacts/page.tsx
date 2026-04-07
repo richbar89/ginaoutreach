@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { Search, X } from "lucide-react";
+import { Search, X, Plus } from "lucide-react";
 import { leads } from "@/lib/leads-data";
 import { getAllCachedStatuses } from "@/lib/metaAds";
 import type { BrandCategory } from "@/lib/types";
@@ -58,10 +58,96 @@ function AdBadge({ status }: { status: AdStatus | null | undefined }) {
   );
 }
 
+function RequestContactModal({ onClose }: { onClose: () => void }) {
+  const [brandName, setBrandName] = useState("");
+  const [brandUrl, setBrandUrl] = useState("");
+  const [notes, setNotes] = useState("");
+  const [status, setStatus] = useState<"idle" | "saving" | "done" | "error">("idle");
+
+  const submit = async () => {
+    if (!brandName.trim() || !brandUrl.trim()) return;
+    setStatus("saving");
+    const res = await fetch("/api/tickets", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ brand_name: brandName, brand_url: brandUrl, notes }),
+    });
+    setStatus(res.ok ? "done" : "error");
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(0,0,0,0.4)" }}>
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
+        <div className="flex items-center justify-between mb-5">
+          <h2 className="text-lg font-black text-navy-900">Request Brand Contact</h2>
+          <button onClick={onClose} className="text-navy-300 hover:text-navy-600"><X size={18} /></button>
+        </div>
+
+        {status === "done" ? (
+          <div className="text-center py-6">
+            <p className="text-emerald-600 font-bold text-sm mb-1">Request submitted!</p>
+            <p className="text-navy-400 text-xs mb-4">We'll add the contact details as soon as possible.</p>
+            <button onClick={onClose} className="px-4 py-2 bg-coral-500 text-white text-sm font-bold rounded-xl hover:bg-coral-600">Done</button>
+          </div>
+        ) : (
+          <>
+            <div className="space-y-3 mb-5">
+              <div>
+                <label className="text-xs font-bold text-navy-500 mb-1 block">Brand Name *</label>
+                <input
+                  type="text"
+                  value={brandName}
+                  onChange={e => setBrandName(e.target.value)}
+                  placeholder="e.g. Innocent Drinks"
+                  className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2.5 outline-none focus:border-coral-300"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-navy-500 mb-1 block">Brand Website *</label>
+                <input
+                  type="url"
+                  value={brandUrl}
+                  onChange={e => setBrandUrl(e.target.value)}
+                  placeholder="https://innocentdrinks.co.uk"
+                  className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2.5 outline-none focus:border-coral-300"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-navy-500 mb-1 block">Notes (optional)</label>
+                <textarea
+                  value={notes}
+                  onChange={e => setNotes(e.target.value)}
+                  rows={2}
+                  placeholder="Any context about the brand or who you're trying to reach…"
+                  className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2.5 outline-none focus:border-coral-300 resize-none"
+                />
+              </div>
+            </div>
+            {status === "error" && <p className="text-red-500 text-xs mb-3">Something went wrong. Please try again.</p>}
+            <div className="flex gap-2">
+              <button
+                onClick={submit}
+                disabled={status === "saving" || !brandName.trim() || !brandUrl.trim()}
+                className="flex-1 py-2.5 bg-coral-500 text-white text-sm font-bold rounded-xl hover:bg-coral-600 disabled:opacity-50"
+              >
+                {status === "saving" ? "Submitting…" : "Submit Request"}
+              </button>
+              <button onClick={onClose} className="px-4 py-2.5 bg-gray-100 text-navy-600 text-sm font-bold rounded-xl hover:bg-gray-200">
+                Cancel
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function ContactsPage() {
   const [query, setQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<BrandCategory | "All">("All");
   const [adStatuses] = useState<Record<string, AdStatus>>(() => getAllCachedStatuses());
+  const [showRequestModal, setShowRequestModal] = useState(false);
 
   const filtered = useMemo(() => {
     let result = leads;
@@ -83,6 +169,7 @@ export default function ContactsPage() {
 
   return (
     <div className="p-10 max-w-6xl mx-auto">
+      {showRequestModal && <RequestContactModal onClose={() => setShowRequestModal(false)} />}
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="font-serif text-4xl font-bold text-navy-900 tracking-tight">
@@ -93,6 +180,12 @@ export default function ContactsPage() {
             {leads.length !== 1 ? "s" : ""}
           </p>
         </div>
+        <button
+          onClick={() => setShowRequestModal(true)}
+          className="flex items-center gap-2 px-4 py-2.5 bg-coral-500 text-white text-sm font-bold rounded-xl hover:bg-coral-600 transition-colors shadow-sm"
+        >
+          <Plus size={14} /> Request Contact
+        </button>
       </div>
 
       {/* Search + filter row */}
