@@ -72,10 +72,10 @@ export default function Sidebar() {
               className="font-display text-2xl font-black leading-none tracking-tight"
               style={{ color: "#111111" }}
             >
-              GinaOS
+              Collabi
             </span>
             <p className="text-[9px] mt-0.5 tracking-[0.18em] uppercase font-sans font-bold" style={{ color: "#9CA3AF" }}>
-              Creator Suite
+              empowering creators
             </p>
           </div>
         </div>
