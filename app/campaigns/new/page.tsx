@@ -48,7 +48,7 @@ export default function NewCampaignPage() {
   }, []);
 
   const industries = useMemo(() => {
-    const set = new Set(allLeads.map((l) => l.industry).filter(Boolean));
+    const set = new Set(allLeads.map((l) => l.industry).filter((i): i is string => Boolean(i)));
     return ["All", ...Array.from(set).sort()];
   }, [allLeads]);
 

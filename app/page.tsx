@@ -10,7 +10,8 @@ import {
   dbGetDeals,
   dbGetBrands,
 } from "@/lib/db";
-import { getGoogleUser, getMicrosoftUser, isGoogleTokenExpired } from "@/lib/googleClient";
+import { getGoogleUser, isGoogleTokenExpired } from "@/lib/googleClient";
+import { getMicrosoftUser } from "@/lib/graphClient";
 import type { Deal, Brand } from "@/lib/types";
 
 const DEAL_STAGE_LABELS: Record<string, string> = {
