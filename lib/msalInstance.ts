@@ -7,7 +7,11 @@ let _configuredClientId: string | null = null;
 export async function getMsalInstance(): Promise<PublicClientApplication | null> {
   if (typeof window === "undefined") return null;
 
-  const clientId = localStorage.getItem("azure_client_id");
+  // Prefer user-configured client ID, fall back to shared app client ID from env
+  const clientId =
+    localStorage.getItem("azure_client_id") ||
+    process.env.NEXT_PUBLIC_AZURE_CLIENT_ID ||
+    null;
   if (!clientId) return null;
 
   // Reset if client ID changed

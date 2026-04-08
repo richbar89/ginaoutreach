@@ -1,12 +1,22 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { Search, X, Plus } from "lucide-react";
-import { leads } from "@/lib/leads-data";
 import { getAllCachedStatuses } from "@/lib/metaAds";
 import type { BrandCategory } from "@/lib/types";
 import type { AdStatus } from "@/lib/metaAds";
+
+type ContactRow = {
+  id: string;
+  name: string;
+  email: string;
+  position: string | null;
+  company: string | null;
+  linkedin: string | null;
+  industry: string | null;
+  category: string | null;
+};
 
 const CATEGORIES: BrandCategory[] = [
   "Snacks & Crisps",
@@ -144,20 +154,30 @@ function RequestContactModal({ onClose }: { onClose: () => void }) {
 }
 
 export default function ContactsPage() {
+  const [contacts, setContacts] = useState<ContactRow[]>([]);
+  const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<BrandCategory | "All">("All");
   const [adStatuses] = useState<Record<string, AdStatus>>(() => getAllCachedStatuses());
   const [showRequestModal, setShowRequestModal] = useState(false);
 
+  useEffect(() => {
+    fetch("/api/contacts")
+      .then((r) => r.json())
+      .then((data) => setContacts(Array.isArray(data) ? data : []))
+      .catch(() => setContacts([]))
+      .finally(() => setLoading(false));
+  }, []);
+
   const filtered = useMemo(() => {
-    let result = leads;
+    let result = contacts;
     if (query.trim()) {
       const q = query.toLowerCase();
       result = result.filter(
         (l) =>
           l.name.toLowerCase().includes(q) ||
-          l.company.toLowerCase().includes(q) ||
-          l.position.toLowerCase().includes(q) ||
+          (l.company ?? "").toLowerCase().includes(q) ||
+          (l.position ?? "").toLowerCase().includes(q) ||
           l.email.toLowerCase().includes(q),
       );
     }
@@ -165,7 +185,7 @@ export default function ContactsPage() {
       result = result.filter((l) => l.category === categoryFilter);
     }
     return result;
-  }, [query, categoryFilter]);
+  }, [contacts, query, categoryFilter]);
 
   return (
     <div className="p-10 max-w-6xl mx-auto">
@@ -176,8 +196,7 @@ export default function ContactsPage() {
             Contacts
           </h1>
           <p className="text-navy-500 text-base mt-2">
-            {filtered.length} of {leads.length} contact
-            {leads.length !== 1 ? "s" : ""}
+            {loading ? "Loading…" : `${filtered.length} of ${contacts.length} contact${contacts.length !== 1 ? "s" : ""}`}
           </p>
         </div>
         <button
@@ -235,17 +254,23 @@ export default function ContactsPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-cream-50">
-            {filtered.length === 0 ? (
+            {loading ? (
+              <tr>
+                <td colSpan={6} className="px-6 py-12 text-center text-sm text-navy-300">
+                  Loading contacts…
+                </td>
+              </tr>
+            ) : filtered.length === 0 ? (
               <tr>
                 <td colSpan={6} className="px-6 py-12 text-center text-sm text-navy-300">
                   No contacts match your search.
                 </td>
               </tr>
             ) : (
-              filtered.map((l, i) => {
+              filtered.map((l) => {
                 const colours = l.category ? CATEGORY_COLOURS[l.category as BrandCategory] : null;
                 return (
-                  <tr key={i} className="hover:bg-cream-50 transition-colors group">
+                  <tr key={l.id} className="hover:bg-cream-50 transition-colors group">
                     <td className="px-6 py-4 font-medium text-navy-900">
                       {l.email ? (
                         <Link

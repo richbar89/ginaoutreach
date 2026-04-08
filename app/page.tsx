@@ -10,7 +10,6 @@ import {
   dbGetDeals,
   dbGetBrands,
 } from "@/lib/db";
-import { leads } from "@/lib/leads-data";
 import type { Deal, Brand } from "@/lib/types";
 
 const DEAL_STAGE_LABELS: Record<string, string> = {
@@ -70,7 +69,7 @@ export default function DashboardPage() {
   const { user } = useUser();
   const firstName = user?.firstName || user?.fullName?.split(" ")[0] || "there";
   const getDb = useDb();
-  const [contactCount] = useState(leads.length);
+  const [contactCount, setContactCount] = useState(0);
   const [emailsSent, setEmailsSent] = useState(0);
   const [followUps, setFollowUps] = useState<FollowUp[]>([]);
   const [deals, setDeals] = useState<Deal[]>([]);
@@ -78,7 +77,10 @@ export default function DashboardPage() {
 
   useEffect(() => {
     (async () => {
-      const db = await getDb();
+      const [db, contactsRes] = await Promise.all([getDb(), fetch("/api/contacts")]);
+      const contactsList: { email: string; name: string }[] = contactsRes.ok ? await contactsRes.json() : [];
+      setContactCount(contactsList.length);
+
       const log = await dbGetEmailLog(db);
       setEmailsSent(log.length);
 
@@ -86,7 +88,7 @@ export default function DashboardPage() {
       for (const r of log) {
         const existing = latestPerContact.get(r.contactEmail);
         if (!existing || r.sentAt > existing.sentAt) {
-          const contact = leads.find(c => c.email.toLowerCase() === r.contactEmail);
+          const contact = contactsList.find(c => c.email.toLowerCase() === r.contactEmail);
           latestPerContact.set(r.contactEmail, {
             sentAt: r.sentAt, subject: r.subject,
             name: contact?.name || r.contactEmail,

@@ -5,7 +5,6 @@ import Link from "next/link";
 import {
   Zap, Play, Square, RefreshCw, ExternalLink, Loader2, TrendingUp, Building2
 } from "lucide-react";
-import { leads } from "@/lib/leads-data";
 import {
   scanCompanies,
   getAllCachedStatuses,
@@ -16,15 +15,18 @@ import {
 } from "@/lib/metaAds";
 import type { AdStatus } from "@/lib/metaAds";
 
-// Unique companies with their category from leads
-const allCompanies = Object.values(
-  leads.reduce<Record<string, { company: string; category: string }>>((acc, l) => {
-    if (l.company && !acc[l.company]) {
-      acc[l.company] = { company: l.company, category: l.category || "Other" };
-    }
-    return acc;
-  }, {})
-);
+type ContactRow = { email: string; company: string | null; category: string | null };
+
+function buildCompanyList(contacts: ContactRow[]) {
+  return Object.values(
+    contacts.reduce<Record<string, { company: string; category: string; email: string }>>((acc, l) => {
+      if (l.company && !acc[l.company]) {
+        acc[l.company] = { company: l.company, category: l.category || "Other", email: l.email };
+      }
+      return acc;
+    }, {})
+  );
+}
 
 function formatChecked(dateStr: string) {
   const diff = Date.now() - new Date(dateStr).getTime();
@@ -47,6 +49,7 @@ function formatCountdown(date: Date): string {
 type Filter = "all" | "running" | "none" | "unchecked";
 
 export default function AdsPage() {
+  const [allCompanies, setAllCompanies] = useState<{ company: string; category: string; email: string }[]>([]);
   const [statuses, setStatuses] = useState<Record<string, AdStatus>>({});
   const [scanning, setScanning] = useState(false);
   const [progress, setProgress] = useState({ done: 0, total: 0, current: "" });
@@ -66,6 +69,10 @@ export default function AdsPage() {
   }, []);
 
   useEffect(() => {
+    fetch("/api/contacts")
+      .then((r) => r.json())
+      .then((data: ContactRow[]) => setAllCompanies(buildCompanyList(Array.isArray(data) ? data : [])))
+      .catch(() => {});
     refreshStatuses();
     refreshCooldown();
     const interval = setInterval(refreshCooldown, 60000);
@@ -344,15 +351,17 @@ export default function AdsPage() {
                         >
                           <RefreshCw size={12} className="text-navy-300 hover:text-navy-500" />
                         </button>
-                        <Link
-                          href={`/contacts/${encodeURIComponent(
-                            leads.find((l) => l.company === company)?.email ?? ""
-                          )}`}
-                          className="inline-flex items-center gap-1 text-xs text-navy-400 hover:text-navy-700 font-medium"
-                        >
-                          <Building2 size={11} />
-                          Profile
-                        </Link>
+                        {allCompanies.find((c) => c.company === company)?.email && (
+                          <Link
+                            href={`/contacts/${encodeURIComponent(
+                              allCompanies.find((c) => c.company === company)!.email
+                            )}`}
+                            className="inline-flex items-center gap-1 text-xs text-navy-400 hover:text-navy-700 font-medium"
+                          >
+                            <Building2 size={11} />
+                            Profile
+                          </Link>
+                        )}
                       </div>
                     </td>
                   </tr>

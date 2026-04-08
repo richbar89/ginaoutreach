@@ -9,7 +9,6 @@ import {
 } from "lucide-react";
 import InitialsAvatar from "@/components/InitialsAvatar";
 import { getContacts, upsertContact } from "@/lib/storage";
-import { leads } from "@/lib/leads-data";
 import { getCachedAdStatus } from "@/lib/metaAds";
 import { useDb } from "@/lib/useDb";
 import { dbGetContactEmailLog } from "@/lib/db";
@@ -125,19 +124,31 @@ function EmailHistory({ history, email, name }: { history: EmailRecord[]; email:
   );
 }
 
-// Lead profile (read-only, from leads-data.ts)
+type LeadRow = {
+  name: string; email: string; position: string | null;
+  company: string | null; linkedin: string | null;
+};
+
+// Lead profile (read-only, from database)
 function LeadProfile({ email }: { email: string }) {
   const getDb = useDb();
-  const lead = leads.find((l) => l.email.toLowerCase() === email.toLowerCase());
+  const [lead, setLead] = useState<LeadRow | null | undefined>(undefined);
   const [history, setHistory] = useState<EmailRecord[]>([]);
 
   useEffect(() => {
     (async () => {
-      const db = await getDb();
+      const [db, res] = await Promise.all([
+        getDb(),
+        fetch(`/api/contacts?email=${encodeURIComponent(email)}`),
+      ]);
+      const data = res.ok ? await res.json() : null;
+      setLead(data ?? null);
       const log = await dbGetContactEmailLog(db, email);
       setHistory(log);
     })();
   }, [email, getDb]);
+
+  if (lead === undefined) return null; // loading
 
   if (!lead) return (
     <div className="p-10 text-center">
@@ -325,12 +336,9 @@ export default function ContactProfilePage() {
     const all = getContacts();
     const found = all.find((c) => c.id === id) ?? null;
     setStoredContact(found);
-    if (!found) {
-      const email = decodeURIComponent(id);
-      const isLead = leads.some((l) => l.email.toLowerCase() === email.toLowerCase());
-      if (!isLead) router.push("/contacts");
-    }
-  }, [id, router]);
+    // If not a stored contact UUID, treat the id as an encoded email.
+    // LeadProfile will redirect if the email doesn't exist in the database.
+  }, [id]);
 
   if (storedContact === undefined) return null;
   if (storedContact) return <StoredContactProfile contact={storedContact} />;

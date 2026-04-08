@@ -1,14 +1,15 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Papa from "papaparse";
 import { Upload, Plus, X, Check, ArrowRight, ArrowLeft, Users, Mail, Search } from "lucide-react";
 import InitialsAvatar from "@/components/InitialsAvatar";
 import { useDb } from "@/lib/useDb";
 import { dbGetCampaigns, dbSaveCampaign } from "@/lib/db";
-import { leads as ALL_LEADS } from "@/lib/leads-data";
 import type { Contact } from "@/lib/types";
+
+type ContactRow = Contact & { id: string; industry: string | null; category: string | null };
 
 type Step = 1 | 2 | 3;
 type ContactTab = "csv" | "manual" | "contacts";
@@ -32,16 +33,24 @@ export default function NewCampaignPage() {
 
   // Step 1
   const [contacts, setContacts] = useState<Contact[]>([]);
+  const [allLeads, setAllLeads] = useState<ContactRow[]>([]);
   const [csvError, setCsvError] = useState("");
   const [manual, setManual] = useState({ name: "", email: "", position: "", company: "" });
   const [contactSearch, setContactSearch] = useState("");
   const [industryFilter, setIndustryFilter] = useState("All");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
-  const industries = useMemo(() => {
-    const set = new Set(ALL_LEADS.map((l) => l.industry).filter(Boolean));
-    return ["All", ...Array.from(set).sort()];
+  useEffect(() => {
+    fetch("/api/contacts")
+      .then((r) => r.json())
+      .then((data) => setAllLeads(Array.isArray(data) ? data : []))
+      .catch(() => {});
   }, []);
+
+  const industries = useMemo(() => {
+    const set = new Set(allLeads.map((l) => l.industry).filter(Boolean));
+    return ["All", ...Array.from(set).sort()];
+  }, [allLeads]);
 
   // Step 2
   const [campaignName, setCampaignName] = useState("");
@@ -49,7 +58,7 @@ export default function NewCampaignPage() {
   const [body, setBody] = useState("");
 
   const filteredStored = useMemo(() => {
-    let result = ALL_LEADS;
+    let result = allLeads;
     if (industryFilter !== "All") {
       result = result.filter((c) => c.industry === industryFilter);
     }
@@ -57,13 +66,13 @@ export default function NewCampaignPage() {
       const q = contactSearch.toLowerCase();
       result = result.filter(
         (c) =>
-          c.name.toLowerCase().includes(q) ||
+          (c.name ?? "").toLowerCase().includes(q) ||
           c.email.toLowerCase().includes(q) ||
-          c.company.toLowerCase().includes(q)
+          (c.company ?? "").toLowerCase().includes(q)
       );
     }
     return result;
-  }, [contactSearch, industryFilter]);
+  }, [allLeads, contactSearch, industryFilter]);
 
   const addContacts = (newOnes: Contact[]) => {
     setContacts((prev) => {
@@ -104,9 +113,9 @@ export default function NewCampaignPage() {
   };
 
   const addFromContacts = () => {
-    const toAdd = ALL_LEADS
+    const toAdd = allLeads
       .filter((c) => selectedIds.has(c.email))
-      .map(({ name, email, position, company }) => ({ name, email, position, company }));
+      .map(({ name, email, position, company }) => ({ name: name ?? "", email, position: position ?? "", company: company ?? "" }));
     addContacts(toAdd);
     setSelectedIds(new Set());
   };
@@ -194,7 +203,7 @@ export default function NewCampaignPage() {
               <Users size={13} className="inline mr-1.5" />
               From Contacts
               <span className="ml-1.5 px-1.5 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full font-medium">
-                {ALL_LEADS.length}
+                {allLeads.length}
               </span>
             </button>
           </div>
