@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Send, Users, TrendingUp, Bell, ChevronRight, Clock, Zap } from "lucide-react";
+import { Send, Users, TrendingUp, Bell, ChevronRight, Clock, Zap, AlertTriangle, X, CheckCircle2 } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import { useDb } from "@/lib/useDb";
 import {
@@ -10,6 +10,7 @@ import {
   dbGetDeals,
   dbGetBrands,
 } from "@/lib/db";
+import { getGoogleUser, getMicrosoftUser, isGoogleTokenExpired } from "@/lib/googleClient";
 import type { Deal, Brand } from "@/lib/types";
 
 const DEAL_STAGE_LABELS: Record<string, string> = {
@@ -74,6 +75,23 @@ export default function DashboardPage() {
   const [followUps, setFollowUps] = useState<FollowUp[]>([]);
   const [deals, setDeals] = useState<Deal[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
+  const [emailConnected, setEmailConnected] = useState<"gmail" | "microsoft" | "expired" | null>(null);
+  const [checklistDismissed, setChecklistDismissed] = useState(false);
+
+  useEffect(() => {
+    // Check email connection status (client-side localStorage)
+    const gUser = getGoogleUser();
+    const mUser = getMicrosoftUser();
+    if (gUser) {
+      setEmailConnected(isGoogleTokenExpired() ? "expired" : "gmail");
+    } else if (mUser) {
+      setEmailConnected("microsoft");
+    } else {
+      setEmailConnected(null);
+    }
+    const dismissed = localStorage.getItem("checklist_dismissed") === "true";
+    setChecklistDismissed(dismissed);
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -120,8 +138,60 @@ export default function DashboardPage() {
   const recentDeals = deals.slice(0, 6);
   const activeDeals = deals.filter(d => d.status !== "paid");
 
+  const checklistTasks = [
+    {
+      id: "email",
+      label: "Connect your email",
+      sub: "Send outreach from your own inbox",
+      done: emailConnected === "gmail" || emailConnected === "microsoft",
+      href: "/settings",
+    },
+    {
+      id: "send",
+      label: "Send your first email",
+      sub: "Pick a contact and reach out",
+      done: emailsSent > 0,
+      href: "/contacts",
+    },
+    {
+      id: "deal",
+      label: "Add a deal to your pipeline",
+      sub: "Track a brand conversation",
+      done: deals.length > 0,
+      href: "/pipeline",
+    },
+  ];
+  const allChecklistDone = checklistTasks.every((t) => t.done);
+  const showChecklist = !checklistDismissed && !allChecklistDone;
+
   return (
     <div className="h-full flex flex-col overflow-hidden" style={{ background: "var(--blush)" }}>
+
+      {/* Email not connected banner */}
+      {emailConnected === null && (
+        <div className="flex items-center gap-3 px-6 py-3 bg-amber-50 border-b border-amber-200 flex-shrink-0">
+          <AlertTriangle size={15} className="text-amber-500 flex-shrink-0" />
+          <p className="text-sm text-amber-800 flex-1">
+            <span className="font-semibold">No email connected.</span> You won&apos;t be able to send outreach until you connect Gmail or Microsoft.
+          </p>
+          <Link href="/settings" className="text-xs font-bold text-amber-700 hover:text-amber-900 whitespace-nowrap border border-amber-300 px-3 py-1 rounded-lg hover:bg-amber-100 transition-colors">
+            Connect now →
+          </Link>
+        </div>
+      )}
+
+      {/* Gmail token expired banner */}
+      {emailConnected === "expired" && (
+        <div className="flex items-center gap-3 px-6 py-3 bg-red-50 border-b border-red-200 flex-shrink-0">
+          <AlertTriangle size={15} className="text-red-500 flex-shrink-0" />
+          <p className="text-sm text-red-800 flex-1">
+            <span className="font-semibold">Gmail session expired.</span> Your emails won&apos;t send until you reconnect.
+          </p>
+          <Link href="/settings" className="text-xs font-bold text-red-700 hover:text-red-900 whitespace-nowrap border border-red-300 px-3 py-1 rounded-lg hover:bg-red-100 transition-colors">
+            Reconnect →
+          </Link>
+        </div>
+      )}
 
       {/* Header */}
       <div
@@ -156,6 +226,48 @@ export default function DashboardPage() {
 
         {/* ── LEFT COLUMN ── */}
         <div className="flex flex-col gap-4 min-h-0">
+
+          {/* Getting started checklist */}
+          {showChecklist && (
+            <div className="bg-white rounded-2xl border flex-shrink-0 overflow-hidden" style={{ borderColor: "var(--border)" }}>
+              <div className="flex items-center justify-between px-5 py-3.5 border-b" style={{ borderColor: "var(--border)" }}>
+                <div className="flex items-center gap-2">
+                  <Zap size={14} className="text-coral-500" />
+                  <span className="text-sm font-black text-navy-900">Getting started</span>
+                  <span className="text-[10px] font-bold bg-coral-100 text-coral-600 px-2 py-0.5 rounded-full">
+                    {checklistTasks.filter(t => t.done).length}/{checklistTasks.length}
+                  </span>
+                </div>
+                <button
+                  onClick={() => { setChecklistDismissed(true); localStorage.setItem("checklist_dismissed", "true"); }}
+                  className="text-navy-300 hover:text-navy-600 transition-colors"
+                >
+                  <X size={14} />
+                </button>
+              </div>
+              <div className="divide-y" style={{ borderColor: "var(--border)" }}>
+                {checklistTasks.map((task) => (
+                  <Link
+                    key={task.id}
+                    href={task.href}
+                    className="flex items-center gap-3 px-5 py-3.5 hover:bg-cream-50 transition-colors group"
+                  >
+                    <CheckCircle2
+                      size={18}
+                      className={`flex-shrink-0 transition-colors ${task.done ? "text-emerald-500" : "text-cream-300 group-hover:text-navy-300"}`}
+                    />
+                    <div className="flex-1 min-w-0">
+                      <p className={`text-sm font-semibold ${task.done ? "text-navy-400 line-through" : "text-navy-900"}`}>
+                        {task.label}
+                      </p>
+                      <p className="text-xs text-navy-400">{task.sub}</p>
+                    </div>
+                    {!task.done && <ChevronRight size={14} className="text-navy-300 group-hover:text-navy-500 flex-shrink-0" />}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Analytics Card */}
           <div

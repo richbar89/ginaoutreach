@@ -12,6 +12,17 @@ export function signOutFromGoogle(): void {
   localStorage.removeItem("google_access_token");
   localStorage.removeItem("google_user_email");
   localStorage.removeItem("google_user_name");
+  localStorage.removeItem("google_token_expires_at");
+}
+
+/** Returns true if the stored Gmail token is missing or expired */
+export function isGoogleTokenExpired(): boolean {
+  if (typeof window === "undefined") return false;
+  const token = localStorage.getItem("google_access_token");
+  if (!token) return true;
+  const expiresAt = Number(localStorage.getItem("google_token_expires_at") || "0");
+  // Treat as expired 5 minutes before actual expiry
+  return expiresAt > 0 && Date.now() > expiresAt - 5 * 60 * 1000;
 }
 
 export function signInWithGoogle(): Promise<{ name: string; email: string }> {
@@ -36,6 +47,8 @@ export function signInWithGoogle(): Promise<{ name: string; email: string }> {
       localStorage.setItem("google_access_token", access_token);
       localStorage.setItem("google_user_email", email);
       localStorage.setItem("google_user_name", name || email);
+      // Store expiry — Google access tokens last 1 hour
+      localStorage.setItem("google_token_expires_at", String(Date.now() + 3600 * 1000));
       resolve({ email, name: name || email });
     };
 
