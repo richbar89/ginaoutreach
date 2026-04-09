@@ -369,12 +369,12 @@ export default function LandingPage() {
         </nav>
 
         {/* ── HERO ── */}
-        <section className="cl-dot" style={{ paddingTop: 140, paddingBottom: 100, paddingLeft: 28, paddingRight: 28, background: "#fff", position: "relative", overflow: "hidden" }}>
+        <section className="cl-dot" style={{ paddingTop: 140, paddingBottom: 100, paddingLeft: 28, paddingRight: 28, background: "#fff", position: "relative", overflow: "hidden", minHeight: 760 }}>
           <div style={{ position: "absolute", top: "20%", right: "8%", width: 480, height: 480, background: "radial-gradient(ellipse, rgba(232,98,42,0.06) 0%, transparent 70%)", pointerEvents: "none" }} />
           <div className="cl-inner">
             <div ref={hero.ref} className={`cl-fade${hero.vis ? " vis" : ""}`} style={{ display: "grid", gridTemplateColumns: "1fr 0.9fr", gap: 80, alignItems: "center" } as React.CSSProperties} id="cl-hero-grid">
               {/* Copy */}
-              <div style={{ minHeight: 420 }}>
+              <div style={{ minHeight: 520 }}>
                 <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "rgba(232,98,42,0.07)", border: "1px solid rgba(232,98,42,0.18)", borderRadius: 100, padding: "5px 13px", marginBottom: 26 }}>
                   <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#E8622A", animation: "cl-pulse 2s infinite" }} />
                   <span style={{ fontSize: 11, color: "#E8622A", fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase" }}>Now in early access</span>
