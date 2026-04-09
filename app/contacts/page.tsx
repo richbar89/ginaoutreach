@@ -168,8 +168,11 @@ export default function ContactsPage() {
     return result;
   }, [contacts, query, activeCategory]);
 
+  const PAGE_SIZE = 20;
   const withLinkedIn = contacts.filter(c => c.linkedin).length;
   const withAds = Object.values(adStatuses).filter(s => s.hasAds).length;
+  const isFiltering = query.trim() || activeCategory !== "All";
+  const visible = isFiltering ? filtered : filtered.slice(0, PAGE_SIZE);
 
   return (
     <div className="p-8 max-w-7xl mx-auto">
@@ -253,7 +256,7 @@ export default function ContactsPage() {
           <div className="px-6 py-16 text-center text-sm text-navy-300">No contacts match your search.</div>
         ) : (
           <div className="divide-y divide-cream-100">
-            {filtered.map((l) => {
+            {visible.map((l) => {
               const adStatus = l.company ? adStatuses[l.company] : undefined;
               return (
                 <div key={l.id} className="flex items-center gap-4 px-6 py-4 hover:bg-cream-50 transition-colors group">
@@ -318,9 +321,14 @@ export default function ContactsPage() {
         )}
       </div>
 
-      {filtered.length > 0 && (
+      {!isFiltering && filtered.length > PAGE_SIZE && (
+        <p className="text-xs text-navy-400 text-center mt-4">
+          Showing {PAGE_SIZE} of {filtered.length.toLocaleString()} contacts — use search or a category to narrow down.
+        </p>
+      )}
+      {isFiltering && filtered.length > 0 && (
         <p className="text-xs text-navy-300 text-center mt-4">
-          Showing {filtered.length.toLocaleString()} contact{filtered.length !== 1 ? "s" : ""}
+          {filtered.length.toLocaleString()} result{filtered.length !== 1 ? "s" : ""}
         </p>
       )}
     </div>
