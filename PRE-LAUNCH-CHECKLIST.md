@@ -57,9 +57,11 @@ Things to complete before selling to real users.
 
 ## Legal & Trust
 
-- [ ] Add Privacy Policy page (`/privacy`)
-- [ ] Add Terms of Service page (`/terms`)
-- [ ] Link both from footer of landing page
+- [x] Add Privacy Policy page (`/privacy`)
+- [x] Add Terms of Service page (`/terms`)
+- [x] Add Data Removal request page (`/data-removal`)
+- [x] Link all three from footer of landing page
+- [ ] Update `hello@collabi.io` in `/privacy` and `/terms` to your real email address once domain is live
 - [ ] Add cookie notice if needed (UK/GDPR)
 
 ---
