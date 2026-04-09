@@ -36,7 +36,7 @@ const CATEGORY_COLOURS: Record<string, { bg: string; text: string; dot: string }
 
 function CategoryBadge({ category }: { category: string | null }) {
   if (!category) return null;
-  const c = CATEGORY_COLOURS[category as BrandCategory];
+  const c = CATEGORY_COLOURS[category];
   if (!c) return null;
   return (
     <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border ${c.bg} ${c.text}`}>
