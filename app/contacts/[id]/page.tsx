@@ -205,7 +205,7 @@ function LeadProfile({ email }: { email: string }) {
                 <Send size={13} /> Send Email
               </Link>
             </div>
-            <AdStatusBadge company={lead.company} />
+            <AdStatusBadge company={lead.company ?? undefined} />
           </div>
         </div>
       </div>
