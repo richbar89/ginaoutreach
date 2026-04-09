@@ -3,358 +3,547 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 
+// ── Typing animation ──────────────────────────────────────────
+const NICHES = ["food creators", "lifestyle creators", "fitness creators", "travel creators", "beauty creators"];
+
+function useTyping(words: string[], speed = 78, del = 42, pause = 2400) {
+  const [text, setText] = useState("");
+  const [deleting, setDeleting] = useState(false);
+  const [idx, setIdx] = useState(0);
+  useEffect(() => {
+    const word = words[idx];
+    let t: ReturnType<typeof setTimeout>;
+    if (!deleting) {
+      if (text === word) t = setTimeout(() => setDeleting(true), pause);
+      else t = setTimeout(() => setText(word.slice(0, text.length + 1)), speed);
+    } else {
+      if (!text) { setDeleting(false); setIdx(n => (n + 1) % words.length); }
+      else t = setTimeout(() => setText(prev => prev.slice(0, -1)), del);
+    }
+    return () => clearTimeout(t);
+  }, [text, deleting, idx, words, speed, del, pause]);
+  return text;
+}
+
 function useInView(threshold = 0.1) {
   const ref = useRef<HTMLDivElement>(null);
-  const [inView, setInView] = useState(false);
+  const [vis, setVis] = useState(false);
   useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setInView(true); }, { threshold });
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVis(true); }, { threshold });
     if (ref.current) obs.observe(ref.current);
     return () => obs.disconnect();
   }, [threshold]);
-  return { ref, inView };
+  return { ref, vis };
 }
 
-function AppMockup() {
+// ── Mockup components ─────────────────────────────────────────
+
+function HeroDashboard() {
   const deals = [
-    { brand: "Innocent Drinks", value: "£2,400", status: "Negotiating", color: "#F59E0B" },
-    { brand: "Graze", value: "£1,200", status: "Replied", color: "#6366F1" },
-    { brand: "Oatly", value: "£3,500", status: "Contracted", color: "#8B5CF6" },
-    { brand: "M&S Food", value: "£800", status: "Pitched", color: "#3B82F6" },
+    { b: "Innocent Drinks", v: "£2,400", s: "Negotiating", c: "#F59E0B" },
+    { b: "M&S Food", v: "£3,200", s: "Contracted", c: "#8B5CF6" },
+    { b: "Graze", v: "£900", s: "Replied", c: "#6366F1" },
+    { b: "Oatly", v: "£1,800", s: "Pitched", c: "#3B82F6" },
   ];
   return (
-    <div style={{ background: "linear-gradient(135deg, #0D1B2A 0%, #162540 100%)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "16px", overflow: "hidden", boxShadow: "0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05)" }}>
-      {/* Window chrome */}
-      <div style={{ background: "rgba(255,255,255,0.04)", borderBottom: "1px solid rgba(255,255,255,0.07)", padding: "12px 16px", display: "flex", alignItems: "center", gap: "8px" }}>
-        <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#FF5F57" }} />
-        <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#FEBC2E" }} />
-        <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#28C840" }} />
+    <div style={{ background: "#0F1E30", borderRadius: 18, border: "1px solid rgba(255,255,255,0.09)", boxShadow: "0 40px 80px -10px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.04)", overflow: "hidden" }}>
+      <div style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.07)", padding: "11px 16px", display: "flex", alignItems: "center", gap: 7 }}>
+        {["#FF5F57","#FEBC2E","#28C840"].map(c => <div key={c} style={{ width: 9, height: 9, borderRadius: "50%", background: c }} />)}
         <div style={{ flex: 1, textAlign: "center" }}>
-          <div style={{ display: "inline-block", background: "rgba(255,255,255,0.05)", borderRadius: "6px", padding: "2px 16px", fontSize: "11px", color: "rgba(255,255,255,0.3)" }}>
-            app.collabi.io/dashboard
-          </div>
+          <span style={{ fontSize: 10, color: "rgba(255,255,255,0.18)", background: "rgba(255,255,255,0.04)", padding: "2px 14px", borderRadius: 5, letterSpacing: "0.01em" }}>collabi.io/dashboard</span>
         </div>
       </div>
-      {/* Content */}
-      <div style={{ display: "flex", height: "360px" }}>
-        {/* Sidebar */}
-        <div style={{ width: "52px", background: "rgba(255,255,255,0.02)", borderRight: "1px solid rgba(255,255,255,0.06)", padding: "16px 0", display: "flex", flexDirection: "column", alignItems: "center", gap: "12px" }}>
-          {[
-            { active: true, d: "M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" },
-            { active: false, d: "M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z" },
-            { active: false, d: "M22 6L12 13 2 6M2 6h20v14a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" },
-            { active: false, d: "M18 20V10M12 20V4M6 20v-6" },
-          ].map((item, i) => (
-            <div key={i} style={{ width: 32, height: 32, borderRadius: 8, background: item.active ? "rgba(232,98,42,0.2)" : "transparent", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={item.active ? "#E8622A" : "rgba(255,255,255,0.25)"} strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-                <path d={item.d} />
-              </svg>
+      <div style={{ padding: "14px 16px 0" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 8, marginBottom: 14 }}>
+          {[{ l: "Contacts", v: "1,293" }, { l: "Emails Sent", v: "47" }, { l: "Active Deals", v: "8" }].map(s => (
+            <div key={s.l} style={{ background: "rgba(255,255,255,0.04)", borderRadius: 10, padding: "10px 12px", border: "1px solid rgba(255,255,255,0.06)" }}>
+              <p style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 5 }}>{s.l}</p>
+              <p style={{ fontSize: 22, fontWeight: 800, color: "#fff", lineHeight: 1, fontFamily: "'Bricolage Grotesque',sans-serif" }}>{s.v}</p>
             </div>
           ))}
         </div>
-        {/* Main */}
-        <div style={{ flex: 1, padding: "16px", overflow: "hidden" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px", marginBottom: "16px" }}>
-            {[{ label: "Contacts", value: "1,293" }, { label: "Emails Sent", value: "47" }, { label: "Active Deals", value: "8" }].map(s => (
-              <div key={s.label} style={{ background: "rgba(255,255,255,0.04)", borderRadius: "10px", padding: "10px 12px", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <p style={{ fontSize: "10px", color: "rgba(255,255,255,0.35)", marginBottom: "4px", textTransform: "uppercase", letterSpacing: "0.06em" }}>{s.label}</p>
-                <p style={{ fontSize: "18px", fontWeight: 800, color: "white", lineHeight: 1 }}>{s.value}</p>
-              </div>
-            ))}
-          </div>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
-            <p style={{ fontSize: "10px", fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.1em" }}>Deal Pipeline</p>
-            <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-              <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#E8622A" }} />
-              <p style={{ fontSize: "10px", color: "#E8622A" }}>4 active</p>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.09em" }}>Deal Pipeline</p>
+          <span style={{ fontSize: 10, color: "#E8622A", fontWeight: 700 }}>4 active</span>
+        </div>
+      </div>
+      <div style={{ padding: "0 16px 16px", display: "flex", flexDirection: "column", gap: 5 }}>
+        {deals.map(d => (
+          <div key={d.b} style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.03)", borderRadius: 9, padding: "8px 10px", border: "1px solid rgba(255,255,255,0.055)" }}>
+            <div style={{ width: 26, height: 26, borderRadius: 7, background: `${d.c}20`, border: `1px solid ${d.c}40`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <span style={{ fontSize: 10, fontWeight: 800, color: d.c }}>{d.b[0]}</span>
+            </div>
+            <span style={{ flex: 1, fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.78)", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>{d.b}</span>
+            <span style={{ fontSize: 11, fontWeight: 700, color: "#10B981", flexShrink: 0 }}>{d.v}</span>
+            <div style={{ padding: "2px 8px", borderRadius: 20, background: `${d.c}18`, border: `1px solid ${d.c}38`, flexShrink: 0 }}>
+              <span style={{ fontSize: 9, fontWeight: 700, color: d.c }}>{d.s}</span>
             </div>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
-            {deals.map(deal => (
-              <div key={deal.brand} style={{ display: "flex", alignItems: "center", gap: "8px", background: "rgba(255,255,255,0.03)", borderRadius: "8px", padding: "7px 10px", border: "1px solid rgba(255,255,255,0.05)" }}>
-                <div style={{ width: 26, height: 26, borderRadius: 6, background: `${deal.color}22`, border: `1px solid ${deal.color}44`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <p style={{ fontSize: "10px", fontWeight: 800, color: deal.color }}>{deal.brand[0]}</p>
-                </div>
-                <p style={{ flex: 1, fontSize: "11px", fontWeight: 600, color: "rgba(255,255,255,0.8)", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>{deal.brand}</p>
-                <p style={{ fontSize: "11px", fontWeight: 700, color: "#10B981", flexShrink: 0 }}>{deal.value}</p>
-                <div style={{ padding: "2px 7px", borderRadius: "20px", background: `${deal.color}18`, border: `1px solid ${deal.color}40`, flexShrink: 0 }}>
-                  <p style={{ fontSize: "9px", fontWeight: 700, color: deal.color }}>{deal.status}</p>
-                </div>
-              </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ContactsMockup() {
+  const rows = [
+    { name: "Beth Griffiths", co: "Innocent Drinks", role: "Brand Manager", tag: "Drinks", hue: 200 },
+    { name: "James Cooper", co: "M&S Food", role: "Marketing Lead", tag: "Grocery", hue: 140 },
+    { name: "Sarah Mills", co: "Graze", role: "Partnerships", tag: "Snacks", hue: 30 },
+    { name: "Tom Walsh", co: "Oatly", role: "Brand Director", tag: "Dairy", hue: 260 },
+    { name: "Emma Clarke", co: "Clipper Teas", role: "Marketing Mgr", tag: "Coffee & Tea", hue: 48 },
+  ];
+  return (
+    <div style={{ background: "#0F1E30", borderRadius: 16, border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 32px 60px rgba(0,0,0,0.35)", overflow: "hidden" }}>
+      <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div>
+          <p style={{ fontSize: 13, fontWeight: 700, color: "#fff", fontFamily: "'Bricolage Grotesque',sans-serif" }}>Contacts</p>
+          <p style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 1 }}>1,293 brand contacts</p>
+        </div>
+        <div style={{ background: "#E8622A", borderRadius: 7, padding: "5px 11px", fontSize: 10, color: "#fff", fontWeight: 700 }}>+ Add Contact</div>
+      </div>
+      <div style={{ padding: "10px 18px", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+        <div style={{ background: "rgba(255,255,255,0.05)", borderRadius: 8, padding: "6px 10px", display: "flex", alignItems: "center", gap: 7 }}>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.28)" strokeWidth="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <span style={{ fontSize: 11, color: "rgba(255,255,255,0.2)" }}>Search contacts...</span>
+        </div>
+      </div>
+      {rows.map((r, i) => (
+        <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 18px", borderBottom: i < rows.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none" }}>
+          <div style={{ width: 30, height: 30, borderRadius: 9, background: `hsl(${r.hue},55%,30%)`, border: `1px solid hsl(${r.hue},55%,42%)`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            <span style={{ fontSize: 11, fontWeight: 700, color: "#fff" }}>{r.name[0]}</span>
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <p style={{ fontSize: 11, fontWeight: 600, color: "#fff", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>{r.name}</p>
+            <p style={{ fontSize: 10, color: "rgba(255,255,255,0.32)", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>{r.co} · {r.role}</p>
+          </div>
+          <div style={{ padding: "2px 8px", borderRadius: 20, background: "rgba(255,255,255,0.06)", flexShrink: 0 }}>
+            <span style={{ fontSize: 9, color: "rgba(255,255,255,0.38)", fontWeight: 600 }}>{r.tag}</span>
+          </div>
+          <div style={{ width: 28, height: 28, borderRadius: 8, background: "rgba(232,98,42,0.12)", border: "1px solid rgba(232,98,42,0.22)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#E8622A" strokeWidth="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function EmailMockup() {
+  return (
+    <div style={{ background: "#0F1E30", borderRadius: 16, border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 32px 60px rgba(0,0,0,0.35)", overflow: "hidden" }}>
+      <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div>
+          <p style={{ fontSize: 13, fontWeight: 700, color: "#fff", fontFamily: "'Bricolage Grotesque',sans-serif" }}>New Campaign</p>
+          <p style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 1 }}>24 contacts selected</p>
+        </div>
+        <div style={{ display: "flex", gap: 5 }}>
+          {["Pitched","Replied","All"].map((t,i) => (
+            <div key={t} style={{ padding: "3px 9px", borderRadius: 20, background: i === 2 ? "#E8622A" : "rgba(255,255,255,0.06)", fontSize: 9, color: i === 2 ? "#fff" : "rgba(255,255,255,0.4)", fontWeight: 600 }}>{t}</div>
+          ))}
+        </div>
+      </div>
+      <div style={{ padding: 16, display: "flex", flexDirection: "column", gap: 10 }}>
+        <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 9, padding: "9px 13px", border: "1px solid rgba(255,255,255,0.07)" }}>
+          <p style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", marginBottom: 5, textTransform: "uppercase", letterSpacing: "0.07em" }}>To</p>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+            {["Innocent Drinks", "M&S Food", "Graze", "+21 more"].map((t, i) => (
+              <span key={i} style={{ fontSize: 10, background: i < 3 ? "rgba(232,98,42,0.15)" : "rgba(255,255,255,0.06)", color: i < 3 ? "#E8622A" : "rgba(255,255,255,0.38)", padding: "2px 8px", borderRadius: 20, fontWeight: 600 }}>{t}</span>
             ))}
           </div>
+        </div>
+        <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 9, padding: "9px 13px", border: "1px solid rgba(255,255,255,0.07)" }}>
+          <p style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", marginBottom: 4, textTransform: "uppercase", letterSpacing: "0.07em" }}>Subject</p>
+          <p style={{ fontSize: 11, color: "rgba(255,255,255,0.8)" }}>Collab opportunity — <span style={{ color: "#E8622A", fontWeight: 600 }}>{"{{name}}"}</span></p>
+        </div>
+        <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 9, padding: "11px 13px", border: "1px solid rgba(255,255,255,0.07)" }}>
+          <p style={{ fontSize: 10, color: "rgba(255,255,255,0.55)", lineHeight: 1.8 }}>Hi <span style={{ color: "#E8622A", fontWeight: 600 }}>{"{{name}}"}</span>,</p>
+          <p style={{ fontSize: 10, color: "rgba(255,255,255,0.38)", lineHeight: 1.8, marginTop: 2 }}>I&apos;ve been following <span style={{ color: "#E8622A", fontWeight: 600 }}>{"{{company}}"}</span> for a while and would love to explore a collaboration...</p>
+          <div style={{ marginTop: 10, display: "flex", flexDirection: "column", gap: 5 }}>
+            {[3,2,3.5,1.5].map((w,i) => <div key={i} style={{ height: 2, width: `${w * 22}%`, background: "rgba(255,255,255,0.07)", borderRadius: 2 }} />)}
+          </div>
+        </div>
+        <div style={{ background: "#E8622A", borderRadius: 9, padding: "10px", display: "flex", alignItems: "center", justifyContent: "center", gap: 7 }}>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          <span style={{ fontSize: 12, fontWeight: 700, color: "#fff" }}>Send Campaign</span>
         </div>
       </div>
     </div>
   );
 }
 
+function PipelineMockup() {
+  const cols = [
+    { label: "Pitched", color: "#3B82F6", deals: [{ b: "Innocent", v: "£2,400" }, { b: "Clipper", v: "£1,100" }] },
+    { label: "Replied", color: "#6366F1", deals: [{ b: "Graze", v: "£900" }] },
+    { label: "Contracted", color: "#8B5CF6", deals: [{ b: "M&S Food", v: "£3,200" }] },
+    { label: "Paid", color: "#10B981", deals: [{ b: "Oatly", v: "£1,800" }] },
+  ];
+  return (
+    <div style={{ background: "#0F1E30", borderRadius: 16, border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 32px 60px rgba(0,0,0,0.35)", overflow: "hidden" }}>
+      <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <p style={{ fontSize: 13, fontWeight: 700, color: "#fff", fontFamily: "'Bricolage Grotesque',sans-serif" }}>Deal Pipeline</p>
+        <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+          <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#E8622A", animation: "cl-pulse 2s infinite" }} />
+          <span style={{ fontSize: 10, color: "#E8622A", fontWeight: 600 }}>6 active deals · £10,400</span>
+        </div>
+      </div>
+      <div style={{ padding: 14, display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 8 }}>
+        {cols.map(col => (
+          <div key={col.label}>
+            <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 9 }}>
+              <div style={{ width: 6, height: 6, borderRadius: 2, background: col.color }} />
+              <span style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.38)", textTransform: "uppercase", letterSpacing: "0.07em" }}>{col.label}</span>
+            </div>
+            {col.deals.map((d, i) => (
+              <div key={i} style={{ background: "rgba(255,255,255,0.04)", borderRadius: 8, padding: "9px 10px", marginBottom: 6, border: `1px solid ${col.color}28` }}>
+                <p style={{ fontSize: 11, fontWeight: 600, color: "#fff", marginBottom: 4 }}>{d.b}</p>
+                <p style={{ fontSize: 11, fontWeight: 700, color: "#10B981" }}>{d.v}</p>
+              </div>
+            ))}
+            <div style={{ border: `1px dashed rgba(255,255,255,0.07)`, borderRadius: 8, padding: "8px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <span style={{ fontSize: 16, color: "rgba(255,255,255,0.12)" }}>+</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function AdsMockup() {
+  const rows = [
+    { name: "Innocent Drinks", cat: "Drinks", status: "Running", spend: "High" },
+    { name: "M&S Food", cat: "Grocery", status: "Running", spend: "High" },
+    { name: "Graze", cat: "Snacks", status: "Paused", spend: "Low" },
+    { name: "Oatly", cat: "Dairy", status: "Running", spend: "Med" },
+    { name: "Clipper Teas", cat: "Coffee & Tea", status: "None", spend: "—" },
+  ];
+  return (
+    <div style={{ background: "#0F1E30", borderRadius: 16, border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 32px 60px rgba(0,0,0,0.35)", overflow: "hidden" }}>
+      <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div>
+          <p style={{ fontSize: 13, fontWeight: 700, color: "#fff", fontFamily: "'Bricolage Grotesque',sans-serif" }}>Meta Ad Intelligence</p>
+          <p style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 1 }}>Scanned 2 minutes ago</p>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 5, background: "rgba(232,98,42,0.1)", border: "1px solid rgba(232,98,42,0.25)", borderRadius: 7, padding: "4px 10px" }}>
+          <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#E8622A", animation: "cl-pulse 2s infinite" }} />
+          <span style={{ fontSize: 10, color: "#E8622A", fontWeight: 600 }}>Live</span>
+        </div>
+      </div>
+      <div style={{ padding: "0 0 4px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr auto auto", gap: "0 16px", padding: "8px 18px 6px", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+          {["Company","Status","Spend"].map(h => <p key={h} style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.22)", textTransform: "uppercase", letterSpacing: "0.08em" }}>{h}</p>)}
+        </div>
+        {rows.map((r, i) => (
+          <div key={i} style={{ display: "grid", gridTemplateColumns: "1fr auto auto", gap: "0 16px", padding: "10px 18px", borderBottom: i < rows.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none", alignItems: "center" }}>
+            <div>
+              <p style={{ fontSize: 11, fontWeight: 600, color: r.status === "Running" ? "#fff" : "rgba(255,255,255,0.5)" }}>{r.name}</p>
+              <p style={{ fontSize: 9, color: "rgba(255,255,255,0.25)" }}>{r.cat}</p>
+            </div>
+            <div style={{
+              padding: "2px 8px", borderRadius: 20, fontSize: 9, fontWeight: 700, display: "flex", alignItems: "center", gap: 4,
+              background: r.status === "Running" ? "rgba(16,185,129,0.12)" : r.status === "Paused" ? "rgba(245,158,11,0.1)" : "rgba(255,255,255,0.05)",
+              color: r.status === "Running" ? "#10B981" : r.status === "Paused" ? "#F59E0B" : "rgba(255,255,255,0.22)",
+            }}>
+              {r.status === "Running" && <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#10B981", animation: "cl-pulse 2s infinite" }} />}
+              {r.status}
+            </div>
+            <p style={{ fontSize: 11, fontWeight: 600, color: r.spend === "High" ? "#E8622A" : r.spend === "Med" ? "#F59E0B" : "rgba(255,255,255,0.25)", textAlign: "right" }}>{r.spend}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── Feature sections data ──────────────────────────────────────
 const FEATURES = [
   {
-    title: "1,200+ Brand Contacts",
-    desc: "Ready-to-use database of food, drink, lifestyle and more brand marketing contacts. No cold prospecting, no hunting down emails.",
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
-      </svg>
-    ),
+    tag: "Brand Contacts",
+    title: "1,200+ contacts.\nZero prospecting.",
+    body: "Every contact is a real marketing decision-maker at a brand that works with creators. Food, drink, lifestyle, wellness, beauty — filtered by category and ready to pitch. We did the work so you don't have to.",
+    bullets: ["Brand managers & marketing leads", "Filtered by category & industry", "Request any missing contact"],
+    mockup: <ContactsMockup />,
   },
   {
-    title: "Email Outreach",
-    desc: "Send personalised campaigns from your Gmail or Outlook. Track every reply, and get automatic follow-up reminders.",
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
-      </svg>
-    ),
+    tag: "Email Outreach",
+    title: "Personal at scale.\nPowerful by default.",
+    body: "Send campaigns from your own Gmail or Outlook — not a bulk sender with a strange domain. Use merge tags to personalise every line. Get automatic follow-up reminders. Every reply tracked.",
+    bullets: ["Sends from your own inbox", "Merge tags for personalisation", "Auto follow-up reminders"],
+    mockup: <EmailMockup />,
   },
   {
-    title: "Deal Pipeline",
-    desc: "Track every brand conversation from first pitch to paid. Visual pipeline board. Never let a deal fall through the cracks.",
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-        <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
-      </svg>
-    ),
+    tag: "Deal Pipeline",
+    title: "First pitch to paid.\nNothing gets lost.",
+    body: "A visual deal board that shows exactly where every brand conversation stands. Move deals forward, log notes, track deal values. When a brand goes quiet, you'll know — and you'll know when to nudge.",
+    bullets: ["Visual Kanban board", "Deal value & stage tracking", "Notes on every conversation"],
+    mockup: <PipelineMockup />,
   },
   {
-    title: "Meta Ad Intelligence",
-    desc: "See which brands are actively running ads right now. Pitch them when their budget is live — and your message actually lands.",
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
-      </svg>
-    ),
+    tag: "Meta Ad Intelligence",
+    title: "Pitch brands when\ntheir budget is open.",
+    body: "A brand actively spending on Meta ads is a brand with a live marketing budget. We scan thousands of brands and flag who's running ads right now — so you pitch at exactly the right moment.",
+    bullets: ["Live ad status for all contacts", "Filter by ad spend level", "Daily automatic rescans"],
+    mockup: <AdsMockup />,
   },
 ];
 
+// ── Main page ──────────────────────────────────────────────────
 export default function LandingPage() {
+  const typed = useTyping(NICHES);
   const [scrolled, setScrolled] = useState(false);
-  const features = useInView(0.1);
+  const hero = useInView(0.05);
+  const logos = useInView(0.1);
+  const f0 = useInView(0.08);
+  const f1 = useInView(0.08);
+  const f2 = useInView(0.08);
+  const f3 = useInView(0.08);
+  const stats = useInView(0.1);
   const pricing = useInView(0.1);
+  const fRefs = [f0, f1, f2, f3];
 
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", fn);
+    const fn = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", fn, { passive: true });
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
-        .cl-landing { font-family: 'DM Sans', sans-serif; background: #0D1B2A; color: #fff; }
-        .cl-display { font-family: 'Syne', sans-serif; }
-        .cl-nav-blur { backdrop-filter: blur(20px); background: rgba(13,27,42,0.85); border-bottom: 1px solid rgba(255,255,255,0.07); }
-        .cl-hero-grid {
-          background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
-          background-size: 52px 52px;
-        }
-        .cl-glow { box-shadow: 0 0 40px rgba(232,98,42,0.25), 0 0 80px rgba(232,98,42,0.1); }
-        .cl-card-hover { transition: transform 0.3s ease, border-color 0.3s ease; }
-        .cl-card-hover:hover { transform: translateY(-5px); border-color: rgba(232,98,42,0.25) !important; }
-        .cl-fade { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
-        .cl-fade.in { opacity: 1; transform: translateY(0); }
-        .cl-float { animation: cl-float 7s ease-in-out infinite; }
-        @keyframes cl-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
-        .cl-pulse { animation: cl-pulse 2.5s ease-in-out infinite; }
-        @keyframes cl-pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
-        .cl-gradient-text { background: linear-gradient(135deg, #fff 30%, rgba(255,255,255,0.65) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .cl-coral-text { background: linear-gradient(135deg, #E8622A 0%, #F59E0B 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .cl-btn-primary { background: #E8622A; color: #fff; transition: background 0.2s ease, transform 0.15s ease; }
-        .cl-btn-primary:hover { background: #d45520; transform: translateY(-1px); }
-        .cl-btn-ghost { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); transition: background 0.2s ease; }
-        .cl-btn-ghost:hover { background: rgba(255,255,255,0.1); }
-        @media (max-width: 768px) {
-          .cl-hero-grid-cols { grid-template-columns: 1fr !important; }
-          .cl-mockup-col { display: none !important; }
-          .cl-feat-grid { grid-template-columns: 1fr !important; }
+        @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        .cl-page { font-family: 'DM Sans', sans-serif; background: #ffffff; color: #0D1B2A; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+        .cl-h { font-family: 'Bricolage Grotesque', sans-serif; }
+        .cl-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; transition: all 0.25s; }
+        .cl-nav-inner { max-width: 1160px; margin: 0 auto; padding: 0 28px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+        .cl-nav-scrolled { background: rgba(255,255,255,0.92); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(0,0,0,0.07); }
+        .cl-dot { background-image: radial-gradient(circle, rgba(13,27,42,0.06) 1.2px, transparent 1.2px); background-size: 28px 28px; }
+        .cl-btn { display: inline-flex; align-items: center; gap: 7px; text-decoration: none; border-radius: 9px; font-weight: 600; font-family: 'DM Sans', sans-serif; transition: all 0.18s ease; cursor: pointer; border: none; }
+        .cl-btn-primary { background: #E8622A; color: #fff; padding: 11px 22px; font-size: 14px; }
+        .cl-btn-primary:hover { background: #d45520; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(232,98,42,0.3); }
+        .cl-btn-primary-lg { background: #E8622A; color: #fff; padding: 14px 30px; font-size: 16px; border-radius: 10px; }
+        .cl-btn-primary-lg:hover { background: #d45520; transform: translateY(-1.5px); box-shadow: 0 8px 28px rgba(232,98,42,0.35); }
+        .cl-btn-ghost { background: transparent; color: #0D1B2A; padding: 11px 18px; font-size: 14px; border: 1px solid #e5e7eb; }
+        .cl-btn-ghost:hover { border-color: #E8622A; color: #E8622A; }
+        .cl-float { animation: cl-float 6s ease-in-out infinite; }
+        @keyframes cl-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+        @keyframes cl-pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .cl-cursor { display: inline-block; width: 2.5px; height: 1em; background: #E8622A; margin-left: 2px; vertical-align: text-bottom; animation: cl-blink 1s step-end infinite; border-radius: 1px; }
+        @keyframes cl-blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+        .cl-fade { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        .cl-fade.vis { opacity: 1; transform: none; }
+        .cl-feat-card { transition: transform 0.25s ease, box-shadow 0.25s ease; border-radius: 14px; border: 1px solid #f0f0f0; padding: 28px; }
+        .cl-feat-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.08); border-color: #fbd6c8; }
+        .cl-price-card { border: 1.5px solid #f0f0f0; border-radius: 20px; padding: 48px; background: #fff; transition: border-color 0.25s, box-shadow 0.25s; box-shadow: 0 4px 24px rgba(0,0,0,0.05); }
+        .cl-price-card:hover { border-color: #E8622A; box-shadow: 0 8px 40px rgba(232,98,42,0.12); }
+        .cl-logo-item { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 15px; color: #c8cdd4; letter-spacing: -0.01em; transition: color 0.2s; white-space: nowrap; }
+        .cl-logo-item:hover { color: #9ba3ae; }
+        .cl-section { padding: 110px 28px; }
+        .cl-section-sm { padding: 72px 28px; }
+        .cl-inner { max-width: 1160px; margin: 0 auto; }
+        .cl-tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #E8622A; background: rgba(232,98,42,0.08); padding: 4px 12px; border-radius: 100px; margin-bottom: 16px; }
+        @media (max-width: 900px) {
+          .cl-hero-grid { grid-template-columns: 1fr !important; }
+          .cl-mockup-hide { display: none !important; }
+          .cl-feat-row { grid-template-columns: 1fr !important; }
+          .cl-feat-row-rev { direction: ltr !important; }
+          .cl-section { padding: 72px 20px; }
+          .cl-price-card { padding: 32px 24px; }
         }
       `}</style>
 
-      <div className="cl-landing">
+      <div className="cl-page">
 
-        {/* NAV */}
-        <nav className={`cl-nav ${scrolled ? "cl-nav-blur" : ""}`} style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, transition: "all 0.3s" }}>
-          <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 24px", height: 64, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <div style={{ width: 32, height: 32, background: "#E8622A", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
-                </svg>
+        {/* ── NAV ── */}
+        <nav className={`cl-nav${scrolled ? " cl-nav-scrolled" : ""}`}>
+          <div className="cl-nav-inner">
+            <Link href="/" style={{ display: "flex", alignItems: "center", gap: 9, textDecoration: "none" }}>
+              <div style={{ width: 30, height: 30, background: "#E8622A", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
               </div>
-              <span className="cl-display" style={{ fontSize: 18, fontWeight: 700 }}>Collabi</span>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <Link href="/sign-in" className="cl-btn-ghost" style={{ fontSize: 14, fontWeight: 500, textDecoration: "none", padding: "8px 18px", borderRadius: 8, display: "inline-block" }}>
-                Sign in
-              </Link>
-              <Link href="/sign-up" className="cl-btn-primary cl-glow" style={{ fontSize: 14, fontWeight: 600, textDecoration: "none", padding: "8px 20px", borderRadius: 8, display: "inline-block" }}>
-                Start free trial
-              </Link>
+              <span className="cl-h" style={{ fontSize: 18, fontWeight: 800, color: "#0D1B2A", letterSpacing: "-0.03em" }}>Collabi</span>
+            </Link>
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <Link href="/sign-in" className="cl-btn cl-btn-ghost">Sign in</Link>
+              <Link href="/sign-up" className="cl-btn cl-btn-primary">Start free trial →</Link>
             </div>
           </div>
         </nav>
 
-        {/* HERO */}
-        <section className="cl-hero-grid" style={{ minHeight: "100vh", display: "flex", alignItems: "center", padding: "120px 24px 80px", position: "relative", overflow: "hidden", background: "linear-gradient(135deg, #0D1B2A 0%, #162540 55%, #0D1B2A 100%)" }}>
-          {/* ambient glow */}
-          <div style={{ position: "absolute", top: "20%", left: "50%", transform: "translateX(-50%)", width: 700, height: 350, background: "radial-gradient(ellipse, rgba(232,98,42,0.1) 0%, transparent 70%)", pointerEvents: "none" }} />
+        {/* ── HERO ── */}
+        <section className="cl-dot" style={{ paddingTop: 140, paddingBottom: 100, paddingLeft: 28, paddingRight: 28, background: "#fff", position: "relative", overflow: "hidden" }}>
+          <div style={{ position: "absolute", top: "20%", right: "8%", width: 480, height: 480, background: "radial-gradient(ellipse, rgba(232,98,42,0.06) 0%, transparent 70%)", pointerEvents: "none" }} />
+          <div className="cl-inner">
+            <div ref={hero.ref} className={`cl-fade${hero.vis ? " vis" : ""}`} style={{ display: "grid", gridTemplateColumns: "1fr 0.9fr", gap: 80, alignItems: "center" } as React.CSSProperties} id="cl-hero-grid">
+              {/* Copy */}
+              <div>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "rgba(232,98,42,0.07)", border: "1px solid rgba(232,98,42,0.18)", borderRadius: 100, padding: "5px 13px", marginBottom: 26 }}>
+                  <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#E8622A", animation: "cl-pulse 2s infinite" }} />
+                  <span style={{ fontSize: 11, color: "#E8622A", fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase" }}>Now in early access</span>
+                </div>
 
-          <div className="cl-hero-grid-cols" style={{ maxWidth: 1160, width: "100%", margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 72, alignItems: "center" }}>
+                <h1 className="cl-h" style={{ fontSize: "clamp(42px, 5.5vw, 68px)", fontWeight: 800, lineHeight: 1.05, letterSpacing: "-0.04em", color: "#0D1B2A", marginBottom: 20 }}>
+                  Land more brand deals<br />
+                  <span style={{ color: "#E8622A" }}>as a&nbsp;</span>
+                  <span style={{ color: "#E8622A" }}>{typed}</span>
+                  <span className="cl-cursor" />
+                </h1>
 
-            {/* Copy */}
-            <div>
-              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(232,98,42,0.1)", border: "1px solid rgba(232,98,42,0.25)", borderRadius: 100, padding: "5px 14px", marginBottom: 28 }}>
-                <div className="cl-pulse" style={{ width: 7, height: 7, borderRadius: "50%", background: "#E8622A" }} />
-                <span style={{ fontSize: 11, color: "#E8622A", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" }}>Now in Early Access</span>
+                <p style={{ fontSize: 18, color: "#6b7280", lineHeight: 1.75, marginBottom: 36, maxWidth: 480, fontWeight: 400 }}>
+                  The outreach platform built for influencers. 1,200+ brand contacts, email campaigns, deal tracking, and Meta ad intelligence — all in one place.
+                </p>
+
+                <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 20 }}>
+                  <Link href="/sign-up" className="cl-btn cl-btn-primary-lg">
+                    Start 7-day free trial
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  </Link>
+                  <Link href="/sign-in" className="cl-btn cl-btn-ghost" style={{ fontSize: 15, padding: "13px 22px", borderRadius: 10 }}>Sign in</Link>
+                </div>
+                <p style={{ fontSize: 13, color: "#9ca3af" }}>No card required · £29/month after trial · Cancel anytime</p>
               </div>
 
-              <h1 className="cl-display" style={{ fontSize: "clamp(38px, 5vw, 62px)", fontWeight: 800, lineHeight: 1.06, marginBottom: 22, letterSpacing: "-0.035em" }}>
-                <span className="cl-gradient-text">Land more brand deals.</span><br />
-                <span className="cl-coral-text">Less chasing,</span><br />
-                <span className="cl-gradient-text">more closing.</span>
-              </h1>
-
-              <p style={{ fontSize: 17, color: "rgba(255,255,255,0.5)", lineHeight: 1.75, marginBottom: 40, maxWidth: 440, fontWeight: 400 }}>
-                The outreach platform built for influencers — 1,200+ brand contacts, email campaigns, deal tracking, and Meta ad intelligence, all in one place.
-              </p>
-
-              <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 18 }}>
-                <Link href="/sign-up" className="cl-btn-primary cl-glow" style={{ display: "inline-flex", alignItems: "center", gap: 8, textDecoration: "none", padding: "13px 26px", borderRadius: 10, fontSize: 15, fontWeight: 700 }}>
-                  Start 7-day free trial
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M5 12h14M12 5l7 7-7 7"/>
-                  </svg>
-                </Link>
-                <Link href="/sign-in" className="cl-btn-ghost" style={{ display: "inline-flex", alignItems: "center", gap: 8, textDecoration: "none", padding: "13px 22px", borderRadius: 10, fontSize: 15, fontWeight: 500 }}>
-                  Sign in
-                </Link>
-              </div>
-              <p style={{ fontSize: 12, color: "rgba(255,255,255,0.25)", letterSpacing: "0.01em" }}>No card required · Cancel anytime · £29/month after trial</p>
-            </div>
-
-            {/* Mockup */}
-            <div className="cl-mockup-col cl-float" style={{ position: "relative" }}>
-              <AppMockup />
-              <div style={{ position: "absolute", bottom: -14, left: -20, background: "rgba(16,185,129,0.12)", border: "1px solid rgba(16,185,129,0.28)", borderRadius: 12, padding: "10px 16px", backdropFilter: "blur(12px)" }}>
-                <p style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", marginBottom: 2 }}>Latest deal closed</p>
-                <p style={{ fontSize: 13, fontWeight: 700, color: "#10B981" }}>Innocent Drinks · £2,400</p>
+              {/* Mockup */}
+              <div className="cl-float cl-mockup-hide" style={{ position: "relative" }}>
+                <HeroDashboard />
+                <div style={{ position: "absolute", bottom: -12, right: -16, background: "#fff", border: "1px solid #f0f0f0", borderRadius: 12, padding: "10px 14px", boxShadow: "0 8px 24px rgba(0,0,0,0.1)" }}>
+                  <p style={{ fontSize: 10, color: "#9ca3af", marginBottom: 2 }}>Deal closed</p>
+                  <p style={{ fontSize: 13, fontWeight: 700, color: "#10B981" }}>Innocent Drinks · £2,400</p>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* STATS BAR */}
-        <div style={{ background: "rgba(255,255,255,0.025)", borderTop: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.07)", padding: "30px 24px" }}>
-          <div style={{ maxWidth: 1160, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "center", flexWrap: "wrap", gap: "40px 56px" }}>
-            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.35)", fontWeight: 500 }}>Join influencers already using Collabi</p>
-            <div style={{ width: 1, height: 28, background: "rgba(255,255,255,0.08)" }} />
-            {[
-              { val: "1,293", label: "brand contacts" },
-              { val: "3.2×", label: "avg reply rate" },
-              { val: "£0", label: "cold prospecting" },
-            ].map(s => (
-              <div key={s.label} style={{ textAlign: "center" }}>
-                <p className="cl-display" style={{ fontSize: 28, fontWeight: 800, color: "#fff", lineHeight: 1 }}>{s.val}</p>
-                <p style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", marginTop: 4 }}>{s.label}</p>
-              </div>
-            ))}
+        {/* ── LOGOS ── */}
+        <div ref={logos.ref} style={{ borderTop: "1px solid #f3f4f6", borderBottom: "1px solid #f3f4f6", padding: "28px", background: "#fafafa" }}>
+          <div className="cl-inner">
+            <div className={`cl-fade${logos.vis ? " vis" : ""}`} style={{ display: "flex", alignItems: "center", gap: 40, flexWrap: "wrap", justifyContent: "center" }}>
+              <p style={{ fontSize: 12, color: "#c4c9d1", fontWeight: 600, letterSpacing: "0.07em", textTransform: "uppercase", flexShrink: 0 }}>Creators working with</p>
+              {["Innocent", "M&S Food", "Graze", "Oatly", "Clipper", "Pip & Nut"].map(b => (
+                <span key={b} className="cl-logo-item">{b}</span>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* FEATURES */}
-        <section ref={features.ref} style={{ padding: "100px 24px", background: "#0D1B2A" }}>
-          <div style={{ maxWidth: 1160, margin: "0 auto" }}>
-            <div className={`cl-fade ${features.inView ? "in" : ""}`} style={{ textAlign: "center", marginBottom: 60 }}>
-              <p style={{ fontSize: 11, fontWeight: 700, color: "#E8622A", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 14 }}>Everything you need</p>
-              <h2 className="cl-display cl-gradient-text" style={{ fontSize: "clamp(30px, 4vw, 46px)", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.1 }}>
-                Built for the business side<br />of being a creator
-              </h2>
-            </div>
-
-            <div className="cl-feat-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 18 }}>
-              {FEATURES.map((f, i) => (
+        {/* ── FEATURES ── */}
+        {FEATURES.map((f, i) => {
+          const fr = fRefs[i];
+          const reverse = i % 2 !== 0;
+          return (
+            <section key={f.tag} className="cl-section" style={{ background: i % 2 === 0 ? "#fff" : "#fafafa", padding: "100px 28px" }}>
+              <div className="cl-inner">
                 <div
-                  key={f.title}
-                  className={`cl-card-hover cl-fade ${features.inView ? "in" : ""}`}
-                  style={{
-                    background: "linear-gradient(135deg, rgba(255,255,255,0.045) 0%, rgba(255,255,255,0.02) 100%)",
-                    border: "1px solid rgba(255,255,255,0.07)",
-                    borderRadius: 16,
-                    padding: "32px 28px",
-                    transitionDelay: `${i * 0.1}s`,
-                  }}
+                  ref={fr.ref}
+                  className={`cl-fade${fr.vis ? " vis" : ""} cl-feat-row${reverse ? " cl-feat-row-rev" : ""}`}
+                  style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "center", direction: reverse ? "rtl" : "ltr" } as React.CSSProperties}
                 >
-                  <div style={{ width: 46, height: 46, borderRadius: 11, background: "rgba(232,98,42,0.12)", border: "1px solid rgba(232,98,42,0.2)", display: "flex", alignItems: "center", justifyContent: "center", color: "#E8622A", marginBottom: 20 }}>
-                    {f.icon}
+                  <div style={{ direction: "ltr" }}>
+                    <div className="cl-tag">{f.tag}</div>
+                    <h2 className="cl-h" style={{ fontSize: "clamp(30px, 3.5vw, 44px)", fontWeight: 800, letterSpacing: "-0.035em", lineHeight: 1.1, color: "#0D1B2A", marginBottom: 20, whiteSpace: "pre-line" }}>
+                      {f.title}
+                    </h2>
+                    <p style={{ fontSize: 17, color: "#6b7280", lineHeight: 1.8, marginBottom: 28 }}>{f.body}</p>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
+                      {f.bullets.map(b => (
+                        <div key={b} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                          <div style={{ width: 20, height: 20, borderRadius: "50%", background: "rgba(232,98,42,0.1)", border: "1px solid rgba(232,98,42,0.25)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#E8622A" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                          </div>
+                          <span style={{ fontSize: 14, color: "#4b5563", fontWeight: 500 }}>{b}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <h3 className="cl-display" style={{ fontSize: 19, fontWeight: 700, color: "#fff", marginBottom: 10, letterSpacing: "-0.02em" }}>{f.title}</h3>
-                  <p style={{ fontSize: 15, color: "rgba(255,255,255,0.48)", lineHeight: 1.75 }}>{f.desc}</p>
+                  <div style={{ direction: "ltr" }}>{f.mockup}</div>
+                </div>
+              </div>
+            </section>
+          );
+        })}
+
+        {/* ── STATS ── */}
+        <div ref={stats.ref} style={{ background: "#0D1B2A", padding: "72px 28px" }}>
+          <div className="cl-inner">
+            <div className={`cl-fade${stats.vis ? " vis" : ""}`} style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 48, textAlign: "center" }}>
+              {[
+                { v: "1,293", l: "Brand contacts", sub: "ready to pitch today" },
+                { v: "3.2×", l: "Average reply rate", sub: "vs cold LinkedIn DMs" },
+                { v: "£0", l: "Cold prospecting cost", sub: "we've done it for you" },
+              ].map(s => (
+                <div key={s.l} style={{ padding: "40px 20px" }}>
+                  <p className="cl-h" style={{ fontSize: "clamp(42px, 5vw, 60px)", fontWeight: 800, color: "#fff", letterSpacing: "-0.04em", lineHeight: 1, marginBottom: 10 }}>{s.v}</p>
+                  <p style={{ fontSize: 16, fontWeight: 600, color: "rgba(255,255,255,0.7)", marginBottom: 5 }}>{s.l}</p>
+                  <p style={{ fontSize: 13, color: "rgba(255,255,255,0.3)" }}>{s.sub}</p>
                 </div>
               ))}
             </div>
           </div>
-        </section>
+        </div>
 
-        {/* PRICING */}
-        <section ref={pricing.ref} style={{ padding: "100px 24px", background: "linear-gradient(180deg, #0D1B2A 0%, #162540 100%)" }}>
-          <div style={{ maxWidth: 480, margin: "0 auto", textAlign: "center" }}>
-            <div className={`cl-fade ${pricing.inView ? "in" : ""}`}>
-              <p style={{ fontSize: 11, fontWeight: 700, color: "#E8622A", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 14 }}>Pricing</p>
-              <h2 className="cl-display cl-gradient-text" style={{ fontSize: "clamp(30px, 4vw, 46px)", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 48 }}>
-                Simple, honest pricing
+        {/* ── PRICING ── */}
+        <section className="cl-section" style={{ background: "#fff", padding: "110px 28px" }}>
+          <div className="cl-inner" style={{ maxWidth: 620 }}>
+            <div ref={pricing.ref} className={`cl-fade${pricing.vis ? " vis" : ""}`} style={{ textAlign: "center" }}>
+              <div className="cl-tag">Pricing</div>
+              <h2 className="cl-h" style={{ fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 800, letterSpacing: "-0.035em", color: "#0D1B2A", marginBottom: 48 }}>
+                One price.<br />Everything included.
               </h2>
-
-              <div className="cl-glow" style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.03) 100%)", border: "1px solid rgba(232,98,42,0.28)", borderRadius: 20, padding: "44px 36px" }}>
-                <div style={{ marginBottom: 6 }}>
-                  <span className="cl-display" style={{ fontSize: 64, fontWeight: 800, color: "#fff", letterSpacing: "-0.045em" }}>£29</span>
-                  <span style={{ fontSize: 18, color: "rgba(255,255,255,0.35)", marginLeft: 4 }}>/month</span>
+              <div className="cl-price-card">
+                <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "center", gap: 4, marginBottom: 6 }}>
+                  <span className="cl-h" style={{ fontSize: 72, fontWeight: 800, color: "#0D1B2A", letterSpacing: "-0.05em", lineHeight: 1 }}>£29</span>
+                  <span style={{ fontSize: 18, color: "#9ca3af", marginBottom: 10 }}>/month</span>
                 </div>
-                <p style={{ fontSize: 14, color: "rgba(255,255,255,0.35)", marginBottom: 32 }}>Everything included. No tiers, no add-ons.</p>
+                <p style={{ fontSize: 15, color: "#9ca3af", marginBottom: 36 }}>7-day free trial · No card required · Cancel anytime</p>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: 11, marginBottom: 36, textAlign: "left" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px 24px", textAlign: "left", marginBottom: 40 }}>
                   {[
-                    "1,293 brand contacts, all niches",
-                    "Unlimited email campaigns",
-                    "Deal pipeline & tracking",
-                    "Meta Ad intelligence",
+                    "1,293 brand contacts",
+                    "Unlimited campaigns",
+                    "Deal pipeline board",
+                    "Meta Ad Intelligence",
                     "Gmail & Outlook integration",
                     "Media kit generator",
+                    "Automatic follow-up reminders",
+                    "New contacts added monthly",
                   ].map(item => (
-                    <div key={item} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                      <div style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(16,185,129,0.15)", border: "1px solid rgba(16,185,129,0.35)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="20 6 9 17 4 12"/>
-                        </svg>
+                    <div key={item} style={{ display: "flex", alignItems: "center", gap: 9 }}>
+                      <div style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(16,185,129,0.12)", border: "1px solid rgba(16,185,129,0.3)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                       </div>
-                      <span style={{ fontSize: 14, color: "rgba(255,255,255,0.65)" }}>{item}</span>
+                      <span style={{ fontSize: 14, color: "#4b5563" }}>{item}</span>
                     </div>
                   ))}
                 </div>
 
-                <Link href="/sign-up" className="cl-btn-primary" style={{ display: "block", textDecoration: "none", padding: "15px", borderRadius: 10, fontSize: 16, fontWeight: 700, textAlign: "center", marginBottom: 14 }}>
-                  Start 7-day free trial
+                <Link href="/sign-up" className="cl-btn cl-btn-primary-lg" style={{ width: "100%", justifyContent: "center", display: "flex", textDecoration: "none", borderRadius: 12, padding: "16px" }}>
+                  Start 7-day free trial — it&apos;s free
                 </Link>
-                <p style={{ fontSize: 12, color: "rgba(255,255,255,0.28)" }}>7-day free trial · No card required · Cancel anytime</p>
+                <p style={{ fontSize: 13, color: "#9ca3af", marginTop: 14 }}>No credit card needed. Cancel at any time.</p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* FOOTER */}
-        <footer style={{ borderTop: "1px solid rgba(255,255,255,0.06)", padding: "28px 24px", background: "#0D1B2A" }}>
-          <div style={{ maxWidth: 1160, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
+        {/* ── FOOTER ── */}
+        <footer style={{ borderTop: "1px solid #f3f4f6", padding: "32px 28px", background: "#fff" }}>
+          <div className="cl-inner" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <div style={{ width: 24, height: 24, background: "#E8622A", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
-                </svg>
+              <div style={{ width: 22, height: 22, background: "#E8622A", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
               </div>
-              <span className="cl-display" style={{ fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.4)" }}>Collabi © 2025</span>
+              <span className="cl-h" style={{ fontSize: 13, fontWeight: 700, color: "#9ca3af" }}>Collabi © 2025</span>
             </div>
             <div style={{ display: "flex", gap: 24 }}>
-              <Link href="/sign-in" style={{ fontSize: 13, color: "rgba(255,255,255,0.35)", textDecoration: "none" }}>Sign in</Link>
-              <Link href="/sign-up" style={{ fontSize: 13, color: "rgba(255,255,255,0.35)", textDecoration: "none" }}>Sign up</Link>
+              {[["Sign in", "/sign-in"], ["Sign up", "/sign-up"]].map(([l, h]) => (
+                <Link key={l} href={h} style={{ fontSize: 13, color: "#9ca3af", textDecoration: "none" }}
+                  onMouseEnter={e => (e.currentTarget.style.color = "#E8622A")}
+                  onMouseLeave={e => (e.currentTarget.style.color = "#9ca3af")}
+                >{l}</Link>
+              ))}
             </div>
           </div>
         </footer>
