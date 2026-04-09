@@ -381,8 +381,9 @@ export default function LandingPage() {
                 </div>
 
                 <h1 className="cl-h" style={{ fontSize: "clamp(42px, 5.5vw, 68px)", fontWeight: 800, lineHeight: 1.08, letterSpacing: "-0.04em", color: "#0D1B2A", marginBottom: 20 }}>
-                  Land more brand deals<br />
-                  <span style={{ color: "#E8622A", whiteSpace: "nowrap" }}>as a&nbsp;{typed}<span className="cl-cursor" /></span>
+                  Land more brand<br />
+                  deals as a<br />
+                  <span style={{ color: "#E8622A" }}>{typed}<span className="cl-cursor" /></span>
                 </h1>
 
                 <p style={{ fontSize: 18, color: "#6b7280", lineHeight: 1.75, marginBottom: 36, maxWidth: 480, fontWeight: 400 }}>
