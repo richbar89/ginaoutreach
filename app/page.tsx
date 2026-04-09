@@ -58,7 +58,7 @@ function HeroDashboard() {
           {[{ l: "Contacts", v: "10k+" }, { l: "Emails Sent", v: "47" }, { l: "Active Deals", v: "8" }].map(s => (
             <div key={s.l} style={{ background: "rgba(255,255,255,0.04)", borderRadius: 10, padding: "10px 12px", border: "1px solid rgba(255,255,255,0.06)" }}>
               <p style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 5 }}>{s.l}</p>
-              <p style={{ fontSize: 22, fontWeight: 800, color: "#fff", lineHeight: 1, fontFamily: "'Syne',sans-serif" }}>{s.v}</p>
+              <p style={{ fontSize: 22, fontWeight: 800, color: "#fff", lineHeight: 1, fontFamily: "'Inter',sans-serif" }}>{s.v}</p>
             </div>
           ))}
         </div>
@@ -97,7 +97,7 @@ function ContactsMockup() {
     <div style={{ background: "#0F1E30", borderRadius: 16, border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 32px 60px rgba(0,0,0,0.35)", overflow: "hidden" }}>
       <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div>
-          <p style={{ fontSize: 13, fontWeight: 700, color: "#fff", fontFamily: "'Syne',sans-serif" }}>Contacts</p>
+          <p style={{ fontSize: 13, fontWeight: 700, color: "#fff", fontFamily: "'Inter',sans-serif" }}>Contacts</p>
           <p style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 1 }}>10,000+ brand contacts</p>
         </div>
         <div style={{ background: "#E8622A", borderRadius: 7, padding: "5px 11px", fontSize: 10, color: "#fff", fontWeight: 700 }}>+ Add Contact</div>
@@ -134,7 +134,7 @@ function EmailMockup() {
     <div style={{ background: "#0F1E30", borderRadius: 16, border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 32px 60px rgba(0,0,0,0.35)", overflow: "hidden" }}>
       <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div>
-          <p style={{ fontSize: 13, fontWeight: 700, color: "#fff", fontFamily: "'Syne',sans-serif" }}>New Campaign</p>
+          <p style={{ fontSize: 13, fontWeight: 700, color: "#fff", fontFamily: "'Inter',sans-serif" }}>New Campaign</p>
           <p style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 1 }}>24 contacts selected</p>
         </div>
         <div style={{ display: "flex", gap: 5 }}>
@@ -182,7 +182,7 @@ function PipelineMockup() {
   return (
     <div style={{ background: "#0F1E30", borderRadius: 16, border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 32px 60px rgba(0,0,0,0.35)", overflow: "hidden" }}>
       <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <p style={{ fontSize: 13, fontWeight: 700, color: "#fff", fontFamily: "'Syne',sans-serif" }}>Deal Pipeline</p>
+        <p style={{ fontSize: 13, fontWeight: 700, color: "#fff", fontFamily: "'Inter',sans-serif" }}>Deal Pipeline</p>
         <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
           <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#E8622A", animation: "cl-pulse 2s infinite" }} />
           <span style={{ fontSize: 10, color: "#E8622A", fontWeight: 600 }}>6 active deals · £10,400</span>
@@ -223,7 +223,7 @@ function AdsMockup() {
     <div style={{ background: "#0F1E30", borderRadius: 16, border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 32px 60px rgba(0,0,0,0.35)", overflow: "hidden" }}>
       <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div>
-          <p style={{ fontSize: 13, fontWeight: 700, color: "#fff", fontFamily: "'Syne',sans-serif" }}>Meta Ad Intelligence</p>
+          <p style={{ fontSize: 13, fontWeight: 700, color: "#fff", fontFamily: "'Inter',sans-serif" }}>Meta Ad Intelligence</p>
           <p style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 1 }}>Scanned 2 minutes ago</p>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 5, background: "rgba(232,98,42,0.1)", border: "1px solid rgba(232,98,42,0.25)", borderRadius: 7, padding: "4px 10px" }}>
@@ -311,10 +311,10 @@ export default function LandingPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Figtree:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        .cl-page { font-family: 'Figtree', sans-serif; background: #ffffff; color: #0D1B2A; line-height: 1.5; -webkit-font-smoothing: antialiased; }
-        .cl-h { font-family: 'Syne', sans-serif; }
+        .cl-page { font-family: 'Inter', sans-serif; background: #ffffff; color: #0D1B2A; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+        .cl-h { font-family: 'Inter', sans-serif; }
         .cl-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; transition: all 0.25s; }
         .cl-nav-inner { max-width: 1160px; margin: 0 auto; padding: 0 28px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
         .cl-nav-scrolled { background: rgba(255,255,255,0.92); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(0,0,0,0.07); }
@@ -374,17 +374,15 @@ export default function LandingPage() {
           <div className="cl-inner">
             <div ref={hero.ref} className={`cl-fade${hero.vis ? " vis" : ""}`} style={{ display: "grid", gridTemplateColumns: "1fr 0.9fr", gap: 80, alignItems: "center" } as React.CSSProperties} id="cl-hero-grid">
               {/* Copy */}
-              <div>
+              <div style={{ minHeight: 420 }}>
                 <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "rgba(232,98,42,0.07)", border: "1px solid rgba(232,98,42,0.18)", borderRadius: 100, padding: "5px 13px", marginBottom: 26 }}>
                   <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#E8622A", animation: "cl-pulse 2s infinite" }} />
                   <span style={{ fontSize: 11, color: "#E8622A", fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase" }}>Now in early access</span>
                 </div>
 
-                <h1 className="cl-h" style={{ fontSize: "clamp(42px, 5.5vw, 68px)", fontWeight: 800, lineHeight: 1.05, letterSpacing: "-0.04em", color: "#0D1B2A", marginBottom: 20 }}>
+                <h1 className="cl-h" style={{ fontSize: "clamp(42px, 5.5vw, 68px)", fontWeight: 800, lineHeight: 1.08, letterSpacing: "-0.04em", color: "#0D1B2A", marginBottom: 20 }}>
                   Land more brand deals<br />
-                  <span style={{ color: "#E8622A" }}>as a&nbsp;</span>
-                  <span style={{ color: "#E8622A" }}>{typed}</span>
-                  <span className="cl-cursor" />
+                  <span style={{ color: "#E8622A", whiteSpace: "nowrap" }}>as a&nbsp;{typed}<span className="cl-cursor" /></span>
                 </h1>
 
                 <p style={{ fontSize: 18, color: "#6b7280", lineHeight: 1.75, marginBottom: 36, maxWidth: 480, fontWeight: 400 }}>
