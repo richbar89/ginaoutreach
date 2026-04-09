@@ -509,7 +509,7 @@ export default function LandingPage() {
           <div className="cl-inner" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
             <span className="cl-h" style={{ fontSize: 15, fontWeight: 800, color: "#9ca3af", letterSpacing: "-0.03em" }}>Collabi © 2025</span>
             <div style={{ display: "flex", gap: 24 }}>
-              {[["Sign in", "/sign-in"], ["Sign up", "/sign-up"]].map(([l, h]) => (
+              {[["Sign in", "/sign-in"], ["Sign up", "/sign-up"], ["Privacy", "/privacy"], ["Terms", "/terms"], ["Data Removal", "/data-removal"]].map(([l, h]) => (
                 <Link key={l} href={h} style={{ fontSize: 13, color: "#9ca3af", textDecoration: "none" }}
                   onMouseEnter={e => (e.currentTarget.style.color = "#E8622A")}
                   onMouseLeave={e => (e.currentTarget.style.color = "#9ca3af")}
