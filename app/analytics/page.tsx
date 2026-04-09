@@ -290,19 +290,27 @@ export default function AnalyticsPage() {
           <h2 className="font-serif text-2xl font-bold text-navy-800 mb-2">
             Connect your Instagram
           </h2>
-          <p className="text-sm text-navy-400 max-w-sm mx-auto mb-8 leading-relaxed">
-            Log in with Facebook to connect your Instagram Business or Creator account.
-            GinaOS will analyse your recent posts and tell you what&apos;s working.
+          <p className="text-sm text-navy-400 max-w-sm mx-auto mb-6 leading-relaxed">
+            Connect your Instagram Business or Creator account via Facebook to see post performance, engagement rates, and AI-powered recommendations.
           </p>
-          <a
-            href="/api/auth/facebook"
-            className="inline-flex items-center gap-2.5 px-7 py-3.5 bg-[#1877F2] hover:bg-[#166FE5] text-white text-sm font-semibold rounded-xl transition-colors shadow-sm"
-          >
-            <LogIn size={15} />
-            Continue with Facebook
-          </a>
+          {error?.includes("missing META_APP_ID") || error?.includes("config") ? (
+            <div className="inline-flex items-start gap-3 px-5 py-4 bg-amber-50 border border-amber-200 rounded-xl text-left max-w-sm mx-auto">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2" className="w-4 h-4 flex-shrink-0 mt-0.5"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <p className="text-xs text-amber-700 leading-relaxed">
+                <span className="font-semibold">Setup required:</span> Add <code className="bg-amber-100 px-1 rounded">META_APP_ID</code> and <code className="bg-amber-100 px-1 rounded">META_APP_SECRET</code> to Replit Secrets, then add your domain to the Meta app&apos;s allowed origins.
+              </p>
+            </div>
+          ) : (
+            <a
+              href="/api/auth/facebook"
+              className="inline-flex items-center gap-2.5 px-7 py-3.5 bg-[#1877F2] hover:bg-[#166FE5] text-white text-sm font-semibold rounded-xl transition-colors shadow-sm"
+            >
+              <LogIn size={15} />
+              Continue with Facebook
+            </a>
+          )}
           <p className="text-xs text-navy-300 mt-5">
-            You&apos;ll be redirected to Facebook to grant access, then brought back here automatically.
+            Requires an Instagram Business or Creator account linked to a Facebook page.
           </p>
         </div>
       )}

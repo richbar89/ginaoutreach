@@ -147,7 +147,7 @@ export default async function PublicKitPage({ params }: { params: { token: strin
         {/* Footer */}
         <div className="text-center pb-6">
           <p className="text-[11px] text-navy-400">
-            Created with GinaOS
+            Created with Collabi
           </p>
         </div>
       </div>

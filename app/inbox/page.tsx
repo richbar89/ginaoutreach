@@ -10,6 +10,12 @@ import {
   markMessageAsRead,
 } from "@/lib/graphClient";
 import type { InboxMessage, MessageDetail } from "@/lib/graphClient";
+import {
+  getGoogleUser,
+  getGmailMessages,
+  getGmailMessageDetail,
+  markGmailAsRead,
+} from "@/lib/googleClient";
 import { useDb } from "@/lib/useDb";
 import { dbGetEmailLog, dbGetDeals, dbUpsertDeal } from "@/lib/db";
 import type { Deal } from "@/lib/types";
@@ -38,6 +44,8 @@ export default function InboxPage() {
   const [error, setError] = useState("");
   const [showAll, setShowAll] = useState(false);
   const [msUser] = useState(() => getMicrosoftUser());
+  const [gmailUser] = useState(() => getGoogleUser());
+  const connectedUser = msUser || gmailUser;
   const [classifying, setClassifying] = useState(false);
   const [classification, setClassification] = useState<{ positive: boolean; confidence: number; reason: string } | null>(null);
   const [pipelineAdded, setPipelineAdded] = useState<string | null>(null); // deal id just added
@@ -65,7 +73,7 @@ export default function InboxPage() {
     else setLoading(true);
     setError("");
     try {
-      const msgs = await getInboxMessages();
+      const msgs = msUser ? await getInboxMessages() : await getGmailMessages();
       setMessages(msgs);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Failed to load inbox.");
@@ -73,19 +81,19 @@ export default function InboxPage() {
       setLoading(false);
       setRefreshing(false);
     }
-  }, []);
+  }, [msUser]);
 
   useEffect(() => {
-    if (msUser) fetchMessages();
+    if (connectedUser) fetchMessages();
     else setLoading(false);
-  }, [msUser, fetchMessages]);
+  }, [connectedUser, fetchMessages]);
 
   // Auto-refresh every 60 seconds
   useEffect(() => {
-    if (!msUser) return;
+    if (!connectedUser) return;
     const interval = setInterval(() => fetchMessages(true), 60000);
     return () => clearInterval(interval);
-  }, [msUser, fetchMessages]);
+  }, [connectedUser, fetchMessages]);
 
   const handleSelect = async (msg: InboxMessage) => {
     setLoadingDetail(true);
@@ -93,10 +101,12 @@ export default function InboxPage() {
     setClassification(null);
     setPipelineAdded(null);
     try {
-      const detail = await getMessageDetail(msg.id);
+      const detail = msUser
+        ? await getMessageDetail(msg.id)
+        : await getGmailMessageDetail(msg.id);
       setSelected(detail);
       if (!msg.isRead) {
-        markMessageAsRead(msg.id);
+        msUser ? markMessageAsRead(msg.id) : markGmailAsRead(msg.id);
         setMessages((prev) =>
           prev.map((m) => (m.id === msg.id ? { ...m, isRead: true } : m))
         );
@@ -148,13 +158,13 @@ export default function InboxPage() {
 
   const unreadCount = visibleMessages.filter((m) => !m.isRead).length;
 
-  if (!msUser) {
+  if (!connectedUser) {
     return (
       <div className="p-10 max-w-lg mx-auto mt-10 text-center">
         <WifiOff size={32} className="text-cream-200 mx-auto mb-4" />
-        <h2 className="font-serif text-2xl font-bold text-navy-900 mb-2">Not connected</h2>
+        <h2 className="font-serif text-2xl font-bold text-navy-900 mb-2">No email connected</h2>
         <p className="text-navy-400 text-sm mb-6">
-          Connect your Microsoft account to view your inbox.
+          Connect your Gmail or Outlook account to view replies from brands.
         </p>
         <Link
           href="/settings"
