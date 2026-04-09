@@ -150,16 +150,6 @@ export default function ContactsPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  // Count per category
-  const categoryCounts = useMemo(() => {
-    const counts: Record<string, number> = { All: contacts.length };
-    for (const c of contacts) {
-      const cat = c.category || "Other";
-      counts[cat] = (counts[cat] || 0) + 1;
-    }
-    return counts;
-  }, [contacts]);
-
   const filtered = useMemo(() => {
     let result = contacts;
     if (query.trim()) {
@@ -217,46 +207,9 @@ export default function ContactsPage() {
         </div>
       )}
 
-      {/* Category pills */}
-      <div className="flex gap-2 flex-wrap mb-5">
-        <button
-          onClick={() => setActiveCategory("All")}
-          className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm font-semibold border transition-all ${
-            activeCategory === "All"
-              ? "bg-navy-900 border-navy-900 text-white"
-              : "bg-white border-cream-200 text-navy-500 hover:border-navy-300"
-          }`}
-        >
-          All
-          <span className={`text-xs font-bold px-1.5 py-0.5 rounded-full ${activeCategory === "All" ? "bg-white/20 text-white" : "bg-cream-100 text-navy-400"}`}>
-            {categoryCounts["All"] || 0}
-          </span>
-        </button>
-        {CATEGORIES.filter(c => categoryCounts[c]).map(cat => {
-          const colours = CATEGORY_COLOURS[cat];
-          const isActive = activeCategory === cat;
-          return (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(isActive ? "All" : cat)}
-              className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm font-semibold border transition-all ${
-                isActive
-                  ? `${colours.bg} ${colours.text} shadow-sm`
-                  : "bg-white border-cream-200 text-navy-500 hover:border-navy-300"
-              }`}
-            >
-              {isActive && <span className={`w-1.5 h-1.5 rounded-full ${colours.dot}`} />}
-              {cat}
-              <span className={`text-xs font-bold px-1.5 py-0.5 rounded-full ${isActive ? "bg-white/40" : "bg-cream-100 text-navy-400"}`}>
-                {categoryCounts[cat]}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Search */}
-      <div className="relative mb-5">
+      {/* Search + category filter */}
+      <div className="flex gap-3 mb-5">
+      <div className="relative flex-1">
         <Search size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-navy-300" />
         <input
           type="text"
@@ -270,6 +223,17 @@ export default function ContactsPage() {
             <X size={14} />
           </button>
         )}
+        </div>
+        <select
+          value={activeCategory}
+          onChange={(e) => setActiveCategory(e.target.value as BrandCategory | "All")}
+          className="px-4 py-3 bg-white border border-cream-200 rounded-xl text-sm text-navy-900 focus:outline-none focus:ring-2 focus:ring-coral-400 focus:border-transparent shadow-sm"
+        >
+          <option value="All">All categories</option>
+          {CATEGORIES.map((c) => (
+            <option key={c} value={c}>{c}</option>
+          ))}
+        </select>
       </div>
 
       {/* Results count when filtered */}
