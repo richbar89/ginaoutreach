@@ -46,7 +46,7 @@ export default function OnboardingPage() {
   useEffect(() => {
     const g = getGoogleUser();
     const m = getMicrosoftUser();
-    if (g || m) router.replace("/");
+    if (g || m) router.replace("/dashboard");
   }, [router]);
 
   // Pre-fill name from Clerk
@@ -101,7 +101,7 @@ export default function OnboardingPage() {
       // Non-blocking — proceed to dashboard even if save fails
     } finally {
       setSaving(false);
-      router.replace("/");
+      router.replace("/dashboard");
     }
   };
 
@@ -201,7 +201,7 @@ export default function OnboardingPage() {
 
               <p className="text-center text-xs text-navy-400 pt-2">
                 Not sure?{" "}
-                <button onClick={() => router.replace("/")} className="text-coral-500 hover:underline">
+                <button onClick={() => router.replace("/dashboard")} className="text-coral-500 hover:underline">
                   Skip for now
                 </button>{" "}
                 — you can connect later in Settings.
@@ -287,7 +287,7 @@ export default function OnboardingPage() {
         </button>
 
         <p className="text-center text-xs text-navy-400 mt-4">
-          <button onClick={() => router.replace("/")} className="text-coral-500 hover:underline">
+          <button onClick={() => router.replace("/dashboard")} className="text-coral-500 hover:underline">
             Skip this step
           </button>{" "}
           — you can fill this in later under Settings.
