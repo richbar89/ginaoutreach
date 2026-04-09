@@ -4,7 +4,6 @@ import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { Search, X, Plus, Linkedin, Send } from "lucide-react";
 import { getAllCachedStatuses } from "@/lib/metaAds";
-import type { BrandCategory } from "@/lib/types";
 import type { AdStatus } from "@/lib/metaAds";
 import InitialsAvatar from "@/components/InitialsAvatar";
 
@@ -19,23 +18,7 @@ type ContactRow = {
   category: string | null;
 };
 
-const CATEGORIES: BrandCategory[] = [
-  "Snacks & Crisps",
-  "Confectionery",
-  "Drinks",
-  "Coffee & Tea",
-  "Beer & Brewing",
-  "Wine & Spirits",
-  "Bakery & Bread",
-  "Dairy & Alternatives",
-  "Casual Dining & Restaurants",
-  "Grocery & Food Brands",
-  "Health & Wellness Food",
-  "Baby & Kids Food",
-  "Other",
-];
-
-const CATEGORY_COLOURS: Record<BrandCategory, { bg: string; text: string; dot: string }> = {
+const CATEGORY_COLOURS: Record<string, { bg: string; text: string; dot: string }> = {
   "Snacks & Crisps":             { bg: "bg-amber-50 border-amber-200",   text: "text-amber-800",  dot: "bg-amber-400" },
   "Confectionery":               { bg: "bg-pink-50 border-pink-200",    text: "text-pink-800",   dot: "bg-pink-400" },
   "Drinks":                      { bg: "bg-cyan-50 border-cyan-200",    text: "text-cyan-800",   dot: "bg-cyan-400" },
@@ -138,7 +121,7 @@ export default function ContactsPage() {
   const [contacts, setContacts] = useState<ContactRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
-  const [activeCategory, setActiveCategory] = useState<BrandCategory | "All">("All");
+  const [activeCategory, setActiveCategory] = useState("All");
   const [adStatuses] = useState<Record<string, AdStatus>>(() => getAllCachedStatuses());
   const [showRequestModal, setShowRequestModal] = useState(false);
 
@@ -149,6 +132,19 @@ export default function ContactsPage() {
       .catch(() => setContacts([]))
       .finally(() => setLoading(false));
   }, []);
+
+  // Derive unique categories from whichever field is actually populated
+  const categoryOptions = useMemo(() => {
+    const cats = new Set<string>();
+    for (const c of contacts) {
+      const val = c.category || c.industry;
+      if (val) cats.add(val);
+    }
+    return Array.from(cats).sort();
+  }, [contacts]);
+
+  // Use whichever field is populated per contact
+  const getCategory = (c: ContactRow) => c.category || c.industry || null;
 
   const filtered = useMemo(() => {
     let result = contacts;
@@ -163,7 +159,7 @@ export default function ContactsPage() {
       );
     }
     if (activeCategory !== "All") {
-      result = result.filter((l) => (l.category || "Other") === activeCategory);
+      result = result.filter((l) => getCategory(l) === activeCategory);
     }
     return result;
   }, [contacts, query, activeCategory]);
@@ -229,11 +225,11 @@ export default function ContactsPage() {
         </div>
         <select
           value={activeCategory}
-          onChange={(e) => setActiveCategory(e.target.value as BrandCategory | "All")}
+          onChange={(e) => setActiveCategory(e.target.value)}
           className="px-4 py-3 bg-white border border-cream-200 rounded-xl text-sm text-navy-900 focus:outline-none focus:ring-2 focus:ring-coral-400 focus:border-transparent shadow-sm"
         >
           <option value="All">All categories</option>
-          {CATEGORIES.map((c) => (
+          {categoryOptions.map((c) => (
             <option key={c} value={c}>{c}</option>
           ))}
         </select>
@@ -261,7 +257,6 @@ export default function ContactsPage() {
                 <th className="text-left px-5 py-3 text-xs font-semibold text-navy-400 uppercase tracking-widest">Name</th>
                 <th className="text-left px-5 py-3 text-xs font-semibold text-navy-400 uppercase tracking-widest">Company</th>
                 <th className="text-left px-5 py-3 text-xs font-semibold text-navy-400 uppercase tracking-widest">Category</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-navy-400 uppercase tracking-widest">Industry</th>
                 <th className="px-5 py-3" />
               </tr>
             </thead>
@@ -289,11 +284,7 @@ export default function ContactsPage() {
                   </td>
                   {/* Category */}
                   <td className="px-5 py-3.5">
-                    <CategoryBadge category={l.category} />
-                  </td>
-                  {/* Industry */}
-                  <td className="px-5 py-3.5 text-sm text-navy-500">
-                    {l.industry || <span className="text-navy-200">—</span>}
+                    <CategoryBadge category={getCategory(l)} />
                   </td>
                   {/* Actions */}
                   <td className="px-5 py-3.5">
