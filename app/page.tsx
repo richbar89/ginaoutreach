@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 
 // ── Typing animation ──────────────────────────────────────────
-const NICHES = ["food creators", "lifestyle creators", "fitness creators", "travel creators", "beauty creators"];
+const NICHES = ["food creator", "lifestyle influencer", "tech youtuber", "parenting guru"];
 
 function useTyping(words: string[], speed = 78, del = 42, pause = 2400) {
   const [text, setText] = useState("");
@@ -55,7 +55,7 @@ function HeroDashboard() {
       </div>
       <div style={{ padding: "14px 16px 0" }}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 8, marginBottom: 14 }}>
-          {[{ l: "Contacts", v: "1,293" }, { l: "Emails Sent", v: "47" }, { l: "Active Deals", v: "8" }].map(s => (
+          {[{ l: "Contacts", v: "10k+" }, { l: "Emails Sent", v: "47" }, { l: "Active Deals", v: "8" }].map(s => (
             <div key={s.l} style={{ background: "rgba(255,255,255,0.04)", borderRadius: 10, padding: "10px 12px", border: "1px solid rgba(255,255,255,0.06)" }}>
               <p style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 5 }}>{s.l}</p>
               <p style={{ fontSize: 22, fontWeight: 800, color: "#fff", lineHeight: 1, fontFamily: "'Bricolage Grotesque',sans-serif" }}>{s.v}</p>
@@ -98,7 +98,7 @@ function ContactsMockup() {
       <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div>
           <p style={{ fontSize: 13, fontWeight: 700, color: "#fff", fontFamily: "'Bricolage Grotesque',sans-serif" }}>Contacts</p>
-          <p style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 1 }}>1,293 brand contacts</p>
+          <p style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 1 }}>10,000+ brand contacts</p>
         </div>
         <div style={{ background: "#E8622A", borderRadius: 7, padding: "5px 11px", fontSize: 10, color: "#fff", fontWeight: 700 }}>+ Add Contact</div>
       </div>
@@ -261,16 +261,23 @@ function AdsMockup() {
 const FEATURES = [
   {
     tag: "Brand Contacts",
-    title: "1,200+ contacts.\nZero prospecting.",
-    body: "Every contact is a real marketing decision-maker at a brand that works with creators. Food, drink, lifestyle, wellness, beauty — filtered by category and ready to pitch. We did the work so you don't have to.",
+    title: "10,000+ contacts.",
+    body: "Every contact is a real and verified marketing decision-maker at a brand you love. Food, drink, lifestyle, wellness, beauty — filtered by category, and contactable in one click. We did the work so you don't have to.",
     bullets: ["Brand managers & marketing leads", "Filtered by category & industry", "Request any missing contact"],
     mockup: <ContactsMockup />,
   },
   {
+    tag: "Meta Ad Intelligence",
+    title: "Pitch brands when\ntheir budget is open.",
+    body: "A brand actively spending on Meta ads is a brand with a live marketing budget. We scan thousands of brands daily and flag who's running ads right now — so you pitch at exactly the right moment.",
+    bullets: ["Live ad status for all contacts", "Daily automatic rescans"],
+    mockup: <AdsMockup />,
+  },
+  {
     tag: "Email Outreach",
     title: "Personal at scale.\nPowerful by default.",
-    body: "Send campaigns from your own Gmail or Outlook — not a bulk sender with a strange domain. Use merge tags to personalise every line. Get automatic follow-up reminders. Every reply tracked.",
-    bullets: ["Sends from your own inbox", "Merge tags for personalisation", "Auto follow-up reminders"],
+    body: "Send campaigns from your own Gmail or Outlook account — not a bulk sender with a strange domain. Use merge tags to personalise every line. Get automatic follow-up reminders. Every reply tracked.",
+    bullets: ["Sends from your own inbox", "Send mass campaigns with personalisation", "Auto follow-up reminders"],
     mockup: <EmailMockup />,
   },
   {
@@ -279,13 +286,6 @@ const FEATURES = [
     body: "A visual deal board that shows exactly where every brand conversation stands. Move deals forward, log notes, track deal values. When a brand goes quiet, you'll know — and you'll know when to nudge.",
     bullets: ["Visual Kanban board", "Deal value & stage tracking", "Notes on every conversation"],
     mockup: <PipelineMockup />,
-  },
-  {
-    tag: "Meta Ad Intelligence",
-    title: "Pitch brands when\ntheir budget is open.",
-    body: "A brand actively spending on Meta ads is a brand with a live marketing budget. We scan thousands of brands and flag who's running ads right now — so you pitch at exactly the right moment.",
-    bullets: ["Live ad status for all contacts", "Filter by ad spend level", "Daily automatic rescans"],
-    mockup: <AdsMockup />,
   },
 ];
 
@@ -299,7 +299,6 @@ export default function LandingPage() {
   const f1 = useInView(0.08);
   const f2 = useInView(0.08);
   const f3 = useInView(0.08);
-  const stats = useInView(0.1);
   const pricing = useInView(0.1);
   const fRefs = [f0, f1, f2, f3];
 
@@ -359,11 +358,8 @@ export default function LandingPage() {
         {/* ── NAV ── */}
         <nav className={`cl-nav${scrolled ? " cl-nav-scrolled" : ""}`}>
           <div className="cl-nav-inner">
-            <Link href="/" style={{ display: "flex", alignItems: "center", gap: 9, textDecoration: "none" }}>
-              <div style={{ width: 30, height: 30, background: "#E8622A", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-              </div>
-              <span className="cl-h" style={{ fontSize: 18, fontWeight: 800, color: "#0D1B2A", letterSpacing: "-0.03em" }}>Collabi</span>
+            <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
+              <span className="cl-h" style={{ fontSize: 24, fontWeight: 800, color: "#0D1B2A", letterSpacing: "-0.04em" }}>Collabi</span>
             </Link>
             <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
               <Link href="/sign-in" className="cl-btn cl-btn-ghost">Sign in</Link>
@@ -392,7 +388,7 @@ export default function LandingPage() {
                 </h1>
 
                 <p style={{ fontSize: 18, color: "#6b7280", lineHeight: 1.75, marginBottom: 36, maxWidth: 480, fontWeight: 400 }}>
-                  The outreach platform built for influencers. 1,200+ brand contacts, email campaigns, deal tracking, and Meta ad intelligence — all in one place.
+                  The outreach platform built for creators, by a creator. 10,000+ brand contacts, email campaigns, deal tracking, and meta ad intelligence — all in one place.
                 </p>
 
                 <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 20 }}>
@@ -465,25 +461,6 @@ export default function LandingPage() {
           );
         })}
 
-        {/* ── STATS ── */}
-        <div ref={stats.ref} style={{ background: "#0D1B2A", padding: "72px 28px" }}>
-          <div className="cl-inner">
-            <div className={`cl-fade${stats.vis ? " vis" : ""}`} style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 48, textAlign: "center" }}>
-              {[
-                { v: "1,293", l: "Brand contacts", sub: "ready to pitch today" },
-                { v: "3.2×", l: "Average reply rate", sub: "vs cold LinkedIn DMs" },
-                { v: "£0", l: "Cold prospecting cost", sub: "we've done it for you" },
-              ].map(s => (
-                <div key={s.l} style={{ padding: "40px 20px" }}>
-                  <p className="cl-h" style={{ fontSize: "clamp(42px, 5vw, 60px)", fontWeight: 800, color: "#fff", letterSpacing: "-0.04em", lineHeight: 1, marginBottom: 10 }}>{s.v}</p>
-                  <p style={{ fontSize: 16, fontWeight: 600, color: "rgba(255,255,255,0.7)", marginBottom: 5 }}>{s.l}</p>
-                  <p style={{ fontSize: 13, color: "rgba(255,255,255,0.3)" }}>{s.sub}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
         {/* ── PRICING ── */}
         <section className="cl-section" style={{ background: "#fff", padding: "110px 28px" }}>
           <div className="cl-inner" style={{ maxWidth: 620 }}>
@@ -501,7 +478,7 @@ export default function LandingPage() {
 
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px 24px", textAlign: "left", marginBottom: 40 }}>
                   {[
-                    "1,293 brand contacts",
+                    "10,000+ brand contacts",
                     "Unlimited campaigns",
                     "Deal pipeline board",
                     "Meta Ad Intelligence",
@@ -531,12 +508,7 @@ export default function LandingPage() {
         {/* ── FOOTER ── */}
         <footer style={{ borderTop: "1px solid #f3f4f6", padding: "32px 28px", background: "#fff" }}>
           <div className="cl-inner" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <div style={{ width: 22, height: 22, background: "#E8622A", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-              </div>
-              <span className="cl-h" style={{ fontSize: 13, fontWeight: 700, color: "#9ca3af" }}>Collabi © 2025</span>
-            </div>
+            <span className="cl-h" style={{ fontSize: 15, fontWeight: 800, color: "#9ca3af", letterSpacing: "-0.03em" }}>Collabi © 2025</span>
             <div style={{ display: "flex", gap: 24 }}>
               {[["Sign in", "/sign-in"], ["Sign up", "/sign-up"]].map(([l, h]) => (
                 <Link key={l} href={h} style={{ fontSize: 13, color: "#9ca3af", textDecoration: "none" }}
