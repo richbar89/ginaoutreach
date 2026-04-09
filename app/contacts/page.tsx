@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
-import { Search, X, Plus, Linkedin, Send, Building2 } from "lucide-react";
+import { Search, X, Plus, Linkedin, Send } from "lucide-react";
 import { getAllCachedStatuses } from "@/lib/metaAds";
 import type { BrandCategory } from "@/lib/types";
 import type { AdStatus } from "@/lib/metaAds";
@@ -248,76 +248,82 @@ export default function ContactsPage() {
         </p>
       )}
 
-      {/* Contact cards */}
+      {/* Table */}
       <div className="bg-white border border-cream-200 rounded-2xl shadow-sm overflow-hidden">
         {loading ? (
           <div className="px-6 py-16 text-center text-sm text-navy-300">Loading contacts…</div>
         ) : filtered.length === 0 ? (
           <div className="px-6 py-16 text-center text-sm text-navy-300">No contacts match your search.</div>
         ) : (
-          <div className="divide-y divide-cream-100">
-            {visible.map((l) => {
-              const adStatus = l.company ? adStatuses[l.company] : undefined;
-              return (
-                <div key={l.id} className="flex items-center gap-4 px-6 py-4 hover:bg-cream-50 transition-colors group">
-                  {/* Avatar */}
-                  <div className="flex-shrink-0">
-                    <InitialsAvatar name={l.name || l.email} email={l.email} size="sm" />
-                  </div>
-
-                  {/* Name + company */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <Link
-                        href={`/contacts/${encodeURIComponent(l.email)}`}
-                        className="text-sm font-semibold text-navy-900 hover:text-coral-600 transition-colors"
-                      >
-                        {l.name || l.email}
-                      </Link>
-                      <AdBadge status={adStatus} />
+          <table className="w-full text-sm">
+            <thead className="border-b border-cream-200 bg-cream-50/60">
+              <tr>
+                <th className="text-left px-5 py-3 text-xs font-semibold text-navy-400 uppercase tracking-widest">Name</th>
+                <th className="text-left px-5 py-3 text-xs font-semibold text-navy-400 uppercase tracking-widest">Company</th>
+                <th className="text-left px-5 py-3 text-xs font-semibold text-navy-400 uppercase tracking-widest">Category</th>
+                <th className="text-left px-5 py-3 text-xs font-semibold text-navy-400 uppercase tracking-widest">Industry</th>
+                <th className="px-5 py-3" />
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-cream-100">
+              {visible.map((l) => (
+                <tr key={l.id} className="hover:bg-cream-50 transition-colors group">
+                  {/* Name */}
+                  <td className="px-5 py-3.5">
+                    <div className="flex items-center gap-3">
+                      <InitialsAvatar name={l.name || l.email} email={l.email} size="sm" />
+                      <div>
+                        <Link
+                          href={`/contacts/${encodeURIComponent(l.email)}`}
+                          className="text-sm font-semibold text-navy-900 hover:text-coral-600 transition-colors"
+                        >
+                          {l.name || l.email}
+                        </Link>
+                        {l.position && <p className="text-xs text-navy-400">{l.position}</p>}
+                      </div>
                     </div>
-                    <div className="flex items-center gap-3 mt-0.5 flex-wrap">
-                      {l.company && (
-                        <span className="inline-flex items-center gap-1 text-xs text-navy-400">
-                          <Building2 size={11} className="text-navy-300" />
-                          {l.company}
+                  </td>
+                  {/* Company */}
+                  <td className="px-5 py-3.5 text-sm text-navy-700">
+                    {l.company || <span className="text-navy-200">—</span>}
+                  </td>
+                  {/* Category */}
+                  <td className="px-5 py-3.5">
+                    <CategoryBadge category={l.category} />
+                  </td>
+                  {/* Industry */}
+                  <td className="px-5 py-3.5 text-sm text-navy-500">
+                    {l.industry || <span className="text-navy-200">—</span>}
+                  </td>
+                  {/* Actions */}
+                  <td className="px-5 py-3.5">
+                    <div className="flex items-center gap-2 justify-end">
+                      {l.linkedin ? (
+                        <a
+                          href={l.linkedin.startsWith("http") ? l.linkedin : `https://${l.linkedin}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-cream-200 hover:border-navy-300 text-navy-500 hover:text-navy-800 text-xs font-semibold rounded-lg transition-colors"
+                        >
+                          <Linkedin size={11} /> LinkedIn
+                        </a>
+                      ) : (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-cream-100 text-navy-200 text-xs rounded-lg cursor-default">
+                          <Linkedin size={11} /> LinkedIn
                         </span>
                       )}
-                      {l.position && (
-                        <span className="text-xs text-navy-400">{l.position}</span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Category badge */}
-                  <div className="flex-shrink-0 hidden sm:block">
-                    <CategoryBadge category={l.category} />
-                  </div>
-
-                  {/* Actions */}
-                  <div className="flex items-center gap-2 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-                    {l.linkedin && (
-                      <a
-                        href={l.linkedin.startsWith("http") ? l.linkedin : `https://${l.linkedin}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        title="LinkedIn"
-                        className="p-2 rounded-lg border border-cream-200 hover:border-navy-200 text-navy-400 hover:text-navy-700 transition-colors"
+                      <Link
+                        href={`/send?to=${encodeURIComponent(l.email)}&name=${encodeURIComponent(l.name || "")}`}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-coral-500 hover:bg-coral-600 text-white text-xs font-semibold rounded-lg transition-colors"
                       >
-                        <Linkedin size={13} />
-                      </a>
-                    )}
-                    <Link
-                      href={`/send?to=${encodeURIComponent(l.email)}&name=${encodeURIComponent(l.name || "")}`}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-coral-500 hover:bg-coral-600 text-white text-xs font-semibold rounded-lg transition-colors"
-                    >
-                      <Send size={11} /> Email
-                    </Link>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+                        <Send size={11} /> Email
+                      </Link>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         )}
       </div>
 
