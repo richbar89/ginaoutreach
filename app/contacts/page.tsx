@@ -19,24 +19,33 @@ type ContactRow = {
   country: string | null;
 };
 
-// ── Legacy food categories (pre-migration 006) ───────────────────────────────
-const FOOD_LEGACY_CATS = new Set([
+// ── All category values that belong to the Food & Drink vertical ─────────────
+// Covers: post-migration ("Food & Drink"), pre-migration granular values,
+// and common Apollo/LinkedIn industry strings
+const FOOD_CATS = new Set([
+  "Food & Drink", "Food & Beverages", "Food & Beverage", "Food and Beverage",
+  "Food Production", "Food Manufacturing", "Beverages", "Grocery",
+  "Grocery & Food Brands", "Restaurants", "Restaurant",
   "Snacks & Crisps", "Confectionery", "Drinks", "Coffee & Tea",
   "Beer & Brewing", "Wine & Spirits", "Bakery & Bread",
   "Dairy & Alternatives", "Casual Dining & Restaurants",
-  "Grocery & Food Brands", "Health & Wellness Food",
-  "Baby & Kids Food", "Other",
+  "Health & Wellness Food", "Baby & Kids Food", "Other",
 ]);
 
-// Normalise category/subcategory so the page works before & after migration 006
-function effectiveCategory(c: ContactRow): string | null {
-  if (c.category === "Food & Drink") return "Food & Drink";
-  if (c.category && FOOD_LEGACY_CATS.has(c.category)) return "Food & Drink";
-  return c.category;
-}
+// What should appear in the subcategory column for a contact
 function effectiveSubcategory(c: ContactRow): string | null {
-  if (c.category && FOOD_LEGACY_CATS.has(c.category)) return c.category;
+  // Pre-migration: category holds the granular value — promote it to subcategory
+  if (c.category && c.category !== "Food & Drink" && FOOD_CATS.has(c.category)) {
+    return c.category;
+  }
   return c.subcategory;
+}
+
+// Which top-level vertical a contact belongs to
+function effectiveCategory(c: ContactRow): string | null {
+  if (!c.category) return null;
+  if (FOOD_CATS.has(c.category)) return "Food & Drink";
+  return c.category; // Lifestyle, Beauty, Fitness etc. pass through directly
 }
 
 // ── Vertical definitions ────────────────────────────────────────────────────
@@ -49,6 +58,13 @@ const VERTICALS = [
     accent: "#E8622A",
     bg: "#FFF4EF",
     border: "#FCDDD0",
+    subcategories: [
+      "Snacks & Crisps", "Confectionery", "Drinks", "Coffee & Tea",
+      "Beer & Brewing", "Wine & Spirits", "Bakery & Bread",
+      "Dairy & Alternatives", "Casual Dining & Restaurants",
+      "Grocery & Food Brands", "Health & Wellness Food",
+      "Baby & Kids Food", "Other",
+    ],
   },
   {
     key: "Lifestyle",
@@ -58,6 +74,10 @@ const VERTICALS = [
     accent: "#7C3AED",
     bg: "#F5F0FF",
     border: "#DDD6FE",
+    subcategories: [
+      "Fashion & Clothing", "Home & Interiors", "Travel", "Pets",
+      "Sustainability", "Media & Publishing", "Gifting & Occasions",
+    ],
   },
   {
     key: "Beauty",
@@ -67,6 +87,10 @@ const VERTICALS = [
     accent: "#DB2777",
     bg: "#FFF0F7",
     border: "#FBCFE8",
+    subcategories: [
+      "Skincare", "Makeup & Cosmetics", "Haircare",
+      "Fragrance", "Nails", "Wellness & Supplements",
+    ],
   },
   {
     key: "Fitness",
@@ -76,6 +100,10 @@ const VERTICALS = [
     accent: "#059669",
     bg: "#EFFFFA",
     border: "#A7F3D0",
+    subcategories: [
+      "Activewear & Apparel", "Supplements & Nutrition", "Equipment & Gear",
+      "Running & Cycling", "Gyms & Studios", "Sports Brands",
+    ],
   },
 ] as const;
 
@@ -211,17 +239,23 @@ export default function ContactsPage() {
     return counts;
   }, [contacts]);
 
-  // Subcategories for the active vertical (handles pre-migration data)
+  // Subcategory options: always the hardcoded list for the active vertical
   const subcategoryOptions = useMemo(() => {
     if (!activeVertical) return [];
-    const subs = new Set<string>();
+    const vertDef = VERTICALS.find(v => v.key === activeVertical);
+    return vertDef ? [...vertDef.subcategories] : [];
+  }, [activeVertical]);
+
+  // Count contacts per subcategory for badge display
+  const subcategoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
     for (const c of contacts) {
       if (effectiveCategory(c) === activeVertical) {
         const sub = effectiveSubcategory(c);
-        if (sub) subs.add(sub);
+        if (sub) counts[sub] = (counts[sub] ?? 0) + 1;
       }
     }
-    return Array.from(subs).sort();
+    return counts;
   }, [contacts, activeVertical]);
 
   const countryOptions = useMemo(() => {
@@ -338,8 +372,8 @@ export default function ContactsPage() {
         })}
       </div>
 
-      {/* Subcategory pills — only shown when a vertical is active */}
-      {activeVertical && subcategoryOptions.length > 0 && (
+      {/* Subcategory pills — shown whenever a vertical is active */}
+      {activeVertical && (
         <div className="flex flex-wrap gap-2 mb-5">
           <button
             onClick={() => setActiveSubcategory(null)}
@@ -351,21 +385,33 @@ export default function ContactsPage() {
             }
           >
             All {activeVerticalDef?.label}
+            {!activeSubcategory && verticalCounts[activeVertical] > 0 && (
+              <span className="ml-1.5 opacity-80">{verticalCounts[activeVertical]}</span>
+            )}
           </button>
-          {subcategoryOptions.map(sub => (
-            <button
-              key={sub}
-              onClick={() => handleSubcategoryClick(sub)}
-              className="px-3 py-1.5 rounded-full text-xs font-semibold transition-colors border"
-              style={
-                activeSubcategory === sub
-                  ? { background: activeVerticalDef?.accent, color: "#fff", borderColor: activeVerticalDef?.accent }
-                  : { background: "#fff", color: "#374151", borderColor: "#E5E7EB" }
-              }
-            >
-              {sub}
-            </button>
-          ))}
+          {subcategoryOptions.map(sub => {
+            const count = subcategoryCounts[sub] ?? 0;
+            const isActive = activeSubcategory === sub;
+            return (
+              <button
+                key={sub}
+                onClick={() => handleSubcategoryClick(sub)}
+                className="px-3 py-1.5 rounded-full text-xs font-semibold transition-colors border"
+                style={
+                  isActive
+                    ? { background: activeVerticalDef?.accent, color: "#fff", borderColor: activeVerticalDef?.accent }
+                    : count > 0
+                      ? { background: "#fff", color: "#374151", borderColor: "#E5E7EB" }
+                      : { background: "#F9FAFB", color: "#9CA3AF", borderColor: "#E5E7EB" }
+                }
+              >
+                {sub}
+                {count > 0 && (
+                  <span className="ml-1.5 opacity-70">{count}</span>
+                )}
+              </button>
+            );
+          })}
         </div>
       )}
 
