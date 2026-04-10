@@ -19,6 +19,26 @@ type ContactRow = {
   country: string | null;
 };
 
+// ── Legacy food categories (pre-migration 006) ───────────────────────────────
+const FOOD_LEGACY_CATS = new Set([
+  "Snacks & Crisps", "Confectionery", "Drinks", "Coffee & Tea",
+  "Beer & Brewing", "Wine & Spirits", "Bakery & Bread",
+  "Dairy & Alternatives", "Casual Dining & Restaurants",
+  "Grocery & Food Brands", "Health & Wellness Food",
+  "Baby & Kids Food", "Other",
+]);
+
+// Normalise category/subcategory so the page works before & after migration 006
+function effectiveCategory(c: ContactRow): string | null {
+  if (c.category === "Food & Drink") return "Food & Drink";
+  if (c.category && FOOD_LEGACY_CATS.has(c.category)) return "Food & Drink";
+  return c.category;
+}
+function effectiveSubcategory(c: ContactRow): string | null {
+  if (c.category && FOOD_LEGACY_CATS.has(c.category)) return c.category;
+  return c.subcategory;
+}
+
 // ── Vertical definitions ────────────────────────────────────────────────────
 const VERTICALS = [
   {
@@ -170,6 +190,7 @@ export default function ContactsPage() {
   const [activeCountry, setActiveCountry] = useState("All");
   const [adStatuses] = useState<Record<string, AdStatus>>(() => getAllCachedStatuses());
   const [showRequestModal, setShowRequestModal] = useState(false);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     fetch("/api/contacts")
@@ -179,22 +200,26 @@ export default function ContactsPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  // Count contacts per vertical
+  // Count contacts per vertical (handles pre-migration data)
   const verticalCounts = useMemo(() => {
     const counts: Record<string, number> = {};
     for (const v of VERTICALS) counts[v.key] = 0;
     for (const c of contacts) {
-      if (c.category && c.category in counts) counts[c.category]++;
+      const cat = effectiveCategory(c);
+      if (cat && cat in counts) counts[cat]++;
     }
     return counts;
   }, [contacts]);
 
-  // Subcategories for the active vertical
+  // Subcategories for the active vertical (handles pre-migration data)
   const subcategoryOptions = useMemo(() => {
     if (!activeVertical) return [];
     const subs = new Set<string>();
     for (const c of contacts) {
-      if (c.category === activeVertical && c.subcategory) subs.add(c.subcategory);
+      if (effectiveCategory(c) === activeVertical) {
+        const sub = effectiveSubcategory(c);
+        if (sub) subs.add(sub);
+      }
     }
     return Array.from(subs).sort();
   }, [contacts, activeVertical]);
@@ -207,8 +232,8 @@ export default function ContactsPage() {
 
   const filtered = useMemo(() => {
     let result = contacts;
-    if (activeVertical) result = result.filter(c => c.category === activeVertical);
-    if (activeSubcategory) result = result.filter(c => c.subcategory === activeSubcategory);
+    if (activeVertical) result = result.filter(c => effectiveCategory(c) === activeVertical);
+    if (activeSubcategory) result = result.filter(c => effectiveSubcategory(c) === activeSubcategory);
     if (activeCountry !== "All") result = result.filter(c => c.country === activeCountry);
     if (query.trim()) {
       const q = query.toLowerCase();
@@ -222,9 +247,10 @@ export default function ContactsPage() {
     return result;
   }, [contacts, activeVertical, activeSubcategory, activeCountry, query]);
 
-  const PAGE_SIZE = 20;
+  const PAGE_SIZE = 25;
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const visible = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
   const isFiltering = !!(activeVertical || activeSubcategory || query.trim() || activeCountry !== "All");
-  const visible = isFiltering ? filtered : filtered.slice(0, PAGE_SIZE);
 
   const activeVerticalDef = VERTICALS.find(v => v.key === activeVertical);
 
@@ -236,6 +262,17 @@ export default function ContactsPage() {
       setActiveVertical(key);
       setActiveSubcategory(null);
     }
+    setPage(1);
+  };
+
+  const handleSubcategoryClick = (sub: string) => {
+    setActiveSubcategory(activeSubcategory === sub ? null : sub);
+    setPage(1);
+  };
+
+  const handleQueryChange = (val: string) => {
+    setQuery(val);
+    setPage(1);
   };
 
   return (
@@ -318,7 +355,7 @@ export default function ContactsPage() {
           {subcategoryOptions.map(sub => (
             <button
               key={sub}
-              onClick={() => setActiveSubcategory(activeSubcategory === sub ? null : sub)}
+              onClick={() => handleSubcategoryClick(sub)}
               className="px-3 py-1.5 rounded-full text-xs font-semibold transition-colors border"
               style={
                 activeSubcategory === sub
@@ -340,11 +377,11 @@ export default function ContactsPage() {
             type="text"
             placeholder="Search by name, company or position…"
             value={query}
-            onChange={e => setQuery(e.target.value)}
+            onChange={e => handleQueryChange(e.target.value)}
             className="w-full pl-11 pr-10 py-3 bg-white border border-cream-200 rounded-xl text-sm text-navy-900 placeholder:text-navy-300 focus:outline-none focus:ring-2 focus:ring-coral-400 focus:border-transparent shadow-sm"
           />
           {query && (
-            <button onClick={() => setQuery("")} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-navy-300 hover:text-navy-600">
+            <button onClick={() => handleQueryChange("")} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-navy-300 hover:text-navy-600">
               <X size={14} />
             </button>
           )}
@@ -414,7 +451,7 @@ export default function ContactsPage() {
                   </td>
                   <td className="px-5 py-3.5">
                     <div className="flex flex-wrap items-center gap-1.5">
-                      <SubcategoryBadge subcategory={l.subcategory} />
+                      <SubcategoryBadge subcategory={effectiveSubcategory(l)} />
                       <AdBadge status={adStatuses[l.company?.toLowerCase() ?? ""]} />
                     </div>
                   </td>
@@ -449,15 +486,32 @@ export default function ContactsPage() {
         )}
       </div>
 
-      {!isFiltering && filtered.length > PAGE_SIZE && (
-        <p className="text-xs text-navy-400 text-center mt-4">
-          Showing {PAGE_SIZE} of {filtered.length.toLocaleString()} contacts — pick a category or search to see more.
-        </p>
-      )}
-      {isFiltering && filtered.length > 0 && (
-        <p className="text-xs text-navy-300 text-center mt-4">
-          {filtered.length.toLocaleString()} result{filtered.length !== 1 ? "s" : ""}
-        </p>
+      {/* Pagination */}
+      {filtered.length > PAGE_SIZE && (
+        <div className="flex items-center justify-between mt-5 px-1">
+          <p className="text-xs text-navy-400">
+            {((page - 1) * PAGE_SIZE) + 1}–{Math.min(page * PAGE_SIZE, filtered.length)} of {filtered.length.toLocaleString()} contacts
+          </p>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setPage(p => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-cream-200 bg-white text-navy-600 hover:border-coral-300 disabled:opacity-30 disabled:cursor-default transition-colors"
+            >
+              ← Prev
+            </button>
+            <span className="text-xs text-navy-400 font-medium tabular-nums">
+              {page} / {totalPages}
+            </span>
+            <button
+              onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+              className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-cream-200 bg-white text-navy-600 hover:border-coral-300 disabled:opacity-30 disabled:cursor-default transition-colors"
+            >
+              Next →
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );
