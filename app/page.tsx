@@ -300,6 +300,7 @@ export default function LandingPage() {
   const f2 = useInView(0.08);
   const f3 = useInView(0.08);
   const pricing = useInView(0.1);
+  const urgency = useInView(0.1);
   const fRefs = [f0, f1, f2, f3];
 
   useEffect(() => {
@@ -459,6 +460,59 @@ export default function LandingPage() {
             </section>
           );
         })}
+
+        {/* ── CREATOR SPOTS ── */}
+        <section className="cl-section" style={{ background: "#F9FAFB", padding: "90px 28px" }}>
+          <div className="cl-inner" style={{ maxWidth: 860 }}>
+            <div ref={urgency.ref} className={`cl-fade${urgency.vis ? " vis" : ""}`}>
+              <div style={{ textAlign: "center", marginBottom: 48 }}>
+                <div className="cl-tag">Limited Access</div>
+                <h2 className="cl-h" style={{ fontSize: "clamp(28px, 3.5vw, 42px)", fontWeight: 800, letterSpacing: "-0.03em", color: "#0D1B2A", marginBottom: 12 }}>
+                  We cap each creator category.
+                </h2>
+                <p style={{ fontSize: 16, color: "#6B7280", maxWidth: 480, margin: "0 auto" }}>
+                  To keep the platform valuable, we limit how many creators share each brand database. Once a category fills up, it closes.
+                </p>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
+                {[
+                  { label: "Foodies", emoji: "🍔", filled: 23, cap: 100, accent: "#E8622A", bg: "#FFF4EF" },
+                  { label: "Lifestyle", emoji: "✨", filled: 8, cap: 100, accent: "#7C3AED", bg: "#F5F0FF" },
+                  { label: "Beauty", emoji: "💄", filled: 5, cap: 100, accent: "#DB2777", bg: "#FFF0F7" },
+                  { label: "Fitness", emoji: "💪", filled: 3, cap: 100, accent: "#059669", bg: "#EFFFFA" },
+                ].map(({ label, emoji, filled, cap, accent, bg }) => {
+                  const pct = Math.round((filled / cap) * 100);
+                  const left = cap - filled;
+                  return (
+                    <div key={label} style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 16, padding: "24px 28px", boxShadow: "0 1px 4px rgba(0,0,0,0.05)" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+                        <span style={{ fontSize: 22 }}>{emoji}</span>
+                        <span style={{ fontWeight: 700, fontSize: 16, color: "#0D1B2A" }}>{label} creators</span>
+                      </div>
+                      {/* Bar */}
+                      <div style={{ background: "#F3F4F6", borderRadius: 999, height: 8, marginBottom: 12, overflow: "hidden" }}>
+                        <div style={{ height: "100%", width: `${pct}%`, background: accent, borderRadius: 999, transition: "width 1s ease" }} />
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontSize: 13, color: "#6B7280" }}>
+                          <span style={{ fontWeight: 700, color: "#0D1B2A" }}>{filled}</span> of {cap} spots filled
+                        </span>
+                        <span style={{ fontSize: 12, fontWeight: 700, color: accent, background: bg, padding: "3px 10px", borderRadius: 999 }}>
+                          {left} left
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div style={{ textAlign: "center", marginTop: 40 }}>
+                <a href="/sign-up" style={{ display: "inline-block", background: "#E8622A", color: "#fff", fontWeight: 700, fontSize: 15, padding: "14px 32px", borderRadius: 12, textDecoration: "none", letterSpacing: "-0.01em" }}>
+                  Claim your spot now →
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* ── PRICING ── */}
         <section className="cl-section" style={{ background: "#fff", padding: "110px 28px" }}>

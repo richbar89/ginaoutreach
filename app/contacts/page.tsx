@@ -19,33 +19,41 @@ type ContactRow = {
   country: string | null;
 };
 
-// ── All category values that belong to the Food & Drink vertical ─────────────
-// Covers: post-migration ("Food & Drink"), pre-migration granular values,
-// and common Apollo/LinkedIn industry strings
-const FOOD_CATS = new Set([
-  "Food & Drink", "Food & Beverages", "Food & Beverage", "Food and Beverage",
-  "Food Production", "Food Manufacturing", "Beverages", "Grocery",
-  "Grocery & Food Brands", "Restaurants", "Restaurant",
+// ── Category normalisation ───────────────────────────────────────────────────
+
+// Specific granular subcategory values (set by admin or auto-detected on import)
+const FOOD_SUBCATS = new Set([
   "Snacks & Crisps", "Confectionery", "Drinks", "Coffee & Tea",
   "Beer & Brewing", "Wine & Spirits", "Bakery & Bread",
   "Dairy & Alternatives", "Casual Dining & Restaurants",
-  "Health & Wellness Food", "Baby & Kids Food", "Other",
+  "Grocery & Food Brands", "Health & Wellness Food", "Baby & Kids Food", "Other",
 ]);
 
-// What should appear in the subcategory column for a contact
-function effectiveSubcategory(c: ContactRow): string | null {
-  // Pre-migration: category holds the granular value — promote it to subcategory
-  if (c.category && c.category !== "Food & Drink" && FOOD_CATS.has(c.category)) {
-    return c.category;
-  }
-  return c.subcategory;
+// Broad values that signal "Food & Drink" vertical (Apollo industries etc.)
+function isFoodVertical(cat: string | null): boolean {
+  if (!cat) return false;
+  if (FOOD_SUBCATS.has(cat)) return true;
+  const l = cat.toLowerCase();
+  return l.includes("food") || l.includes("drink") || l.includes("beverage")
+    || l.includes("restaurant") || l.includes("bakery") || l.includes("dairy")
+    || l.includes("snack") || l.includes("coffee") || l.includes("tea")
+    || l.includes("beer") || l.includes("wine") || l.includes("brew")
+    || l.includes("confection") || l.includes("grocery");
 }
 
 // Which top-level vertical a contact belongs to
 function effectiveCategory(c: ContactRow): string | null {
   if (!c.category) return null;
-  if (FOOD_CATS.has(c.category)) return "Food & Drink";
-  return c.category; // Lifestyle, Beauty, Fitness etc. pass through directly
+  if (isFoodVertical(c.category)) return "Food & Drink";
+  return c.category; // Lifestyle, Beauty, Fitness pass through directly
+}
+
+// Specific subcategory for badge + filtering (only granular values, not Apollo industries)
+function effectiveSubcategory(c: ContactRow): string | null {
+  if (c.subcategory) return c.subcategory;
+  // Legacy: granular value was stored directly in category column
+  if (c.category && FOOD_SUBCATS.has(c.category)) return c.category;
+  return null;
 }
 
 // ── Vertical definitions ────────────────────────────────────────────────────
@@ -267,7 +275,11 @@ export default function ContactsPage() {
   const filtered = useMemo(() => {
     let result = contacts;
     if (activeVertical) result = result.filter(c => effectiveCategory(c) === activeVertical);
-    if (activeSubcategory) result = result.filter(c => effectiveSubcategory(c) === activeSubcategory);
+    if (activeSubcategory) {
+      const withSub = result.filter(c => effectiveSubcategory(c) === activeSubcategory);
+      // If we have contacts with that exact subcategory, show them; otherwise show all in vertical
+      result = withSub.length > 0 ? withSub : result;
+    }
     if (activeCountry !== "All") result = result.filter(c => c.country === activeCountry);
     if (query.trim()) {
       const q = query.toLowerCase();

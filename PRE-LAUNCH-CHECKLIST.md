@@ -66,6 +66,26 @@ Things to complete before selling to real users.
 
 ---
 
+## Creator Capacity & Urgency
+
+- [ ] Add creator type selection to onboarding (Foodie / Lifestyle / Beauty / Fitness)
+- [ ] Store `creator_type` on Clerk user metadata (or in a `user_profiles` Supabase table)
+- [ ] Build dynamic capacity bars pulling real signup counts per vertical
+- [ ] Set capacity limits per vertical (e.g. 100 Foodies, 100 Lifestyle etc.) — update in code/env as you scale
+- [ ] **For now**: urgency bars on landing page use hardcoded "filled" counts — update manually each week
+
+---
+
+## Database — Contacts
+
+- [ ] Re-import food contacts CSV through admin — new import now auto-detects subcategory from Apollo keywords (Beer & Brewing, Drinks, Coffee & Tea etc.)
+- [ ] Import Lifestyle contacts CSV (next vertical)
+- [ ] Import Beauty contacts CSV
+- [ ] Import Fitness contacts CSV
+- [ ] Run `supabase/migrations/006_fix_contact_categories.sql` in Supabase SQL editor after re-import to tidy any remaining legacy category values
+
+---
+
 ## Pre-Launch
 
 - [ ] Send test emails from a real connected inbox to confirm deliverability
