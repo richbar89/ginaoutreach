@@ -3,8 +3,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { ArrowLeft, Upload, Plus, Trash2 } from "lucide-react";
-import type { BrandCategory } from "@/lib/types";
-
 type UploadedContact = {
   id: string;
   name: string;
@@ -13,14 +11,11 @@ type UploadedContact = {
   company: string | null;
   linkedin: string | null;
   category: string | null;
+  subcategory: string | null;
+  country: string | null;
   created_at: string;
 };
 
-const CATEGORIES: BrandCategory[] = [
-  "Snacks & Crisps","Confectionery","Drinks","Coffee & Tea","Beer & Brewing",
-  "Wine & Spirits","Bakery & Bread","Dairy & Alternatives","Casual Dining & Restaurants",
-  "Grocery & Food Brands","Health & Wellness Food","Baby & Kids Food","Other",
-];
 
 export default function AdminContactsPage() {
   const [contacts, setContacts] = useState<UploadedContact[]>([]);
@@ -31,7 +26,7 @@ export default function AdminContactsPage() {
   const fileRef = useRef<HTMLInputElement>(null);
 
   // Single contact form
-  const [form, setForm] = useState({ name: "", email: "", position: "", company: "", linkedin: "", notes: "", category: "" });
+  const [form, setForm] = useState({ name: "", email: "", position: "", company: "", linkedin: "", notes: "", category: "", subcategory: "", country: "UK" });
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -53,7 +48,7 @@ export default function AdminContactsPage() {
     });
     const data = await res.json();
     setResult(res.ok ? `Added 1 contact.` : `Error: ${data.error}`);
-    if (res.ok) { setForm({ name: "", email: "", position: "", company: "", linkedin: "", notes: "", category: "" }); await load(); }
+    if (res.ok) { setForm({ name: "", email: "", position: "", company: "", linkedin: "", notes: "", category: "", subcategory: "", country: "UK" }); await load(); }
     setUploading(false);
   };
 
@@ -134,16 +129,40 @@ export default function AdminContactsPage() {
             {field("linkedin", "LinkedIn URL")}
             {field("notes", "Notes")}
           </div>
-          <div className="mb-4">
-            <label className="text-xs font-bold text-navy-500 mb-1 block">Category</label>
-            <select
-              value={form.category}
-              onChange={e => setForm(p => ({ ...p, category: e.target.value }))}
-              className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2"
-            >
-              <option value="">None</option>
-              {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-            </select>
+          <div className="grid grid-cols-3 gap-3 mb-4">
+            <div>
+              <label className="text-xs font-bold text-navy-500 mb-1 block">Category</label>
+              <input
+                type="text"
+                value={form.category}
+                onChange={e => setForm(p => ({ ...p, category: e.target.value }))}
+                placeholder="e.g. Food & Drink"
+                className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2 outline-none focus:border-coral-300"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-bold text-navy-500 mb-1 block">Subcategory</label>
+              <input
+                type="text"
+                value={form.subcategory}
+                onChange={e => setForm(p => ({ ...p, subcategory: e.target.value }))}
+                placeholder="e.g. Snacks"
+                className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2 outline-none focus:border-coral-300"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-bold text-navy-500 mb-1 block">Country</label>
+              <select
+                value={form.country}
+                onChange={e => setForm(p => ({ ...p, country: e.target.value }))}
+                className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2"
+              >
+                <option value="UK">UK</option>
+                <option value="US">US</option>
+                <option value="Global">Global</option>
+                <option value="EU">EU</option>
+              </select>
+            </div>
           </div>
           {result && <p className={`text-sm font-semibold mb-3 ${result.startsWith("Error") ? "text-red-500" : "text-emerald-600"}`}>{result}</p>}
           <button
@@ -159,9 +178,11 @@ export default function AdminContactsPage() {
       {/* CSV upload */}
       {tab === "csv" && (
         <div className="bg-white rounded-2xl border p-5" style={{ borderColor: "var(--border)" }}>
-          <p className="text-sm text-navy-500 mb-4">
+          <p className="text-sm text-navy-500 mb-2">
             CSV must include <span className="font-bold">name</span> and <span className="font-bold">email</span> columns.
-            Optional: position, company, linkedin, notes, category.
+          </p>
+          <p className="text-xs text-navy-400 mb-4">
+            Optional columns: <code className="bg-gray-100 px-1 rounded">position</code> <code className="bg-gray-100 px-1 rounded">company</code> <code className="bg-gray-100 px-1 rounded">linkedin</code> <code className="bg-gray-100 px-1 rounded">category</code> <code className="bg-gray-100 px-1 rounded">subcategory</code> <code className="bg-gray-100 px-1 rounded">country</code> <code className="bg-gray-100 px-1 rounded">notes</code>
           </p>
           <input ref={fileRef} type="file" accept=".csv" className="mb-4 text-sm text-navy-600" />
           {result && <p className={`text-sm font-semibold mb-3 ${result.startsWith("Error") ? "text-red-500" : "text-emerald-600"}`}>{result}</p>}
@@ -186,7 +207,7 @@ export default function AdminContactsPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b" style={{ borderColor: "var(--border)" }}>
-                  {["Name", "Email", "Position", "Company", "Category", ""].map(h => (
+                  {["Name", "Email", "Company", "Category", "Country", ""].map(h => (
                     <th key={h} className="text-left px-4 py-3 text-[11px] font-black uppercase tracking-widest text-navy-400">{h}</th>
                   ))}
                 </tr>
@@ -196,9 +217,9 @@ export default function AdminContactsPage() {
                   <tr key={c.id} className="border-b last:border-0 hover:bg-navy-50/30 transition-colors" style={{ borderColor: "var(--border)" }}>
                     <td className="px-4 py-3 font-semibold text-navy-900">{c.name}</td>
                     <td className="px-4 py-3 text-navy-500">{c.email}</td>
-                    <td className="px-4 py-3 text-navy-400">{c.position || "—"}</td>
                     <td className="px-4 py-3 text-navy-400">{c.company || "—"}</td>
-                    <td className="px-4 py-3 text-navy-400">{c.category || "—"}</td>
+                    <td className="px-4 py-3 text-navy-400">{c.category || "—"}{c.subcategory ? ` / ${c.subcategory}` : ""}</td>
+                    <td className="px-4 py-3 text-navy-400">{c.country || "UK"}</td>
                     <td className="px-4 py-3">
                       <button onClick={() => deleteContact(c.id)} className="text-red-400 hover:text-red-600">
                         <Trash2 size={14} />

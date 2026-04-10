@@ -10,12 +10,12 @@ export async function GET(req: NextRequest) {
 
   const db = getSupabaseAdmin();
   const email = req.nextUrl.searchParams.get("email");
+  const country = req.nextUrl.searchParams.get("country");
 
   if (email) {
-    // Single contact lookup by email
     const { data, error } = await db
       .from("uploaded_contacts")
-      .select("id, name, email, position, company, linkedin, industry, category")
+      .select("id, name, email, position, company, linkedin, category, subcategory, country")
       .ilike("email", email)
       .maybeSingle();
 
@@ -24,10 +24,14 @@ export async function GET(req: NextRequest) {
   }
 
   // All contacts
-  const { data, error } = await db
+  let query = db
     .from("uploaded_contacts")
-    .select("id, name, email, position, company, linkedin, industry, category")
+    .select("id, name, email, position, company, linkedin, category, subcategory, country")
     .order("name", { ascending: true });
+
+  if (country && country !== "All") query = query.eq("country", country);
+
+  const { data, error } = await query;
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json(data || []);

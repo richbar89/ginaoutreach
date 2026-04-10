@@ -14,8 +14,9 @@ type ContactRow = {
   position: string | null;
   company: string | null;
   linkedin: string | null;
-  industry: string | null;
   category: string | null;
+  subcategory: string | null;
+  country: string | null;
 };
 
 const CATEGORY_COLOURS: Record<string, { bg: string; text: string; dot: string }> = {
@@ -122,6 +123,7 @@ export default function ContactsPage() {
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
+  const [activeCountry, setActiveCountry] = useState("All");
   const [adStatuses] = useState<Record<string, AdStatus>>(() => getAllCachedStatuses());
   const [showRequestModal, setShowRequestModal] = useState(false);
 
@@ -133,18 +135,23 @@ export default function ContactsPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  // Derive unique categories from whichever field is actually populated
   const categoryOptions = useMemo(() => {
     const cats = new Set<string>();
     for (const c of contacts) {
-      const val = c.category || c.industry;
-      if (val) cats.add(val);
+      if (c.category) cats.add(c.category);
     }
     return Array.from(cats).sort();
   }, [contacts]);
 
-  // Use whichever field is populated per contact
-  const getCategory = (c: ContactRow) => c.category || c.industry || null;
+  const countryOptions = useMemo(() => {
+    const countries = new Set<string>();
+    for (const c of contacts) {
+      if (c.country) countries.add(c.country);
+    }
+    return Array.from(countries).sort();
+  }, [contacts]);
+
+  const getCategory = (c: ContactRow) => c.category || null;
 
   const filtered = useMemo(() => {
     let result = contacts;
@@ -161,13 +168,16 @@ export default function ContactsPage() {
     if (activeCategory !== "All") {
       result = result.filter((l) => getCategory(l) === activeCategory);
     }
+    if (activeCountry !== "All") {
+      result = result.filter((l) => l.country === activeCountry);
+    }
     return result;
-  }, [contacts, query, activeCategory]);
+  }, [contacts, query, activeCategory, activeCountry]);
 
   const PAGE_SIZE = 20;
   const withLinkedIn = contacts.filter(c => c.linkedin).length;
   const withAds = Object.values(adStatuses).filter(s => s.hasAds).length;
-  const isFiltering = query.trim() || activeCategory !== "All";
+  const isFiltering = query.trim() || activeCategory !== "All" || activeCountry !== "All";
   const visible = isFiltering ? filtered : filtered.slice(0, PAGE_SIZE);
 
   return (
@@ -233,6 +243,18 @@ export default function ContactsPage() {
             <option key={c} value={c}>{c}</option>
           ))}
         </select>
+        {countryOptions.length > 1 && (
+          <select
+            value={activeCountry}
+            onChange={(e) => setActiveCountry(e.target.value)}
+            className="px-4 py-3 bg-white border border-cream-200 rounded-xl text-sm text-navy-900 focus:outline-none focus:ring-2 focus:ring-coral-400 focus:border-transparent shadow-sm"
+          >
+            <option value="All">All countries</option>
+            {countryOptions.map((c) => (
+              <option key={c} value={c}>{c}</option>
+            ))}
+          </select>
+        )}
       </div>
 
       {/* Results count when filtered */}

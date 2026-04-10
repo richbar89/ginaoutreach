@@ -23,6 +23,8 @@ export async function POST(req: NextRequest) {
       linkedin: contact.linkedin?.trim() || null,
       notes: contact.notes?.trim() || null,
       category: contact.category || null,
+      subcategory: contact.subcategory || null,
+      country: contact.country || "UK",
     });
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     return NextResponse.json({ inserted: 1 });
@@ -48,11 +50,13 @@ export async function POST(req: NextRequest) {
       rows.push({
         name,
         email: email.toLowerCase(),
-        position: row["position"] || row["job_title"] || row["role"] || null,
-        company: row["company"] || row["brand"] || row["organisation"] || null,
-        linkedin: row["linkedin"] || row["linkedin_url"] || null,
+        position: row["position"] || row["job_title"] || row["title"] || row["role"] || null,
+        company: row["company"] || row["company_name"] || row["brand"] || row["organisation"] || null,
+        linkedin: row["linkedin"] || row["linkedin_url"] || row["linkedin_profile"] || null,
         notes: row["notes"] || null,
-        category: row["category"] || null,
+        category: row["category"] || row["industry"] || null,
+        subcategory: row["subcategory"] || null,
+        country: row["country"] || "UK",
       });
     }
 
