@@ -186,8 +186,21 @@ export async function DELETE(req: NextRequest) {
   const result = await requireAdmin();
   if (result instanceof NextResponse) return result;
 
-  const { id } = await req.json();
+  const body = await req.json();
   const db = getSupabaseAdmin();
-  await db.from("uploaded_contacts").delete().eq("id", id);
-  return NextResponse.json({ ok: true });
+
+  if (body.ids && Array.isArray(body.ids)) {
+    // Bulk delete — single DB call
+    const { error } = await db.from("uploaded_contacts").delete().in("id", body.ids);
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ deleted: body.ids.length });
+  }
+
+  if (body.id) {
+    const { error } = await db.from("uploaded_contacts").delete().eq("id", body.id);
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ ok: true });
+  }
+
+  return NextResponse.json({ error: "Provide id or ids" }, { status: 400 });
 }

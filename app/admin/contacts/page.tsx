@@ -80,11 +80,16 @@ export default function AdminContactsPage() {
   const deleteSelected = async () => {
     if (selected.size === 0) return;
     setDeleting(true);
-    await Promise.all([...selected].map(id =>
-      fetch("/api/admin/contacts", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) })
-    ));
-    setContacts(prev => prev.filter(c => !selected.has(c.id)));
-    setSelected(new Set());
+    const ids = [...selected];
+    const res = await fetch("/api/admin/contacts", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ids }),
+    });
+    if (res.ok) {
+      setContacts(prev => prev.filter(c => !selected.has(c.id)));
+      setSelected(new Set());
+    }
     setDeleting(false);
     setConfirmDeleteAll(false);
   };
