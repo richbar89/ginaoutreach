@@ -67,7 +67,7 @@ export default function AdminContactsPage() {
       body: JSON.stringify({ csv, vertical: csvVertical }),
     });
     const data = await res.json();
-    setResult(res.ok ? `Inserted ${data.inserted} contacts.` : `Error: ${data.error}`);
+    setResult(res.ok ? `Inserted ${data.inserted} contacts (AI-classified ${data.classified ?? 0} companies).` : `Error: ${data.error}`);
     if (res.ok) await load();
     setUploading(false);
   };
@@ -81,15 +81,22 @@ export default function AdminContactsPage() {
   const deleteSelected = async () => {
     if (selected.size === 0) return;
     setDeleting(true);
-    const ids = [...selected];
+    const isAll = selected.size === contacts.length;
     const res = await fetch("/api/admin/contacts", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ids }),
+      body: JSON.stringify(isAll ? { all: true } : { ids: [...selected] }),
     });
     if (res.ok) {
-      setContacts(prev => prev.filter(c => !selected.has(c.id)));
+      if (isAll) {
+        setContacts([]);
+      } else {
+        setContacts(prev => prev.filter(c => !selected.has(c.id)));
+      }
       setSelected(new Set());
+    } else {
+      const data = await res.json();
+      alert(`Delete failed: ${data.error}`);
     }
     setDeleting(false);
     setConfirmDeleteAll(false);

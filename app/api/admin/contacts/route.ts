@@ -244,8 +244,14 @@ export async function DELETE(req: NextRequest) {
   const body = await req.json();
   const db = getSupabaseAdmin();
 
-  if (body.ids && Array.isArray(body.ids)) {
-    // Bulk delete — single DB call
+  // Delete everything
+  if (body.all === true) {
+    const { error } = await db.from("uploaded_contacts").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ deleted: "all" });
+  }
+
+  if (body.ids && Array.isArray(body.ids) && body.ids.length > 0) {
     const { error } = await db.from("uploaded_contacts").delete().in("id", body.ids);
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     return NextResponse.json({ deleted: body.ids.length });
@@ -257,5 +263,5 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ ok: true });
   }
 
-  return NextResponse.json({ error: "Provide id or ids" }, { status: 400 });
+  return NextResponse.json({ error: "Provide id, ids, or all:true" }, { status: 400 });
 }
