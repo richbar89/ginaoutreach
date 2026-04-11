@@ -73,40 +73,50 @@ export async function POST(req: NextRequest) {
   }
 
   if (csv) {
-    // Proper CSV parser — handles quoted fields containing commas and newlines
-    function parseCsvLine(line: string): string[] {
-      const fields: string[] = [];
+    // Full CSV parser — handles quoted fields with embedded commas AND newlines
+    function parseFullCsv(raw: string): string[][] {
+      const records: string[][] = [];
+      let fields: string[] = [];
       let cur = "";
       let inQuote = false;
-      for (let i = 0; i < line.length; i++) {
-        const ch = line[i];
+      const s = raw.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+
+      for (let i = 0; i < s.length; i++) {
+        const ch = s[i];
         if (ch === '"') {
-          if (inQuote && line[i + 1] === '"') { cur += '"'; i++; }
+          if (inQuote && s[i + 1] === '"') { cur += '"'; i++; }
           else inQuote = !inQuote;
         } else if (ch === "," && !inQuote) {
-          fields.push(cur.trim());
+          fields.push(cur);
           cur = "";
+        } else if (ch === "\n" && !inQuote) {
+          fields.push(cur);
+          cur = "";
+          if (fields.some(f => f.trim())) records.push(fields);
+          fields = [];
         } else {
           cur += ch;
         }
       }
-      fields.push(cur.trim());
-      return fields;
+      // Last field/record
+      fields.push(cur);
+      if (fields.some(f => f.trim())) records.push(fields);
+      return records;
     }
 
-    const lines = (csv as string).split("\n").filter(l => l.trim());
-    if (lines.length < 2) return NextResponse.json({ error: "CSV has no data rows" }, { status: 400 });
+    const records = parseFullCsv(csv as string);
+    if (records.length < 2) return NextResponse.json({ error: "CSV has no data rows" }, { status: 400 });
 
     // Normalise headers: lowercase, spaces→underscores, strip non-alphanumeric
-    const headers = parseCsvLine(lines[0]).map((h: string) =>
+    const headers = records[0].map((h: string) =>
       h.toLowerCase().trim().replace(/\s+/g, "_").replace(/[^a-z0-9_]/g, "")
     );
     const rows = [];
 
-    for (let i = 1; i < lines.length; i++) {
-      const values = parseCsvLine(lines[i]);
+    for (let i = 1; i < records.length; i++) {
+      const values = records[i];
       const row: Record<string, string> = {};
-      headers.forEach((h: string, idx: number) => { row[h] = values[idx] || ""; });
+      headers.forEach((h: string, idx: number) => { row[h] = (values[idx] ?? "").trim(); });
 
       const email = row["email"] || row["email_address"] || row["personal_email"] || "";
       const name = row["full_name"] || row["name"] || row["contact_name"] ||
