@@ -1,6 +1,7 @@
 import { requireAdmin } from "@/lib/adminAuth";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { NextRequest, NextResponse } from "next/server";
+import { classifyCompanies, chunk } from "@/lib/classifyCompany";
 
 // Auto-detect Food & Drink subcategory from Apollo keyword/description text
 function detectFoodSubcategory(text: string): string | null {
@@ -136,11 +137,17 @@ export async function POST(req: NextRequest) {
     const records = parseFullCsv(csv as string);
     if (records.length < 2) return NextResponse.json({ error: "CSV has no data rows" }, { status: 400 });
 
-    // Normalise headers: lowercase, spaces→underscores, strip non-alphanumeric
     const headers = records[0].map((h: string) =>
       h.toLowerCase().trim().replace(/\s+/g, "_").replace(/[^a-z0-9_]/g, "")
     );
-    const rows = [];
+
+    // ── Parse all raw rows ──────────────────────────────────────────────────
+    type RawRow = {
+      name: string; email: string; position: string | null;
+      company: string | null; linkedin: string | null; country: string;
+      industry: string; keywords: string; description: string;
+    };
+    const rawRows: RawRow[] = [];
 
     for (let i = 1; i < records.length; i++) {
       const values = records[i];
@@ -152,42 +159,66 @@ export async function POST(req: NextRequest) {
         ([row["first_name"], row["last_name"]].filter(Boolean).join(" ")) || "";
       if (!email || !name) continue;
 
-      const keywords = row["keywords"] || row["company_keywords"] || "";
-      const description = row["company_short_description"] || row["company_seo_description"] || row["description"] || "";
-      const industry = row["industry"] || "";
-      const searchText = `${keywords} ${description} ${industry}`;
-
-      // Category: always use the forced vertical if provided
-      const category = vertical || row["category"] || industry || null;
-
-      // Subcategory: auto-detect from keywords for the chosen vertical
-      const subcategory = row["subcategory"] || detectSubcategory(category || "", searchText);
-
-      // Apollo-specific column names (after header normalisation)
-      const position = row["title"] || row["position"] || row["job_title"] || row["role"] || row["headline"] || null;
-      const company = row["company_name"] || row["company"] || row["brand"] || row["organisation"] || null;
-      const linkedin = row["linkedin"] || row["linkedin_url"] || row["linkedin_profile"] || null;
-      // Apollo country is "company_country" or "country"
-      const country = row["company_country"] || row["country"] || "UK";
-
-      rows.push({
+      rawRows.push({
         name,
         email: email.toLowerCase(),
-        position: position?.trim() || null,
-        company: company?.trim() || null,
-        linkedin: linkedin?.trim() || null,
-        notes: row["notes"] || null,
-        category,
-        subcategory,
-        country,
+        position: row["title"] || row["position"] || row["job_title"] || row["role"] || row["headline"] || null,
+        company: (row["company_name"] || row["company"] || row["brand"] || row["organisation"] || "").trim() || null,
+        linkedin: row["linkedin"] || row["linkedin_url"] || row["linkedin_profile"] || null,
+        country: row["company_country"] || row["country"] || "UK",
+        industry: row["industry"] || "",
+        keywords: row["keywords"] || row["company_keywords"] || "",
+        description: row["company_short_description"] || row["company_seo_description"] || row["description"] || "",
       });
     }
 
-    if (rows.length === 0) return NextResponse.json({ error: "No valid rows found" }, { status: 400 });
+    if (rawRows.length === 0) return NextResponse.json({ error: "No valid rows found" }, { status: 400 });
+
+    // ── AI classification — deduplicate by company name ────────────────────
+    const companyMap = new Map<string, { name: string; industry: string; keywords: string; description: string }>();
+    for (const r of rawRows) {
+      if (r.company) {
+        const key = r.company.toLowerCase();
+        if (!companyMap.has(key)) {
+          companyMap.set(key, { name: r.company, industry: r.industry, keywords: r.keywords, description: r.description });
+        }
+      }
+    }
+
+    const uniqueCompanies = Array.from(companyMap.values());
+    const classifications: Record<string, { categories: string[]; subcategories: string[]; primary_category: string; primary_subcategory: string }> = {};
+
+    // Process in batches of 20 to keep prompts manageable
+    const batches = chunk(uniqueCompanies, 20);
+    for (const batch of batches) {
+      const result = await classifyCompanies(batch, vertical);
+      Object.assign(classifications, result);
+    }
+
+    // ── Build final rows using AI classifications ──────────────────────────
+    const rows = rawRows.map(r => {
+      const key = r.company?.toLowerCase() ?? "";
+      const cls = classifications[key];
+      return {
+        name: r.name,
+        email: r.email,
+        position: r.position?.trim() || null,
+        company: r.company,
+        linkedin: r.linkedin?.trim() || null,
+        notes: null,
+        // Primary category/subcategory for backwards compat
+        category: cls?.primary_category ?? vertical ?? r.industry ?? null,
+        subcategory: cls?.primary_subcategory ?? "Other",
+        // Full multi-value arrays
+        categories: cls?.categories ?? (vertical ? [vertical] : []),
+        subcategories: cls?.subcategories ?? ["Other"],
+        country: r.country,
+      };
+    });
 
     const { error } = await db.from("uploaded_contacts").insert(rows);
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-    return NextResponse.json({ inserted: rows.length });
+    return NextResponse.json({ inserted: rows.length, classified: uniqueCompanies.length });
   }
 
   return NextResponse.json({ error: "Provide contact or csv" }, { status: 400 });

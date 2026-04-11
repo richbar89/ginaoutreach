@@ -16,6 +16,8 @@ type ContactRow = {
   linkedin: string | null;
   category: string | null;
   subcategory: string | null;
+  subcategories: string[] | null;
+  categories: string[] | null;
   country: string | null;
 };
 
@@ -48,12 +50,18 @@ function effectiveCategory(c: ContactRow): string | null {
   return c.category; // Lifestyle, Beauty, Fitness pass through directly
 }
 
-// Specific subcategory for badge + filtering (only granular values, not Apollo industries)
+// All subcategories for a contact (new multi-value or legacy single)
+function allSubcategories(c: ContactRow): string[] {
+  if (c.subcategories && c.subcategories.length > 0) return c.subcategories;
+  if (c.subcategory) return [c.subcategory];
+  if (c.category && FOOD_SUBCATS.has(c.category)) return [c.category];
+  return [];
+}
+
+// Primary subcategory for display
 function effectiveSubcategory(c: ContactRow): string | null {
-  if (c.subcategory) return c.subcategory;
-  // Legacy: granular value was stored directly in category column
-  if (c.category && FOOD_SUBCATS.has(c.category)) return c.category;
-  return null;
+  const subs = allSubcategories(c);
+  return subs[0] ?? null;
 }
 
 // ── Vertical definitions ────────────────────────────────────────────────────
@@ -259,8 +267,9 @@ export default function ContactsPage() {
     const counts: Record<string, number> = {};
     for (const c of contacts) {
       if (effectiveCategory(c) === activeVertical) {
-        const sub = effectiveSubcategory(c);
-        if (sub) counts[sub] = (counts[sub] ?? 0) + 1;
+        for (const sub of allSubcategories(c)) {
+          counts[sub] = (counts[sub] ?? 0) + 1;
+        }
       }
     }
     return counts;
@@ -276,7 +285,7 @@ export default function ContactsPage() {
     let result = contacts;
     if (activeVertical) result = result.filter(c => effectiveCategory(c) === activeVertical);
     if (activeSubcategory) {
-      result = result.filter(c => effectiveSubcategory(c) === activeSubcategory);
+      result = result.filter(c => allSubcategories(c).includes(activeSubcategory));
     }
     if (activeCountry !== "All") result = result.filter(c => c.country === activeCountry);
     if (query.trim()) {
@@ -516,7 +525,9 @@ export default function ContactsPage() {
                   </td>
                   <td className="px-5 py-3.5">
                     <div className="flex flex-wrap items-center gap-1.5">
-                      <SubcategoryBadge subcategory={effectiveSubcategory(l)} />
+                      {allSubcategories(l).slice(0, 3).map(sub => (
+                        <SubcategoryBadge key={sub} subcategory={sub} />
+                      ))}
                       <AdBadge status={adStatuses[l.company?.toLowerCase() ?? ""]} />
                     </div>
                   </td>

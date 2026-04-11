@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
   if (email) {
     const { data, error } = await db
       .from("uploaded_contacts")
-      .select("id, name, email, position, company, linkedin, category, subcategory, country")
+      .select("id, name, email, position, company, linkedin, category, subcategory, subcategories, categories, country")
       .ilike("email", email)
       .maybeSingle();
 
@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
   // All contacts
   let query = db
     .from("uploaded_contacts")
-    .select("id, name, email, position, company, linkedin, category, subcategory, country")
+    .select("id, name, email, position, company, linkedin, category, subcategory, subcategories, categories, country")
     .order("name", { ascending: true });
 
   if (country && country !== "All") query = query.eq("country", country);
