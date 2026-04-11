@@ -35,7 +35,7 @@ function detectFoodSubcategory(text: string): string | null {
     return "Drinks";
   if (l.includes("drink") || l.includes("beverage"))
     return "Drinks";
-  return null;
+  return "Other";
 }
 
 // Auto-detect subcategory from keywords for any vertical
@@ -50,7 +50,7 @@ function detectSubcategory(vertical: string, text: string): string | null {
     if (l.includes("sustainable") || l.includes("eco") || l.includes("green") || l.includes("recycl") || l.includes("ethical")) return "Sustainability & Eco";
     if (l.includes("gift") || l.includes("occasion") || l.includes("wedding") || l.includes("celebration")) return "Gifting & Occasions";
     if (l.includes("media") || l.includes("publishing") || l.includes("magazine") || l.includes("content")) return "Media & Publishing";
-    return null;
+    return "Other";
   }
   if (vertical === "Beauty") {
     if (l.includes("skincare") || l.includes("skin care") || l.includes("moistur") || l.includes("serum") || l.includes("spf") || l.includes("sunscreen")) return "Skincare";
@@ -59,7 +59,7 @@ function detectSubcategory(vertical: string, text: string): string | null {
     if (l.includes("fragrance") || l.includes("perfume") || l.includes("cologne") || l.includes("scent")) return "Fragrance";
     if (l.includes("nail") || l.includes("manicure") || l.includes("pedicure")) return "Nails";
     if (l.includes("wellness") || l.includes("supplement") || l.includes("vitamin") || l.includes("collagen")) return "Wellness & Supplements";
-    return null;
+    return "Other";
   }
   if (vertical === "Fitness") {
     if (l.includes("activewear") || l.includes("sportswear") || l.includes("gym wear") || l.includes("legging") || l.includes("trainer")) return "Activewear & Apparel";
@@ -68,9 +68,9 @@ function detectSubcategory(vertical: string, text: string): string | null {
     if (l.includes("running") || l.includes("cycling") || l.includes("triathlon") || l.includes("marathon")) return "Running & Cycling";
     if (l.includes("gym") || l.includes("studio") || l.includes("pilates") || l.includes("yoga class") || l.includes("crossfit")) return "Gyms & Studios";
     if (l.includes("sport") || l.includes("athletic") || l.includes("football") || l.includes("rugby") || l.includes("tennis")) return "Sports Brands";
-    return null;
+    return "Other";
   }
-  return null;
+  return "Other";
 }
 
 // Single contact
