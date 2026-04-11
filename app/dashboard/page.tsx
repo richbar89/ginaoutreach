@@ -166,7 +166,7 @@ export default function DashboardPage() {
   const showChecklist = !checklistDismissed && !allChecklistDone;
 
   return (
-    <div className="h-full flex flex-col overflow-hidden" style={{ background: "var(--blush)" }}>
+    <div className="h-full flex flex-col overflow-hidden" style={{ background: "#F7F8FA" }}>
 
       {/* Email not connected banner */}
       {emailConnected === null && (

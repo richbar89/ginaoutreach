@@ -47,7 +47,7 @@ export default function AdminPage() {
   ];
 
   return (
-    <div className="h-full flex flex-col overflow-y-auto p-8" style={{ background: "var(--blush)" }}>
+    <div className="h-full flex flex-col overflow-y-auto p-8" style={{ background: "#F7F8FA" }}>
       <div className="mb-8">
         <p className="text-[11px] font-bold uppercase tracking-widest text-navy-400 mb-1">Admin</p>
         <h1 className="text-3xl font-black tracking-tight text-navy-900">Dashboard</h1>

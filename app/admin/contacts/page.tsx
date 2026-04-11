@@ -116,7 +116,7 @@ export default function AdminContactsPage() {
   );
 
   return (
-    <div className="h-full flex flex-col overflow-y-auto p-8" style={{ background: "var(--blush)" }}>
+    <div className="h-full flex flex-col overflow-y-auto p-8" style={{ background: "#F7F8FA" }}>
       <div className="flex items-center gap-3 mb-6">
         <Link href="/admin" className="text-navy-400 hover:text-navy-700"><ArrowLeft size={18} /></Link>
         <div>

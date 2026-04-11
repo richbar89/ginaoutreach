@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,9 +6,9 @@
 
 :root {
   --orange:   #E8622A;
-  --blush:    #F0F5F8;
+  --blush:    #F7F8FA;
   --border:   #E5E7EB;
-  --text:     #111111;
+  --text:     #0D1B2A;
   --muted:    #6B7280;
   --sidebar:  #FFFFFF;
 }
@@ -18,15 +18,14 @@
 }
 
 body {
-  font-family: 'Urbanist', system-ui, sans-serif;
+  font-family: 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
-  background: linear-gradient(170deg, #9BBFCF 0%, #B5D2DF 20%, #CBE0E9 42%, #DDE9EE 62%, #EBF1F3 80%, #F2F5F3 100%);
-  background-attachment: fixed;
+  background: #EDEEF2;
   color: var(--text);
 }
 
 h1, h2, h3 {
-  font-family: 'Urbanist', system-ui, sans-serif;
+  font-family: 'Inter', system-ui, sans-serif;
   letter-spacing: -0.03em;
   font-weight: 700;
 }
@@ -34,26 +33,26 @@ h1, h2, h3 {
 @layer utilities {
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: #F7A882 transparent;
+    scrollbar-color: #E5E7EB transparent;
   }
 
   .font-display {
-    font-family: 'Urbanist', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
   }
 
   .input-base {
-    @apply w-full px-4 py-2.5 bg-white border border-navy-200 rounded-2xl text-sm text-navy-800
-           placeholder:text-navy-400 focus:outline-none focus:ring-2 focus:ring-coral-300/50
-           focus:border-coral-400 transition font-sans;
+    @apply w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-900
+           placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-300/40
+           focus:border-orange-400 transition;
   }
 
   .btn-primary {
-    @apply inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600
-           disabled:bg-navy-100 disabled:text-navy-400 text-white text-sm font-semibold
-           rounded-2xl transition-colors font-sans;
+    @apply inline-flex items-center gap-2 px-5 py-2.5 bg-[#E8622A] hover:bg-[#d45520]
+           disabled:opacity-40 text-white text-sm font-semibold
+           rounded-xl transition-colors;
   }
 
   .card {
-    @apply bg-white border border-navy-200 rounded-3xl shadow-sm;
+    @apply bg-white border border-gray-100 rounded-2xl shadow-sm;
   }
 }

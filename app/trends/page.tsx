@@ -64,7 +64,7 @@ function fmt(n: number) {
 function scoreStyle(score: number) {
   if (score > 65) return { bg: "#FEF2F2", text: "#B91C1C", border: "#FECACA" };
   if (score >= 50) return { bg: "#FFFBEB", text: "#92400E", border: "#FDE68A" };
-  return { bg: "var(--blush)", text: "#505D44", border: "var(--border)" };
+  return { bg: '#F7F8FA', text: "#505D44", border: "var(--border)" };
 }
 
 // ── Component ────────────────────────────────────────────────
@@ -239,7 +239,7 @@ export default function TrendsPage() {
   // ── Render ────────────────────────────────────────────────
 
   return (
-    <div className="h-full flex flex-col overflow-hidden" style={{ background: "var(--blush)" }}>
+    <div className="h-full flex flex-col overflow-hidden" style={{ background: '#F7F8FA' }}>
 
       {/* ── Header ── */}
       <div
@@ -593,7 +593,7 @@ export default function TrendsPage() {
               {/* Score breakdown */}
               <div
                 className="rounded-xl p-4 space-y-2.5"
-                style={{ background: "var(--blush)", border: "1px solid var(--border)" }}
+                style={{ background: '#F7F8FA', border: "1px solid var(--border)" }}
               >
                 <p className="text-[10px] font-black uppercase tracking-widest text-navy-400 mb-1">
                   Viral Score Breakdown
@@ -636,7 +636,7 @@ export default function TrendsPage() {
                   <div
                     key={label}
                     className="rounded-xl p-3 text-center border"
-                    style={{ background: "var(--blush)", borderColor: "var(--border)" }}
+                    style={{ background: '#F7F8FA', borderColor: "var(--border)" }}
                   >
                     <Icon size={13} className="text-navy-400 mx-auto mb-1.5" />
                     <p className="text-base font-black text-navy-900 leading-none">{value}</p>
@@ -669,7 +669,7 @@ export default function TrendsPage() {
                   </p>
                   <p
                     className="text-xs text-navy-700 leading-relaxed rounded-xl p-3 whitespace-pre-wrap border"
-                    style={{ background: "var(--blush)", borderColor: "var(--border)" }}
+                    style={{ background: '#F7F8FA', borderColor: "var(--border)" }}
                   >
                     {selectedPost.caption}
                   </p>

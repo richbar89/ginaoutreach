@@ -69,7 +69,7 @@ export default function AdminAnnouncementsPage() {
   };
 
   return (
-    <div className="h-full flex flex-col overflow-y-auto p-8" style={{ background: "var(--blush)" }}>
+    <div className="h-full flex flex-col overflow-y-auto p-8" style={{ background: "#F7F8FA" }}>
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <Link href="/admin" className="text-navy-400 hover:text-navy-700"><ArrowLeft size={18} /></Link>

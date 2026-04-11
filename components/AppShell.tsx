@@ -26,32 +26,25 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const isApp = APP_ROUTES.some((r) => pathname === r || pathname.startsWith(r + "/"));
   const isOnboarding = pathname.startsWith("/onboarding");
 
-  if (!isApp) {
-    // Public pages (landing, sign-in, sign-up) — no chrome
-    return <>{children}</>;
-  }
-
-  if (isOnboarding) {
-    // Onboarding — no sidebar, no announcement banner
-    return <>{children}</>;
-  }
+  if (!isApp) return <>{children}</>;
+  if (isOnboarding) return <>{children}</>;
 
   return (
-    <div style={{ minHeight: "100vh", padding: "20px" }}>
+    <div style={{ minHeight: "100vh", padding: "16px", background: "#EDEEF2" }}>
       <div
         className="flex overflow-hidden"
         style={{
-          height: "calc(100vh - 40px)",
-          borderRadius: "20px",
-          boxShadow:
-            "0 2px 2px rgba(0,0,0,0.04), 0 6px 12px rgba(0,0,0,0.06), 0 20px 40px rgba(0,0,0,0.10), 0 48px 72px rgba(0,0,0,0.07)",
+          height: "calc(100vh - 32px)",
+          borderRadius: "16px",
+          boxShadow: "0 1px 3px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.08), 0 32px 56px rgba(0,0,0,0.06)",
           overflow: "hidden",
+          border: "1px solid rgba(0,0,0,0.06)",
         }}
       >
         <Sidebar />
         <main
           className="flex-1 flex flex-col overflow-hidden"
-          style={{ background: "rgba(255,255,255,0.72)", backdropFilter: "blur(2px)" }}
+          style={{ background: "#F7F8FA" }}
         >
           <AnnouncementBanner />
           <div className="flex-1 overflow-y-auto">{children}</div>
