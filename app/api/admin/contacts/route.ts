@@ -73,20 +73,44 @@ export async function POST(req: NextRequest) {
   }
 
   if (csv) {
-    // CSV upload — parse lines
-    const lines = (csv as string).split("\n").map((l: string) => l.trim()).filter(Boolean);
+    // Proper CSV parser — handles quoted fields containing commas and newlines
+    function parseCsvLine(line: string): string[] {
+      const fields: string[] = [];
+      let cur = "";
+      let inQuote = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') {
+          if (inQuote && line[i + 1] === '"') { cur += '"'; i++; }
+          else inQuote = !inQuote;
+        } else if (ch === "," && !inQuote) {
+          fields.push(cur.trim());
+          cur = "";
+        } else {
+          cur += ch;
+        }
+      }
+      fields.push(cur.trim());
+      return fields;
+    }
+
+    const lines = (csv as string).split("\n").filter(l => l.trim());
     if (lines.length < 2) return NextResponse.json({ error: "CSV has no data rows" }, { status: 400 });
 
-    const headers = lines[0].split(",").map((h: string) => h.trim().toLowerCase().replace(/[^a-z_]/g, ""));
+    // Normalise headers: lowercase, spaces→underscores, strip non-alphanumeric
+    const headers = parseCsvLine(lines[0]).map((h: string) =>
+      h.toLowerCase().trim().replace(/\s+/g, "_").replace(/[^a-z0-9_]/g, "")
+    );
     const rows = [];
 
     for (let i = 1; i < lines.length; i++) {
-      const values = lines[i].split(",").map((v: string) => v.trim().replace(/^"|"$/g, ""));
+      const values = parseCsvLine(lines[i]);
       const row: Record<string, string> = {};
       headers.forEach((h: string, idx: number) => { row[h] = values[idx] || ""; });
 
-      const email = row["email"] || row["email_address"] || "";
-      const name = row["name"] || row["full_name"] || row["contact_name"] || "";
+      const email = row["email"] || row["email_address"] || row["personal_email"] || "";
+      const name = row["full_name"] || row["name"] || row["contact_name"] ||
+        ([row["first_name"], row["last_name"]].filter(Boolean).join(" ")) || "";
       if (!email || !name) continue;
 
       const industry = row["industry"] || "";
@@ -97,7 +121,7 @@ export async function POST(req: NextRequest) {
       // Determine top-level category
       let category = row["category"] || null;
       if (!category && isFoodIndustry(industry)) category = "Food & Drink";
-      if (!category && industry) category = industry; // fallback: store Apollo industry
+      if (!category && industry) category = industry;
 
       // Auto-detect subcategory from keywords if not supplied
       let subcategory = row["subcategory"] || null;
@@ -105,16 +129,23 @@ export async function POST(req: NextRequest) {
         subcategory = detectFoodSubcategory(searchText);
       }
 
+      // Apollo-specific column names (after header normalisation)
+      const position = row["title"] || row["position"] || row["job_title"] || row["role"] || row["headline"] || null;
+      const company = row["company_name"] || row["company"] || row["brand"] || row["organisation"] || null;
+      const linkedin = row["linkedin"] || row["linkedin_url"] || row["linkedin_profile"] || null;
+      // Apollo country is "company_country" or "country"
+      const country = row["company_country"] || row["country"] || "UK";
+
       rows.push({
         name,
         email: email.toLowerCase(),
-        position: row["position"] || row["job_title"] || row["title"] || row["role"] || null,
-        company: row["company"] || row["company_name"] || row["brand"] || row["organisation"] || null,
-        linkedin: row["linkedin"] || row["linkedin_url"] || row["linkedin_profile"] || null,
+        position: position?.trim() || null,
+        company: company?.trim() || null,
+        linkedin: linkedin?.trim() || null,
         notes: row["notes"] || null,
         category,
         subcategory,
-        country: row["country"] || "UK",
+        country,
       });
     }
 
