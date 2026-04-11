@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
-import { ArrowLeft, Upload, Plus, Trash2 } from "lucide-react";
+import { ArrowLeft, Upload, Plus, Trash2, Sparkles } from "lucide-react";
 
 type UploadedContact = {
   id: string;
@@ -29,6 +29,11 @@ export default function AdminContactsPage() {
   const [csvVertical, setCsvVertical] = useState("Food & Drink");
   const fileRef = useRef<HTMLInputElement>(null);
 
+  // AI classification state
+  const [classifyStatus, setClassifyStatus] = useState<null | { total: number; classified: number }>(null);
+  const [classifying, setClassifying] = useState(false);
+  const [classifyLog, setClassifyLog] = useState<string[]>([]);
+
   const [form, setForm] = useState({ name: "", email: "", position: "", company: "", linkedin: "", notes: "", category: "", subcategory: "", country: "UK" });
 
   const load = useCallback(async () => {
@@ -41,6 +46,47 @@ export default function AdminContactsPage() {
   }, []);
 
   useEffect(() => { load(); }, [load]);
+
+  const loadClassifyStatus = useCallback(async () => {
+    const res = await fetch("/api/admin/contacts/classify");
+    if (res.ok) setClassifyStatus(await res.json());
+  }, []);
+
+  useEffect(() => { loadClassifyStatus(); }, [loadClassifyStatus]);
+
+  const runClassification = async () => {
+    setClassifying(true);
+    setClassifyLog([]);
+    let done = false;
+    let total = 0;
+    let totalProcessed = 0;
+
+    while (!done) {
+      const res = await fetch("/api/admin/contacts/classify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ vertical: null }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        setClassifyLog(l => [...l, `Error: ${err.error}`]);
+        break;
+      }
+      const data = await res.json();
+      total = (data.remaining ?? 0) + totalProcessed + (data.processed ?? 0);
+      totalProcessed += data.processed ?? 0;
+      done = data.done;
+      setClassifyLog(l => [...l,
+        `Classified ${data.companies_classified ?? 0} companies (${totalProcessed} contacts updated, ${data.remaining ?? 0} remaining)`
+      ]);
+      setClassifyStatus({ total, classified: totalProcessed });
+      if (done) break;
+    }
+
+    setClassifying(false);
+    await load();
+    await loadClassifyStatus();
+  };
 
   const submitSingle = async () => {
     if (!form.name || !form.email) return;
@@ -67,7 +113,8 @@ export default function AdminContactsPage() {
       body: JSON.stringify({ csv, vertical: csvVertical }),
     });
     const data = await res.json();
-    setResult(res.ok ? `Inserted ${data.inserted} contacts (AI-classified ${data.classified ?? 0} companies).` : `Error: ${data.error}`);
+    setResult(res.ok ? `Inserted ${data.inserted} contacts. Use "Run AI Classification" to improve subcategory accuracy.` : `Error: ${data.error}`);
+    if (res.ok) await loadClassifyStatus();
     if (res.ok) await load();
     setUploading(false);
   };
@@ -131,6 +178,55 @@ export default function AdminContactsPage() {
           <h1 className="text-2xl font-black text-navy-900">Contacts</h1>
         </div>
       </div>
+
+      {/* AI Classification panel */}
+      {classifyStatus && classifyStatus.total > 0 && (
+        <div className="bg-white rounded-2xl border mb-5 p-5" style={{ borderColor: "var(--border)" }}>
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <p className="text-sm font-black text-navy-900 flex items-center gap-2">
+                <Sparkles size={14} className="text-coral-500" /> AI Classification
+              </p>
+              <p className="text-xs text-navy-400 mt-0.5">
+                {classifyStatus.classified} of {classifyStatus.total} contacts AI-classified
+                {classifyStatus.classified < classifyStatus.total && (
+                  <span className="text-amber-600 font-semibold"> — {classifyStatus.total - classifyStatus.classified} still using keyword fallback</span>
+                )}
+              </p>
+            </div>
+            {classifyStatus.classified < classifyStatus.total && (
+              <button
+                onClick={runClassification}
+                disabled={classifying}
+                className="flex items-center gap-2 px-4 py-2 bg-coral-500 text-white text-sm font-bold rounded-xl hover:bg-coral-600 disabled:opacity-50 transition-colors"
+              >
+                <Sparkles size={13} />
+                {classifying ? "Classifying…" : "Run AI Classification"}
+              </button>
+            )}
+            {classifyStatus.classified >= classifyStatus.total && (
+              <span className="text-xs font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-lg">
+                ✓ All classified
+              </span>
+            )}
+          </div>
+          {/* Progress bar */}
+          <div className="bg-gray-100 rounded-full h-1.5 overflow-hidden mb-3">
+            <div
+              className="h-full bg-coral-500 rounded-full transition-all duration-500"
+              style={{ width: `${classifyStatus.total > 0 ? (classifyStatus.classified / classifyStatus.total) * 100 : 0}%` }}
+            />
+          </div>
+          {/* Log */}
+          {classifyLog.length > 0 && (
+            <div className="bg-gray-50 rounded-xl p-3 max-h-28 overflow-y-auto">
+              {classifyLog.map((line, i) => (
+                <p key={i} className="text-xs text-navy-500 font-mono">{line}</p>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="flex gap-2 mb-5">
