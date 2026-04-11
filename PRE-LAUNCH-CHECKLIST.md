@@ -86,6 +86,16 @@ Things to complete before selling to real users.
 
 ---
 
+## App UI & Features — Backlog
+
+- [ ] **Deal Pipeline** — add drag-and-drop between stages (currently static cards)
+- [ ] **Remove Trend Monitor** — `/trends` page and sidebar link to be deleted
+- [ ] **Meta Ad Alerts** — improve the `/ads` page (better UI, more actionable data)
+- [ ] **Sidebar** — restructure into cleaner sections, easier to navigate
+- [ ] **Sidebar Outreach section** — tidy up items (review labels, order, remove clutter)
+
+---
+
 ## Pre-Launch
 
 - [ ] Send test emails from a real connected inbox to confirm deliverability
