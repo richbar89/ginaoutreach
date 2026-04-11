@@ -229,12 +229,23 @@ export async function GET() {
   if (result instanceof NextResponse) return result;
 
   const db = getSupabaseAdmin();
-  const { data } = await db
-    .from("uploaded_contacts")
-    .select("*")
-    .order("created_at", { ascending: false });
+  let allData: Record<string, unknown>[] = [];
+  const PAGE = 1000;
+  let from = 0;
 
-  return NextResponse.json(data || []);
+  while (true) {
+    const { data, error } = await db
+      .from("uploaded_contacts")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .range(from, from + PAGE - 1);
+    if (error || !data || data.length === 0) break;
+    allData = allData.concat(data);
+    if (data.length < PAGE) break;
+    from += PAGE;
+  }
+
+  return NextResponse.json(allData);
 }
 
 export async function DELETE(req: NextRequest) {

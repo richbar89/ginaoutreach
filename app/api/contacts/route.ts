@@ -23,16 +23,28 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(data);
   }
 
-  // All contacts
-  let query = db
-    .from("uploaded_contacts")
-    .select("id, name, email, position, company, linkedin, category, subcategory, subcategories, categories, country")
-    .order("name", { ascending: true });
+  // All contacts — fetch in pages to bypass Supabase's 1000-row default limit
+  let allData: Record<string, unknown>[] = [];
+  const PAGE = 1000;
+  let from = 0;
+  let keepGoing = true;
 
-  if (country && country !== "All") query = query.eq("country", country);
+  while (keepGoing) {
+    let query = db
+      .from("uploaded_contacts")
+      .select("id, name, email, position, company, linkedin, category, subcategory, subcategories, categories, country")
+      .order("name", { ascending: true })
+      .range(from, from + PAGE - 1);
 
-  const { data, error } = await query;
+    if (country && country !== "All") query = query.eq("country", country);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json(data || []);
+    const { data, error } = await query;
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (!data || data.length === 0) break;
+    allData = allData.concat(data);
+    keepGoing = data.length === PAGE;
+    from += PAGE;
+  }
+
+  return NextResponse.json(allData);
 }
