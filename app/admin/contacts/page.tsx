@@ -26,6 +26,7 @@ export default function AdminContactsPage() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [deleting, setDeleting] = useState(false);
   const [confirmDeleteAll, setConfirmDeleteAll] = useState(false);
+  const [csvVertical, setCsvVertical] = useState("Food & Drink");
   const fileRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState({ name: "", email: "", position: "", company: "", linkedin: "", notes: "", category: "", subcategory: "", country: "UK" });
@@ -63,7 +64,7 @@ export default function AdminContactsPage() {
     const res = await fetch("/api/admin/contacts", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ csv }),
+      body: JSON.stringify({ csv, vertical: csvVertical }),
     });
     const data = await res.json();
     setResult(res.ok ? `Inserted ${data.inserted} contacts.` : `Error: ${data.error}`);
@@ -183,17 +184,41 @@ export default function AdminContactsPage() {
       {/* CSV upload */}
       {tab === "csv" && (
         <div className="bg-white rounded-2xl border p-5" style={{ borderColor: "var(--border)" }}>
-          <p className="text-sm text-navy-500 mb-2">
-            CSV must include <span className="font-bold">name</span> and <span className="font-bold">email</span> columns.
-          </p>
-          <p className="text-xs text-navy-400 mb-4">
-            Optional: <code className="bg-gray-100 px-1 rounded">position</code> <code className="bg-gray-100 px-1 rounded">company</code> <code className="bg-gray-100 px-1 rounded">linkedin</code> <code className="bg-gray-100 px-1 rounded">category</code> <code className="bg-gray-100 px-1 rounded">subcategory</code> <code className="bg-gray-100 px-1 rounded">country</code> <code className="bg-gray-100 px-1 rounded">notes</code>
-            <br />Apollo exports are supported — subcategories are auto-detected from the <code className="bg-gray-100 px-1 rounded">Keywords</code> column.
-          </p>
+          <p className="text-sm font-semibold text-navy-700 mb-4">Apollo export supported. Must include <span className="text-coral-600">name</span> and <span className="text-coral-600">email</span> columns.</p>
+
+          {/* Vertical selector */}
+          <div className="mb-5">
+            <label className="text-xs font-black text-navy-500 uppercase tracking-widest mb-2 block">Which vertical is this CSV for? *</label>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              {[
+                { key: "Food & Drink", label: "Foodies", emoji: "🍔" },
+                { key: "Lifestyle",    label: "Lifestyle", emoji: "✨" },
+                { key: "Beauty",       label: "Beauty",    emoji: "💄" },
+                { key: "Fitness",      label: "Fitness",   emoji: "💪" },
+              ].map(v => (
+                <button
+                  key={v.key}
+                  type="button"
+                  onClick={() => setCsvVertical(v.key)}
+                  className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border-2 text-sm font-bold transition-all ${
+                    csvVertical === v.key
+                      ? "border-coral-500 bg-coral-50 text-coral-700"
+                      : "border-gray-200 bg-white text-navy-600 hover:border-coral-300"
+                  }`}
+                >
+                  <span>{v.emoji}</span> {v.label}
+                </button>
+              ))}
+            </div>
+            <p className="text-xs text-navy-400 mt-2">
+              Every contact in this CSV will be tagged as <span className="font-semibold text-navy-600">{csvVertical}</span>. Subcategories are auto-detected from the Keywords column.
+            </p>
+          </div>
+
           <input ref={fileRef} type="file" accept=".csv" className="mb-4 text-sm text-navy-600" />
           {result && <p className={`text-sm font-semibold mb-3 ${result.startsWith("Error") ? "text-red-500" : "text-emerald-600"}`}>{result}</p>}
           <button onClick={submitCsv} disabled={uploading} className="flex items-center gap-2 px-4 py-2 bg-coral-500 text-white text-sm font-bold rounded-xl hover:bg-coral-600 disabled:opacity-50">
-            <Upload size={14} /> {uploading ? "Uploading…" : "Upload CSV"}
+            <Upload size={14} /> {uploading ? "Uploading…" : `Upload as ${csvVertical}`}
           </button>
         </div>
       )}

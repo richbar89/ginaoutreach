@@ -38,10 +38,39 @@ function detectFoodSubcategory(text: string): string | null {
   return null;
 }
 
-function isFoodIndustry(industry: string): boolean {
-  const l = industry.toLowerCase();
-  return l.includes("food") || l.includes("beverage") || l.includes("drink")
-    || l.includes("restaurant") || l.includes("bakery") || l.includes("dairy");
+// Auto-detect subcategory from keywords for any vertical
+function detectSubcategory(vertical: string, text: string): string | null {
+  const l = text.toLowerCase();
+  if (vertical === "Food & Drink") return detectFoodSubcategory(text);
+  if (vertical === "Lifestyle") {
+    if (l.includes("fashion") || l.includes("clothing") || l.includes("apparel") || l.includes("wear") || l.includes("style") || l.includes("textile")) return "Fashion & Clothing";
+    if (l.includes("home") || l.includes("interior") || l.includes("furniture") || l.includes("decor") || l.includes("living")) return "Home & Interiors";
+    if (l.includes("travel") || l.includes("tourism") || l.includes("hotel") || l.includes("holiday") || l.includes("flight")) return "Travel & Tourism";
+    if (l.includes("pet") || l.includes("dog") || l.includes("cat") || l.includes("animal")) return "Pets";
+    if (l.includes("sustainable") || l.includes("eco") || l.includes("green") || l.includes("recycl") || l.includes("ethical")) return "Sustainability & Eco";
+    if (l.includes("gift") || l.includes("occasion") || l.includes("wedding") || l.includes("celebration")) return "Gifting & Occasions";
+    if (l.includes("media") || l.includes("publishing") || l.includes("magazine") || l.includes("content")) return "Media & Publishing";
+    return null;
+  }
+  if (vertical === "Beauty") {
+    if (l.includes("skincare") || l.includes("skin care") || l.includes("moistur") || l.includes("serum") || l.includes("spf") || l.includes("sunscreen")) return "Skincare";
+    if (l.includes("makeup") || l.includes("cosmetic") || l.includes("foundation") || l.includes("lipstick") || l.includes("mascara") || l.includes("eyeshadow")) return "Makeup & Cosmetics";
+    if (l.includes("hair") || l.includes("shampoo") || l.includes("conditioner") || l.includes("salon")) return "Haircare";
+    if (l.includes("fragrance") || l.includes("perfume") || l.includes("cologne") || l.includes("scent")) return "Fragrance";
+    if (l.includes("nail") || l.includes("manicure") || l.includes("pedicure")) return "Nails";
+    if (l.includes("wellness") || l.includes("supplement") || l.includes("vitamin") || l.includes("collagen")) return "Wellness & Supplements";
+    return null;
+  }
+  if (vertical === "Fitness") {
+    if (l.includes("activewear") || l.includes("sportswear") || l.includes("gym wear") || l.includes("legging") || l.includes("trainer")) return "Activewear & Apparel";
+    if (l.includes("supplement") || l.includes("protein") || l.includes("creatine") || l.includes("pre-workout") || l.includes("nutrition")) return "Supplements & Nutrition";
+    if (l.includes("equipment") || l.includes("dumbbell") || l.includes("barbell") || l.includes("treadmill") || l.includes("gear")) return "Equipment & Gear";
+    if (l.includes("running") || l.includes("cycling") || l.includes("triathlon") || l.includes("marathon")) return "Running & Cycling";
+    if (l.includes("gym") || l.includes("studio") || l.includes("pilates") || l.includes("yoga class") || l.includes("crossfit")) return "Gyms & Studios";
+    if (l.includes("sport") || l.includes("athletic") || l.includes("football") || l.includes("rugby") || l.includes("tennis")) return "Sports Brands";
+    return null;
+  }
+  return null;
 }
 
 // Single contact
@@ -49,7 +78,7 @@ export async function POST(req: NextRequest) {
   const result = await requireAdmin();
   if (result instanceof NextResponse) return result;
 
-  const { csv, contact } = await req.json();
+  const { csv, contact, vertical } = await req.json();
   const db = getSupabaseAdmin();
 
   if (contact) {
@@ -123,21 +152,16 @@ export async function POST(req: NextRequest) {
         ([row["first_name"], row["last_name"]].filter(Boolean).join(" ")) || "";
       if (!email || !name) continue;
 
-      const industry = row["industry"] || "";
       const keywords = row["keywords"] || row["company_keywords"] || "";
       const description = row["company_short_description"] || row["company_seo_description"] || row["description"] || "";
+      const industry = row["industry"] || "";
       const searchText = `${keywords} ${description} ${industry}`;
 
-      // Determine top-level category
-      let category = row["category"] || null;
-      if (!category && isFoodIndustry(industry)) category = "Food & Drink";
-      if (!category && industry) category = industry;
+      // Category: always use the forced vertical if provided
+      const category = vertical || row["category"] || industry || null;
 
-      // Auto-detect subcategory from keywords if not supplied
-      let subcategory = row["subcategory"] || null;
-      if (!subcategory && isFoodIndustry(industry)) {
-        subcategory = detectFoodSubcategory(searchText);
-      }
+      // Subcategory: auto-detect from keywords for the chosen vertical
+      const subcategory = row["subcategory"] || detectSubcategory(category || "", searchText);
 
       // Apollo-specific column names (after header normalisation)
       const position = row["title"] || row["position"] || row["job_title"] || row["role"] || row["headline"] || null;
