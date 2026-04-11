@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { ArrowLeft, Upload, Plus, Trash2 } from "lucide-react";
+
 type UploadedContact = {
   id: string;
   name: string;
@@ -16,16 +17,17 @@ type UploadedContact = {
   created_at: string;
 };
 
-
 export default function AdminContactsPage() {
   const [contacts, setContacts] = useState<UploadedContact[]>([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<"list" | "single" | "csv">("list");
   const [uploading, setUploading] = useState(false);
   const [result, setResult] = useState<string | null>(null);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [deleting, setDeleting] = useState(false);
+  const [confirmDeleteAll, setConfirmDeleteAll] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  // Single contact form
   const [form, setForm] = useState({ name: "", email: "", position: "", company: "", linkedin: "", notes: "", category: "", subcategory: "", country: "UK" });
 
   const load = useCallback(async () => {
@@ -33,6 +35,7 @@ export default function AdminContactsPage() {
     const res = await fetch("/api/admin/contacts");
     const data = await res.json();
     setContacts(Array.isArray(data) ? data : []);
+    setSelected(new Set());
     setLoading(false);
   }, []);
 
@@ -69,13 +72,30 @@ export default function AdminContactsPage() {
   };
 
   const deleteContact = async (id: string) => {
-    await fetch("/api/admin/contacts", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id }),
-    });
+    await fetch("/api/admin/contacts", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) });
     setContacts(prev => prev.filter(c => c.id !== id));
+    setSelected(prev => { const s = new Set(prev); s.delete(id); return s; });
   };
+
+  const deleteSelected = async () => {
+    if (selected.size === 0) return;
+    setDeleting(true);
+    await Promise.all([...selected].map(id =>
+      fetch("/api/admin/contacts", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) })
+    ));
+    setContacts(prev => prev.filter(c => !selected.has(c.id)));
+    setSelected(new Set());
+    setDeleting(false);
+    setConfirmDeleteAll(false);
+  };
+
+  const allSelected = contacts.length > 0 && selected.size === contacts.length;
+  const toggleAll = () => setSelected(allSelected ? new Set() : new Set(contacts.map(c => c.id)));
+  const toggleOne = (id: string) => setSelected(prev => {
+    const s = new Set(prev);
+    s.has(id) ? s.delete(id) : s.add(id);
+    return s;
+  });
 
   const field = (key: keyof typeof form, label: string, type = "text") => (
     <div>
@@ -132,31 +152,15 @@ export default function AdminContactsPage() {
           <div className="grid grid-cols-3 gap-3 mb-4">
             <div>
               <label className="text-xs font-bold text-navy-500 mb-1 block">Category</label>
-              <input
-                type="text"
-                value={form.category}
-                onChange={e => setForm(p => ({ ...p, category: e.target.value }))}
-                placeholder="e.g. Food & Drink"
-                className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2 outline-none focus:border-coral-300"
-              />
+              <input type="text" value={form.category} onChange={e => setForm(p => ({ ...p, category: e.target.value }))} placeholder="e.g. Food & Drink" className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2 outline-none focus:border-coral-300" />
             </div>
             <div>
               <label className="text-xs font-bold text-navy-500 mb-1 block">Subcategory</label>
-              <input
-                type="text"
-                value={form.subcategory}
-                onChange={e => setForm(p => ({ ...p, subcategory: e.target.value }))}
-                placeholder="e.g. Snacks"
-                className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2 outline-none focus:border-coral-300"
-              />
+              <input type="text" value={form.subcategory} onChange={e => setForm(p => ({ ...p, subcategory: e.target.value }))} placeholder="e.g. Snacks" className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2 outline-none focus:border-coral-300" />
             </div>
             <div>
               <label className="text-xs font-bold text-navy-500 mb-1 block">Country</label>
-              <select
-                value={form.country}
-                onChange={e => setForm(p => ({ ...p, country: e.target.value }))}
-                className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2"
-              >
+              <select value={form.country} onChange={e => setForm(p => ({ ...p, country: e.target.value }))} className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2">
                 <option value="UK">UK</option>
                 <option value="US">US</option>
                 <option value="Global">Global</option>
@@ -165,11 +169,7 @@ export default function AdminContactsPage() {
             </div>
           </div>
           {result && <p className={`text-sm font-semibold mb-3 ${result.startsWith("Error") ? "text-red-500" : "text-emerald-600"}`}>{result}</p>}
-          <button
-            onClick={submitSingle}
-            disabled={uploading || !form.name || !form.email}
-            className="flex items-center gap-2 px-4 py-2 bg-coral-500 text-white text-sm font-bold rounded-xl hover:bg-coral-600 disabled:opacity-50"
-          >
+          <button onClick={submitSingle} disabled={uploading || !form.name || !form.email} className="flex items-center gap-2 px-4 py-2 bg-coral-500 text-white text-sm font-bold rounded-xl hover:bg-coral-600 disabled:opacity-50">
             <Plus size={14} /> {uploading ? "Adding…" : "Add Contact"}
           </button>
         </div>
@@ -182,15 +182,12 @@ export default function AdminContactsPage() {
             CSV must include <span className="font-bold">name</span> and <span className="font-bold">email</span> columns.
           </p>
           <p className="text-xs text-navy-400 mb-4">
-            Optional columns: <code className="bg-gray-100 px-1 rounded">position</code> <code className="bg-gray-100 px-1 rounded">company</code> <code className="bg-gray-100 px-1 rounded">linkedin</code> <code className="bg-gray-100 px-1 rounded">category</code> <code className="bg-gray-100 px-1 rounded">subcategory</code> <code className="bg-gray-100 px-1 rounded">country</code> <code className="bg-gray-100 px-1 rounded">notes</code>
+            Optional: <code className="bg-gray-100 px-1 rounded">position</code> <code className="bg-gray-100 px-1 rounded">company</code> <code className="bg-gray-100 px-1 rounded">linkedin</code> <code className="bg-gray-100 px-1 rounded">category</code> <code className="bg-gray-100 px-1 rounded">subcategory</code> <code className="bg-gray-100 px-1 rounded">country</code> <code className="bg-gray-100 px-1 rounded">notes</code>
+            <br />Apollo exports are supported — subcategories are auto-detected from the <code className="bg-gray-100 px-1 rounded">Keywords</code> column.
           </p>
           <input ref={fileRef} type="file" accept=".csv" className="mb-4 text-sm text-navy-600" />
           {result && <p className={`text-sm font-semibold mb-3 ${result.startsWith("Error") ? "text-red-500" : "text-emerald-600"}`}>{result}</p>}
-          <button
-            onClick={submitCsv}
-            disabled={uploading}
-            className="flex items-center gap-2 px-4 py-2 bg-coral-500 text-white text-sm font-bold rounded-xl hover:bg-coral-600 disabled:opacity-50"
-          >
+          <button onClick={submitCsv} disabled={uploading} className="flex items-center gap-2 px-4 py-2 bg-coral-500 text-white text-sm font-bold rounded-xl hover:bg-coral-600 disabled:opacity-50">
             <Upload size={14} /> {uploading ? "Uploading…" : "Upload CSV"}
           </button>
         </div>
@@ -203,33 +200,84 @@ export default function AdminContactsPage() {
         ) : contacts.length === 0 ? (
           <div className="text-center text-navy-400 text-sm py-10">No contacts uploaded yet.</div>
         ) : (
-          <div className="bg-white rounded-2xl border overflow-hidden" style={{ borderColor: "var(--border)" }}>
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b" style={{ borderColor: "var(--border)" }}>
-                  {["Name", "Email", "Company", "Category", "Country", ""].map(h => (
-                    <th key={h} className="text-left px-4 py-3 text-[11px] font-black uppercase tracking-widest text-navy-400">{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {contacts.map(c => (
-                  <tr key={c.id} className="border-b last:border-0 hover:bg-navy-50/30 transition-colors" style={{ borderColor: "var(--border)" }}>
-                    <td className="px-4 py-3 font-semibold text-navy-900">{c.name}</td>
-                    <td className="px-4 py-3 text-navy-500">{c.email}</td>
-                    <td className="px-4 py-3 text-navy-400">{c.company || "—"}</td>
-                    <td className="px-4 py-3 text-navy-400">{c.category || "—"}{c.subcategory ? ` / ${c.subcategory}` : ""}</td>
-                    <td className="px-4 py-3 text-navy-400">{c.country || "UK"}</td>
-                    <td className="px-4 py-3">
-                      <button onClick={() => deleteContact(c.id)} className="text-red-400 hover:text-red-600">
-                        <Trash2 size={14} />
+          <>
+            {/* Bulk action bar */}
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-xs text-navy-400">
+                {selected.size > 0 ? <span className="font-semibold text-navy-700">{selected.size} selected</span> : `${contacts.length} contacts`}
+              </p>
+              <div className="flex items-center gap-2">
+                {selected.size > 0 && (
+                  confirmDeleteAll ? (
+                    <>
+                      <span className="text-xs text-red-600 font-semibold">Delete {selected.size} contact{selected.size !== 1 ? "s" : ""}?</span>
+                      <button onClick={deleteSelected} disabled={deleting} className="px-3 py-1.5 bg-red-500 text-white text-xs font-bold rounded-lg hover:bg-red-600 disabled:opacity-50">
+                        {deleting ? "Deleting…" : "Yes, delete"}
                       </button>
-                    </td>
+                      <button onClick={() => setConfirmDeleteAll(false)} className="px-3 py-1.5 bg-gray-100 text-navy-600 text-xs font-bold rounded-lg hover:bg-gray-200">
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <button onClick={() => setConfirmDeleteAll(true)} className="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 border border-red-200 text-red-600 text-xs font-bold rounded-lg hover:bg-red-100">
+                      <Trash2 size={12} /> Delete {selected.size === contacts.length ? "all" : `${selected.size} selected`}
+                    </button>
+                  )
+                )}
+              </div>
+            </div>
+
+            <div className="bg-white rounded-2xl border overflow-hidden" style={{ borderColor: "var(--border)" }}>
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b" style={{ borderColor: "var(--border)" }}>
+                    <th className="px-4 py-3 w-10">
+                      <input
+                        type="checkbox"
+                        checked={allSelected}
+                        onChange={toggleAll}
+                        className="rounded border-gray-300 accent-coral-500 cursor-pointer"
+                      />
+                    </th>
+                    {["Name", "Email", "Company", "Category / Sub", "Country", ""].map(h => (
+                      <th key={h} className="text-left px-4 py-3 text-[11px] font-black uppercase tracking-widest text-navy-400">{h}</th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {contacts.map(c => (
+                    <tr
+                      key={c.id}
+                      className={`border-b last:border-0 transition-colors ${selected.has(c.id) ? "bg-coral-50" : "hover:bg-navy-50/30"}`}
+                      style={{ borderColor: "var(--border)" }}
+                    >
+                      <td className="px-4 py-3">
+                        <input
+                          type="checkbox"
+                          checked={selected.has(c.id)}
+                          onChange={() => toggleOne(c.id)}
+                          className="rounded border-gray-300 accent-coral-500 cursor-pointer"
+                        />
+                      </td>
+                      <td className="px-4 py-3 font-semibold text-navy-900">{c.name}</td>
+                      <td className="px-4 py-3 text-navy-500">{c.email}</td>
+                      <td className="px-4 py-3 text-navy-400">{c.company || "—"}</td>
+                      <td className="px-4 py-3 text-navy-400">
+                        {c.category || "—"}
+                        {c.subcategory && <span className="text-navy-300"> / {c.subcategory}</span>}
+                      </td>
+                      <td className="px-4 py-3 text-navy-400">{c.country || "UK"}</td>
+                      <td className="px-4 py-3">
+                        <button onClick={() => deleteContact(c.id)} className="text-red-300 hover:text-red-600 transition-colors">
+                          <Trash2 size={14} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )
       )}
     </div>
