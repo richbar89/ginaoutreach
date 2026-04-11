@@ -276,9 +276,7 @@ export default function ContactsPage() {
     let result = contacts;
     if (activeVertical) result = result.filter(c => effectiveCategory(c) === activeVertical);
     if (activeSubcategory) {
-      const withSub = result.filter(c => effectiveSubcategory(c) === activeSubcategory);
-      // If we have contacts with that exact subcategory, show them; otherwise show all in vertical
-      result = withSub.length > 0 ? withSub : result;
+      result = result.filter(c => effectiveSubcategory(c) === activeSubcategory);
     }
     if (activeCountry !== "All") result = result.filter(c => c.country === activeCountry);
     if (query.trim()) {
@@ -472,9 +470,18 @@ export default function ContactsPage() {
           <div className="px-6 py-16 text-center text-sm text-navy-300">Loading contacts…</div>
         ) : filtered.length === 0 ? (
           <div className="px-6 py-16 text-center">
-            <p className="text-sm text-navy-300 mb-2">No contacts match your search.</p>
-            {activeVertical && verticalCounts[activeVertical] === 0 && (
-              <p className="text-xs text-navy-200">This category is coming soon — check back shortly.</p>
+            {activeSubcategory ? (
+              <>
+                <p className="text-sm font-semibold text-navy-500 mb-1">No contacts tagged as &ldquo;{activeSubcategory}&rdquo; yet.</p>
+                <p className="text-xs text-navy-300 mb-3">Subcategory tagging is added on import — all {activeVerticalDef?.label} contacts are available above.</p>
+                <button onClick={() => setActiveSubcategory(null)} className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-cream-200 text-navy-500 hover:border-coral-300 transition-colors">
+                  Show all {activeVerticalDef?.label} →
+                </button>
+              </>
+            ) : activeVertical && verticalCounts[activeVertical] === 0 ? (
+              <p className="text-sm text-navy-300">This category is coming soon — check back shortly.</p>
+            ) : (
+              <p className="text-sm text-navy-300">No contacts match your search.</p>
             )}
           </div>
         ) : (
