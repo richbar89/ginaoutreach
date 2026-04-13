@@ -107,7 +107,8 @@ function DealModal({
 
 export default function PipelinePage() {
   const getDb = useDb();
-  const { userId } = useAuth();
+  const { userId: clerkUserId } = useAuth();
+  const userId = clerkUserId ?? undefined;
   const [deals, setDeals] = useState<Deal[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<Deal | "new" | null>(null);
