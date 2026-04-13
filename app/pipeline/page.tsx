@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Plus, Trash2, X, Check, Pencil, TrendingUp, Loader2 } from "lucide-react";
 import { useDb } from "@/lib/useDb";
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 import { dbGetDeals, dbUpsertDeal, dbDeleteDeal } from "@/lib/db";
 import type { Deal, DealStatus } from "@/lib/types";
 import InitialsAvatar from "@/components/InitialsAvatar";
@@ -107,8 +107,7 @@ function DealModal({
 
 export default function PipelinePage() {
   const getDb = useDb();
-  const { user } = useUser();
-  const userId = user?.id;
+  const { userId } = useAuth();
   const [deals, setDeals] = useState<Deal[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<Deal | "new" | null>(null);
