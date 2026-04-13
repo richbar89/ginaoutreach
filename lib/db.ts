@@ -92,17 +92,19 @@ function rowToEmailRecord(r: Record<string, unknown>): EmailRecord {
 // ── Deals ───────────────────────────────────────────────────
 
 export async function dbGetDeals(db: DB): Promise<Deal[]> {
-  const { data } = await db
+  const { data, error } = await db
     .from("deals")
     .select("*")
     .order("created_at", { ascending: false });
+  if (error) throw new Error(error.message);
   return (data || []).map(rowToDeal);
 }
 
 export async function dbUpsertDeal(db: DB, deal: Deal, userId?: string): Promise<void> {
-  await db.from("deals").upsert({
+  if (!userId) throw new Error("userId is required to save a deal");
+  const { error } = await db.from("deals").upsert({
     id: deal.id,
-    ...(userId ? { user_id: userId } : {}),
+    user_id: userId,
     contact_email: deal.contactEmail,
     contact_name: deal.contactName,
     company: deal.company,
@@ -112,6 +114,7 @@ export async function dbUpsertDeal(db: DB, deal: Deal, userId?: string): Promise
     created_at: deal.createdAt,
     updated_at: new Date().toISOString(),
   });
+  if (error) throw new Error(error.message);
 }
 
 export async function dbDeleteDeal(db: DB, id: string): Promise<void> {

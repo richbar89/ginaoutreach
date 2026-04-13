@@ -111,6 +111,7 @@ export default function PipelinePage() {
   const userId = clerkUserId ?? undefined;
   const [deals, setDeals] = useState<Deal[]>([]);
   const [loading, setLoading] = useState(true);
+  const [saveError, setSaveError] = useState("");
   const [editing, setEditing] = useState<Deal | "new" | null>(null);
   const [dragOver, setDragOver] = useState<DealStatus | null>(null);
   const dragId = useRef<string | null>(null);
@@ -147,11 +148,16 @@ export default function PipelinePage() {
   }, [getDb, userId]);
 
   const handleSave = async (d: Deal) => {
-    const db = await getDb();
-    await dbUpsertDeal(db, d, userId);
-    const updated = await dbGetDeals(db);
-    setDeals(updated);
-    setEditing(null);
+    setSaveError("");
+    try {
+      const db = await getDb();
+      await dbUpsertDeal(db, d, userId);
+      const updated = await dbGetDeals(db);
+      setDeals(updated);
+      setEditing(null);
+    } catch (e) {
+      setSaveError(e instanceof Error ? e.message : "Failed to save deal");
+    }
   };
 
   const handleDelete = async (id: string) => {
@@ -212,6 +218,12 @@ export default function PipelinePage() {
           </button>
         </div>
       </div>
+
+      {saveError && (
+        <div className="flex-shrink-0 mx-8 mt-4 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700 font-medium">
+          Error: {saveError}
+        </div>
+      )}
 
       {/* Kanban board */}
       <div className="flex-1 min-h-0 overflow-x-auto overflow-y-hidden px-6 py-5">
