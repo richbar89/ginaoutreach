@@ -37,7 +37,6 @@ const navSections = [
   {
     label: "Intelligence",
     items: [
-      { href: "/trends",    label: "Trend Monitor",  icon: TrendingUp, exact: false },
       { href: "/ads",       label: "Meta Ad Alerts", icon: BarChart2,  exact: false },
       { href: "/analytics", label: "My Analytics",   icon: BarChart2,  exact: false },
     ],

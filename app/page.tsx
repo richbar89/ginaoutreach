@@ -6,6 +6,14 @@ import Link from "next/link";
 // ── Typing animation ──────────────────────────────────────────
 const NICHES = ["food creator", "lifestyle influencer", "tech youtuber", "parenting guru"];
 
+// ── Capacity accent colours per category ─────────────────────
+const CAPACITY_ACCENTS: Record<string, { accent: string; bg: string }> = {
+  foodie:    { accent: "#E8622A", bg: "#FFF4EF" },
+  lifestyle: { accent: "#7C3AED", bg: "#F5F0FF" },
+  beauty:    { accent: "#DB2777", bg: "#FFF0F7" },
+  fitness:   { accent: "#059669", bg: "#EFFFFA" },
+};
+
 function useTyping(words: string[], speed = 78, del = 42, pause = 2400) {
   const [text, setText] = useState("");
   const [deleting, setDeleting] = useState(false);
@@ -290,6 +298,8 @@ const FEATURES = [
 ];
 
 // ── Main page ──────────────────────────────────────────────────
+type CapacityRow = { category: string; label: string; emoji: string; filled: number; cap: number };
+
 export default function LandingPage() {
   const typed = useTyping(NICHES);
   const [scrolled, setScrolled] = useState(false);
@@ -302,11 +312,19 @@ export default function LandingPage() {
   const pricing = useInView(0.1);
   const urgency = useInView(0.1);
   const fRefs = [f0, f1, f2, f3];
+  const [capacityRows, setCapacityRows] = useState<CapacityRow[]>([]);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", fn, { passive: true });
     return () => window.removeEventListener("scroll", fn);
+  }, []);
+
+  useEffect(() => {
+    fetch("/api/capacity")
+      .then(r => r.ok ? r.json() : [])
+      .then(data => { if (Array.isArray(data) && data.length) setCapacityRows(data); })
+      .catch(() => {});
   }, []);
 
   return (
@@ -475,16 +493,12 @@ export default function LandingPage() {
                 </p>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
-                {[
-                  { label: "Foodies", emoji: "🍔", filled: 23, cap: 100, accent: "#E8622A", bg: "#FFF4EF" },
-                  { label: "Lifestyle", emoji: "✨", filled: 8, cap: 100, accent: "#7C3AED", bg: "#F5F0FF" },
-                  { label: "Beauty", emoji: "💄", filled: 5, cap: 100, accent: "#DB2777", bg: "#FFF0F7" },
-                  { label: "Fitness", emoji: "💪", filled: 3, cap: 100, accent: "#059669", bg: "#EFFFFA" },
-                ].map(({ label, emoji, filled, cap, accent, bg }) => {
-                  const pct = Math.round((filled / cap) * 100);
+                {capacityRows.map(({ category, label, emoji, filled, cap }) => {
+                  const { accent, bg } = CAPACITY_ACCENTS[category] || { accent: "#E8622A", bg: "#FFF4EF" };
+                  const pct = cap > 0 ? Math.round((filled / cap) * 100) : 0;
                   const left = cap - filled;
                   return (
-                    <div key={label} style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 16, padding: "24px 28px", boxShadow: "0 1px 4px rgba(0,0,0,0.05)" }}>
+                    <div key={category} style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 16, padding: "24px 28px", boxShadow: "0 1px 4px rgba(0,0,0,0.05)" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
                         <span style={{ fontSize: 22 }}>{emoji}</span>
                         <span style={{ fontWeight: 700, fontSize: 16, color: "#0D1B2A" }}>{label} creators</span>

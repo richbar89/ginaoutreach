@@ -99,9 +99,10 @@ export async function dbGetDeals(db: DB): Promise<Deal[]> {
   return (data || []).map(rowToDeal);
 }
 
-export async function dbUpsertDeal(db: DB, deal: Deal): Promise<void> {
+export async function dbUpsertDeal(db: DB, deal: Deal, userId?: string): Promise<void> {
   await db.from("deals").upsert({
     id: deal.id,
+    ...(userId ? { user_id: userId } : {}),
     contact_email: deal.contactEmail,
     contact_name: deal.contactName,
     company: deal.company,

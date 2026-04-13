@@ -1,19 +1,20 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Plus, Trash2, ChevronRight, X, Check, Pencil, TrendingUp } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Plus, Trash2, X, Check, Pencil, TrendingUp, Loader2 } from "lucide-react";
 import { useDb } from "@/lib/useDb";
+import { useUser } from "@clerk/nextjs";
 import { dbGetDeals, dbUpsertDeal, dbDeleteDeal } from "@/lib/db";
 import type { Deal, DealStatus } from "@/lib/types";
 import InitialsAvatar from "@/components/InitialsAvatar";
 
-const STAGES: { key: DealStatus; label: string; colour: string; bg: string; border: string }[] = [
-  { key: "pitched",     label: "Pitched",      colour: "text-navy-500",   bg: "bg-navy-50",    border: "border-navy-200" },
-  { key: "replied",     label: "Replied",       colour: "text-blue-600",   bg: "bg-blue-50",    border: "border-blue-200" },
-  { key: "negotiating", label: "Negotiating",   colour: "text-amber-600",  bg: "bg-amber-50",   border: "border-amber-200" },
-  { key: "contracted",  label: "Contracted",    colour: "text-violet-600", bg: "bg-violet-50",  border: "border-violet-200" },
-  { key: "delivered",   label: "Delivered",     colour: "text-teal-600",   bg: "bg-teal-50",    border: "border-teal-200" },
-  { key: "paid",        label: "Paid",          colour: "text-emerald-600",bg: "bg-emerald-50", border: "border-emerald-200" },
+const STAGES: { key: DealStatus; label: string; colour: string; bg: string; border: string; ring: string }[] = [
+  { key: "pitched",     label: "Pitched",     colour: "text-navy-500",   bg: "bg-navy-50",    border: "border-navy-200",   ring: "ring-navy-400" },
+  { key: "replied",     label: "Replied",      colour: "text-blue-600",   bg: "bg-blue-50",    border: "border-blue-200",   ring: "ring-blue-400" },
+  { key: "negotiating", label: "Negotiating",  colour: "text-amber-600",  bg: "bg-amber-50",   border: "border-amber-200",  ring: "ring-amber-400" },
+  { key: "contracted",  label: "Contracted",   colour: "text-violet-600", bg: "bg-violet-50",  border: "border-violet-200", ring: "ring-violet-400" },
+  { key: "delivered",   label: "Delivered",    colour: "text-teal-600",   bg: "bg-teal-50",    border: "border-teal-200",   ring: "ring-teal-400" },
+  { key: "paid",        label: "Paid",         colour: "text-emerald-600",bg: "bg-emerald-50", border: "border-emerald-200",ring: "ring-emerald-400" },
 ];
 
 function DealModal({
@@ -106,20 +107,48 @@ function DealModal({
 
 export default function PipelinePage() {
   const getDb = useDb();
+  const { user } = useUser();
+  const userId = user?.id;
   const [deals, setDeals] = useState<Deal[]>([]);
+  const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<Deal | "new" | null>(null);
+  const [dragOver, setDragOver] = useState<DealStatus | null>(null);
+  const dragId = useRef<string | null>(null);
+  const dragEnterCount = useRef<Record<string, number>>({});
 
   useEffect(() => {
+    let cancelled = false;
     (async () => {
-      const db = await getDb();
-      const data = await dbGetDeals(db);
-      setDeals(data);
+      try {
+        const db = await getDb();
+
+        // Migrate any localStorage deals saved before Supabase was wired up
+        const LS_KEY = "ginaos_deals";
+        const lsRaw = typeof window !== "undefined" ? localStorage.getItem(LS_KEY) : null;
+        if (lsRaw && userId) {
+          const lsDeals: Deal[] = JSON.parse(lsRaw);
+          if (lsDeals.length > 0) {
+            await Promise.all(lsDeals.map(d => dbUpsertDeal(db, d, userId)));
+            localStorage.removeItem(LS_KEY);
+          }
+        }
+
+        const data = await dbGetDeals(db);
+        if (!cancelled) setDeals(data);
+      } catch {
+        // Supabase unavailable — fall back to localStorage so mock data is still visible
+        const lsRaw = typeof window !== "undefined" ? localStorage.getItem("ginaos_deals") : null;
+        if (!cancelled) setDeals(lsRaw ? JSON.parse(lsRaw) : []);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
     })();
-  }, [getDb]);
+    return () => { cancelled = true; };
+  }, [getDb, userId]);
 
   const handleSave = async (d: Deal) => {
     const db = await getDb();
-    await dbUpsertDeal(db, d);
+    await dbUpsertDeal(db, d, userId);
     const updated = await dbGetDeals(db);
     setDeals(updated);
     setEditing(null);
@@ -133,14 +162,19 @@ export default function PipelinePage() {
     setDeals(updated);
   };
 
-  const advanceStage = async (deal: Deal) => {
-    const idx = STAGES.findIndex(s => s.key === deal.status);
-    if (idx >= STAGES.length - 1) return;
-    const updatedDeal = { ...deal, status: STAGES[idx + 1].key, updatedAt: new Date().toISOString() };
+  const handleDrop = async (targetStatus: DealStatus) => {
+    const id = dragId.current;
+    dragId.current = null;
+    dragEnterCount.current = {};
+    setDragOver(null);
+    if (!id) return;
+    const deal = deals.find(d => d.id === id);
+    if (!deal || deal.status === targetStatus) return;
+    const updated = { ...deal, status: targetStatus, updatedAt: new Date().toISOString() };
+    // Optimistic update
+    setDeals(prev => prev.map(d => d.id === id ? updated : d));
     const db = await getDb();
-    await dbUpsertDeal(db, updatedDeal);
-    const updated = await dbGetDeals(db);
-    setDeals(updated);
+    await dbUpsertDeal(db, updated, userId);
   };
 
   const totalValue = deals
@@ -153,17 +187,22 @@ export default function PipelinePage() {
   const currencySymbol = deals.find(d => d.value)?.value?.replace(/[0-9., ]/g, "").trim() || "£";
 
   return (
-    <div className="p-10 max-w-5xl mx-auto">
+    <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="mb-10">
-        <div className="flex items-center gap-3 mb-5">
-          <div className="h-px w-10 bg-coral-400" />
-          <span className="text-[11px] font-bold uppercase tracking-widest text-coral-500">Pipeline</span>
-        </div>
-        <div className="flex items-start justify-between">
+      <div className="flex-shrink-0 px-8 pt-7 pb-5 border-b border-cream-200 bg-white">
+        <div className="flex items-center justify-between">
           <div>
-            <h1 className="font-serif text-4xl font-bold text-navy-900 leading-tight">Deal Pipeline</h1>
-            <p className="mt-2 text-navy-500 text-base">Track every brand deal from first pitch to payment.</p>
+            <div className="flex items-center gap-3 mb-1">
+              <div className="h-px w-8 bg-coral-400" />
+              <span className="text-[11px] font-bold uppercase tracking-widest text-coral-500">Pipeline</span>
+            </div>
+            <h1 className="font-serif text-3xl font-bold text-navy-900 leading-tight">Deal Pipeline</h1>
+            {totalValue > 0 && (
+              <p className="mt-1 text-sm font-semibold text-emerald-600">
+                <TrendingUp size={13} className="inline mr-1 mb-0.5" />
+                Total pipeline value: <span className="font-bold">{currencySymbol}{totalValue.toLocaleString()}</span>
+              </p>
+            )}
           </div>
           <button
             onClick={() => setEditing("new")}
@@ -174,99 +213,117 @@ export default function PipelinePage() {
         </div>
       </div>
 
-      {/* Summary bar */}
-      <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 mb-10">
-        {STAGES.map(s => {
-          const count = deals.filter(d => d.status === s.key).length;
-          return (
-            <div key={s.key} className={`${s.bg} ${s.border} border rounded-xl p-3 text-center`}>
-              <p className={`text-2xl font-serif font-bold ${s.colour}`}>{count}</p>
-              <p className={`text-[10px] font-semibold uppercase tracking-wide mt-0.5 ${s.colour} opacity-70`}>{s.label}</p>
-            </div>
-          );
-        })}
-      </div>
+      {/* Kanban board */}
+      <div className="flex-1 min-h-0 overflow-x-auto overflow-y-hidden px-6 py-5">
+        {loading ? (
+          <div className="flex items-center justify-center h-full">
+            <Loader2 size={24} className="text-navy-300 animate-spin" />
+          </div>
+        ) : (
+          <div className="flex gap-4 h-full" style={{ minWidth: "max-content" }}>
+            {STAGES.map(stage => {
+              const stageDeals = deals.filter(d => d.status === stage.key);
+              const isOver = dragOver === stage.key;
 
-      {/* Total value */}
-      {totalValue > 0 && (
-        <div className="mb-8 flex items-center gap-3 px-5 py-4 bg-emerald-50 border border-emerald-200 rounded-2xl">
-          <TrendingUp size={18} className="text-emerald-600 flex-shrink-0" />
-          <p className="text-sm font-semibold text-emerald-700">
-            Total pipeline value: <span className="font-bold">{currencySymbol}{totalValue.toLocaleString()}</span>
-          </p>
-        </div>
-      )}
+              return (
+                <div
+                  key={stage.key}
+                  className={`flex flex-col rounded-2xl border transition-all duration-150 ${stage.bg} ${stage.border} ${isOver ? `ring-2 ${stage.ring} shadow-lg` : ""}`}
+                  style={{ width: 256, minWidth: 256 }}
+                  onDragOver={(e) => { e.preventDefault(); }}
+                  onDragEnter={(e) => {
+                    e.preventDefault();
+                    dragEnterCount.current[stage.key] = (dragEnterCount.current[stage.key] || 0) + 1;
+                    setDragOver(stage.key);
+                  }}
+                  onDragLeave={() => {
+                    dragEnterCount.current[stage.key] = (dragEnterCount.current[stage.key] || 0) - 1;
+                    if ((dragEnterCount.current[stage.key] || 0) <= 0) {
+                      dragEnterCount.current[stage.key] = 0;
+                      setDragOver(prev => prev === stage.key ? null : prev);
+                    }
+                  }}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    dragEnterCount.current[stage.key] = 0;
+                    handleDrop(stage.key);
+                  }}
+                >
+                  {/* Column header */}
+                  <div className={`flex items-center justify-between px-4 py-3 border-b ${stage.border} flex-shrink-0`}>
+                    <span className={`text-xs font-bold uppercase tracking-widest ${stage.colour}`}>
+                      {stage.label}
+                    </span>
+                    <span className={`text-xs font-bold tabular-nums ${stage.colour} opacity-60`}>
+                      {stageDeals.length}
+                    </span>
+                  </div>
 
-      {/* Deal list grouped by stage */}
-      {deals.length === 0 ? (
-        <div className="text-center py-20 bg-white border border-cream-200 rounded-2xl">
-          <TrendingUp size={36} className="text-cream-300 mx-auto mb-4" />
-          <p className="font-serif text-xl font-bold text-navy-900 mb-2">No deals yet</p>
-          <p className="text-navy-400 text-sm mb-6">Add a deal manually or let the inbox detect positive replies for you.</p>
-          <button
-            onClick={() => setEditing("new")}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold rounded-xl transition-colors"
-          >
-            <Plus size={14} /> Add First Deal
-          </button>
-        </div>
-      ) : (
-        <div className="space-y-10">
-          {STAGES.map(stage => {
-            const stageDeals = deals.filter(d => d.status === stage.key);
-            if (stageDeals.length === 0) return null;
-            const isLast = stage.key === "paid";
-            return (
-              <div key={stage.key}>
-                <div className="flex items-center gap-3 mb-4">
-                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${stage.bg} ${stage.colour} ${stage.border} border`}>
-                    {stage.label}
-                  </span>
-                  <span className="text-xs text-navy-400">{stageDeals.length} deal{stageDeals.length !== 1 ? "s" : ""}</span>
-                </div>
-                <div className="space-y-3">
-                  {stageDeals.map(deal => (
-                    <div key={deal.id} className="bg-white border border-cream-200 hover:border-cream-300 rounded-2xl px-5 py-4 shadow-sm hover:shadow-md transition-all flex items-center gap-4">
-                      <InitialsAvatar name={deal.contactName} email={deal.contactEmail} size="sm" />
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <p className="font-semibold text-navy-900 text-sm">{deal.contactName}</p>
-                          <span className="text-navy-300 text-xs">·</span>
-                          <p className="text-sm text-navy-500">{deal.company}</p>
-                          {deal.value && (
-                            <span className="px-2 py-0.5 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold rounded-lg">
-                              {deal.value}
-                            </span>
-                          )}
+                  {/* Cards */}
+                  <div className="flex-1 min-h-0 overflow-y-auto p-3 space-y-2.5 scrollbar-thin">
+                    {stageDeals.length === 0 && (
+                      <div className={`border-2 border-dashed ${stage.border} rounded-xl h-16 flex items-center justify-center opacity-40`}>
+                        <p className={`text-[11px] font-semibold ${stage.colour}`}>Drop here</p>
+                      </div>
+                    )}
+                    {stageDeals.map(deal => (
+                      <div
+                        key={deal.id}
+                        draggable
+                        onDragStart={(e) => {
+                          dragId.current = deal.id;
+                          e.dataTransfer.effectAllowed = "move";
+                        }}
+                        onDragEnd={() => {
+                          dragId.current = null;
+                          dragEnterCount.current = {};
+                          setDragOver(null);
+                        }}
+                        className="bg-white rounded-xl p-3.5 shadow-sm border border-cream-200 hover:border-cream-300 hover:shadow-md transition-all cursor-grab active:cursor-grabbing active:opacity-60 active:scale-95 select-none"
+                      >
+                        <div className="flex items-start gap-2.5 mb-2">
+                          <InitialsAvatar name={deal.contactName} email={deal.contactEmail} size="sm" />
+                          <div className="flex-1 min-w-0">
+                            <p className="font-semibold text-navy-900 text-sm leading-tight truncate">{deal.contactName}</p>
+                            <p className="text-xs text-navy-500 truncate">{deal.company}</p>
+                          </div>
                         </div>
-                        {deal.notes && <p className="text-xs text-navy-400 mt-1 line-clamp-1">{deal.notes}</p>}
-                      </div>
-                      <div className="flex items-center gap-1 flex-shrink-0">
-                        {!isLast && (
-                          <button
-                            onClick={() => advanceStage(deal)}
-                            title={`Move to ${STAGES[STAGES.findIndex(s => s.key === deal.status) + 1]?.label}`}
-                            className="inline-flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-semibold text-navy-500 hover:text-coral-600 hover:bg-coral-50 border border-cream-200 hover:border-coral-200 rounded-lg transition-colors"
-                          >
-                            <ChevronRight size={12} />
-                            {STAGES[STAGES.findIndex(s => s.key === deal.status) + 1]?.label}
-                          </button>
+
+                        {deal.value && (
+                          <span className="inline-block px-2 py-0.5 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold rounded-lg mb-2">
+                            {deal.value}
+                          </span>
                         )}
-                        <button onClick={() => setEditing(deal)} className="p-2 hover:bg-cream-100 rounded-lg transition-colors" title="Edit">
-                          <Pencil size={13} className="text-navy-400" />
-                        </button>
-                        <button onClick={() => handleDelete(deal.id)} className="p-2 hover:bg-red-50 rounded-lg transition-colors" title="Remove">
-                          <Trash2 size={13} className="text-navy-400 hover:text-red-500" />
-                        </button>
+
+                        {deal.notes && (
+                          <p className="text-xs text-navy-400 line-clamp-2 mb-2">{deal.notes}</p>
+                        )}
+
+                        <div className="flex items-center justify-end gap-1 pt-1 border-t border-cream-100">
+                          <button
+                            onClick={() => setEditing(deal)}
+                            className="p-1.5 hover:bg-cream-100 rounded-lg transition-colors"
+                            title="Edit"
+                          >
+                            <Pencil size={12} className="text-navy-400" />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(deal.id)}
+                            className="p-1.5 hover:bg-red-50 rounded-lg transition-colors"
+                            title="Remove"
+                          >
+                            <Trash2 size={12} className="text-navy-400 hover:text-red-500" />
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
+              );
+            })}
+          </div>
+        )}
+      </div>
 
       {editing !== null && (
         <DealModal

@@ -9,17 +9,11 @@ import { signInWithMicrosoft, getMicrosoftUser } from "@/lib/graphClient";
 import { useDb } from "@/lib/useDb";
 import { dbGetMediaKit, dbSaveMediaKit } from "@/lib/db";
 
-const NICHES = [
-  "Food & Lifestyle",
-  "Fitness & Wellness",
-  "Fashion & Beauty",
-  "Travel & Adventure",
-  "Home & Interiors",
-  "Parenting & Family",
-  "Tech & Gaming",
-  "Business & Finance",
-  "Entertainment & Comedy",
-  "Other",
+const CREATOR_TYPES = [
+  { key: "foodie",    label: "Foodie",    emoji: "🍔", desc: "Food, drink, restaurants, recipes" },
+  { key: "lifestyle", label: "Lifestyle", emoji: "✨", desc: "Everyday life, home, mindfulness" },
+  { key: "beauty",    label: "Beauty",    emoji: "💄", desc: "Makeup, skincare, haircare" },
+  { key: "fitness",   label: "Fitness",   emoji: "💪", desc: "Fitness, wellness, nutrition" },
 ];
 
 type Step = "email" | "profile";
@@ -39,7 +33,7 @@ export default function OnboardingPage() {
   // Profile step
   const [name, setName] = useState("");
   const [handle, setHandle] = useState("");
-  const [niche, setNiche] = useState("");
+  const [creatorType, setCreatorType] = useState("");
   const [saving, setSaving] = useState(false);
 
   // Skip onboarding entirely if already connected
@@ -89,14 +83,22 @@ export default function OnboardingPage() {
     setSaving(true);
     try {
       const db = await getDb();
+
+      // Save media kit fields
       const existing = await dbGetMediaKit(db);
+      const selectedType = CREATOR_TYPES.find(t => t.key === creatorType);
       await dbSaveMediaKit(db, {
         ...existing,
         name: name.trim() || existing.name,
         handle: handle.trim() ? (handle.startsWith("@") ? handle.trim() : `@${handle.trim()}`) : existing.handle,
-        tagline: niche || existing.tagline,
+        tagline: selectedType ? `${selectedType.label} creator` : existing.tagline,
         email: connected?.email || existing.email,
       });
+
+      // Save creator_type separately
+      if (creatorType) {
+        await db.from("user_settings").upsert({ creator_type: creatorType });
+      }
     } catch {
       // Non-blocking — proceed to dashboard even if save fails
     } finally {
@@ -235,7 +237,7 @@ export default function OnboardingPage() {
           </p>
         </div>
 
-        <div className="bg-white rounded-2xl border border-cream-200 p-6 space-y-4 shadow-sm">
+        <div className="bg-white rounded-2xl border border-cream-200 p-6 space-y-5 shadow-sm">
           {/* Name */}
           <div>
             <label className="text-xs font-bold text-navy-500 uppercase tracking-widest mb-1.5 block">Your Name</label>
@@ -263,17 +265,37 @@ export default function OnboardingPage() {
             </div>
           </div>
 
-          {/* Niche */}
+          {/* Creator type */}
           <div>
-            <label className="text-xs font-bold text-navy-500 uppercase tracking-widest mb-1.5 block">Your Niche</label>
-            <select
-              value={niche}
-              onChange={e => setNiche(e.target.value)}
-              className="w-full text-sm border border-cream-200 rounded-xl px-4 py-3 outline-none focus:border-coral-300 focus:ring-2 focus:ring-coral-100 bg-white"
-            >
-              <option value="">Select your niche…</option>
-              {NICHES.map(n => <option key={n} value={n}>{n}</option>)}
-            </select>
+            <label className="text-xs font-bold text-navy-500 uppercase tracking-widest mb-2 block">What kind of creator are you?</label>
+            <div className="grid grid-cols-2 gap-2">
+              {CREATOR_TYPES.map(type => {
+                const selected = creatorType === type.key;
+                return (
+                  <button
+                    key={type.key}
+                    type="button"
+                    onClick={() => setCreatorType(type.key)}
+                    className={`flex items-center gap-3 p-3.5 rounded-xl border-2 text-left transition-all ${
+                      selected
+                        ? "border-coral-400 bg-coral-50"
+                        : "border-cream-200 bg-white hover:border-cream-300 hover:bg-cream-50"
+                    }`}
+                  >
+                    <span className="text-2xl leading-none">{type.emoji}</span>
+                    <div className="min-w-0">
+                      <p className={`text-sm font-bold leading-tight ${selected ? "text-coral-700" : "text-navy-900"}`}>
+                        {type.label}
+                      </p>
+                      <p className="text-[11px] text-navy-400 leading-snug mt-0.5 truncate">{type.desc}</p>
+                    </div>
+                    {selected && (
+                      <CheckCircle size={15} className="text-coral-500 flex-shrink-0 ml-auto" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
 

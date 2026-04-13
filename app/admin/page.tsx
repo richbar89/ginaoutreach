@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Ticket, Users, AlertTriangle, Megaphone, Activity, Upload } from "lucide-react";
+import { Ticket, Users, AlertTriangle, Megaphone, Activity, Upload, Save, Loader2 } from "lucide-react";
 
 const NAV = [
   { href: "/admin/tickets",      label: "Tickets",       icon: Ticket,       desc: "Brand contact requests" },
@@ -20,8 +20,22 @@ type Stats = {
   activeAnnouncements: number;
 };
 
+type CapacityRow = {
+  category: string;
+  label: string;
+  emoji: string;
+  filled: number;
+  cap: number;
+};
+
 export default function AdminPage() {
   const [stats, setStats] = useState<Stats | null>(null);
+
+  // Capacity state
+  const [capacity, setCapacity] = useState<CapacityRow[]>([]);
+  const [capacityLoading, setCapacityLoading] = useState(true);
+  const [capacitySaving, setCapacitySaving] = useState(false);
+  const [capacitySaved, setCapacitySaved] = useState(false);
 
   useEffect(() => {
     Promise.all([
@@ -38,6 +52,41 @@ export default function AdminPage() {
       });
     }).catch(() => {});
   }, []);
+
+  useEffect(() => {
+    fetch("/api/admin/capacity")
+      .then(r => r.json())
+      .then(data => setCapacity(Array.isArray(data) ? data : []))
+      .catch(() => {})
+      .finally(() => setCapacityLoading(false));
+  }, []);
+
+  const updateCapacityField = (category: string, field: "filled" | "cap", raw: string) => {
+    const value = parseInt(raw, 10);
+    setCapacity(prev =>
+      prev.map(row => row.category === category ? { ...row, [field]: isNaN(value) ? 0 : value } : row)
+    );
+    setCapacitySaved(false);
+  };
+
+  const saveCapacity = async () => {
+    setCapacitySaving(true);
+    try {
+      const res = await fetch("/api/admin/capacity", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(capacity.map(r => ({ category: r.category, filled: r.filled, cap: r.cap }))),
+      });
+      if (res.ok) {
+        const updated = await res.json();
+        setCapacity(updated);
+        setCapacitySaved(true);
+        setTimeout(() => setCapacitySaved(false), 2500);
+      }
+    } finally {
+      setCapacitySaving(false);
+    }
+  };
 
   const statCards = [
     { label: "Pending Tickets", value: stats?.pendingTickets ?? "—", colour: "text-amber-600", bg: "bg-amber-50 border-amber-200" },
@@ -61,6 +110,81 @@ export default function AdminPage() {
             <p className={`text-4xl font-black ${s.colour}`}>{s.value}</p>
           </div>
         ))}
+      </div>
+
+      {/* Creator Capacity Editor */}
+      <div className="bg-white border rounded-2xl p-6 mb-8" style={{ borderColor: "var(--border)" }}>
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <h2 className="text-base font-black text-navy-900">Creator Capacity</h2>
+            <p className="text-xs text-navy-400 mt-0.5">Controls the urgency bars on the landing page. Update manually each week.</p>
+          </div>
+          <button
+            onClick={saveCapacity}
+            disabled={capacitySaving || capacityLoading}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-coral-500 hover:bg-coral-600 disabled:opacity-50 text-white text-sm font-bold rounded-xl transition-colors"
+          >
+            {capacitySaving
+              ? <><Loader2 size={13} className="animate-spin" /> Saving…</>
+              : capacitySaved
+              ? "✓ Saved"
+              : <><Save size={13} /> Save Changes</>
+            }
+          </button>
+        </div>
+
+        {capacityLoading ? (
+          <div className="flex items-center gap-2 text-sm text-navy-400 py-4">
+            <Loader2 size={14} className="animate-spin" /> Loading…
+          </div>
+        ) : (
+          <div className="grid grid-cols-4 gap-4">
+            {capacity.map(row => {
+              const pct = row.cap > 0 ? Math.min(100, Math.round((row.filled / row.cap) * 100)) : 0;
+              return (
+                <div key={row.category} className="border rounded-xl p-4" style={{ borderColor: "var(--border)" }}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-xl">{row.emoji}</span>
+                    <span className="text-sm font-black text-navy-900">{row.label}</span>
+                  </div>
+
+                  {/* Progress bar */}
+                  <div className="h-1.5 bg-cream-100 rounded-full mb-3 overflow-hidden">
+                    <div
+                      className="h-full bg-coral-400 rounded-full transition-all"
+                      style={{ width: `${pct}%` }}
+                    />
+                  </div>
+                  <p className="text-[11px] text-navy-400 mb-3">{pct}% filled ({row.filled}/{row.cap})</p>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase tracking-widest text-navy-400 mb-1">Filled</label>
+                      <input
+                        type="number"
+                        min={0}
+                        max={row.cap}
+                        value={row.filled}
+                        onChange={e => updateCapacityField(row.category, "filled", e.target.value)}
+                        className="w-full text-sm font-bold text-navy-900 border border-cream-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-coral-300 focus:ring-1 focus:ring-coral-200"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase tracking-widest text-navy-400 mb-1">Cap</label>
+                      <input
+                        type="number"
+                        min={1}
+                        value={row.cap}
+                        onChange={e => updateCapacityField(row.category, "cap", e.target.value)}
+                        className="w-full text-sm font-bold text-navy-900 border border-cream-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-coral-300 focus:ring-1 focus:ring-coral-200"
+                      />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* Nav grid */}

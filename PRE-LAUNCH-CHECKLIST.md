@@ -68,11 +68,11 @@ Things to complete before selling to real users.
 
 ## Creator Capacity & Urgency
 
-- [ ] Add creator type selection to onboarding (Foodie / Lifestyle / Beauty / Fitness)
-- [ ] Store `creator_type` on Clerk user metadata (or in a `user_profiles` Supabase table)
+- [x] Add creator type selection to onboarding (Foodie / Lifestyle / Beauty / Fitness)
+- [x] Store `creator_type` in `user_settings` Supabase table
 - [ ] Build dynamic capacity bars pulling real signup counts per vertical
-- [ ] Set capacity limits per vertical (e.g. 100 Foodies, 100 Lifestyle etc.) — update in code/env as you scale
-- [ ] **For now**: urgency bars on landing page use hardcoded "filled" counts — update manually each week
+- [x] Set capacity limits per vertical — managed via admin dashboard, persisted in `creator_capacity` table
+- [x] Urgency bars on landing page now fetch from DB — update via Admin → Dashboard
 
 ---
 
@@ -88,8 +88,8 @@ Things to complete before selling to real users.
 
 ## App UI & Features — Backlog
 
-- [ ] **Deal Pipeline** — add drag-and-drop between stages (currently static cards)
-- [ ] **Remove Trend Monitor** — `/trends` page and sidebar link to be deleted
+- [x] **Deal Pipeline** — add drag-and-drop between stages (currently static cards)
+- [x] **Remove Trend Monitor** — `/trends` page and sidebar link to be deleted
 - [ ] **Meta Ad Alerts** — improve the `/ads` page (better UI, more actionable data)
 - [ ] **Sidebar** — restructure into cleaner sections, easier to navigate
 - [ ] **Sidebar Outreach section** — tidy up items (review labels, order, remove clutter)

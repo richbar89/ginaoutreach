@@ -17,6 +17,7 @@ import {
   markGmailAsRead,
 } from "@/lib/googleClient";
 import { useDb } from "@/lib/useDb";
+import { useUser } from "@clerk/nextjs";
 import { dbGetEmailLog, dbGetDeals, dbUpsertDeal } from "@/lib/db";
 import type { Deal } from "@/lib/types";
 import InitialsAvatar from "@/components/InitialsAvatar";
@@ -36,6 +37,7 @@ function timeAgo(dateStr: string): string {
 
 export default function InboxPage() {
   const getDb = useDb();
+  const { user } = useUser();
   const [messages, setMessages] = useState<InboxMessage[]>([]);
   const [selected, setSelected] = useState<MessageDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -152,7 +154,7 @@ export default function InboxPage() {
       createdAt: now,
       updatedAt: now,
     };
-    await dbUpsertDeal(db, deal);
+    await dbUpsertDeal(db, deal, user?.id);
     setPipelineAdded(deal.id);
   };
 

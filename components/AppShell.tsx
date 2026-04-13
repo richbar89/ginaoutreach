@@ -13,7 +13,6 @@ const APP_ROUTES = [
   "/templates",
   "/pipeline",
   "/media-kit",
-  "/trends",
   "/ads",
   "/analytics",
   "/settings",
