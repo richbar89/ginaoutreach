@@ -239,6 +239,7 @@ export default function SettingsPage() {
   };
 
   return (
+    <>
     <div className="p-10 max-w-2xl mx-auto">
       {/* Header */}
       <div className="mb-10">
@@ -608,5 +609,6 @@ export default function SettingsPage() {
           onClose={() => setEditingTemplate(null)}
         />
       )}
+    </>
   );
 }
