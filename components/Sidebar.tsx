@@ -7,11 +7,9 @@ import {
   Users,
   Megaphone,
   Settings,
-  Send,
   Inbox,
   TrendingUp,
   BarChart2,
-  FileText,
   BookOpen,
   Sparkles,
   ShieldCheck,
@@ -24,21 +22,24 @@ const navSections = [
   {
     label: "Outreach",
     items: [
-      { href: "/dashboard",  label: "Dashboard",     icon: LayoutDashboard, exact: true },
-      { href: "/contacts",   label: "Contacts",       icon: Users,           exact: false },
-      { href: "/campaigns",  label: "Campaigns",      icon: Megaphone,       exact: false },
-      { href: "/send",       label: "Quick Send",     icon: Send,            exact: false },
-      { href: "/inbox",      label: "Inbox",          icon: Inbox,           exact: false },
-      { href: "/templates",  label: "Templates",      icon: FileText,        exact: false },
-      { href: "/pipeline",   label: "Deal Pipeline",  icon: TrendingUp,      exact: false },
-      { href: "/media-kit",  label: "Media Kit",      icon: BookOpen,        exact: false },
+      { href: "/dashboard",  label: "Dashboard",    icon: LayoutDashboard, exact: true },
+      { href: "/contacts",   label: "Contacts",     icon: Users,           exact: false },
+      { href: "/inbox",      label: "Inbox",        icon: Inbox,           exact: false },
+      { href: "/campaigns",  label: "Campaigns",    icon: Megaphone,       exact: false },
+    ],
+  },
+  {
+    label: "Deals",
+    items: [
+      { href: "/pipeline",   label: "Deal Pipeline", icon: TrendingUp, exact: false },
+      { href: "/media-kit",  label: "Media Kit",     icon: BookOpen,   exact: false },
     ],
   },
   {
     label: "Intelligence",
     items: [
-      { href: "/ads",       label: "Meta Ad Alerts", icon: BarChart2,  exact: false },
-      { href: "/analytics", label: "My Analytics",   icon: BarChart2,  exact: false },
+      { href: "/ads",        label: "Meta Ad Alerts", icon: BarChart2, exact: false },
+      { href: "/analytics",  label: "My Analytics",   icon: BarChart2, exact: false },
     ],
   },
 ];

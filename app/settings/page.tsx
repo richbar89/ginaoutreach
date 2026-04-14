@@ -10,6 +10,12 @@ import {
   ChevronUp,
   ExternalLink,
   Loader2,
+  Plus,
+  Pencil,
+  Trash2,
+  FileText,
+  X,
+  Check,
 } from "lucide-react";
 import {
   signInWithMicrosoft,
@@ -28,8 +34,84 @@ import {
   dbSaveSignature,
   dbGetBrands,
   dbSaveBrands,
+  dbGetTemplates,
+  dbUpsertTemplate,
+  dbDeleteTemplate,
 } from "@/lib/db";
-import type { Brand } from "@/lib/types";
+import type { Brand, EmailTemplate } from "@/lib/types";
+
+const MERGE_TAGS = [
+  { tag: "[FirstName]", desc: "Recipient's first name" },
+  { tag: "[BusinessName]", desc: "Brand / company name" },
+  { tag: "[Signature]", desc: "Your saved signature" },
+];
+
+function TemplateModal({ initial, onSave, onClose }: {
+  initial?: EmailTemplate;
+  onSave: (t: EmailTemplate) => void;
+  onClose: () => void;
+}) {
+  const [form, setForm] = useState({
+    name: initial?.name || "",
+    subject: initial?.subject || "",
+    body: initial?.body || "",
+  });
+
+  const insertTag = (tag: string) => setForm(f => ({ ...f, body: f.body + tag }));
+
+  const handleSave = () => {
+    if (!form.name.trim() || !form.subject.trim() || !form.body.trim()) return;
+    onSave({
+      id: initial?.id || crypto.randomUUID(),
+      ...form,
+      createdAt: initial?.createdAt || new Date().toISOString(),
+    });
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-900/60 backdrop-blur-sm">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between px-7 py-5 border-b border-cream-200">
+          <h2 className="font-serif text-xl font-bold text-navy-900">{initial ? "Edit Template" : "New Template"}</h2>
+          <button onClick={onClose} className="p-1.5 hover:bg-cream-100 rounded-lg transition-colors">
+            <X size={16} className="text-navy-400" />
+          </button>
+        </div>
+        <div className="px-7 py-6 space-y-5">
+          <div>
+            <label className="block text-xs font-semibold text-navy-400 mb-2 uppercase tracking-widest">Template Name</label>
+            <input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="e.g. Initial Pitch, Follow-up #1" className="input-base" />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-navy-400 mb-2 uppercase tracking-widest">Subject Line</label>
+            <input value={form.subject} onChange={e => setForm(f => ({ ...f, subject: e.target.value }))} placeholder="e.g. Partnership opportunity — [BusinessName] × you" className="input-base" />
+          </div>
+          <div>
+            <p className="text-xs font-semibold text-navy-400 mb-2 uppercase tracking-widest">Insert Merge Tag</p>
+            <div className="flex flex-wrap gap-2">
+              {MERGE_TAGS.map(({ tag, desc }) => (
+                <button key={tag} onClick={() => insertTag(tag)} title={desc} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-coral-50 hover:bg-coral-100 border border-coral-200 text-coral-700 text-xs font-semibold rounded-lg transition-colors">
+                  {tag}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-navy-400 mb-2 uppercase tracking-widest">Message Body</label>
+            <textarea rows={10} value={form.body} onChange={e => setForm(f => ({ ...f, body: e.target.value }))} placeholder={`Hi [FirstName],\n\nI'd love to explore a partnership…\n\n[Signature]`} className="input-base resize-y font-mono leading-relaxed text-sm" />
+          </div>
+        </div>
+        <div className="flex items-center justify-end gap-3 px-7 py-5 border-t border-cream-200 bg-cream-50 rounded-b-2xl">
+          <button onClick={onClose} className="px-4 py-2 text-sm font-medium text-navy-500 hover:text-navy-800 transition-colors">Cancel</button>
+          <button onClick={handleSave} disabled={!form.name.trim() || !form.subject.trim() || !form.body.trim()} className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-50">
+            <Check size={14} />
+            {initial ? "Save Changes" : "Create Template"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 type ConnectedUser = { name: string; email: string } | null;
 
@@ -47,6 +129,8 @@ export default function SettingsPage() {
   const [sigSaved, setSigSaved] = useState(false);
   const [brands, setBrands] = useState<Brand[]>(Array.from({ length: 10 }, () => ({ name: "", runningAds: false })));
   const [brandsSaved, setBrandsSaved] = useState(false);
+  const [templates, setTemplates] = useState<EmailTemplate[]>([]);
+  const [editingTemplate, setEditingTemplate] = useState<EmailTemplate | "new" | null>(null);
 
   useEffect(() => {
     const stored = localStorage.getItem("azure_client_id") || "";
@@ -60,6 +144,8 @@ export default function SettingsPage() {
       setSignature(sig);
       const storedBrands = await dbGetBrands(db);
       setBrands(Array.from({ length: 10 }, (_, i) => storedBrands[i] ?? { name: "", runningAds: false }));
+      const storedTemplates = await dbGetTemplates(db);
+      setTemplates(storedTemplates);
       setLoading(false);
     })();
   }, [getDb]);
@@ -80,6 +166,20 @@ export default function SettingsPage() {
 
   const updateBrand = (i: number, patch: Partial<Brand>) => {
     setBrands(prev => prev.map((b, idx) => idx === i ? { ...b, ...patch } : b));
+  };
+
+  const handleSaveTemplate = async (t: EmailTemplate) => {
+    const db = await getDb();
+    await dbUpsertTemplate(db, t);
+    setTemplates(await dbGetTemplates(db));
+    setEditingTemplate(null);
+  };
+
+  const handleDeleteTemplate = async (id: string) => {
+    if (!confirm("Delete this template?")) return;
+    const db = await getDb();
+    await dbDeleteTemplate(db, id);
+    setTemplates(await dbGetTemplates(db));
   };
 
   const saveClientId = () => {
@@ -375,6 +475,53 @@ export default function SettingsPage() {
         </div>
       </div>
 
+      {/* Email Templates */}
+      <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm mb-6">
+        <div className="px-7 py-5 border-b border-cream-100 flex items-center justify-between">
+          <div>
+            <p className="text-sm font-bold text-navy-800">Email Templates</p>
+            <p className="text-xs text-navy-400 mt-1">
+              Use <span className="font-mono text-coral-600">[FirstName]</span>, <span className="font-mono text-coral-600">[BusinessName]</span> and <span className="font-mono text-coral-600">[Signature]</span> to personalise automatically.
+            </p>
+          </div>
+          <button
+            onClick={() => setEditingTemplate("new")}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-coral-500 hover:bg-coral-600 text-white text-xs font-bold rounded-xl transition-colors flex-shrink-0"
+          >
+            <Plus size={13} /> New Template
+          </button>
+        </div>
+        <div className="px-7 py-5">
+          {templates.length === 0 ? (
+            <div className="text-center py-8">
+              <FileText size={28} className="text-cream-300 mx-auto mb-3" />
+              <p className="text-sm font-semibold text-navy-600 mb-1">No templates yet</p>
+              <p className="text-xs text-navy-400">Create your first template to speed up outreach.</p>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {templates.map(t => (
+                <div key={t.id} className="flex items-center gap-4 p-4 bg-cream-50 border border-cream-200 rounded-xl">
+                  <FileText size={15} className="text-coral-400 flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-navy-900 truncate">{t.name}</p>
+                    <p className="text-xs text-navy-400 truncate">{t.subject}</p>
+                  </div>
+                  <div className="flex items-center gap-1 flex-shrink-0">
+                    <button onClick={() => setEditingTemplate(t)} className="p-1.5 hover:bg-cream-200 rounded-lg transition-colors" title="Edit">
+                      <Pencil size={13} className="text-navy-400" />
+                    </button>
+                    <button onClick={() => handleDeleteTemplate(t.id)} className="p-1.5 hover:bg-red-50 rounded-lg transition-colors" title="Delete">
+                      <Trash2 size={13} className="text-navy-400 hover:text-red-500" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* Setup Instructions */}
       <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm">
         <button
@@ -453,5 +600,13 @@ export default function SettingsPage() {
         )}
       </div>
     </div>
+
+      {editingTemplate !== null && (
+        <TemplateModal
+          initial={editingTemplate === "new" ? undefined : editingTemplate}
+          onSave={handleSaveTemplate}
+          onClose={() => setEditingTemplate(null)}
+        />
+      )}
   );
 }
