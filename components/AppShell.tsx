@@ -30,10 +30,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   if (isOnboarding) return <>{children}</>;
 
   return (
-    <div style={{ minHeight: "100vh", padding: "16px", background: "#EDEEF2" }}>
+    <div style={{ minHeight: "100vh", padding: "12px", background: "var(--app-bg)" }}>
       {/* Mobile nudge — only visible on small screens */}
-      <div className="md:hidden fixed inset-0 z-[999] flex flex-col items-center justify-center p-8 text-center" style={{ background: "#EDEEF2" }}>
-        <div style={{ background: "#fff", borderRadius: 20, padding: "40px 32px", boxShadow: "0 8px 40px rgba(0,0,0,0.12)", maxWidth: 340, width: "100%" }}>
+      <div className="md:hidden fixed inset-0 z-[999] flex flex-col items-center justify-center p-8 text-center" style={{ background: "var(--app-bg)" }}>
+        <div style={{ background: "#fff", borderRadius: 20, padding: "40px 32px", boxShadow: "0 8px 40px rgba(0,0,0,0.4)", maxWidth: 340, width: "100%" }}>
           <div style={{ width: 52, height: 52, background: "#FEF0EB", borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
             <Monitor size={24} style={{ color: "#E8622A" }} />
           </div>
@@ -45,17 +45,16 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <div
         className="flex overflow-hidden"
         style={{
-          height: "calc(100vh - 32px)",
-          borderRadius: "16px",
-          boxShadow: "0 1px 3px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.08), 0 32px 56px rgba(0,0,0,0.06)",
+          height: "calc(100vh - 24px)",
+          borderRadius: "14px",
+          boxShadow: "0 0 0 1px rgba(255,255,255,0.05), 0 24px 60px rgba(0,0,0,0.5)",
           overflow: "hidden",
-          border: "1px solid rgba(0,0,0,0.06)",
         }}
       >
         <Sidebar />
         <main
           className="flex-1 flex flex-col overflow-hidden"
-          style={{ background: "#F7F8FA" }}
+          style={{ background: "var(--blush)" }}
         >
           <AnnouncementBanner />
           <div className="flex-1 overflow-y-auto">{children}</div>

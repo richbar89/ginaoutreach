@@ -5,12 +5,14 @@
 @tailwind utilities;
 
 :root {
-  --orange:   #E8622A;
-  --blush:    #F7F8FA;
-  --border:   #E5E7EB;
-  --text:     #0D1B2A;
-  --muted:    #6B7280;
-  --sidebar:  #FFFFFF;
+  --orange:        #E8622A;
+  --blush:         #F4F5F8;
+  --border:        #EAECF0;
+  --text:          #0D1B2A;
+  --muted:         #6B7280;
+  --sidebar-bg:    #0D1B2A;
+  --sidebar-border: rgba(255,255,255,0.06);
+  --app-bg:        #080F17;
 }
 
 * {
@@ -20,7 +22,7 @@
 body {
   font-family: 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
-  background: #EDEEF2;
+  background: var(--app-bg);
   color: var(--text);
 }
 
@@ -53,6 +55,6 @@ h1, h2, h3 {
   }
 
   .card {
-    @apply bg-white border border-gray-100 rounded-2xl shadow-sm;
+    @apply bg-white border border-[#EAECF0] rounded-2xl shadow-sm;
   }
 }

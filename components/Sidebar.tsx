@@ -57,12 +57,12 @@ export default function Sidebar() {
     <aside
       className="w-[220px] flex-shrink-0 flex flex-col h-full"
       style={{
-        background: "#FFFFFF",
-        borderRight: "1px solid #F0F0F2",
+        background: "var(--sidebar-bg)",
+        borderRight: "1px solid var(--sidebar-border)",
       }}
     >
       {/* Logo */}
-      <div className="px-5 pt-6 pb-5" style={{ borderBottom: "1px solid #F0F0F2" }}>
+      <div className="px-5 pt-6 pb-5" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
         <div className="flex items-center gap-2.5">
           <div
             className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
@@ -71,8 +71,8 @@ export default function Sidebar() {
             <Sparkles size={13} className="text-white" strokeWidth={2.5} />
           </div>
           <span
-            className="text-[19px] font-black tracking-tight leading-none"
-            style={{ color: "#0D1B2A", letterSpacing: "-0.04em" }}
+            className="text-[19px] font-black tracking-tight leading-none text-white"
+            style={{ letterSpacing: "-0.04em" }}
           >
             Collabi
           </span>
@@ -80,10 +80,11 @@ export default function Sidebar() {
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 px-3 py-4 overflow-y-auto scrollbar-thin space-y-4">
+      <nav className="flex-1 px-3 py-4 overflow-y-auto scrollbar-thin space-y-5">
         {navSections.map((section) => (
           <div key={section.label}>
-            <p className="px-2 mb-1.5 text-[10px] font-bold uppercase tracking-[0.15em] text-gray-400">
+            <p className="px-2 mb-1.5 text-[10px] font-bold uppercase tracking-[0.15em]"
+               style={{ color: "rgba(255,255,255,0.25)" }}>
               {section.label}
             </p>
             <div className="space-y-0.5">
@@ -96,14 +97,29 @@ export default function Sidebar() {
                     className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[13px] font-medium transition-all duration-100"
                     style={
                       active
-                        ? { background: "#FEF0EB", color: "#C04A1A", fontWeight: 600 }
-                        : { color: "#6B7280" }
+                        ? {
+                            background: "rgba(232,98,42,0.14)",
+                            color: "#ffffff",
+                            fontWeight: 600,
+                            borderLeft: "2px solid #E8622A",
+                            paddingLeft: "8px",
+                          }
+                        : { color: "rgba(255,255,255,0.5)" }
                     }
+                    onMouseEnter={e => {
+                      if (!active) (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.85)";
+                    }}
+                    onMouseLeave={e => {
+                      if (!active) (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.5)";
+                    }}
                   >
                     <Icon
                       size={15}
                       strokeWidth={active ? 2.5 : 2}
-                      style={{ color: active ? "#E8622A" : "#9CA3AF", flexShrink: 0 }}
+                      style={{
+                        color: active ? "#E8622A" : "rgba(255,255,255,0.35)",
+                        flexShrink: 0,
+                      }}
                     />
                     {label}
                   </Link>
@@ -117,20 +133,21 @@ export default function Sidebar() {
       {/* Admin */}
       {isAdmin && (
         <div className="px-3 pb-2">
-          <p className="px-2 mb-1.5 text-[10px] font-bold uppercase tracking-[0.15em] text-gray-400">Admin</p>
+          <p className="px-2 mb-1.5 text-[10px] font-bold uppercase tracking-[0.15em]"
+             style={{ color: "rgba(255,255,255,0.25)" }}>Admin</p>
           <Link
             href="/admin"
             className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[13px] font-medium transition-all duration-100"
             style={
               pathname.startsWith("/admin")
-                ? { background: "#FEF0EB", color: "#C04A1A", fontWeight: 600 }
-                : { color: "#6B7280" }
+                ? { background: "rgba(232,98,42,0.14)", color: "#ffffff", fontWeight: 600, borderLeft: "2px solid #E8622A", paddingLeft: "8px" }
+                : { color: "rgba(255,255,255,0.5)" }
             }
           >
             <ShieldCheck
               size={15}
               strokeWidth={pathname.startsWith("/admin") ? 2.5 : 2}
-              style={{ color: pathname.startsWith("/admin") ? "#E8622A" : "#9CA3AF", flexShrink: 0 }}
+              style={{ color: pathname.startsWith("/admin") ? "#E8622A" : "rgba(255,255,255,0.35)", flexShrink: 0 }}
             />
             Admin Dashboard
           </Link>
@@ -138,21 +155,27 @@ export default function Sidebar() {
       )}
 
       {/* Settings */}
-      <div className="px-3 pb-2" style={{ borderTop: "1px solid #F0F0F2" }}>
+      <div className="px-3 pb-2" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
         <div className="pt-2">
           <Link
             href="/settings"
             className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[13px] font-medium transition-all duration-100"
             style={
               pathname === "/settings"
-                ? { background: "#FEF0EB", color: "#C04A1A", fontWeight: 600 }
-                : { color: "#6B7280" }
+                ? { background: "rgba(232,98,42,0.14)", color: "#ffffff", fontWeight: 600, borderLeft: "2px solid #E8622A", paddingLeft: "8px" }
+                : { color: "rgba(255,255,255,0.5)" }
             }
+            onMouseEnter={e => {
+              if (pathname !== "/settings") (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.85)";
+            }}
+            onMouseLeave={e => {
+              if (pathname !== "/settings") (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.5)";
+            }}
           >
             <Settings
               size={15}
               strokeWidth={pathname === "/settings" ? 2.5 : 2}
-              style={{ color: pathname === "/settings" ? "#E8622A" : "#9CA3AF", flexShrink: 0 }}
+              style={{ color: pathname === "/settings" ? "#E8622A" : "rgba(255,255,255,0.35)", flexShrink: 0 }}
             />
             Settings
           </Link>
@@ -160,7 +183,7 @@ export default function Sidebar() {
       </div>
 
       {/* User footer */}
-      <div className="px-4 py-3.5" style={{ borderTop: "1px solid #F0F0F2" }}>
+      <div className="px-4 py-3.5" style={{ borderTop: "1px solid rgba(255,255,255,0.06)", background: "rgba(0,0,0,0.2)" }}>
         <div className="flex items-center gap-2.5">
           <div
             className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden"
@@ -173,17 +196,20 @@ export default function Sidebar() {
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[12px] font-semibold truncate" style={{ color: "#0D1B2A" }}>
+            <p className="text-[12px] font-semibold truncate text-white">
               {displayName}
             </p>
-            <p className="text-[10px] truncate" style={{ color: "#9CA3AF" }}>
+            <p className="text-[10px] truncate" style={{ color: "rgba(255,255,255,0.35)" }}>
               {displayHandle}
             </p>
           </div>
           <SignOutButton>
             <button
               title="Sign out"
-              className="text-[11px] text-gray-300 hover:text-red-400 transition-colors flex-shrink-0 font-medium"
+              className="text-[11px] transition-colors flex-shrink-0 font-medium"
+              style={{ color: "rgba(255,255,255,0.25)" }}
+              onMouseEnter={e => (e.currentTarget.style.color = "#f87171")}
+              onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.25)")}
             >
               ↪
             </button>

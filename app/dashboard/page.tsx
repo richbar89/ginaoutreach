@@ -19,14 +19,14 @@ const DEAL_STAGE_LABELS: Record<string, string> = {
   contracted: "Contracted", delivered: "Delivered", paid: "Paid",
 };
 
-const DEAL_CARD_COLOURS = [
-  { bg: "#EFF6FF", border: "#BFDBFE" },
-  { bg: "#F5F3FF", border: "#DDD6FE" },
-  { bg: "#ECFDF5", border: "#A7F3D0" },
-  { bg: "#FFF7ED", border: "#FED7AA" },
-  { bg: "#FDF4FF", border: "#E9D5FF" },
-  { bg: "#F0FDFA", border: "#99F6E4" },
-];
+const DEAL_STAGE_ACCENT: Record<string, string> = {
+  pitched:     "#3B82F6",
+  replied:     "#6366F1",
+  negotiating: "#F59E0B",
+  contracted:  "#8B5CF6",
+  delivered:   "#06B6D4",
+  paid:        "#10B981",
+};
 
 const DEAL_STAGE_BADGE: Record<string, string> = {
   pitched:     "bg-blue-100 text-blue-700",
@@ -166,16 +166,16 @@ export default function DashboardPage() {
   const showChecklist = !checklistDismissed && !allChecklistDone;
 
   return (
-    <div className="h-full flex flex-col overflow-hidden" style={{ background: "#F7F8FA" }}>
+    <div className="h-full flex flex-col overflow-hidden" style={{ background: "var(--blush)" }}>
 
       {/* Email not connected banner */}
       {emailConnected === null && (
-        <div className="flex items-center gap-3 px-6 py-3 bg-amber-50 border-b border-amber-200 flex-shrink-0">
-          <AlertTriangle size={15} className="text-amber-500 flex-shrink-0" />
-          <p className="text-sm text-amber-800 flex-1">
-            <span className="font-semibold">No email connected.</span> You won&apos;t be able to send outreach until you connect Gmail or Microsoft.
+        <div className="flex items-center gap-3 px-6 py-2.5 flex-shrink-0" style={{ background: "#FFF8EE", borderBottom: "1px solid #FDE5B8" }}>
+          <AlertTriangle size={13} style={{ color: "#D97706", flexShrink: 0 }} />
+          <p className="text-xs font-medium flex-1" style={{ color: "#92400E" }}>
+            <span className="font-bold">No email connected.</span> Connect Gmail or Microsoft to send outreach.
           </p>
-          <Link href="/settings" className="text-xs font-bold text-amber-700 hover:text-amber-900 whitespace-nowrap border border-amber-300 px-3 py-1 rounded-lg hover:bg-amber-100 transition-colors">
+          <Link href="/settings" className="text-xs font-bold whitespace-nowrap px-3 py-1 rounded-lg transition-colors" style={{ color: "#B45309", background: "#FEF3C7", border: "1px solid #FDE68A" }}>
             Connect now →
           </Link>
         </div>
@@ -183,12 +183,12 @@ export default function DashboardPage() {
 
       {/* Gmail token expired banner */}
       {emailConnected === "expired" && (
-        <div className="flex items-center gap-3 px-6 py-3 bg-red-50 border-b border-red-200 flex-shrink-0">
-          <AlertTriangle size={15} className="text-red-500 flex-shrink-0" />
-          <p className="text-sm text-red-800 flex-1">
-            <span className="font-semibold">Gmail session expired.</span> Your emails won&apos;t send until you reconnect.
+        <div className="flex items-center gap-3 px-6 py-2.5 flex-shrink-0" style={{ background: "#FFF5F5", borderBottom: "1px solid #FECACA" }}>
+          <AlertTriangle size={13} style={{ color: "#EF4444", flexShrink: 0 }} />
+          <p className="text-xs font-medium flex-1" style={{ color: "#7F1D1D" }}>
+            <span className="font-bold">Gmail session expired.</span> Your emails won&apos;t send until you reconnect.
           </p>
-          <Link href="/settings" className="text-xs font-bold text-red-700 hover:text-red-900 whitespace-nowrap border border-red-300 px-3 py-1 rounded-lg hover:bg-red-100 transition-colors">
+          <Link href="/settings" className="text-xs font-bold whitespace-nowrap px-3 py-1 rounded-lg transition-colors" style={{ color: "#B91C1C", background: "#FEE2E2", border: "1px solid #FECACA" }}>
             Reconnect →
           </Link>
         </div>
@@ -197,33 +197,38 @@ export default function DashboardPage() {
       {/* Header */}
       <div
         className="flex items-center justify-between px-8 pt-6 pb-5 flex-shrink-0"
-        style={{ borderBottom: "1px solid var(--border)" }}
+        style={{ borderBottom: "1px solid var(--border)", background: "#fff" }}
       >
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-widest text-navy-400 mb-1">{today}</p>
-          <h1 className="text-3xl font-black tracking-tight text-navy-900">Good morning, {firstName}.</h1>
+          <p className="text-[10px] font-semibold uppercase tracking-widest mb-1" style={{ color: "#9CA3AF" }}>{today}</p>
+          <h1 className="text-[28px] font-black tracking-tight" style={{ color: "#0D1B2A", letterSpacing: "-0.035em" }}>Good morning, {firstName}.</h1>
         </div>
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2">
           <Link
             href="/contacts"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-white border text-navy-700 text-sm font-semibold rounded-xl transition-all hover:border-coral-300 hover:shadow-sm"
-            style={{ borderColor: "var(--border)" }}
+            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-xl transition-all"
+            style={{ background: "#fff", border: "1px solid var(--border)", color: "#374151" }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "#E8622A"; (e.currentTarget as HTMLElement).style.color = "#E8622A"; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--border)"; (e.currentTarget as HTMLElement).style.color = "#374151"; }}
           >
-            <Users size={14} />
+            <Users size={13} />
             New Campaign
           </Link>
           <Link
             href="/send"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-coral-500 hover:bg-coral-600 text-white text-sm font-bold rounded-xl transition-all shadow-sm"
+            className="inline-flex items-center gap-2 px-4 py-2 text-white text-sm font-bold rounded-xl transition-all"
+            style={{ background: "#E8622A", boxShadow: "0 1px 8px rgba(232,98,42,0.35)" }}
+            onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = "#d45520"}
+            onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = "#E8622A"}
           >
-            <Send size={14} />
+            <Send size={13} />
             Quick Send
           </Link>
         </div>
       </div>
 
       {/* Main grid */}
-      <div className="flex-1 min-h-0 grid grid-cols-2 gap-4 p-5">
+      <div className="flex-1 min-h-0 grid grid-cols-2 gap-3 p-4">
 
         {/* ── LEFT COLUMN ── */}
         <div className="flex flex-col gap-4 min-h-0">
@@ -423,30 +428,35 @@ export default function DashboardPage() {
                 <p className="text-xs text-navy-300 mt-1">Positive replies in your inbox get flagged automatically.</p>
               </div>
             ) : (
-              <div className="flex-1 overflow-y-auto scrollbar-thin p-3 space-y-2">
-                {recentDeals.map((deal, i) => {
-                  const colours = DEAL_CARD_COLOURS[i % DEAL_CARD_COLOURS.length];
+              <div className="flex-1 overflow-y-auto scrollbar-thin p-3 space-y-1.5">
+                {recentDeals.map((deal) => {
+                  const accent = DEAL_STAGE_ACCENT[deal.status] || "#6B7280";
                   return (
                     <div
                       key={deal.id}
-                      className="rounded-xl px-4 py-3 flex items-center gap-3"
-                      style={{ background: colours.bg, border: `1px solid ${colours.border}` }}
+                      className="rounded-xl px-3.5 py-3 flex items-center gap-3"
+                      style={{
+                        background: "#fff",
+                        border: "1px solid var(--border)",
+                        borderLeft: `3px solid ${accent}`,
+                      }}
                     >
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-black text-navy-900 truncate">
+                        <p className="text-sm font-semibold truncate" style={{ color: "#0D1B2A" }}>
                           {deal.company || deal.contactName}
                         </p>
                         {deal.company && (
-                          <p className="text-xs text-navy-500 font-medium truncate">{deal.contactName}</p>
+                          <p className="text-xs truncate" style={{ color: "#9CA3AF" }}>{deal.contactName}</p>
                         )}
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0">
                         {deal.value && (
-                          <span className="text-xs font-black text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-lg">
+                          <span className="text-xs font-bold" style={{ color: "#059669" }}>
                             {deal.value}
                           </span>
                         )}
-                        <span className={`text-[10px] font-bold uppercase tracking-wide px-2 py-1 rounded-full ${DEAL_STAGE_BADGE[deal.status] || "bg-navy-100 text-navy-600"}`}>
+                        <span className="text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-md"
+                          style={{ background: `${accent}15`, color: accent }}>
                           {DEAL_STAGE_LABELS[deal.status] || deal.status}
                         </span>
                       </div>
