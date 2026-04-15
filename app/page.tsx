@@ -367,6 +367,17 @@ export default function LandingPage() {
         .cl-pricing-grain { background: #0D1B2A; }
         .cl-pricing-grain::before { content: ""; position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E"); background-size: 200px 200px; opacity: 0.055; pointer-events: none; z-index: 0; }
         .cl-pricing-grain::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at 30% 50%, rgba(71,129,255,0.18) 0%, transparent 65%), radial-gradient(ellipse at 80% 20%, rgba(232,98,42,0.08) 0%, transparent 50%); pointer-events: none; z-index: 0; }
+        .cl-desktop-only { display: block; }
+        .cl-mobile-only { display: none; }
+        @media (max-width: 768px) {
+          .cl-desktop-only { display: none !important; }
+          .cl-mobile-only { display: block !important; }
+        }
+        .cl-hero-copy { min-height: 520px; }
+        @media (max-width: 768px) {
+          .cl-hero-section { min-height: unset !important; padding-top: 100px !important; padding-bottom: 60px !important; }
+          .cl-hero-copy { min-height: unset !important; }
+        }
         @media (max-width: 900px) {
           .cl-hero-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
           .cl-mockup-hide { display: none !important; }
@@ -394,12 +405,12 @@ export default function LandingPage() {
         </nav>
 
         {/* ── HERO ── */}
-        <section className="cl-dot" style={{ paddingTop: 140, paddingBottom: 100, paddingLeft: 28, paddingRight: 28, background: "#fff", position: "relative", overflow: "hidden", minHeight: 760 }}>
+        <section className="cl-dot cl-hero-section" style={{ paddingTop: 140, paddingBottom: 100, paddingLeft: 28, paddingRight: 28, background: "#fff", position: "relative", overflow: "hidden", minHeight: 760 }}>
           <div style={{ position: "absolute", top: "20%", right: "8%", width: 480, height: 480, background: "radial-gradient(ellipse, rgba(232,98,42,0.06) 0%, transparent 70%)", pointerEvents: "none" }} />
           <div className="cl-inner">
             <div ref={hero.ref} className={`cl-hero-grid cl-fade${hero.vis ? " vis" : ""}`}>
               {/* Copy */}
-              <div style={{ minHeight: 520 }}>
+              <div className="cl-hero-copy">
                 <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "rgba(232,98,42,0.07)", border: "1px solid rgba(232,98,42,0.18)", borderRadius: 100, padding: "5px 13px", marginBottom: 26 }}>
                   <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#E8622A", animation: "cl-pulse 2s infinite" }} />
                   <span style={{ fontSize: 11, color: "#E8622A", fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase" }}>Now in early access</span>
@@ -449,41 +460,65 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* ── FEATURES ── */}
-        {FEATURES.map((f, i) => {
-          const fr = fRefs[i];
-          const reverse = i % 2 !== 0;
-          return (
-            <section key={f.tag} className="cl-section" style={{ background: i % 2 === 0 ? "#fff" : "#fafafa", padding: "100px 28px" }}>
-              <div className="cl-inner">
-                <div
-                  ref={fr.ref}
-                  className={`cl-feat-row cl-fade${fr.vis ? " vis" : ""}${reverse ? " cl-feat-row-rev" : ""}`}
-                  style={{ direction: reverse ? "rtl" : "ltr" } as React.CSSProperties}
-                >
-                  <div style={{ direction: "ltr" }}>
-                    <div className="cl-tag">{f.tag}</div>
-                    <h2 className="cl-h" style={{ fontSize: "clamp(30px, 3.5vw, 44px)", fontWeight: 800, letterSpacing: "-0.035em", lineHeight: 1.1, color: "#0D1B2A", marginBottom: 20, whiteSpace: "pre-line" }}>
-                      {f.title}
-                    </h2>
-                    <p style={{ fontSize: 17, color: "#6b7280", lineHeight: 1.8, marginBottom: 28 }}>{f.body}</p>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
-                      {f.bullets.map(b => (
-                        <div key={b} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                          <div style={{ width: 20, height: 20, borderRadius: "50%", background: "rgba(232,98,42,0.1)", border: "1px solid rgba(232,98,42,0.25)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#E8622A" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        {/* ── FEATURES (desktop only) ── */}
+        <div className="cl-desktop-only">
+          {FEATURES.map((f, i) => {
+            const fr = fRefs[i];
+            const reverse = i % 2 !== 0;
+            return (
+              <section key={f.tag} className="cl-section" style={{ background: i % 2 === 0 ? "#fff" : "#fafafa", padding: "100px 28px" }}>
+                <div className="cl-inner">
+                  <div
+                    ref={fr.ref}
+                    className={`cl-feat-row cl-fade${fr.vis ? " vis" : ""}${reverse ? " cl-feat-row-rev" : ""}`}
+                    style={{ direction: reverse ? "rtl" : "ltr" } as React.CSSProperties}
+                  >
+                    <div style={{ direction: "ltr" }}>
+                      <div className="cl-tag">{f.tag}</div>
+                      <h2 className="cl-h" style={{ fontSize: "clamp(30px, 3.5vw, 44px)", fontWeight: 800, letterSpacing: "-0.035em", lineHeight: 1.1, color: "#0D1B2A", marginBottom: 20, whiteSpace: "pre-line" }}>
+                        {f.title}
+                      </h2>
+                      <p style={{ fontSize: 17, color: "#6b7280", lineHeight: 1.8, marginBottom: 28 }}>{f.body}</p>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
+                        {f.bullets.map(b => (
+                          <div key={b} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                            <div style={{ width: 20, height: 20, borderRadius: "50%", background: "rgba(232,98,42,0.1)", border: "1px solid rgba(232,98,42,0.25)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#E8622A" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                            <span style={{ fontSize: 14, color: "#4b5563", fontWeight: 500 }}>{b}</span>
                           </div>
-                          <span style={{ fontSize: 14, color: "#4b5563", fontWeight: 500 }}>{b}</span>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
+                    <div style={{ direction: "ltr" }}>{f.mockup}</div>
                   </div>
-                  <div style={{ direction: "ltr" }}>{f.mockup}</div>
                 </div>
+              </section>
+            );
+          })}
+        </div>
+
+        {/* ── MOBILE FEATURES (mobile only) ── */}
+        <div className="cl-mobile-only" style={{ background: "#fff", padding: "56px 24px" }}>
+          <p style={{ textAlign: "center", fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#E8622A", marginBottom: 10 }}>Everything you need</p>
+          <h2 className="cl-h" style={{ textAlign: "center", fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em", color: "#0D1B2A", marginBottom: 32, lineHeight: 1.2 }}>
+            One platform.<br />Every tool.
+          </h2>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+            {[
+              { emoji: "📋", title: "10k+ contacts", body: "Real brand managers, ready to pitch" },
+              { emoji: "📊", title: "Ad intelligence", body: "See which brands have live budgets" },
+              { emoji: "✉️", title: "Email campaigns", body: "Send from your own Gmail or Outlook" },
+              { emoji: "💼", title: "Deal pipeline", body: "Track every conversation to paid" },
+            ].map(({ emoji, title, body }) => (
+              <div key={title} style={{ background: "#F9FAFB", borderRadius: 16, padding: "20px 18px", border: "1px solid #F0F0F2" }}>
+                <div style={{ fontSize: 24, marginBottom: 10 }}>{emoji}</div>
+                <p style={{ fontSize: 14, fontWeight: 700, color: "#0D1B2A", marginBottom: 5, letterSpacing: "-0.02em" }}>{title}</p>
+                <p style={{ fontSize: 12, color: "#9CA3AF", lineHeight: 1.5 }}>{body}</p>
               </div>
-            </section>
-          );
-        })}
+            ))}
+          </div>
+        </div>
 
         {/* ── CREATOR SPOTS ── */}
         <section className="cl-section" style={{ background: "#F9FAFB", padding: "90px 28px" }}>
