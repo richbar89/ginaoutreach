@@ -6,8 +6,9 @@ import { useUser } from "@clerk/nextjs";
 import { CheckCircle, Loader2, Mail, ArrowRight, User } from "lucide-react";
 import { signInWithGoogle, getGoogleUser } from "@/lib/googleClient";
 import { signInWithMicrosoft, getMicrosoftUser } from "@/lib/graphClient";
+import { useAuth } from "@clerk/nextjs";
 import { useDb } from "@/lib/useDb";
-import { dbGetMediaKit, dbSaveMediaKit } from "@/lib/db";
+import { dbGetMediaKit, dbSaveMediaKit, dbGetDeals, dbUpsertDeal, dbGetBrands, dbSaveBrands } from "@/lib/db";
 
 const CREATOR_TYPES = [
   { key: "foodie",    label: "Foodie",    emoji: "🍔", desc: "Food, drink, restaurants, recipes" },
@@ -23,6 +24,8 @@ type Connected = { provider: EmailProvider; email: string; name: string } | null
 export default function OnboardingPage() {
   const router = useRouter();
   const { user } = useUser();
+  const { userId: clerkUserId } = useAuth();
+  const userId = clerkUserId ?? undefined;
   const getDb = useDb();
 
   const [step, setStep] = useState<Step>("email");
@@ -98,6 +101,33 @@ export default function OnboardingPage() {
       // Save creator_type separately
       if (creatorType) {
         await db.from("user_settings").upsert({ creator_type: creatorType });
+      }
+
+      // Seed demo data if this is a fresh account
+      if (userId) {
+        const [existingDeals, existingBrands] = await Promise.all([
+          dbGetDeals(db),
+          dbGetBrands(db),
+        ]);
+
+        if (existingDeals.length === 0) {
+          const now = new Date().toISOString();
+          const demoDeals = [
+            { id: crypto.randomUUID(), contactName: "Sarah Mitchell", contactEmail: "sarah@graze.com",      company: "Graze",           status: "pitched"     as const, value: "£400",  notes: "Sent initial pitch for snack box campaign", createdAt: now, updatedAt: now },
+            { id: crypto.randomUUID(), contactName: "James Okafor",   contactEmail: "james@oatly.com",       company: "Oatly",           status: "replied"     as const, value: "£650",  notes: "Positive reply — awaiting brief",           createdAt: now, updatedAt: now },
+            { id: crypto.randomUUID(), contactName: "Emma Chen",      contactEmail: "emma@innocent.com",     company: "Innocent Drinks", status: "negotiating" as const, value: "£1,200",notes: "Negotiating deliverables and usage rights",  createdAt: now, updatedAt: now },
+          ];
+          await Promise.all(demoDeals.map(d => dbUpsertDeal(db, d, userId)));
+        }
+
+        if (existingBrands.length === 0) {
+          await dbSaveBrands(db, [
+            { name: "Graze",           runningAds: true },
+            { name: "Oatly",           runningAds: false },
+            { name: "Innocent Drinks", runningAds: true },
+            { name: "Pip & Nut",       runningAds: false },
+          ]);
+        }
       }
     } catch {
       // Non-blocking — proceed to dashboard even if save fails

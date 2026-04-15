@@ -362,13 +362,19 @@ export default function LandingPage() {
         .cl-section-sm { padding: 72px 28px; }
         .cl-inner { max-width: 1160px; margin: 0 auto; }
         .cl-tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #E8622A; background: rgba(232,98,42,0.08); padding: 4px 12px; border-radius: 100px; margin-bottom: 16px; }
+        .cl-hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr); gap: 80px; align-items: center; }
+        .cl-feat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+        .cl-pricing-grain { background: #0D1B2A; }
+        .cl-pricing-grain::before { content: ""; position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E"); background-size: 200px 200px; opacity: 0.055; pointer-events: none; z-index: 0; }
+        .cl-pricing-grain::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at 30% 50%, rgba(71,129,255,0.18) 0%, transparent 65%), radial-gradient(ellipse at 80% 20%, rgba(232,98,42,0.08) 0%, transparent 50%); pointer-events: none; z-index: 0; }
         @media (max-width: 900px) {
-          .cl-hero-grid { grid-template-columns: 1fr !important; }
+          .cl-hero-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
           .cl-mockup-hide { display: none !important; }
-          .cl-feat-row { grid-template-columns: 1fr !important; }
+          .cl-feat-row { grid-template-columns: 1fr !important; gap: 40px !important; }
           .cl-feat-row-rev { direction: ltr !important; }
           .cl-section { padding: 72px 20px; }
           .cl-price-card { padding: 32px 24px; }
+          .cl-nav-signin { display: none !important; }
         }
       `}</style>
 
@@ -381,7 +387,7 @@ export default function LandingPage() {
               <span className="cl-h" style={{ fontSize: 24, fontWeight: 800, color: "#0D1B2A", letterSpacing: "-0.04em" }}>Collabi</span>
             </Link>
             <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-              <Link href="/sign-in" className="cl-btn cl-btn-ghost">Sign in</Link>
+              <Link href="/sign-in" className="cl-btn cl-btn-ghost cl-nav-signin">Sign in</Link>
               <Link href="/sign-up" className="cl-btn cl-btn-primary">Start free trial →</Link>
             </div>
           </div>
@@ -391,7 +397,7 @@ export default function LandingPage() {
         <section className="cl-dot" style={{ paddingTop: 140, paddingBottom: 100, paddingLeft: 28, paddingRight: 28, background: "#fff", position: "relative", overflow: "hidden", minHeight: 760 }}>
           <div style={{ position: "absolute", top: "20%", right: "8%", width: 480, height: 480, background: "radial-gradient(ellipse, rgba(232,98,42,0.06) 0%, transparent 70%)", pointerEvents: "none" }} />
           <div className="cl-inner">
-            <div ref={hero.ref} className={`cl-fade${hero.vis ? " vis" : ""}`} style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 0.9fr)", gap: 80, alignItems: "center" } as React.CSSProperties} id="cl-hero-grid">
+            <div ref={hero.ref} className={`cl-hero-grid cl-fade${hero.vis ? " vis" : ""}`}>
               {/* Copy */}
               <div style={{ minHeight: 520 }}>
                 <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "rgba(232,98,42,0.07)", border: "1px solid rgba(232,98,42,0.18)", borderRadius: 100, padding: "5px 13px", marginBottom: 26 }}>
@@ -452,8 +458,8 @@ export default function LandingPage() {
               <div className="cl-inner">
                 <div
                   ref={fr.ref}
-                  className={`cl-fade${fr.vis ? " vis" : ""} cl-feat-row${reverse ? " cl-feat-row-rev" : ""}`}
-                  style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "center", direction: reverse ? "rtl" : "ltr" } as React.CSSProperties}
+                  className={`cl-feat-row cl-fade${fr.vis ? " vis" : ""}${reverse ? " cl-feat-row-rev" : ""}`}
+                  style={{ direction: reverse ? "rtl" : "ltr" } as React.CSSProperties}
                 >
                   <div style={{ direction: "ltr" }}>
                     <div className="cl-tag">{f.tag}</div>
@@ -529,19 +535,30 @@ export default function LandingPage() {
         </section>
 
         {/* ── PRICING ── */}
-        <section className="cl-section" style={{ background: "#fff", padding: "110px 28px" }}>
-          <div className="cl-inner" style={{ maxWidth: 620 }}>
+        <section className="cl-section cl-pricing-grain" style={{ padding: "110px 28px", position: "relative", overflow: "hidden" }}>
+          {/* SVG grain filter — hidden, just defines the filter */}
+          <svg width="0" height="0" style={{ position: "absolute" }}>
+            <defs>
+              <filter id="cl-grain">
+                <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" result="noise" />
+                <feColorMatrix type="saturate" values="0" in="noise" result="grayNoise" />
+                <feBlend in="SourceGraphic" in2="grayNoise" mode="overlay" result="blended" />
+                <feComposite in="blended" in2="SourceGraphic" operator="in" />
+              </filter>
+            </defs>
+          </svg>
+          <div className="cl-inner" style={{ maxWidth: 620, position: "relative", zIndex: 1 }}>
             <div ref={pricing.ref} className={`cl-fade${pricing.vis ? " vis" : ""}`} style={{ textAlign: "center" }}>
-              <div className="cl-tag">Pricing</div>
-              <h2 className="cl-h" style={{ fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 800, letterSpacing: "-0.035em", color: "#0D1B2A", marginBottom: 48 }}>
+              <div style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.5)", background: "rgba(255,255,255,0.1)", padding: "4px 12px", borderRadius: 100, marginBottom: 16 }}>Pricing</div>
+              <h2 className="cl-h" style={{ fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 800, letterSpacing: "-0.035em", color: "#fff", marginBottom: 48 }}>
                 One price.<br />Everything included.
               </h2>
-              <div className="cl-price-card">
+              <div style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 20, padding: "48px", backdropFilter: "blur(10px)" }}>
                 <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "center", gap: 4, marginBottom: 6 }}>
-                  <span className="cl-h" style={{ fontSize: 72, fontWeight: 800, color: "#0D1B2A", letterSpacing: "-0.05em", lineHeight: 1 }}>£29</span>
-                  <span style={{ fontSize: 18, color: "#9ca3af", marginBottom: 10 }}>/month</span>
+                  <span className="cl-h" style={{ fontSize: 72, fontWeight: 800, color: "#fff", letterSpacing: "-0.05em", lineHeight: 1 }}>£29</span>
+                  <span style={{ fontSize: 18, color: "rgba(255,255,255,0.45)", marginBottom: 10 }}>/month</span>
                 </div>
-                <p style={{ fontSize: 15, color: "#9ca3af", marginBottom: 36 }}>7-day free trial · No card required · Cancel anytime</p>
+                <p style={{ fontSize: 15, color: "rgba(255,255,255,0.45)", marginBottom: 36 }}>7-day free trial · No card required · Cancel anytime</p>
 
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px 24px", textAlign: "left", marginBottom: 40 }}>
                   {[
@@ -555,18 +572,18 @@ export default function LandingPage() {
                     "New contacts added monthly",
                   ].map(item => (
                     <div key={item} style={{ display: "flex", alignItems: "center", gap: 9 }}>
-                      <div style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(16,185,129,0.12)", border: "1px solid rgba(16,185,129,0.3)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                      <div style={{ width: 18, height: 18, borderRadius: "50%", background: "rgba(16,185,129,0.2)", border: "1px solid rgba(16,185,129,0.4)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#34D399" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                       </div>
-                      <span style={{ fontSize: 14, color: "#4b5563" }}>{item}</span>
+                      <span style={{ fontSize: 14, color: "rgba(255,255,255,0.75)" }}>{item}</span>
                     </div>
                   ))}
                 </div>
 
-                <Link href="/sign-up" className="cl-btn cl-btn-primary-lg" style={{ width: "100%", justifyContent: "center", display: "flex", textDecoration: "none", borderRadius: 12, padding: "16px" }}>
+                <Link href="/sign-up" className="cl-btn cl-btn-primary-lg" style={{ width: "100%", justifyContent: "center", display: "flex", textDecoration: "none", borderRadius: 12, padding: "16px", background: "#fff", color: "#0D1B2A" }}>
                   Start 7-day free trial — it&apos;s free
                 </Link>
-                <p style={{ fontSize: 13, color: "#9ca3af", marginTop: 14 }}>No credit card needed. Cancel at any time.</p>
+                <p style={{ fontSize: 13, color: "rgba(255,255,255,0.35)", marginTop: 14 }}>No credit card needed. Cancel at any time.</p>
               </div>
             </div>
           </div>

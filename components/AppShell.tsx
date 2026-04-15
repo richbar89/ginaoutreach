@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 import AnnouncementBanner from "@/components/AnnouncementBanner";
+import { Monitor } from "lucide-react";
 
 const APP_ROUTES = [
   "/dashboard",
@@ -30,6 +31,17 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div style={{ minHeight: "100vh", padding: "16px", background: "#EDEEF2" }}>
+      {/* Mobile nudge — only visible on small screens */}
+      <div className="md:hidden fixed inset-0 z-[999] flex flex-col items-center justify-center p-8 text-center" style={{ background: "#EDEEF2" }}>
+        <div style={{ background: "#fff", borderRadius: 20, padding: "40px 32px", boxShadow: "0 8px 40px rgba(0,0,0,0.12)", maxWidth: 340, width: "100%" }}>
+          <div style={{ width: 52, height: 52, background: "#FEF0EB", borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
+            <Monitor size={24} style={{ color: "#E8622A" }} />
+          </div>
+          <h2 style={{ fontSize: 20, fontWeight: 800, color: "#0D1B2A", letterSpacing: "-0.03em", marginBottom: 10 }}>Best on desktop</h2>
+          <p style={{ fontSize: 14, color: "#6B7280", lineHeight: 1.6, marginBottom: 24 }}>Collabi is designed for a full-screen experience. For the best results, open it on your laptop or desktop.</p>
+          <a href="/" style={{ display: "inline-block", fontSize: 13, color: "#E8622A", fontWeight: 600, textDecoration: "none" }}>← Back to home</a>
+        </div>
+      </div>
       <div
         className="flex overflow-hidden"
         style={{
