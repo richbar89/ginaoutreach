@@ -21,6 +21,8 @@ const APP_ROUTES = [
   "/onboarding",
 ];
 
+const SIDEBAR_WIDTH = 52; // px
+
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isApp = APP_ROUTES.some((r) => pathname === r || pathname.startsWith(r + "/"));
@@ -30,31 +32,93 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   if (isOnboarding) return <>{children}</>;
 
   return (
-    <div style={{ height: "100vh", display: "flex", overflow: "hidden" }}>
-      {/* Mobile nudge — only visible on small screens */}
+    <div
+      style={{
+        height: "100vh",
+        display: "flex",
+        overflow: "hidden",
+        padding: "20px",
+        paddingLeft: "20px",
+      }}
+    >
+      {/* Mobile nudge */}
       <div
         className="md:hidden fixed inset-0 z-[999] flex flex-col items-center justify-center p-8 text-center"
-        style={{ background: "linear-gradient(135deg, #A8B4FF 0%, #C8B4FF 45%, #FFB090 100%)" }}
+        style={{ background: "linear-gradient(145deg, #818CF8 0%, #A5B4FC 30%, #FFFFFF 100%)" }}
       >
-        <div style={{ background: "rgba(255,255,255,0.85)", backdropFilter: "blur(20px)", borderRadius: 20, padding: "40px 32px", boxShadow: "0 8px 40px rgba(100,80,200,0.2)", maxWidth: 340, width: "100%" }}>
-          <div style={{ width: 52, height: 52, background: "#FEF0EB", borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
-            <Monitor size={24} style={{ color: "#E8622A" }} />
+        <div
+          style={{
+            background: "rgba(255,255,255,0.9)",
+            backdropFilter: "blur(20px)",
+            borderRadius: 20,
+            padding: "40px 32px",
+            boxShadow: "0 8px 40px rgba(99,102,241,0.2)",
+            maxWidth: 340,
+            width: "100%",
+          }}
+        >
+          <div
+            style={{
+              width: 52,
+              height: 52,
+              background: "#FEF0EB",
+              borderRadius: 14,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              margin: "0 auto 20px",
+            }}
+          >
+            <Monitor size={24} style={{ color: "#EA580C" }} />
           </div>
-          <h2 style={{ fontSize: 20, fontWeight: 800, color: "#0D1B2A", letterSpacing: "-0.03em", marginBottom: 10 }}>Best on desktop</h2>
-          <p style={{ fontSize: 14, color: "#6B7280", lineHeight: 1.6, marginBottom: 24 }}>Collabi is designed for a full-screen experience. For the best results, open it on your laptop or desktop.</p>
-          <a href="/" style={{ display: "inline-block", fontSize: 13, color: "#E8622A", fontWeight: 600, textDecoration: "none" }}>← Back to home</a>
+          <h2 style={{ fontSize: 20, fontWeight: 800, color: "#111827", letterSpacing: "-0.03em", marginBottom: 10 }}>
+            Best on desktop
+          </h2>
+          <p style={{ fontSize: 14, color: "#6B7280", lineHeight: 1.6, marginBottom: 24 }}>
+            Collabi is designed for a full-screen experience. For the best results, open it on your laptop or desktop.
+          </p>
+          <a href="/" style={{ display: "inline-block", fontSize: 13, color: "#EA580C", fontWeight: 600, textDecoration: "none" }}>
+            ← Back to home
+          </a>
         </div>
       </div>
 
-      <Sidebar />
+      {/* Layout: sidebar straddling left edge of card */}
+      <div style={{ position: "relative", flex: 1, display: "flex" }}>
 
-      <main
-        className="flex-1 flex flex-col overflow-hidden"
-        style={{ background: "transparent" }}
-      >
-        <AnnouncementBanner />
-        <div className="flex-1 overflow-y-auto">{children}</div>
-      </main>
+        {/* Sidebar — 50% outside card, 50% inside */}
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: SIDEBAR_WIDTH,
+            zIndex: 20,
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <Sidebar />
+        </div>
+
+        {/* Main card — starts at half the sidebar width so sidebar straddles its edge */}
+        <div
+          style={{
+            marginLeft: SIDEBAR_WIDTH / 2,
+            flex: 1,
+            background: "#FFFFFF",
+            borderRadius: 20,
+            boxShadow: "0 8px 48px rgba(99,102,241,0.12), 0 2px 8px rgba(0,0,0,0.06)",
+            overflow: "hidden",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <AnnouncementBanner />
+          <div style={{ flex: 1, overflow: "auto" }}>{children}</div>
+        </div>
+      </div>
     </div>
   );
 }
