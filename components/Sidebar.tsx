@@ -57,10 +57,10 @@ export default function Sidebar() {
     <aside
       className="w-[220px] flex-shrink-0 flex flex-col h-full"
       style={{
-        background: "rgba(255,255,255,0.72)",
-        backdropFilter: "blur(20px)",
-        WebkitBackdropFilter: "blur(20px)",
-        borderRight: "1px solid rgba(255,255,255,0.5)",
+        background: "rgba(255,255,255,0.70)",
+        backdropFilter: "blur(24px)",
+        WebkitBackdropFilter: "blur(24px)",
+        borderRight: "1px solid rgba(255,255,255,0.45)",
       }}
     >
       {/* Logo */}

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,23 +6,29 @@
 
 :root {
   --orange:        #E8622A;
-  --blush:         #F8F9FF;
-  --border:        #E4E8FF;
+  --blush:         transparent;
+  --border:        rgba(0, 0, 0, 0.07);
   --text:          #0D1B2A;
   --muted:         #6B7280;
-  --sidebar-bg:    #FFFFFF;
-  --sidebar-border: #E4E8FF;
-  --app-bg:        #C0C8FF;
+  --sidebar-bg:    rgba(255,255,255,0.70);
+  --sidebar-border: rgba(255,255,255,0.45);
+  --app-bg:        #B0BCFF;
 }
 
 * {
   box-sizing: border-box;
 }
 
+html {
+  background: linear-gradient(135deg, #A8B4FF 0%, #C8B4FF 45%, #FFB090 100%);
+  background-attachment: fixed;
+}
+
 body {
   font-family: 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
-  background: var(--app-bg);
+  background: transparent;
+  min-height: 100vh;
   color: var(--text);
 }
 
@@ -35,26 +41,37 @@ h1, h2, h3 {
 @layer utilities {
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: #E5E7EB transparent;
+    scrollbar-color: rgba(0,0,0,0.1) transparent;
   }
 
   .font-display {
     font-family: 'Inter', system-ui, sans-serif;
   }
 
+  .glass {
+    background: rgba(255,255,255,0.72);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
   .input-base {
-    @apply w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-900
+    @apply w-full px-4 py-2.5 bg-white border rounded-xl text-sm text-gray-900
            placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-300/40
            focus:border-orange-400 transition;
+    border-color: rgba(0,0,0,0.09);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
   }
 
   .btn-primary {
     @apply inline-flex items-center gap-2 px-5 py-2.5 bg-[#E8622A] hover:bg-[#d45520]
            disabled:opacity-40 text-white text-sm font-semibold
            rounded-xl transition-colors;
+    box-shadow: 0 2px 12px rgba(232,98,42,0.3);
   }
 
   .card {
-    @apply bg-white border border-[#EAECF0] rounded-2xl shadow-sm;
+    @apply bg-white rounded-2xl;
+    border: 1px solid rgba(255,255,255,0.9);
+    box-shadow: 0 4px 24px rgba(100,80,200,0.08), 0 1px 4px rgba(0,0,0,0.04);
   }
 }

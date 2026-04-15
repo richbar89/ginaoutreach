@@ -30,10 +30,13 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   if (isOnboarding) return <>{children}</>;
 
   return (
-    <div style={{ minHeight: "100vh", padding: "12px", background: "linear-gradient(135deg, #A8B4FF 0%, #C8B8FF 45%, #FFB899 100%)" }}>
+    <div style={{ height: "100vh", display: "flex", overflow: "hidden" }}>
       {/* Mobile nudge — only visible on small screens */}
-      <div className="md:hidden fixed inset-0 z-[999] flex flex-col items-center justify-center p-8 text-center" style={{ background: "var(--app-bg)" }}>
-        <div style={{ background: "#fff", borderRadius: 20, padding: "40px 32px", boxShadow: "0 8px 40px rgba(0,0,0,0.4)", maxWidth: 340, width: "100%" }}>
+      <div
+        className="md:hidden fixed inset-0 z-[999] flex flex-col items-center justify-center p-8 text-center"
+        style={{ background: "linear-gradient(135deg, #A8B4FF 0%, #C8B4FF 45%, #FFB090 100%)" }}
+      >
+        <div style={{ background: "rgba(255,255,255,0.85)", backdropFilter: "blur(20px)", borderRadius: 20, padding: "40px 32px", boxShadow: "0 8px 40px rgba(100,80,200,0.2)", maxWidth: 340, width: "100%" }}>
           <div style={{ width: 52, height: 52, background: "#FEF0EB", borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
             <Monitor size={24} style={{ color: "#E8622A" }} />
           </div>
@@ -42,24 +45,16 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           <a href="/" style={{ display: "inline-block", fontSize: 13, color: "#E8622A", fontWeight: 600, textDecoration: "none" }}>← Back to home</a>
         </div>
       </div>
-      <div
-        className="flex overflow-hidden"
-        style={{
-          height: "calc(100vh - 24px)",
-          borderRadius: "14px",
-          boxShadow: "0 0 0 1px rgba(255,255,255,0.3), 0 24px 60px rgba(100,80,180,0.25)",
-          overflow: "hidden",
-        }}
+
+      <Sidebar />
+
+      <main
+        className="flex-1 flex flex-col overflow-hidden"
+        style={{ background: "transparent" }}
       >
-        <Sidebar />
-        <main
-          className="flex-1 flex flex-col overflow-hidden"
-          style={{ background: "rgba(248,249,255,0.88)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)" }}
-        >
-          <AnnouncementBanner />
-          <div className="flex-1 overflow-y-auto">{children}</div>
-        </main>
-      </div>
+        <AnnouncementBanner />
+        <div className="flex-1 overflow-y-auto">{children}</div>
+      </main>
     </div>
   );
 }
