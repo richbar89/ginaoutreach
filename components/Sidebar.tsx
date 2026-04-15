@@ -57,12 +57,14 @@ export default function Sidebar() {
     <aside
       className="w-[220px] flex-shrink-0 flex flex-col h-full"
       style={{
-        background: "var(--sidebar-bg)",
-        borderRight: "1px solid var(--sidebar-border)",
+        background: "rgba(255,255,255,0.72)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        borderRight: "1px solid rgba(255,255,255,0.5)",
       }}
     >
       {/* Logo */}
-      <div className="px-5 pt-6 pb-5" style={{ borderBottom: "1px solid var(--sidebar-border)" }}>
+      <div className="px-5 pt-6 pb-5" style={{ borderBottom: "1px solid rgba(255,255,255,0.5)" }}>
         <div className="flex items-center gap-2.5">
           <div
             className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
@@ -155,7 +157,7 @@ export default function Sidebar() {
       )}
 
       {/* Settings */}
-      <div className="px-3 pb-2" style={{ borderTop: "1px solid var(--sidebar-border)" }}>
+      <div className="px-3 pb-2" style={{ borderTop: "1px solid rgba(255,255,255,0.5)" }}>
         <div className="pt-2">
           <Link
             href="/settings"
@@ -183,7 +185,7 @@ export default function Sidebar() {
       </div>
 
       {/* User footer */}
-      <div className="px-4 py-3.5" style={{ borderTop: "1px solid var(--sidebar-border)", background: "#F8F9FF" }}>
+      <div className="px-4 py-3.5" style={{ borderTop: "1px solid rgba(255,255,255,0.5)", background: "rgba(255,255,255,0.4)" }}>
         <div className="flex items-center gap-2.5">
           <div
             className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden"

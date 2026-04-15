@@ -30,7 +30,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   if (isOnboarding) return <>{children}</>;
 
   return (
-    <div style={{ minHeight: "100vh", padding: "12px", background: "linear-gradient(135deg, #C0C8FF 0%, #D8CCFF 50%, #F8C4A2 100%)" }}>
+    <div style={{ minHeight: "100vh", padding: "12px", background: "linear-gradient(135deg, #A8B4FF 0%, #C8B8FF 45%, #FFB899 100%)" }}>
       {/* Mobile nudge — only visible on small screens */}
       <div className="md:hidden fixed inset-0 z-[999] flex flex-col items-center justify-center p-8 text-center" style={{ background: "var(--app-bg)" }}>
         <div style={{ background: "#fff", borderRadius: 20, padding: "40px 32px", boxShadow: "0 8px 40px rgba(0,0,0,0.4)", maxWidth: 340, width: "100%" }}>
@@ -47,14 +47,14 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         style={{
           height: "calc(100vh - 24px)",
           borderRadius: "14px",
-          boxShadow: "0 0 0 1px rgba(255,255,255,0.05), 0 24px 60px rgba(0,0,0,0.5)",
+          boxShadow: "0 0 0 1px rgba(255,255,255,0.3), 0 24px 60px rgba(100,80,180,0.25)",
           overflow: "hidden",
         }}
       >
         <Sidebar />
         <main
           className="flex-1 flex flex-col overflow-hidden"
-          style={{ background: "var(--blush)" }}
+          style={{ background: "rgba(248,249,255,0.88)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)" }}
         >
           <AnnouncementBanner />
           <div className="flex-1 overflow-y-auto">{children}</div>
