@@ -62,7 +62,7 @@ export default function Sidebar() {
       }}
     >
       {/* Logo */}
-      <div className="px-5 pt-6 pb-5" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+      <div className="px-5 pt-6 pb-5" style={{ borderBottom: "1px solid var(--sidebar-border)" }}>
         <div className="flex items-center gap-2.5">
           <div
             className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
@@ -71,8 +71,8 @@ export default function Sidebar() {
             <Sparkles size={13} className="text-white" strokeWidth={2.5} />
           </div>
           <span
-            className="text-[19px] font-black tracking-tight leading-none text-white"
-            style={{ letterSpacing: "-0.04em" }}
+            className="text-[19px] font-black tracking-tight leading-none"
+            style={{ color: "#0D1B2A", letterSpacing: "-0.04em" }}
           >
             Collabi
           </span>
@@ -84,7 +84,7 @@ export default function Sidebar() {
         {navSections.map((section) => (
           <div key={section.label}>
             <p className="px-2 mb-1.5 text-[10px] font-bold uppercase tracking-[0.15em]"
-               style={{ color: "rgba(255,255,255,0.25)" }}>
+               style={{ color: "rgba(13,27,42,0.3)" }}>
               {section.label}
             </p>
             <div className="space-y-0.5">
@@ -98,26 +98,26 @@ export default function Sidebar() {
                     style={
                       active
                         ? {
-                            background: "rgba(232,98,42,0.14)",
-                            color: "#ffffff",
+                            background: "rgba(232,98,42,0.08)",
+                            color: "#E8622A",
                             fontWeight: 600,
                             borderLeft: "2px solid #E8622A",
                             paddingLeft: "8px",
                           }
-                        : { color: "rgba(255,255,255,0.5)" }
+                        : { color: "#6B7280" }
                     }
                     onMouseEnter={e => {
-                      if (!active) (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.85)";
+                      if (!active) (e.currentTarget as HTMLElement).style.color = "#0D1B2A";
                     }}
                     onMouseLeave={e => {
-                      if (!active) (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.5)";
+                      if (!active) (e.currentTarget as HTMLElement).style.color = "#6B7280";
                     }}
                   >
                     <Icon
                       size={15}
                       strokeWidth={active ? 2.5 : 2}
                       style={{
-                        color: active ? "#E8622A" : "rgba(255,255,255,0.35)",
+                        color: active ? "#E8622A" : "#9CA3AF",
                         flexShrink: 0,
                       }}
                     />
@@ -134,20 +134,20 @@ export default function Sidebar() {
       {isAdmin && (
         <div className="px-3 pb-2">
           <p className="px-2 mb-1.5 text-[10px] font-bold uppercase tracking-[0.15em]"
-             style={{ color: "rgba(255,255,255,0.25)" }}>Admin</p>
+             style={{ color: "rgba(13,27,42,0.3)" }}>Admin</p>
           <Link
             href="/admin"
             className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[13px] font-medium transition-all duration-100"
             style={
               pathname.startsWith("/admin")
-                ? { background: "rgba(232,98,42,0.14)", color: "#ffffff", fontWeight: 600, borderLeft: "2px solid #E8622A", paddingLeft: "8px" }
-                : { color: "rgba(255,255,255,0.5)" }
+                ? { background: "rgba(232,98,42,0.08)", color: "#E8622A", fontWeight: 600, borderLeft: "2px solid #E8622A", paddingLeft: "8px" }
+                : { color: "#6B7280" }
             }
           >
             <ShieldCheck
               size={15}
               strokeWidth={pathname.startsWith("/admin") ? 2.5 : 2}
-              style={{ color: pathname.startsWith("/admin") ? "#E8622A" : "rgba(255,255,255,0.35)", flexShrink: 0 }}
+              style={{ color: pathname.startsWith("/admin") ? "#E8622A" : "#9CA3AF", flexShrink: 0 }}
             />
             Admin Dashboard
           </Link>
@@ -155,27 +155,27 @@ export default function Sidebar() {
       )}
 
       {/* Settings */}
-      <div className="px-3 pb-2" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+      <div className="px-3 pb-2" style={{ borderTop: "1px solid var(--sidebar-border)" }}>
         <div className="pt-2">
           <Link
             href="/settings"
             className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[13px] font-medium transition-all duration-100"
             style={
               pathname === "/settings"
-                ? { background: "rgba(232,98,42,0.14)", color: "#ffffff", fontWeight: 600, borderLeft: "2px solid #E8622A", paddingLeft: "8px" }
-                : { color: "rgba(255,255,255,0.5)" }
+                ? { background: "rgba(232,98,42,0.08)", color: "#E8622A", fontWeight: 600, borderLeft: "2px solid #E8622A", paddingLeft: "8px" }
+                : { color: "#6B7280" }
             }
             onMouseEnter={e => {
-              if (pathname !== "/settings") (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.85)";
+              if (pathname !== "/settings") (e.currentTarget as HTMLElement).style.color = "#0D1B2A";
             }}
             onMouseLeave={e => {
-              if (pathname !== "/settings") (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.5)";
+              if (pathname !== "/settings") (e.currentTarget as HTMLElement).style.color = "#6B7280";
             }}
           >
             <Settings
               size={15}
               strokeWidth={pathname === "/settings" ? 2.5 : 2}
-              style={{ color: pathname === "/settings" ? "#E8622A" : "rgba(255,255,255,0.35)", flexShrink: 0 }}
+              style={{ color: pathname === "/settings" ? "#E8622A" : "#9CA3AF", flexShrink: 0 }}
             />
             Settings
           </Link>
@@ -183,7 +183,7 @@ export default function Sidebar() {
       </div>
 
       {/* User footer */}
-      <div className="px-4 py-3.5" style={{ borderTop: "1px solid rgba(255,255,255,0.06)", background: "rgba(0,0,0,0.2)" }}>
+      <div className="px-4 py-3.5" style={{ borderTop: "1px solid var(--sidebar-border)", background: "#F8F9FF" }}>
         <div className="flex items-center gap-2.5">
           <div
             className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden"
@@ -196,10 +196,10 @@ export default function Sidebar() {
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[12px] font-semibold truncate text-white">
+            <p className="text-[12px] font-semibold truncate" style={{ color: "#0D1B2A" }}>
               {displayName}
             </p>
-            <p className="text-[10px] truncate" style={{ color: "rgba(255,255,255,0.35)" }}>
+            <p className="text-[10px] truncate" style={{ color: "#9CA3AF" }}>
               {displayHandle}
             </p>
           </div>
@@ -207,9 +207,9 @@ export default function Sidebar() {
             <button
               title="Sign out"
               className="text-[11px] transition-colors flex-shrink-0 font-medium"
-              style={{ color: "rgba(255,255,255,0.25)" }}
+              style={{ color: "#D1D5DB" }}
               onMouseEnter={e => (e.currentTarget.style.color = "#f87171")}
-              onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.25)")}
+              onMouseLeave={e => (e.currentTarget.style.color = "#D1D5DB")}
             >
               ↪
             </button>

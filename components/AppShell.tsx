@@ -30,7 +30,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   if (isOnboarding) return <>{children}</>;
 
   return (
-    <div style={{ minHeight: "100vh", padding: "12px", background: "var(--app-bg)" }}>
+    <div style={{ minHeight: "100vh", padding: "12px", background: "linear-gradient(135deg, #C0C8FF 0%, #D8CCFF 50%, #F8C4A2 100%)" }}>
       {/* Mobile nudge — only visible on small screens */}
       <div className="md:hidden fixed inset-0 z-[999] flex flex-col items-center justify-center p-8 text-center" style={{ background: "var(--app-bg)" }}>
         <div style={{ background: "#fff", borderRadius: 20, padding: "40px 32px", boxShadow: "0 8px 40px rgba(0,0,0,0.4)", maxWidth: 340, width: "100%" }}>

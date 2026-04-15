@@ -6,13 +6,13 @@
 
 :root {
   --orange:        #E8622A;
-  --blush:         #F4F5F8;
-  --border:        #EAECF0;
+  --blush:         #F8F9FF;
+  --border:        #E4E8FF;
   --text:          #0D1B2A;
   --muted:         #6B7280;
-  --sidebar-bg:    #0D1B2A;
-  --sidebar-border: rgba(255,255,255,0.06);
-  --app-bg:        #080F17;
+  --sidebar-bg:    #FFFFFF;
+  --sidebar-border: #E4E8FF;
+  --app-bg:        #C0C8FF;
 }
 
 * {
