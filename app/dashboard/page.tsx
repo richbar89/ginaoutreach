@@ -243,7 +243,7 @@ export default function DashboardPage() {
       <div style={{ flex: 1, minHeight: 0, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", overflow: "hidden" }}>
 
         {/* LEFT COLUMN */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px", minHeight: 0, overflow: "hidden" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px", minHeight: 0 }}>
 
           {/* Getting started checklist */}
           {showChecklist && (
@@ -364,7 +364,7 @@ export default function DashboardPage() {
         </div>
 
         {/* RIGHT COLUMN */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px", minHeight: 0, overflow: "hidden" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px", minHeight: 0 }}>
 
           {/* Deal Pipeline */}
           <div style={{ ...CARD, flex: 1, minHeight: 0, display: "flex", flexDirection: "column", overflow: "hidden" }}>
