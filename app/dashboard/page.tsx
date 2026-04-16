@@ -168,7 +168,7 @@ export default function DashboardPage() {
   const showChecklist = !checklistDismissed && !allChecklistDone;
 
   return (
-    <div style={{ height: "100%", display: "flex", flexDirection: "column", padding: "16px", gap: "12px", overflow: "hidden", background: "rgba(255,255,255,0.28)", borderRadius: 20 }}>
+    <div style={{ height: "100%", display: "flex", flexDirection: "column", padding: "16px", gap: "12px", overflow: "hidden" }}>
 
       {/* Email not connected banner */}
       {emailConnected === null && (
@@ -290,7 +290,7 @@ export default function DashboardPage() {
               borderRadius: 22,
               padding: "24px",
               background: "linear-gradient(135deg, #FB923C 0%, #EA580C 50%, #C2410C 100%)",
-              boxShadow: "0 12px 40px rgba(234,88,12,0.38)",
+              boxShadow: "0 4px 16px rgba(234,88,12,0.18)",
             }}
           >
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
