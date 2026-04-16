@@ -28,16 +28,19 @@ const DEAL_STAGE_ACCENT: Record<string, string> = {
   paid:        "#10B981",
 };
 
-const DEAL_STAGE_BADGE: Record<string, string> = {
-  pitched:     "bg-blue-100 text-blue-700",
-  replied:     "bg-indigo-100 text-indigo-700",
-  negotiating: "bg-amber-100 text-amber-700",
-  contracted:  "bg-violet-100 text-violet-700",
-  delivered:   "bg-teal-100 text-teal-700",
-  paid:        "bg-emerald-100 text-emerald-700",
+const BRAND_AVATAR_COLOURS = ["#3B82F6","#8B5CF6","#10B981","#F59E0B","#EF4444","#EC4899","#06B6D4","#84CC16","#F97316","#6366F1"];
+
+// Floating card base style
+const CARD: React.CSSProperties = {
+  background: "rgba(255, 255, 255, 0.9)",
+  backdropFilter: "blur(20px)",
+  WebkitBackdropFilter: "blur(20px)",
+  borderRadius: 20,
+  border: "1px solid rgba(255, 255, 255, 0.75)",
+  boxShadow: "0 4px 24px rgba(0, 0, 0, 0.07), 0 1px 4px rgba(0, 0, 0, 0.04)",
 };
 
-const BRAND_AVATAR_COLOURS = ["#3B82F6","#8B5CF6","#10B981","#F59E0B","#EF4444","#EC4899","#06B6D4","#84CC16","#F97316","#6366F1"];
+const CARD_DIVIDER = "1px solid rgba(0, 0, 0, 0.06)";
 
 type FollowUp = { email: string; name: string; subject: string; daysAgo: number };
 
@@ -80,7 +83,6 @@ export default function DashboardPage() {
   const [checklistDismissed, setChecklistDismissed] = useState(false);
 
   useEffect(() => {
-    // Check email connection status (client-side localStorage)
     const gUser = getGoogleUser();
     const mUser = getMicrosoftUser();
     if (gUser) {
@@ -166,16 +168,19 @@ export default function DashboardPage() {
   const showChecklist = !checklistDismissed && !allChecklistDone;
 
   return (
-    <div className="h-full flex flex-col overflow-hidden" style={{ background: "var(--blush)" }}>
+    <div style={{ height: "100%", display: "flex", flexDirection: "column", padding: "16px", gap: "12px", overflow: "hidden" }}>
 
       {/* Email not connected banner */}
       {emailConnected === null && (
-        <div className="flex items-center gap-3 px-6 py-2.5 flex-shrink-0" style={{ background: "#FFF8EE", borderBottom: "1px solid #FDE5B8" }}>
-          <AlertTriangle size={13} style={{ color: "#D97706", flexShrink: 0 }} />
+        <div
+          className="flex items-center gap-3 px-5 py-3 flex-shrink-0"
+          style={{ ...CARD, background: "rgba(255,248,238,0.95)", border: "1px solid #FDE5B8" }}
+        >
+          <AlertTriangle size={14} style={{ color: "#D97706", flexShrink: 0 }} />
           <p className="text-xs font-medium flex-1" style={{ color: "#92400E" }}>
             <span className="font-bold">No email connected.</span> Connect Gmail or Microsoft to send outreach.
           </p>
-          <Link href="/settings" className="text-xs font-bold whitespace-nowrap px-3 py-1 rounded-lg transition-colors" style={{ color: "#B45309", background: "#FEF3C7", border: "1px solid #FDE68A" }}>
+          <Link href="/settings" className="text-xs font-bold whitespace-nowrap px-3 py-1.5 rounded-lg transition-colors" style={{ color: "#B45309", background: "#FEF3C7", border: "1px solid #FDE68A" }}>
             Connect now →
           </Link>
         </div>
@@ -183,210 +188,185 @@ export default function DashboardPage() {
 
       {/* Gmail token expired banner */}
       {emailConnected === "expired" && (
-        <div className="flex items-center gap-3 px-6 py-2.5 flex-shrink-0" style={{ background: "#FFF5F5", borderBottom: "1px solid #FECACA" }}>
-          <AlertTriangle size={13} style={{ color: "#EF4444", flexShrink: 0 }} />
+        <div
+          className="flex items-center gap-3 px-5 py-3 flex-shrink-0"
+          style={{ ...CARD, background: "rgba(255,245,245,0.95)", border: "1px solid #FECACA" }}
+        >
+          <AlertTriangle size={14} style={{ color: "#EF4444", flexShrink: 0 }} />
           <p className="text-xs font-medium flex-1" style={{ color: "#7F1D1D" }}>
             <span className="font-bold">Gmail session expired.</span> Your emails won&apos;t send until you reconnect.
           </p>
-          <Link href="/settings" className="text-xs font-bold whitespace-nowrap px-3 py-1 rounded-lg transition-colors" style={{ color: "#B91C1C", background: "#FEE2E2", border: "1px solid #FECACA" }}>
+          <Link href="/settings" className="text-xs font-bold whitespace-nowrap px-3 py-1.5 rounded-lg transition-colors" style={{ color: "#B91C1C", background: "#FEE2E2", border: "1px solid #FECACA" }}>
             Reconnect →
           </Link>
         </div>
       )}
 
-      {/* Header */}
+      {/* ── Header card ── */}
       <div
-        className="flex items-center justify-between px-8 pt-6 pb-5 flex-shrink-0"
-        style={{ borderBottom: "1px solid var(--border)", background: "#fff" }}
+        className="flex items-center justify-between flex-shrink-0"
+        style={{ ...CARD, padding: "18px 28px" }}
       >
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-widest mb-1" style={{ color: "#9CA3AF" }}>{today}</p>
-          <h1 className="text-[28px] font-black tracking-tight" style={{ color: "#0D1B2A", letterSpacing: "-0.035em" }}>Good morning, {firstName}.</h1>
+          <p style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#9CA3AF", marginBottom: 6 }}>
+            {today}
+          </p>
+          <h1 style={{ fontSize: 34, fontWeight: 900, letterSpacing: "-0.04em", color: "#111827", lineHeight: 1 }}>
+            Hey {firstName}!
+          </h1>
         </div>
-        <div className="flex items-center gap-2">
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <Link
             href="/contacts"
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-xl transition-all"
-            style={{ background: "#fff", border: "1px solid var(--border)", color: "#374151" }}
-            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "#E8622A"; (e.currentTarget as HTMLElement).style.color = "#E8622A"; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--border)"; (e.currentTarget as HTMLElement).style.color = "#374151"; }}
+            className="inline-flex items-center gap-2 text-sm font-semibold rounded-xl transition-all"
+            style={{ padding: "9px 16px", background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.08)", color: "#374151" }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "#EA580C"; (e.currentTarget as HTMLElement).style.color = "#EA580C"; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,0,0,0.08)"; (e.currentTarget as HTMLElement).style.color = "#374151"; }}
           >
-            <Users size={13} />
+            <Users size={14} />
             New Campaign
           </Link>
           <Link
             href="/send"
-            className="inline-flex items-center gap-2 px-4 py-2 text-white text-sm font-bold rounded-xl transition-all"
-            style={{ background: "#E8622A", boxShadow: "0 1px 8px rgba(232,98,42,0.35)" }}
-            onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = "#d45520"}
-            onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = "#E8622A"}
+            className="inline-flex items-center gap-2 text-white text-sm font-bold rounded-xl transition-all"
+            style={{ padding: "9px 16px", background: "#EA580C", boxShadow: "0 2px 14px rgba(234,88,12,0.40)" }}
+            onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = "#C2410C"}
+            onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = "#EA580C"}
           >
-            <Send size={13} />
+            <Send size={14} />
             Quick Send
           </Link>
         </div>
       </div>
 
-      {/* Main grid */}
-      <div className="flex-1 min-h-0 grid grid-cols-2 gap-3 p-4">
+      {/* ── Main grid ── */}
+      <div style={{ flex: 1, minHeight: 0, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", overflow: "hidden" }}>
 
-        {/* ── LEFT COLUMN ── */}
-        <div className="flex flex-col gap-4 min-h-0">
+        {/* LEFT COLUMN */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px", minHeight: 0, overflow: "hidden" }}>
 
           {/* Getting started checklist */}
           {showChecklist && (
-            <div className="bg-white rounded-2xl border flex-shrink-0 overflow-hidden" style={{ borderColor: "var(--border)" }}>
-              <div className="flex items-center justify-between px-5 py-3.5 border-b" style={{ borderColor: "var(--border)" }}>
-                <div className="flex items-center gap-2">
-                  <Zap size={14} className="text-coral-500" />
-                  <span className="text-sm font-black text-navy-900">Getting started</span>
-                  <span className="text-[10px] font-bold bg-coral-100 text-coral-600 px-2 py-0.5 rounded-full">
+            <div style={{ ...CARD, flexShrink: 0, overflow: "hidden" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 20px", borderBottom: CARD_DIVIDER }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <Zap size={14} style={{ color: "#EA580C" }} />
+                  <span style={{ fontSize: 13, fontWeight: 800, color: "#111827" }}>Getting started</span>
+                  <span style={{ fontSize: 10, fontWeight: 700, background: "#FEF0EB", color: "#EA580C", padding: "2px 8px", borderRadius: 20, border: "1px solid #FDDBC8" }}>
                     {checklistTasks.filter(t => t.done).length}/{checklistTasks.length}
                   </span>
                 </div>
                 <button
                   onClick={() => { setChecklistDismissed(true); localStorage.setItem("checklist_dismissed", "true"); }}
-                  className="text-navy-300 hover:text-navy-600 transition-colors"
+                  style={{ color: "#9CA3AF", background: "none", border: "none", cursor: "pointer", padding: 4, borderRadius: 6, display: "flex" }}
                 >
                   <X size={14} />
                 </button>
               </div>
-              <div className="divide-y" style={{ borderColor: "var(--border)" }}>
-                {checklistTasks.map((task) => (
-                  <Link
-                    key={task.id}
-                    href={task.href}
-                    className="flex items-center gap-3 px-5 py-3.5 hover:bg-cream-50 transition-colors group"
-                  >
-                    <CheckCircle2
-                      size={18}
-                      className={`flex-shrink-0 transition-colors ${task.done ? "text-emerald-500" : "text-cream-300 group-hover:text-navy-300"}`}
-                    />
-                    <div className="flex-1 min-w-0">
-                      <p className={`text-sm font-semibold ${task.done ? "text-navy-400 line-through" : "text-navy-900"}`}>
-                        {task.label}
-                      </p>
-                      <p className="text-xs text-navy-400">{task.sub}</p>
-                    </div>
-                    {!task.done && <ChevronRight size={14} className="text-navy-300 group-hover:text-navy-500 flex-shrink-0" />}
-                  </Link>
-                ))}
-              </div>
+              {checklistTasks.map((task, i) => (
+                <Link
+                  key={task.id}
+                  href={task.href}
+                  className="flex items-center gap-3 hover:bg-orange-50/40 transition-colors group"
+                  style={{ padding: "12px 20px", borderBottom: i < checklistTasks.length - 1 ? CARD_DIVIDER : "none" }}
+                >
+                  <CheckCircle2 size={18} style={{ flexShrink: 0, color: task.done ? "#10B981" : "#D1D5DB" }} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontSize: 13, fontWeight: 700, color: task.done ? "#9CA3AF" : "#111827", textDecoration: task.done ? "line-through" : "none" }}>
+                      {task.label}
+                    </p>
+                    <p style={{ fontSize: 11, color: "#9CA3AF", marginTop: 1 }}>{task.sub}</p>
+                  </div>
+                  {!task.done && <ChevronRight size={14} style={{ color: "#D1D5DB", flexShrink: 0 }} />}
+                </Link>
+              ))}
             </div>
           )}
 
-          {/* Analytics Card */}
+          {/* Analytics card */}
           <div
-            className="rounded-2xl p-5 flex-shrink-0"
-            style={{ background: "linear-gradient(135deg, #0D1B2A 0%, #162540 55%, #1C3358 100%)" }}
+            style={{
+              flexShrink: 0,
+              borderRadius: 20,
+              padding: "20px",
+              background: "linear-gradient(135deg, #0D1B2A 0%, #162540 55%, #1C3358 100%)",
+              border: "1px solid rgba(255,255,255,0.07)",
+              boxShadow: "0 4px 28px rgba(0,0,0,0.22)",
+            }}
           >
-            {/* Title */}
-            <div className="flex items-center justify-between mb-4">
-              <p className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "#93B8D4" }}>Analytics</p>
-              <span className="inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-1 rounded-full" style={{ color: "#F08050", background: "rgba(232,98,42,0.15)", border: "1px solid rgba(232,98,42,0.3)" }}>
-                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#E8622A" }} />
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+              <p style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.09em", color: "#93B8D4" }}>Analytics</p>
+              <span
+                className="inline-flex items-center gap-1.5"
+                style={{ fontSize: 10, fontWeight: 700, padding: "4px 10px", borderRadius: 20, color: "#F08050", background: "rgba(232,98,42,0.15)", border: "1px solid rgba(232,98,42,0.3)" }}
+              >
+                <span className="animate-pulse" style={{ width: 6, height: 6, borderRadius: "50%", background: "#E8622A", display: "inline-block" }} />
                 Live Data
               </span>
             </div>
 
-            {/* Avg views */}
-            <div className="mb-5 pb-5" style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
-              <p className="text-xs font-medium mb-1" style={{ color: "#93B8D4" }}>Avg. Views per Post — last 7 days</p>
-              <div className="flex items-end gap-3">
-                <p className="text-white text-5xl font-black tracking-tight leading-none">—</p>
-                <p className="text-xs mb-1" style={{ color: "#5A88A8" }}>Connect Meta API to populate</p>
+            <div style={{ marginBottom: 16, paddingBottom: 16, borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+              <p style={{ fontSize: 11, color: "#93B8D4", marginBottom: 6 }}>Avg. Views per Post — last 7 days</p>
+              <div style={{ display: "flex", alignItems: "flex-end", gap: 10 }}>
+                <p style={{ color: "white", fontSize: 44, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1 }}>—</p>
+                <p style={{ fontSize: 11, color: "#5A88A8", marginBottom: 4 }}>Connect Meta API to populate</p>
               </div>
             </div>
 
-            {/* Follower counts */}
-            <div className="grid grid-cols-3 gap-2.5">
-              {/* Instagram */}
-              <div className="flex flex-col items-center gap-3 rounded-xl py-4 px-3" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
+              {[
+                { bg: "linear-gradient(135deg, #F58529 0%, #DD2A7B 50%, #8134AF 100%)", icon: <InstagramIcon size={24} />, count: "137K", label: "Instagram" },
+                { bg: "linear-gradient(135deg, #010101 0%, #69C9D0 100%)",               icon: <TikTokIcon size={22} />,    count: "84K",  label: "TikTok" },
+                { bg: "#1877F2",                                                          icon: <FacebookIcon size={22} />,  count: "52K",  label: "Facebook" },
+              ].map(({ bg, icon, count, label }) => (
                 <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
-                  style={{ background: "linear-gradient(135deg, #F58529 0%, #DD2A7B 50%, #8134AF 100%)" }}
+                  key={label}
+                  style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, borderRadius: 14, padding: "14px 8px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.09)" }}
                 >
-                  <InstagramIcon size={28} />
+                  <div style={{ width: 46, height: 46, borderRadius: 13, display: "flex", alignItems: "center", justifyContent: "center", background: bg, flexShrink: 0 }}>
+                    {icon}
+                  </div>
+                  <div style={{ textAlign: "center" }}>
+                    <p style={{ color: "white", fontSize: 26, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1, marginBottom: 3 }}>{count}</p>
+                    <p style={{ fontSize: 9, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.09em", color: "#93B8D4" }}>{label}</p>
+                  </div>
                 </div>
-                <div className="text-center">
-                  <p className="text-white text-3xl font-black leading-none tracking-tight mb-1">137K</p>
-                  <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "#93B8D4" }}>Instagram</p>
-                </div>
-              </div>
-
-              {/* TikTok */}
-              <div className="flex flex-col items-center gap-3 rounded-xl py-4 px-3" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
-                <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
-                  style={{ background: "linear-gradient(135deg, #010101 0%, #69C9D0 100%)" }}
-                >
-                  <TikTokIcon size={26} />
-                </div>
-                <div className="text-center">
-                  <p className="text-white text-3xl font-black leading-none tracking-tight mb-1">84K</p>
-                  <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "#93B8D4" }}>TikTok</p>
-                </div>
-              </div>
-
-              {/* Facebook */}
-              <div className="flex flex-col items-center gap-3 rounded-xl py-4 px-3" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
-                <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
-                  style={{ background: "#1877F2" }}
-                >
-                  <FacebookIcon size={26} />
-                </div>
-                <div className="text-center">
-                  <p className="text-white text-3xl font-black leading-none tracking-tight mb-1">52K</p>
-                  <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "#93B8D4" }}>Facebook</p>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
 
-          {/* Top Brands + Ads Alerts */}
-          <div
-            className="flex-1 min-h-0 bg-white rounded-2xl border flex flex-col overflow-hidden"
-            style={{ borderColor: "var(--border)" }}
-          >
-            <div
-              className="flex items-center justify-between px-5 py-4 flex-shrink-0"
-              style={{ borderBottom: "1px solid var(--border)" }}
-            >
-              <div className="flex items-center gap-2">
-                <Zap size={15} className="text-coral-500" />
-                <span className="text-base font-black text-navy-900">Top Brands</span>
+          {/* Top Brands */}
+          <div style={{ ...CARD, flex: 1, minHeight: 0, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 20px", borderBottom: CARD_DIVIDER, flexShrink: 0 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <Zap size={14} style={{ color: "#EA580C" }} />
+                <span style={{ fontSize: 14, fontWeight: 800, color: "#111827" }}>Top Brands</span>
               </div>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-navy-400">Ads Alerts</span>
+              <span style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.09em", color: "#9CA3AF" }}>Ads Alerts</span>
             </div>
             {brands.length === 0 ? (
-              <div className="flex-1 flex flex-col items-center justify-center text-center p-6">
-                <p className="text-sm font-semibold text-navy-400">No brands added yet.</p>
-                <p className="text-xs text-navy-300 mt-1">Add brands to monitor in Settings.</p>
+              <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: 24 }}>
+                <p style={{ fontSize: 13, fontWeight: 600, color: "#9CA3AF" }}>No brands added yet.</p>
+                <p style={{ fontSize: 11, color: "#D1D5DB", marginTop: 4 }}>Add brands to monitor in Settings.</p>
               </div>
             ) : (
-              <div className="flex-1 grid grid-cols-2 content-start p-3 gap-2 overflow-hidden">
+              <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", alignContent: "start", padding: 12, gap: 8, overflow: "hidden" }}>
                 {brands.map((brand, i) => (
                   <div
                     key={brand.name + i}
-                    className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-navy-50/40 transition-colors border"
-                    style={{ borderColor: "var(--border)" }}
+                    className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-orange-50/30 transition-colors"
+                    style={{ border: "1px solid rgba(0,0,0,0.06)" }}
                   >
                     <div
-                      className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 text-white text-[10px] font-black"
-                      style={{ background: BRAND_AVATAR_COLOURS[i % BRAND_AVATAR_COLOURS.length] }}
+                      style={{ width: 24, height: 24, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, background: BRAND_AVATAR_COLOURS[i % BRAND_AVATAR_COLOURS.length], color: "white", fontSize: 10, fontWeight: 800 }}
                     >
                       {brand.name[0]?.toUpperCase()}
                     </div>
-                    <span className="flex-1 font-bold text-navy-900 text-xs truncate">{brand.name}</span>
+                    <span style={{ flex: 1, fontWeight: 700, color: "#111827", fontSize: 12, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{brand.name}</span>
                     {brand.runningAds ? (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600" title="Running Ads">
-                        <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse flex-shrink-0" />
-                      </span>
+                      <span className="animate-pulse" style={{ width: 8, height: 8, borderRadius: "50%", background: "#10B981", flexShrink: 0, display: "inline-block" }} />
                     ) : (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-red-400" title="No Ads">
-                        <span className="w-2 h-2 bg-red-400 rounded-full flex-shrink-0" />
-                      </span>
+                      <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#F87171", flexShrink: 0, display: "inline-block" }} />
                     )}
                   </div>
                 ))}
@@ -395,68 +375,68 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* ── RIGHT COLUMN ── */}
-        <div className="flex flex-col gap-4 min-h-0">
+        {/* RIGHT COLUMN */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px", minHeight: 0, overflow: "hidden" }}>
 
           {/* Deal Pipeline */}
-          <div
-            className="flex-1 min-h-0 bg-white rounded-2xl border flex flex-col overflow-hidden"
-            style={{ borderColor: "var(--border)" }}
-          >
-            <div
-              className="flex items-center justify-between px-5 py-4 flex-shrink-0"
-              style={{ borderBottom: "1px solid var(--border)" }}
-            >
-              <div className="flex items-center gap-2">
-                <TrendingUp size={15} className="text-coral-500" />
-                <span className="text-base font-black text-navy-900">Deal Pipeline</span>
+          <div style={{ ...CARD, flex: 1, minHeight: 0, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 20px", borderBottom: CARD_DIVIDER, flexShrink: 0 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <TrendingUp size={14} style={{ color: "#EA580C" }} />
+                <span style={{ fontSize: 14, fontWeight: 800, color: "#111827" }}>Deal Pipeline</span>
                 {activeDeals.length > 0 && (
-                  <span className="text-[10px] font-bold bg-coral-100 text-coral-600 px-2 py-0.5 rounded-full">
+                  <span style={{ fontSize: 10, fontWeight: 700, background: "#FEF0EB", color: "#EA580C", padding: "2px 8px", borderRadius: 20, border: "1px solid #FDDBC8" }}>
                     {activeDeals.length} active
                   </span>
                 )}
               </div>
-              <Link href="/pipeline" className="text-[11px] text-navy-400 hover:text-coral-500 transition-colors font-semibold">
+              <Link
+                href="/pipeline"
+                style={{ fontSize: 11, color: "#9CA3AF", fontWeight: 600, textDecoration: "none", transition: "color 0.12s" }}
+                onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = "#EA580C"}
+                onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = "#9CA3AF"}
+              >
                 View all →
               </Link>
             </div>
 
             {deals.length === 0 ? (
-              <div className="flex-1 flex flex-col items-center justify-center text-center p-6">
-                <TrendingUp size={28} className="text-navy-200 mb-3" />
-                <p className="text-sm font-semibold text-navy-400">No deals yet.</p>
-                <p className="text-xs text-navy-300 mt-1">Positive replies in your inbox get flagged automatically.</p>
+              <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: 24 }}>
+                <TrendingUp size={28} style={{ color: "#E5E7EB", marginBottom: 12 }} />
+                <p style={{ fontSize: 13, fontWeight: 600, color: "#9CA3AF" }}>No deals yet.</p>
+                <p style={{ fontSize: 11, color: "#D1D5DB", marginTop: 4 }}>Positive replies in your inbox get flagged automatically.</p>
               </div>
             ) : (
-              <div className="flex-1 overflow-y-auto scrollbar-thin p-3 space-y-1.5">
+              <div className="scrollbar-thin" style={{ flex: 1, overflowY: "auto", padding: "10px 12px", display: "flex", flexDirection: "column", gap: 6 }}>
                 {recentDeals.map((deal) => {
                   const accent = DEAL_STAGE_ACCENT[deal.status] || "#6B7280";
                   return (
                     <div
                       key={deal.id}
-                      className="rounded-xl px-3.5 py-3 flex items-center gap-3"
                       style={{
-                        background: "#fff",
-                        border: "1px solid var(--border)",
+                        borderRadius: 14,
+                        padding: "10px 14px",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 12,
+                        background: "rgba(255,255,255,0.6)",
+                        border: "1px solid rgba(0,0,0,0.05)",
                         borderLeft: `3px solid ${accent}`,
                       }}
                     >
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold truncate" style={{ color: "#0D1B2A" }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <p style={{ fontSize: 13, fontWeight: 700, color: "#111827", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                           {deal.company || deal.contactName}
                         </p>
                         {deal.company && (
-                          <p className="text-xs truncate" style={{ color: "#9CA3AF" }}>{deal.contactName}</p>
+                          <p style={{ fontSize: 11, color: "#9CA3AF", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{deal.contactName}</p>
                         )}
                       </div>
-                      <div className="flex items-center gap-2 flex-shrink-0">
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
                         {deal.value && (
-                          <span className="text-xs font-bold" style={{ color: "#059669" }}>
-                            {deal.value}
-                          </span>
+                          <span style={{ fontSize: 12, fontWeight: 800, color: "#059669" }}>{deal.value}</span>
                         )}
-                        <span className="text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-md"
-                          style={{ background: `${accent}15`, color: accent }}>
+                        <span style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", padding: "3px 8px", borderRadius: 8, background: `${accent}18`, color: accent }}>
                           {DEAL_STAGE_LABELS[deal.status] || deal.status}
                         </span>
                       </div>
@@ -468,58 +448,56 @@ export default function DashboardPage() {
           </div>
 
           {/* Follow-up Reminders */}
-          <div
-            className="flex-1 min-h-0 bg-white rounded-2xl border flex flex-col overflow-hidden"
-            style={{ borderColor: "var(--border)" }}
-          >
-            <div
-              className="flex items-center justify-between px-5 py-4 flex-shrink-0"
-              style={{ borderBottom: "1px solid var(--border)" }}
-            >
-              <div className="flex items-center gap-2">
-                <Bell size={15} className="text-coral-500" />
-                <span className="text-base font-black text-navy-900">Follow-up Reminders</span>
+          <div style={{ ...CARD, flex: 1, minHeight: 0, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 20px", borderBottom: CARD_DIVIDER, flexShrink: 0 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <Bell size={14} style={{ color: "#EA580C" }} />
+                <span style={{ fontSize: 14, fontWeight: 800, color: "#111827" }}>Follow-up Reminders</span>
                 {followUps.length > 0 && (
-                  <span className="text-[10px] font-bold bg-red-100 text-red-600 px-2 py-0.5 rounded-full">
+                  <span style={{ fontSize: 10, fontWeight: 700, background: "#FEE2E2", color: "#DC2626", padding: "2px 8px", borderRadius: 20, border: "1px solid #FECACA" }}>
                     {followUps.length} due
                   </span>
                 )}
               </div>
-              <Link href="/contacts" className="text-[11px] text-navy-400 hover:text-coral-500 transition-colors font-semibold">
+              <Link
+                href="/contacts"
+                style={{ fontSize: 11, color: "#9CA3AF", fontWeight: 600, textDecoration: "none", transition: "color 0.12s" }}
+                onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = "#EA580C"}
+                onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = "#9CA3AF"}
+              >
                 View contacts →
               </Link>
             </div>
 
             {followUps.length === 0 ? (
-              <div className="flex-1 flex flex-col items-center justify-center text-center p-6">
-                <Clock size={24} className="text-navy-200 mb-3" />
-                <p className="text-sm font-semibold text-navy-400">All up to date.</p>
-                <p className="text-xs text-navy-300 mt-1">Contacts emailed 5+ days ago appear here.</p>
+              <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: 24 }}>
+                <Clock size={24} style={{ color: "#E5E7EB", marginBottom: 12 }} />
+                <p style={{ fontSize: 13, fontWeight: 600, color: "#9CA3AF" }}>All up to date.</p>
+                <p style={{ fontSize: 11, color: "#D1D5DB", marginTop: 4 }}>Contacts emailed 5+ days ago appear here.</p>
               </div>
             ) : (
-              <div className="flex-1 overflow-y-auto scrollbar-thin divide-y" style={{ borderColor: "var(--border)" }}>
-                {followUps.map((f) => (
+              <div className="scrollbar-thin" style={{ flex: 1, overflowY: "auto" }}>
+                {followUps.map((f, i) => (
                   <div
                     key={f.email}
-                    className="flex items-center gap-3 px-5 py-3 hover:bg-navy-50/40 transition-colors"
+                    className="flex items-center gap-3 hover:bg-orange-50/20 transition-colors"
+                    style={{ padding: "11px 20px", borderBottom: i < followUps.length - 1 ? CARD_DIVIDER : "none" }}
                   >
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-black text-navy-900 truncate">{f.name}</p>
-                      <p className="text-xs text-navy-400 font-medium truncate">{f.subject}</p>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <p style={{ fontSize: 13, fontWeight: 800, color: "#111827", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.name}</p>
+                      <p style={{ fontSize: 11, color: "#9CA3AF", fontWeight: 500, marginTop: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.subject}</p>
                     </div>
-                    <div className="flex items-center gap-2 flex-shrink-0">
-                      <span
-                        className={`text-[10px] font-bold px-2 py-1 rounded-full ${
-                          f.daysAgo >= 14 ? "bg-red-100 text-red-600" : "bg-amber-100 text-amber-700"
-                        }`}
-                      >
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
+                      <span style={{ fontSize: 10, fontWeight: 700, padding: "3px 8px", borderRadius: 20, background: f.daysAgo >= 14 ? "#FEE2E2" : "#FEF3C7", color: f.daysAgo >= 14 ? "#DC2626" : "#D97706" }}>
                         {f.daysAgo}d ago
                       </span>
                       <Link
                         href={`/send?to=${encodeURIComponent(f.email)}&name=${encodeURIComponent(f.name)}`}
-                        className="p-1.5 hover:bg-coral-50 rounded-lg transition-colors"
+                        style={{ padding: 6, borderRadius: 8, color: "#9CA3AF", display: "flex", alignItems: "center", transition: "all 0.12s" }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(234,88,12,0.08)"; (e.currentTarget as HTMLElement).style.color = "#EA580C"; }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "transparent"; (e.currentTarget as HTMLElement).style.color = "#9CA3AF"; }}
                       >
-                        <ChevronRight size={13} className="text-navy-400" />
+                        <ChevronRight size={13} />
                       </Link>
                     </div>
                   </div>

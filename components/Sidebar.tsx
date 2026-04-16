@@ -32,17 +32,17 @@ const NAV_ITEMS = [
 
 const PILL: React.CSSProperties = {
   background: "rgba(255,255,255,0.88)",
-  backdropFilter: "blur(20px)",
-  WebkitBackdropFilter: "blur(20px)",
-  borderRadius: 26,
+  backdropFilter: "blur(24px)",
+  WebkitBackdropFilter: "blur(24px)",
+  borderRadius: 30,
   border: "1px solid rgba(255,255,255,0.9)",
-  boxShadow: "0 4px 24px rgba(99,102,241,0.15), 0 1px 4px rgba(0,0,0,0.06)",
+  boxShadow: "0 4px 28px rgba(234,88,12,0.14), 0 1px 6px rgba(0,0,0,0.06)",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  padding: "12px 0",
-  gap: 2,
-  width: 52,
+  padding: "14px 0",
+  gap: 4,
+  width: 62,
 };
 
 export default function Sidebar() {
@@ -58,19 +58,19 @@ export default function Sidebar() {
       {/* Logo mark */}
       <div
         style={{
-          width: 32,
-          height: 32,
+          width: 38,
+          height: 38,
           background: "linear-gradient(135deg, #EA580C, #FB923C)",
-          borderRadius: 10,
+          borderRadius: 12,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          marginBottom: 10,
-          boxShadow: "0 2px 8px rgba(234,88,12,0.35)",
+          marginBottom: 12,
+          boxShadow: "0 2px 10px rgba(234,88,12,0.4)",
           flexShrink: 0,
         }}
       >
-        <Sparkles size={14} color="white" strokeWidth={2.5} />
+        <Sparkles size={17} color="white" strokeWidth={2.5} />
       </div>
 
       {/* Nav icons */}
@@ -82,9 +82,9 @@ export default function Sidebar() {
             href={href}
             title={label}
             style={{
-              width: 36,
-              height: 36,
-              borderRadius: 10,
+              width: 46,
+              height: 46,
+              borderRadius: 13,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -106,7 +106,7 @@ export default function Sidebar() {
               }
             }}
           >
-            <Icon size={17} strokeWidth={active ? 2.5 : 1.75} />
+            <Icon size={21} strokeWidth={active ? 2.5 : 1.75} />
           </Link>
         );
       })}
@@ -117,9 +117,9 @@ export default function Sidebar() {
           href="/admin"
           title="Admin Dashboard"
           style={{
-            width: 36,
-            height: 36,
-            borderRadius: 10,
+            width: 46,
+            height: 46,
+            borderRadius: 13,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -129,7 +129,7 @@ export default function Sidebar() {
             flexShrink: 0,
           }}
         >
-          <ShieldCheck size={17} strokeWidth={1.75} />
+          <ShieldCheck size={21} strokeWidth={1.75} />
         </Link>
       )}
 
@@ -141,9 +141,9 @@ export default function Sidebar() {
         href="/settings"
         title="Settings"
         style={{
-          width: 36,
-          height: 36,
-          borderRadius: 10,
+          width: 46,
+          height: 46,
+          borderRadius: 13,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -165,7 +165,7 @@ export default function Sidebar() {
           }
         }}
       >
-        <Settings size={17} strokeWidth={1.75} />
+        <Settings size={21} strokeWidth={1.75} />
       </Link>
 
       {/* User avatar */}
@@ -173,8 +173,8 @@ export default function Sidebar() {
         <button
           title={`Sign out (${user?.firstName || ""})`}
           style={{
-            width: 30,
-            height: 30,
+            width: 34,
+            height: 34,
             borderRadius: "50%",
             overflow: "hidden",
             background: "#EA580C",
@@ -190,7 +190,7 @@ export default function Sidebar() {
           {user?.imageUrl ? (
             <img src={user.imageUrl} alt={initials} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           ) : (
-            <span style={{ color: "white", fontSize: 10, fontWeight: 800 }}>{initials}</span>
+            <span style={{ color: "white", fontSize: 11, fontWeight: 800 }}>{initials}</span>
           )}
         </button>
       </SignOutButton>
