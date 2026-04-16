@@ -32,12 +32,12 @@ const BRAND_AVATAR_COLOURS = ["#3B82F6","#8B5CF6","#10B981","#F59E0B","#EF4444",
 
 // Floating card base style
 const CARD: React.CSSProperties = {
-  background: "rgba(255, 255, 255, 0.9)",
-  backdropFilter: "blur(20px)",
-  WebkitBackdropFilter: "blur(20px)",
-  borderRadius: 20,
-  border: "1px solid rgba(255, 255, 255, 0.75)",
-  boxShadow: "0 4px 24px rgba(0, 0, 0, 0.07), 0 1px 4px rgba(0, 0, 0, 0.04)",
+  background: "rgba(255, 252, 249, 0.86)",
+  backdropFilter: "blur(18px)",
+  WebkitBackdropFilter: "blur(18px)",
+  borderRadius: 22,
+  border: "1px solid rgba(255, 255, 255, 0.65)",
+  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.09), 0 1px 4px rgba(0, 0, 0, 0.04)",
 };
 
 const CARD_DIVIDER = "1px solid rgba(0, 0, 0, 0.06)";
@@ -283,53 +283,43 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* Analytics card */}
+          {/* Analytics card — orange gradient hero */}
           <div
             style={{
               flexShrink: 0,
-              borderRadius: 20,
-              padding: "20px",
-              background: "linear-gradient(135deg, #0D1B2A 0%, #162540 55%, #1C3358 100%)",
-              border: "1px solid rgba(255,255,255,0.07)",
-              boxShadow: "0 4px 28px rgba(0,0,0,0.22)",
+              borderRadius: 22,
+              padding: "24px",
+              background: "linear-gradient(135deg, #FB923C 0%, #EA580C 50%, #C2410C 100%)",
+              boxShadow: "0 12px 40px rgba(234,88,12,0.38)",
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
-              <p style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.09em", color: "#93B8D4" }}>Analytics</p>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
+              <p style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.7)" }}>Analytics</p>
               <span
                 className="inline-flex items-center gap-1.5"
-                style={{ fontSize: 10, fontWeight: 700, padding: "4px 10px", borderRadius: 20, color: "#F08050", background: "rgba(232,98,42,0.15)", border: "1px solid rgba(232,98,42,0.3)" }}
+                style={{ fontSize: 10, fontWeight: 700, padding: "4px 10px", borderRadius: 20, color: "white", background: "rgba(255,255,255,0.2)" }}
               >
-                <span className="animate-pulse" style={{ width: 6, height: 6, borderRadius: "50%", background: "#E8622A", display: "inline-block" }} />
+                <span className="animate-pulse" style={{ width: 6, height: 6, borderRadius: "50%", background: "white", display: "inline-block" }} />
                 Live Data
               </span>
             </div>
 
-            <div style={{ marginBottom: 16, paddingBottom: 16, borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
-              <p style={{ fontSize: 11, color: "#93B8D4", marginBottom: 6 }}>Avg. Views per Post — last 7 days</p>
-              <div style={{ display: "flex", alignItems: "flex-end", gap: 10 }}>
-                <p style={{ color: "white", fontSize: 44, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1 }}>—</p>
-                <p style={{ fontSize: 11, color: "#5A88A8", marginBottom: 4 }}>Connect Meta API to populate</p>
-              </div>
+            <div style={{ marginBottom: 18 }}>
+              <p style={{ fontSize: 11, color: "rgba(255,255,255,0.65)", marginBottom: 6 }}>Avg. Views per Post — last 7 days</p>
+              <p style={{ color: "white", fontSize: 52, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1 }}>—</p>
+              <p style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", marginTop: 6 }}>Connect Meta API to populate</p>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
+            <div style={{ borderTop: "1px solid rgba(255,255,255,0.2)", paddingTop: 16, display: "grid", gridTemplateColumns: "1fr 1fr 1fr" }}>
               {[
-                { bg: "linear-gradient(135deg, #F58529 0%, #DD2A7B 50%, #8134AF 100%)", icon: <InstagramIcon size={24} />, count: "137K", label: "Instagram" },
-                { bg: "linear-gradient(135deg, #010101 0%, #69C9D0 100%)",               icon: <TikTokIcon size={22} />,    count: "84K",  label: "TikTok" },
-                { bg: "#1877F2",                                                          icon: <FacebookIcon size={22} />,  count: "52K",  label: "Facebook" },
-              ].map(({ bg, icon, count, label }) => (
-                <div
-                  key={label}
-                  style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, borderRadius: 14, padding: "14px 8px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.09)" }}
-                >
-                  <div style={{ width: 46, height: 46, borderRadius: 13, display: "flex", alignItems: "center", justifyContent: "center", background: bg, flexShrink: 0 }}>
-                    {icon}
-                  </div>
-                  <div style={{ textAlign: "center" }}>
-                    <p style={{ color: "white", fontSize: 26, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1, marginBottom: 3 }}>{count}</p>
-                    <p style={{ fontSize: 9, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.09em", color: "#93B8D4" }}>{label}</p>
-                  </div>
+                { icon: <InstagramIcon size={20} />, count: "137K", label: "Instagram" },
+                { icon: <TikTokIcon size={18} />,    count: "84K",  label: "TikTok" },
+                { icon: <FacebookIcon size={18} />,  count: "52K",  label: "Facebook" },
+              ].map(({ icon, count, label }) => (
+                <div key={label} style={{ textAlign: "center" }}>
+                  <div style={{ display: "flex", justifyContent: "center", marginBottom: 6, opacity: 0.85 }}>{icon}</div>
+                  <p style={{ color: "white", fontSize: 22, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1, marginBottom: 3 }}>{count}</p>
+                  <p style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.09em", color: "rgba(255,255,255,0.6)" }}>{label}</p>
                 </div>
               ))}
             </div>
@@ -354,20 +344,18 @@ export default function DashboardPage() {
                 {brands.map((brand, i) => (
                   <div
                     key={brand.name + i}
-                    className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-orange-50/30 transition-colors"
+                    className="flex items-center gap-3 px-3 py-3 rounded-2xl hover:bg-orange-50/30 transition-colors"
                     style={{ border: "1px solid rgba(0,0,0,0.06)" }}
                   >
                     <div
-                      style={{ width: 24, height: 24, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, background: BRAND_AVATAR_COLOURS[i % BRAND_AVATAR_COLOURS.length], color: "white", fontSize: 10, fontWeight: 800 }}
+                      style={{ width: 34, height: 34, borderRadius: 11, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, background: BRAND_AVATAR_COLOURS[i % BRAND_AVATAR_COLOURS.length], color: "white", fontSize: 13, fontWeight: 800 }}
                     >
                       {brand.name[0]?.toUpperCase()}
                     </div>
-                    <span style={{ flex: 1, fontWeight: 700, color: "#111827", fontSize: 12, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{brand.name}</span>
-                    {brand.runningAds ? (
-                      <span className="animate-pulse" style={{ width: 8, height: 8, borderRadius: "50%", background: "#10B981", flexShrink: 0, display: "inline-block" }} />
-                    ) : (
-                      <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#F87171", flexShrink: 0, display: "inline-block" }} />
-                    )}
+                    <span style={{ flex: 1, fontWeight: 700, color: "#111827", fontSize: 13, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{brand.name}</span>
+                    <span style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: "0.06em", padding: "3px 8px", borderRadius: 20, flexShrink: 0, background: brand.runningAds ? "#DCFCE7" : "#FEE2E2", color: brand.runningAds ? "#15803D" : "#DC2626", border: `1px solid ${brand.runningAds ? "#BBF7D0" : "#FECACA"}` }}>
+                      {brand.runningAds ? "Active" : "Paused"}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -414,29 +402,29 @@ export default function DashboardPage() {
                     <div
                       key={deal.id}
                       style={{
-                        borderRadius: 14,
-                        padding: "10px 14px",
+                        borderRadius: 16,
+                        padding: "14px 16px",
                         display: "flex",
                         alignItems: "center",
                         gap: 12,
-                        background: "rgba(255,255,255,0.6)",
-                        border: "1px solid rgba(0,0,0,0.05)",
-                        borderLeft: `3px solid ${accent}`,
+                        background: "rgba(255,255,255,0.72)",
+                        border: "1px solid rgba(0,0,0,0.04)",
+                        borderLeft: `4px solid ${accent}`,
                       }}
                     >
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ fontSize: 13, fontWeight: 700, color: "#111827", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        <p style={{ fontSize: 14, fontWeight: 700, color: "#111827", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                           {deal.company || deal.contactName}
                         </p>
                         {deal.company && (
-                          <p style={{ fontSize: 11, color: "#9CA3AF", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{deal.contactName}</p>
+                          <p style={{ fontSize: 11, color: "#9CA3AF", marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{deal.contactName}</p>
                         )}
                       </div>
                       <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
                         {deal.value && (
-                          <span style={{ fontSize: 12, fontWeight: 800, color: "#059669" }}>{deal.value}</span>
+                          <span style={{ fontSize: 13, fontWeight: 800, color: "#059669" }}>{deal.value}</span>
                         )}
-                        <span style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", padding: "3px 8px", borderRadius: 8, background: `${accent}18`, color: accent }}>
+                        <span style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", padding: "5px 10px", borderRadius: 20, background: `${accent}15`, color: accent }}>
                           {DEAL_STAGE_LABELS[deal.status] || deal.status}
                         </span>
                       </div>
@@ -481,14 +469,14 @@ export default function DashboardPage() {
                   <div
                     key={f.email}
                     className="flex items-center gap-3 hover:bg-orange-50/20 transition-colors"
-                    style={{ padding: "11px 20px", borderBottom: i < followUps.length - 1 ? CARD_DIVIDER : "none" }}
+                    style={{ padding: "14px 20px", borderBottom: i < followUps.length - 1 ? CARD_DIVIDER : "none" }}
                   >
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{ fontSize: 13, fontWeight: 800, color: "#111827", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.name}</p>
-                      <p style={{ fontSize: 11, color: "#9CA3AF", fontWeight: 500, marginTop: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.subject}</p>
+                      <p style={{ fontSize: 14, fontWeight: 800, color: "#111827", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.name}</p>
+                      <p style={{ fontSize: 12, color: "#9CA3AF", fontWeight: 500, marginTop: 3, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.subject}</p>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
-                      <span style={{ fontSize: 10, fontWeight: 700, padding: "3px 8px", borderRadius: 20, background: f.daysAgo >= 14 ? "#FEE2E2" : "#FEF3C7", color: f.daysAgo >= 14 ? "#DC2626" : "#D97706" }}>
+                      <span style={{ fontSize: 10, fontWeight: 700, padding: "5px 10px", borderRadius: 20, background: f.daysAgo >= 14 ? "#FEE2E2" : "#FEF3C7", color: f.daysAgo >= 14 ? "#DC2626" : "#D97706" }}>
                         {f.daysAgo}d ago
                       </span>
                       <Link
