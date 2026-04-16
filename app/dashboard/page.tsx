@@ -32,12 +32,12 @@ const BRAND_AVATAR_COLOURS = ["#3B82F6","#8B5CF6","#10B981","#F59E0B","#EF4444",
 
 // Floating card base style
 const CARD: React.CSSProperties = {
-  background: "rgba(255, 252, 249, 0.86)",
-  backdropFilter: "blur(18px)",
-  WebkitBackdropFilter: "blur(18px)",
+  background: "rgba(255, 253, 251, 0.97)",
+  backdropFilter: "blur(12px)",
+  WebkitBackdropFilter: "blur(12px)",
   borderRadius: 22,
-  border: "1px solid rgba(255, 255, 255, 0.65)",
-  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.09), 0 1px 4px rgba(0, 0, 0, 0.04)",
+  border: "1px solid rgba(255, 255, 255, 0.85)",
+  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.10), 0 1px 4px rgba(0, 0, 0, 0.05)",
 };
 
 const CARD_DIVIDER = "1px solid rgba(0, 0, 0, 0.06)";
