@@ -296,7 +296,7 @@ export default function DashboardPage() {
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
               <p style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.7)" }}>Analytics</p>
               <span
-                className="inline-flex items-center gap-1.5"
+                className="inline-flex items-center gap-1.5 animate-live-badge"
                 style={{ fontSize: 10, fontWeight: 700, padding: "4px 10px", borderRadius: 20, color: "white", background: "rgba(255,255,255,0.2)" }}
               >
                 <span className="animate-pulse" style={{ width: 6, height: 6, borderRadius: "50%", background: "white", display: "inline-block" }} />

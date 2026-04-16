@@ -31,12 +31,12 @@ const NAV_ITEMS = [
 ];
 
 const PILL: React.CSSProperties = {
-  background: "rgba(255,255,255,0.88)",
+  background: "linear-gradient(180deg, rgba(255,237,213,0.92) 0%, rgba(255,247,237,0.92) 100%)",
   backdropFilter: "blur(24px)",
   WebkitBackdropFilter: "blur(24px)",
   borderRadius: 30,
-  border: "1px solid rgba(255,255,255,0.9)",
-  boxShadow: "0 4px 28px rgba(234,88,12,0.14), 0 1px 6px rgba(0,0,0,0.06)",
+  border: "1px solid rgba(255,255,255,0.85)",
+  boxShadow: "0 4px 28px rgba(234,88,12,0.18), 0 1px 6px rgba(0,0,0,0.06)",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
