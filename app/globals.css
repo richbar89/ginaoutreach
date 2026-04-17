@@ -23,7 +23,7 @@
 }
 
 html {
-  background: #B5684E;
+  background: linear-gradient(150deg, #C97B5C 0%, #B5684E 55%, #9A4535 100%);
   background-attachment: fixed;
   min-height: 100vh;
 }

@@ -36,14 +36,14 @@ const BRAND_AVATAR_COLOURS = [
 
 const FAV_KEY = "dashboard_fav_brands";
 
-// Floating card base
+// Floating card — soft shadow only, no dark border
 const CARD: React.CSSProperties = {
   background: "rgba(255, 253, 251, 0.97)",
   backdropFilter: "blur(16px)",
   WebkitBackdropFilter: "blur(16px)",
   borderRadius: 26,
-  border: "1px solid rgba(255, 255, 255, 0.9)",
-  boxShadow: "0 12px 48px rgba(0, 0, 0, 0.18), 0 2px 8px rgba(0, 0, 0, 0.08)",
+  border: "1px solid rgba(255, 255, 255, 0.7)",
+  boxShadow: "0 4px 24px rgba(0, 0, 0, 0.10)",
 };
 
 const CARD_DIVIDER = "1px solid rgba(0, 0, 0, 0.06)";
@@ -251,8 +251,8 @@ export default function DashboardPage() {
 
   return (
     <div style={{
-      height: "100%", display: "flex", flexDirection: "column",
-      padding: "40px", gap: "28px", overflow: "hidden",
+      minHeight: "100%", display: "flex", flexDirection: "column",
+      padding: "40px", gap: "28px",
     }}>
 
       {/* ── Banners ── */}
@@ -314,10 +314,10 @@ export default function DashboardPage() {
       </div>
 
       {/* ── Main grid ── */}
-      <div style={{ flex: 1, minHeight: 0, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "28px", overflow: "hidden" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "28px", alignItems: "start" }}>
 
         {/* LEFT COLUMN */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "28px", minHeight: 0 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "28px" }}>
 
           {/* Getting started checklist */}
           {showChecklist && (
@@ -411,7 +411,7 @@ export default function DashboardPage() {
           </div>
 
           {/* ── Meta Ads card ── */}
-          <div style={{ ...CARD, flex: 1, minHeight: 0, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+          <div style={{ ...CARD, display: "flex", flexDirection: "column", overflow: "hidden" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "22px 32px", borderBottom: CARD_DIVIDER, flexShrink: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <Star size={14} style={{ color: "#EA580C" }} />
@@ -478,13 +478,13 @@ export default function DashboardPage() {
 
             {/* Favourited brands list */}
             {displayedBrands.length === 0 ? (
-              <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: 40 }}>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: 40 }}>
                 <Star size={28} style={{ color: "#E5E7EB", marginBottom: 12 }} />
                 <p style={{ fontSize: 13, fontWeight: 600, color: "#9CA3AF" }}>No brands pinned yet.</p>
                 <p style={{ fontSize: 11, color: "#D1D5DB", marginTop: 4 }}>Click Edit to select up to 8 brands to watch.</p>
               </div>
             ) : (
-              <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", alignContent: "start", padding: "16px 24px", gap: 10, overflowY: "auto" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", alignContent: "start", padding: "16px 24px", gap: 10 }}>
                 {displayedBrands.map((brand, i) => {
                   const hasData = brand.runningAds !== null;
                   return (
@@ -522,10 +522,10 @@ export default function DashboardPage() {
         </div>
 
         {/* RIGHT COLUMN */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "28px", minHeight: 0 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "28px" }}>
 
           {/* Deal Pipeline */}
-          <div style={{ ...CARD, flex: 1, minHeight: 0, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+          <div style={{ ...CARD, display: "flex", flexDirection: "column" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "22px 32px", borderBottom: CARD_DIVIDER, flexShrink: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <TrendingUp size={14} style={{ color: "#EA580C" }} />
@@ -547,13 +547,13 @@ export default function DashboardPage() {
             </div>
 
             {deals.length === 0 ? (
-              <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: 48 }}>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: 48 }}>
                 <TrendingUp size={28} style={{ color: "#E5E7EB", marginBottom: 12 }} />
                 <p style={{ fontSize: 13, fontWeight: 600, color: "#9CA3AF" }}>No deals yet.</p>
                 <p style={{ fontSize: 11, color: "#D1D5DB", marginTop: 4 }}>Positive replies in your inbox get flagged automatically.</p>
               </div>
             ) : (
-              <div className="scrollbar-thin" style={{ flex: 1, overflowY: "auto", padding: "18px 24px", display: "flex", flexDirection: "column", gap: 10 }}>
+              <div style={{ padding: "18px 24px", display: "flex", flexDirection: "column", gap: 10 }}>
                 {recentDeals.map((deal) => {
                   const accent = DEAL_STAGE_ACCENT[deal.status] || "#6B7280";
                   return (
@@ -591,7 +591,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Follow-up Reminders */}
-          <div style={{ ...CARD, flex: 1, minHeight: 0, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+          <div style={{ ...CARD, display: "flex", flexDirection: "column" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "22px 32px", borderBottom: CARD_DIVIDER, flexShrink: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <Bell size={14} style={{ color: "#EA580C" }} />
@@ -613,13 +613,13 @@ export default function DashboardPage() {
             </div>
 
             {followUps.length === 0 ? (
-              <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: 48 }}>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: 48 }}>
                 <Clock size={24} style={{ color: "#E5E7EB", marginBottom: 12 }} />
                 <p style={{ fontSize: 13, fontWeight: 600, color: "#9CA3AF" }}>All up to date.</p>
                 <p style={{ fontSize: 11, color: "#D1D5DB", marginTop: 4 }}>Contacts emailed 5+ days ago appear here.</p>
               </div>
             ) : (
-              <div className="scrollbar-thin" style={{ flex: 1, overflowY: "auto" }}>
+              <div>
                 {followUps.map((f, i) => (
                   <div
                     key={f.email}

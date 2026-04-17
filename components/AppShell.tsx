@@ -78,18 +78,19 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <Sidebar />
       </div>
 
-      {/* Main content — transparent so cards float on terracotta */}
+      {/* Main content — fully transparent, cards float on terracotta */}
       <div
         style={{
           flex: 1,
           minWidth: 0,
-          overflow: "hidden",
           display: "flex",
           flexDirection: "column",
+          background: "transparent",
+          overflow: "hidden",
         }}
       >
         <AnnouncementBanner />
-        <div style={{ flex: 1, overflow: "auto" }}>{children}</div>
+        <div style={{ flex: 1, overflowY: "auto", background: "transparent" }}>{children}</div>
       </div>
 
     </div>
