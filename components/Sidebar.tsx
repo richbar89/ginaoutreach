@@ -31,12 +31,12 @@ const NAV_ITEMS = [
 ];
 
 const PILL: React.CSSProperties = {
-  background: "linear-gradient(180deg, rgba(255,237,213,0.92) 0%, rgba(255,247,237,0.92) 100%)",
+  background: "rgba(251, 247, 242, 0.97)",
   backdropFilter: "blur(24px)",
   WebkitBackdropFilter: "blur(24px)",
   borderRadius: 30,
-  border: "1px solid rgba(255,255,255,0.85)",
-  boxShadow: "0 4px 28px rgba(234,88,12,0.18), 0 1px 6px rgba(0,0,0,0.06)",
+  border: "1px solid rgba(255,255,255,0.9)",
+  boxShadow: "0 4px 28px rgba(0,0,0,0.12), 0 1px 6px rgba(0,0,0,0.06)",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
@@ -60,13 +60,13 @@ export default function Sidebar() {
         style={{
           width: 38,
           height: 38,
-          background: "linear-gradient(135deg, #EA580C, #FB923C)",
+          background: "#D4795C",
           borderRadius: 12,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           marginBottom: 12,
-          boxShadow: "0 2px 10px rgba(234,88,12,0.4)",
+          boxShadow: "0 2px 10px rgba(212,121,92,0.35)",
           flexShrink: 0,
         }}
       >
@@ -88,8 +88,8 @@ export default function Sidebar() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              background: active ? "rgba(234,88,12,0.10)" : "transparent",
-              color: active ? "#EA580C" : "#9CA3AF",
+              background: active ? "rgba(75,191,176,0.12)" : "transparent",
+              color: active ? "#4BBFB0" : "#9CA3AF",
               transition: "all 0.12s",
               flexShrink: 0,
             }}
@@ -123,8 +123,8 @@ export default function Sidebar() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            background: pathname.startsWith("/admin") ? "rgba(234,88,12,0.10)" : "transparent",
-            color: pathname.startsWith("/admin") ? "#EA580C" : "#9CA3AF",
+            background: pathname.startsWith("/admin") ? "rgba(75,191,176,0.12)" : "transparent",
+            color: pathname.startsWith("/admin") ? "#4BBFB0" : "#9CA3AF",
             transition: "all 0.12s",
             flexShrink: 0,
           }}
@@ -147,8 +147,8 @@ export default function Sidebar() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: pathname === "/settings" ? "rgba(234,88,12,0.10)" : "transparent",
-          color: pathname === "/settings" ? "#EA580C" : "#9CA3AF",
+          background: pathname === "/settings" ? "rgba(75,191,176,0.12)" : "transparent",
+          color: pathname === "/settings" ? "#4BBFB0" : "#9CA3AF",
           transition: "all 0.12s",
           flexShrink: 0,
         }}
@@ -177,7 +177,7 @@ export default function Sidebar() {
             height: 34,
             borderRadius: "50%",
             overflow: "hidden",
-            background: "#EA580C",
+            background: "#D4795C",
             border: "none",
             cursor: "pointer",
             display: "flex",

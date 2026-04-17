@@ -9,23 +9,36 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Urbanist", "system-ui", "sans-serif"],
-        serif: ["Urbanist", "system-ui", "sans-serif"],
-        display: ["Urbanist", "system-ui", "sans-serif"],
+        sans:    ["Inter", "system-ui", "sans-serif"],
+        display: ["Sora", "system-ui", "sans-serif"],
+        serif:   ["Sora", "system-ui", "sans-serif"],
       },
       colors: {
-        // Warm orange — primary accent (base44-inspired)
+        // Warm terracotta — primary accent
         coral: {
           50:  "#FEF5F0",
           100: "#FDE8DC",
           200: "#FAC9B0",
-          300: "#F7A882",
-          400: "#F08050",
-          500: "#E8622A",
-          600: "#CC4F1A",
-          700: "#A83D10",
-          800: "#7A2C0B",
-          900: "#4F1B05",
+          300: "#F0A882",
+          400: "#E08E6A",
+          500: "#D4795C",
+          600: "#BF6849",
+          700: "#9E5238",
+          800: "#7A3C28",
+          900: "#4F2518",
+        },
+        // Teal — secondary accent
+        teal: {
+          50:  "#F0FAFA",
+          100: "#CCEFEC",
+          200: "#99DED9",
+          300: "#66CDC5",
+          400: "#4BBFB0",
+          500: "#35AFA0",
+          600: "#278F82",
+          700: "#1E6E64",
+          800: "#164E47",
+          900: "#0E302C",
         },
         // Charcoal — text, borders, UI
         navy: {
@@ -40,11 +53,12 @@ const config: Config = {
           800: "#1F2937",
           900: "#111111",
         },
-        // Soft blue-gray — subtle backgrounds and surfaces
+        // Warm cream — card backgrounds, surfaces
         cream: {
-          50:  "#F0F5F8",
-          100: "#E2ECF2",
-          200: "#C5D9E3",
+          50:  "#FDFAF7",
+          100: "#FBF7F2",
+          200: "#F5EFE6",
+          300: "#EDE8E1",
         },
       },
     },
