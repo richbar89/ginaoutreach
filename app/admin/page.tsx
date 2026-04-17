@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Ticket, Users, AlertTriangle, Megaphone, Activity, Upload, Save, Loader2 } from "lucide-react";
+import { Ticket, Users, AlertTriangle, Megaphone, Activity, Upload, Save, Loader2, ListOrdered } from "lucide-react";
 
 const NAV = [
+  { href: "/admin/waitlist",     label: "Waitlist",      icon: ListOrdered,  desc: "Landing page sign-ups" },
   { href: "/admin/tickets",      label: "Tickets",       icon: Ticket,       desc: "Brand contact requests" },
   { href: "/admin/users",        label: "Users",         icon: Users,        desc: "All users + email stats" },
   { href: "/admin/contacts",     label: "Contacts",      icon: Upload,       desc: "Upload new contacts" },
