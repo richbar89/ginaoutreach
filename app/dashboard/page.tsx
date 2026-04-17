@@ -2,17 +2,18 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Send, Users, TrendingUp, Bell, ChevronRight, Clock, Zap, AlertTriangle, X, CheckCircle2 } from "lucide-react";
+import {
+  Send, Users, TrendingUp, Bell, ChevronRight, Clock,
+  Zap, AlertTriangle, X, CheckCircle2, Star, Edit2, Check,
+} from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import { useDb } from "@/lib/useDb";
-import {
-  dbGetEmailLog,
-  dbGetDeals,
-  dbGetBrands,
-} from "@/lib/db";
+import { dbGetEmailLog, dbGetDeals, dbGetBrands } from "@/lib/db";
 import { getGoogleUser, isGoogleTokenExpired } from "@/lib/googleClient";
 import { getMicrosoftUser } from "@/lib/graphClient";
+import { getAllCachedStatuses } from "@/lib/metaAds";
 import type { Deal, Brand } from "@/lib/types";
+import type { AdStatus } from "@/lib/metaAds";
 
 const DEAL_STAGE_LABELS: Record<string, string> = {
   pitched: "Pitched", replied: "Replied", negotiating: "Negotiating",
@@ -28,59 +29,99 @@ const DEAL_STAGE_ACCENT: Record<string, string> = {
   paid:        "#10B981",
 };
 
-const BRAND_AVATAR_COLOURS = ["#3B82F6","#8B5CF6","#10B981","#F59E0B","#EF4444","#EC4899","#06B6D4","#84CC16","#F97316","#6366F1"];
+const BRAND_AVATAR_COLOURS = [
+  "#3B82F6","#8B5CF6","#10B981","#F59E0B",
+  "#EF4444","#EC4899","#06B6D4","#84CC16","#F97316","#6366F1",
+];
 
-// Floating card base style
+const FAV_KEY = "dashboard_fav_brands";
+
+// Floating card base
 const CARD: React.CSSProperties = {
   background: "rgba(255, 253, 251, 0.97)",
-  backdropFilter: "blur(12px)",
-  WebkitBackdropFilter: "blur(12px)",
-  borderRadius: 22,
-  border: "1px solid rgba(255, 255, 255, 0.85)",
-  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.10), 0 1px 4px rgba(0, 0, 0, 0.05)",
+  backdropFilter: "blur(16px)",
+  WebkitBackdropFilter: "blur(16px)",
+  borderRadius: 26,
+  border: "1px solid rgba(255, 255, 255, 0.9)",
+  boxShadow: "0 12px 48px rgba(0, 0, 0, 0.18), 0 2px 8px rgba(0, 0, 0, 0.08)",
 };
 
 const CARD_DIVIDER = "1px solid rgba(0, 0, 0, 0.06)";
 
 type FollowUp = { email: string; name: string; subject: string; daysAgo: number };
 
-function InstagramIcon({ size = 28 }: { size?: number }) {
+// ── Sparkline SVG ─────────────────────────────────────────────
+const DEMO_VIEWS = [3800, 5200, 4600, 6800, 5900, 7400, 6100, 8300, 7700, 9100,
+  8500, 10200, 9400, 11000, 10100, 9200, 11800, 12400, 11200, 13100,
+  12300, 11600, 14000, 13500, 12800, 15200, 14600, 13900, 16100, 15400];
+
+function Sparkline({ data, color = "#4BBFB0", height = 90 }: { data: number[]; color?: string; height?: number }) {
+  const W = 500;
+  const H = height;
+  const pad = 8;
+  const max = Math.max(...data);
+  const min = Math.min(...data);
+  const range = max - min || 1;
+
+  const pts = data.map((v, i) => ({
+    x: pad + (i / (data.length - 1)) * (W - pad * 2),
+    y: pad + (1 - (v - min) / range) * (H - pad * 2),
+  }));
+
+  const line = pts.reduce((d, p, i) => {
+    if (i === 0) return `M ${p.x} ${p.y}`;
+    const prev = pts[i - 1];
+    const cx = (prev.x + p.x) / 2;
+    return `${d} C ${cx} ${prev.y} ${cx} ${p.y} ${p.x} ${p.y}`;
+  }, "");
+
+  const area = `${line} L ${pts[pts.length - 1].x} ${H} L ${pts[0].x} ${H} Z`;
+
+  const last = pts[pts.length - 1];
+
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-      <circle cx="12" cy="12" r="4"/>
-      <circle cx="17.5" cy="6.5" r="1" fill="white" stroke="none"/>
+    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", height }} preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity="0.25" />
+          <stop offset="100%" stopColor={color} stopOpacity="0.02" />
+        </linearGradient>
+      </defs>
+      <path d={area} fill="url(#sg)" />
+      <path d={line} fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx={last.x} cy={last.y} r="4" fill={color} stroke="white" strokeWidth="2" />
     </svg>
   );
 }
 
-function TikTokIcon({ size = 26 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="white">
-      <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.79 1.52V6.77a4.85 4.85 0 01-1.02-.08z"/>
-    </svg>
-  );
-}
-
-function FacebookIcon({ size = 26 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="white">
-      <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
-    </svg>
-  );
+// ── Day labels for sparkline ──────────────────────────────────
+function last7Labels() {
+  const days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  const out: string[] = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    out.push(days[d.getDay()]);
+  }
+  return out;
 }
 
 export default function DashboardPage() {
   const { user } = useUser();
   const firstName = user?.firstName || user?.fullName?.split(" ")[0] || "there";
   const getDb = useDb();
+
   const [contactCount, setContactCount] = useState(0);
   const [emailsSent, setEmailsSent] = useState(0);
   const [followUps, setFollowUps] = useState<FollowUp[]>([]);
   const [deals, setDeals] = useState<Deal[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
+  const [allCompanies, setAllCompanies] = useState<string[]>([]);
   const [emailConnected, setEmailConnected] = useState<"gmail" | "microsoft" | "expired" | null>(null);
   const [checklistDismissed, setChecklistDismissed] = useState(false);
+  const [adStatuses, setAdStatuses] = useState<Record<string, AdStatus>>({});
+  const [favBrands, setFavBrands] = useState<string[]>([]);
+  const [editingFavs, setEditingFavs] = useState(false);
 
   useEffect(() => {
     const gUser = getGoogleUser();
@@ -92,15 +133,24 @@ export default function DashboardPage() {
     } else {
       setEmailConnected(null);
     }
-    const dismissed = localStorage.getItem("checklist_dismissed") === "true";
-    setChecklistDismissed(dismissed);
+    setChecklistDismissed(localStorage.getItem("checklist_dismissed") === "true");
+    const stored = localStorage.getItem(FAV_KEY);
+    if (stored) setFavBrands(JSON.parse(stored));
+    setAdStatuses(getAllCachedStatuses());
   }, []);
 
   useEffect(() => {
     (async () => {
       const [db, contactsRes] = await Promise.all([getDb(), fetch("/api/contacts")]);
-      const contactsList: { email: string; name: string }[] = contactsRes.ok ? await contactsRes.json() : [];
+      const contactsList: { email: string; name: string; company?: string }[] =
+        contactsRes.ok ? await contactsRes.json() : [];
       setContactCount(contactsList.length);
+
+      // Unique company names for brand selector
+      const companies = Array.from(
+        new Set(contactsList.map(c => (c as any).company).filter(Boolean))
+      ) as string[];
+      setAllCompanies(companies);
 
       const log = await dbGetEmailLog(db);
       setEmailsSent(log.length);
@@ -131,95 +181,119 @@ export default function DashboardPage() {
 
       const brandsData = await dbGetBrands(db);
       setBrands(brandsData);
+
+      // Auto-populate favs from brands table if none saved yet
+      const stored = localStorage.getItem(FAV_KEY);
+      if (!stored && brandsData.length > 0) {
+        const initial = brandsData.slice(0, 8).map(b => b.name);
+        setFavBrands(initial);
+        localStorage.setItem(FAV_KEY, JSON.stringify(initial));
+      }
     })();
   }, [getDb]);
+
+  function toggleFav(name: string) {
+    setFavBrands(prev => {
+      const next = prev.includes(name)
+        ? prev.filter(n => n !== name)
+        : prev.length < 8 ? [...prev, name] : prev;
+      localStorage.setItem(FAV_KEY, JSON.stringify(next));
+      return next;
+    });
+  }
 
   const today = new Date().toLocaleDateString("en-GB", {
     weekday: "long", day: "numeric", month: "long", year: "numeric",
   });
 
-  const recentDeals = deals.slice(0, 6);
   const activeDeals = deals.filter(d => d.status !== "paid");
+  const recentDeals = deals.slice(0, 6);
 
   const checklistTasks = [
     {
-      id: "email",
-      label: "Connect your email",
+      id: "email", label: "Connect your email",
       sub: "Send outreach from your own inbox",
       done: emailConnected === "gmail" || emailConnected === "microsoft",
       href: "/settings",
     },
     {
-      id: "send",
-      label: "Send your first email",
+      id: "send", label: "Send your first email",
       sub: "Pick a contact and reach out",
-      done: emailsSent > 0,
-      href: "/contacts",
+      done: emailsSent > 0, href: "/contacts",
     },
     {
-      id: "deal",
-      label: "Add a deal to your pipeline",
+      id: "deal", label: "Add a deal to your pipeline",
       sub: "Track a brand conversation",
-      done: deals.length > 0,
-      href: "/pipeline",
+      done: deals.length > 0, href: "/pipeline",
     },
   ];
-  const allChecklistDone = checklistTasks.every((t) => t.done);
+  const allChecklistDone = checklistTasks.every(t => t.done);
   const showChecklist = !checklistDismissed && !allChecklistDone;
 
-  return (
-    <div style={{ height: "100%", display: "flex", flexDirection: "column", padding: "32px", gap: "24px", overflow: "hidden" }}>
+  // All selectable brand names (DB brands + unique contact companies)
+  const allBrandNames = Array.from(
+    new Set([...brands.map(b => b.name), ...allCompanies])
+  ).sort();
 
-      {/* Email not connected banner */}
+  // The 8 favourited brands to display, with ad status
+  const displayedBrands = favBrands.map(name => {
+    const dbBrand = brands.find(b => b.name === name);
+    const cached = adStatuses[name];
+    return {
+      name,
+      runningAds: cached?.hasAds ?? dbBrand?.runningAds ?? null,
+      checkedAt: cached?.checkedAt ?? null,
+    };
+  });
+
+  const dayLabels = last7Labels();
+  const sparkData = DEMO_VIEWS.slice(-7);
+
+  return (
+    <div style={{
+      height: "100%", display: "flex", flexDirection: "column",
+      padding: "40px", gap: "28px", overflow: "hidden",
+    }}>
+
+      {/* ── Banners ── */}
       {emailConnected === null && (
-        <div
-          className="flex items-center gap-3 px-5 py-3 flex-shrink-0"
-          style={{ ...CARD, background: "rgba(255,248,238,0.95)", border: "1px solid #FDE5B8" }}
-        >
+        <div className="flex items-center gap-3 px-6 py-3.5 flex-shrink-0" style={{ ...CARD, background: "rgba(255,248,238,0.97)", border: "1px solid #FDE5B8" }}>
           <AlertTriangle size={14} style={{ color: "#D97706", flexShrink: 0 }} />
           <p className="text-xs font-medium flex-1" style={{ color: "#92400E" }}>
             <span className="font-bold">No email connected.</span> Connect Gmail or Microsoft to send outreach.
           </p>
-          <Link href="/settings" className="text-xs font-bold whitespace-nowrap px-3 py-1.5 rounded-lg transition-colors" style={{ color: "#B45309", background: "#FEF3C7", border: "1px solid #FDE68A" }}>
+          <Link href="/settings" className="text-xs font-bold whitespace-nowrap px-3 py-1.5 rounded-lg" style={{ color: "#B45309", background: "#FEF3C7", border: "1px solid #FDE68A" }}>
             Connect now →
           </Link>
         </div>
       )}
-
-      {/* Gmail token expired banner */}
       {emailConnected === "expired" && (
-        <div
-          className="flex items-center gap-3 px-5 py-3 flex-shrink-0"
-          style={{ ...CARD, background: "rgba(255,245,245,0.95)", border: "1px solid #FECACA" }}
-        >
+        <div className="flex items-center gap-3 px-6 py-3.5 flex-shrink-0" style={{ ...CARD, background: "rgba(255,245,245,0.97)", border: "1px solid #FECACA" }}>
           <AlertTriangle size={14} style={{ color: "#EF4444", flexShrink: 0 }} />
           <p className="text-xs font-medium flex-1" style={{ color: "#7F1D1D" }}>
             <span className="font-bold">Gmail session expired.</span> Your emails won&apos;t send until you reconnect.
           </p>
-          <Link href="/settings" className="text-xs font-bold whitespace-nowrap px-3 py-1.5 rounded-lg transition-colors" style={{ color: "#B91C1C", background: "#FEE2E2", border: "1px solid #FECACA" }}>
+          <Link href="/settings" className="text-xs font-bold whitespace-nowrap px-3 py-1.5 rounded-lg" style={{ color: "#B91C1C", background: "#FEE2E2", border: "1px solid #FECACA" }}>
             Reconnect →
           </Link>
         </div>
       )}
 
       {/* ── Header card ── */}
-      <div
-        className="flex items-center justify-between flex-shrink-0"
-        style={{ ...CARD, padding: "36px 56px" }}
-      >
+      <div className="flex items-center justify-between flex-shrink-0" style={{ ...CARD, padding: "28px 44px" }}>
         <div>
-          <p style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#9CA3AF", marginBottom: 6 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#9CA3AF", marginBottom: 8 }}>
             {today}
           </p>
-          <h1 style={{ fontSize: 34, fontWeight: 900, letterSpacing: "-0.04em", color: "#111827", lineHeight: 1 }}>
+          <h1 style={{ fontSize: 36, fontWeight: 900, letterSpacing: "-0.04em", color: "#111827", lineHeight: 1 }}>
             Hey {firstName}!
           </h1>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <Link
             href="/contacts"
             className="inline-flex items-center gap-2 text-sm font-semibold rounded-xl transition-all"
-            style={{ padding: "9px 16px", background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.08)", color: "#374151" }}
+            style={{ padding: "10px 20px", background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.08)", color: "#374151" }}
             onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "#EA580C"; (e.currentTarget as HTMLElement).style.color = "#EA580C"; }}
             onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,0,0,0.08)"; (e.currentTarget as HTMLElement).style.color = "#374151"; }}
           >
@@ -229,7 +303,7 @@ export default function DashboardPage() {
           <Link
             href="/send"
             className="inline-flex items-center gap-2 text-white text-sm font-bold rounded-xl transition-all"
-            style={{ padding: "9px 16px", background: "#EA580C", boxShadow: "0 2px 14px rgba(234,88,12,0.40)" }}
+            style={{ padding: "10px 20px", background: "#EA580C", boxShadow: "0 2px 14px rgba(234,88,12,0.40)" }}
             onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = "#C2410C"}
             onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = "#EA580C"}
           >
@@ -240,15 +314,15 @@ export default function DashboardPage() {
       </div>
 
       {/* ── Main grid ── */}
-      <div style={{ flex: 1, minHeight: 0, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px", overflow: "hidden" }}>
+      <div style={{ flex: 1, minHeight: 0, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "28px", overflow: "hidden" }}>
 
         {/* LEFT COLUMN */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "24px", minHeight: 0 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "28px", minHeight: 0 }}>
 
           {/* Getting started checklist */}
           {showChecklist && (
             <div style={{ ...CARD, flexShrink: 0, overflow: "hidden" }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "28px 40px", borderBottom: CARD_DIVIDER }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "22px 32px", borderBottom: CARD_DIVIDER }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <Zap size={14} style={{ color: "#EA580C" }} />
                   <span style={{ fontSize: 13, fontWeight: 800, color: "#111827" }}>Getting started</span>
@@ -268,14 +342,14 @@ export default function DashboardPage() {
                   key={task.id}
                   href={task.href}
                   className="flex items-center gap-3 hover:bg-orange-50/40 transition-colors group"
-                  style={{ padding: "24px 40px", borderBottom: i < checklistTasks.length - 1 ? CARD_DIVIDER : "none" }}
+                  style={{ padding: "18px 32px", borderBottom: i < checklistTasks.length - 1 ? CARD_DIVIDER : "none" }}
                 >
                   <CheckCircle2 size={18} style={{ flexShrink: 0, color: task.done ? "#10B981" : "#D1D5DB" }} />
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <p style={{ fontSize: 13, fontWeight: 700, color: task.done ? "#9CA3AF" : "#111827", textDecoration: task.done ? "line-through" : "none" }}>
                       {task.label}
                     </p>
-                    <p style={{ fontSize: 11, color: "#9CA3AF", marginTop: 1 }}>{task.sub}</p>
+                    <p style={{ fontSize: 11, color: "#9CA3AF", marginTop: 2 }}>{task.sub}</p>
                   </div>
                   {!task.done && <ChevronRight size={14} style={{ color: "#D1D5DB", flexShrink: 0 }} />}
                 </Link>
@@ -283,92 +357,176 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* Analytics card — orange gradient hero */}
-          <div
-            style={{
-              flexShrink: 0,
-              borderRadius: 22,
-              padding: "48px",
-              background: "linear-gradient(135deg, #FB923C 0%, #EA580C 50%, #C2410C 100%)",
-              boxShadow: "0 4px 16px rgba(234,88,12,0.18)",
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 36 }}>
-              <p style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.7)" }}>Analytics</p>
-              <span
-                className="inline-flex items-center gap-1.5 animate-live-badge"
-                style={{ fontSize: 10, fontWeight: 700, padding: "4px 10px", borderRadius: 20, color: "white", background: "rgba(255,255,255,0.2)" }}
-              >
-                <span className="animate-pulse" style={{ width: 6, height: 6, borderRadius: "50%", background: "white", display: "inline-block" }} />
-                Live Data
-              </span>
+          {/* ── Analytics / Sparkline card ── */}
+          <div style={{ ...CARD, flexShrink: 0, padding: "28px 32px" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+              <div>
+                <p style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.1em", color: "#9CA3AF", marginBottom: 4 }}>Analytics</p>
+                <p style={{ fontSize: 24, fontWeight: 900, letterSpacing: "-0.04em", color: "#111827", lineHeight: 1 }}>
+                  Daily Social Views
+                </p>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span
+                  className="inline-flex items-center gap-1.5"
+                  style={{ fontSize: 10, fontWeight: 700, padding: "5px 11px", borderRadius: 20, color: "#4BBFB0", background: "rgba(75,191,176,0.1)", border: "1px solid rgba(75,191,176,0.25)" }}
+                >
+                  <span className="animate-pulse" style={{ width: 6, height: 6, borderRadius: "50%", background: "#4BBFB0", display: "inline-block" }} />
+                  Live
+                </span>
+                <Link href="/analytics" style={{ fontSize: 11, color: "#9CA3AF", fontWeight: 600, textDecoration: "none" }}
+                  onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = "#EA580C"}
+                  onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = "#9CA3AF"}
+                >
+                  Full analytics →
+                </Link>
+              </div>
             </div>
 
-            <div style={{ marginBottom: 36 }}>
-              <p style={{ fontSize: 11, color: "rgba(255,255,255,0.65)", marginBottom: 6 }}>Avg. Views per Post — last 7 days</p>
-              <p style={{ color: "white", fontSize: 52, fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1 }}>—</p>
-              <p style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", marginTop: 6 }}>Connect Meta API to populate</p>
+            {/* Chart */}
+            <div style={{ marginBottom: 8 }}>
+              <Sparkline data={sparkData} color="#4BBFB0" height={88} />
             </div>
 
-            <div style={{ borderTop: "1px solid rgba(255,255,255,0.2)", paddingTop: 32, display: "grid", gridTemplateColumns: "1fr 1fr 1fr" }}>
+            {/* Day labels */}
+            <div style={{ display: "flex", justifyContent: "space-between", paddingTop: 4 }}>
+              {dayLabels.map(d => (
+                <span key={d} style={{ fontSize: 10, fontWeight: 600, color: "#D1D5DB" }}>{d}</span>
+              ))}
+            </div>
+
+            {/* Stats row */}
+            <div style={{ borderTop: CARD_DIVIDER, marginTop: 18, paddingTop: 18, display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
               {[
-                { icon: <InstagramIcon size={20} />, count: "137K", label: "Instagram" },
-                { icon: <TikTokIcon size={18} />,    count: "84K",  label: "TikTok" },
-                { icon: <FacebookIcon size={18} />,  count: "52K",  label: "Facebook" },
-              ].map(({ icon, count, label }) => (
+                { label: "Instagram", count: "137K", colour: "#E1306C" },
+                { label: "TikTok",    count: "84K",  colour: "#010101" },
+                { label: "Facebook",  count: "52K",  colour: "#1877F2" },
+              ].map(({ label, count, colour }) => (
                 <div key={label} style={{ textAlign: "center" }}>
-                  <div style={{ display: "flex", justifyContent: "center", marginBottom: 6, opacity: 0.85 }}>{icon}</div>
-                  <p style={{ color: "white", fontSize: 22, fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1, marginBottom: 3 }}>{count}</p>
-                  <p style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.09em", color: "rgba(255,255,255,0.6)" }}>{label}</p>
+                  <p style={{ fontSize: 20, fontWeight: 900, letterSpacing: "-0.03em", color: "#111827", lineHeight: 1, marginBottom: 3 }}>{count}</p>
+                  <p style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: colour }}>{label}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Top Brands */}
+          {/* ── Meta Ads card ── */}
           <div style={{ ...CARD, flex: 1, minHeight: 0, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 20px", borderBottom: CARD_DIVIDER, flexShrink: 0 }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "22px 32px", borderBottom: CARD_DIVIDER, flexShrink: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <Zap size={14} style={{ color: "#EA580C" }} />
-                <span style={{ fontSize: 14, fontWeight: 800, color: "#111827" }}>Top Brands</span>
+                <Star size={14} style={{ color: "#EA580C" }} />
+                <span style={{ fontSize: 14, fontWeight: 800, color: "#111827" }}>Meta Ads</span>
+                <span style={{ fontSize: 10, fontWeight: 700, background: "#FEF0EB", color: "#EA580C", padding: "2px 8px", borderRadius: 20, border: "1px solid #FDDBC8" }}>
+                  {favBrands.length}/8
+                </span>
               </div>
-              <span style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.09em", color: "#9CA3AF" }}>Ads Alerts</span>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <button
+                  onClick={() => setEditingFavs(v => !v)}
+                  style={{
+                    display: "flex", alignItems: "center", gap: 5,
+                    fontSize: 11, fontWeight: 700, color: editingFavs ? "#10B981" : "#9CA3AF",
+                    background: editingFavs ? "rgba(16,185,129,0.08)" : "rgba(0,0,0,0.04)",
+                    border: `1px solid ${editingFavs ? "rgba(16,185,129,0.25)" : "rgba(0,0,0,0.08)"}`,
+                    borderRadius: 8, padding: "5px 10px", cursor: "pointer",
+                  }}
+                >
+                  {editingFavs ? <Check size={12} /> : <Edit2 size={12} />}
+                  {editingFavs ? "Done" : "Edit"}
+                </button>
+                <Link href="/ads" style={{ fontSize: 11, color: "#9CA3AF", fontWeight: 600, textDecoration: "none" }}
+                  onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = "#EA580C"}
+                  onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = "#9CA3AF"}
+                >
+                  Full scan →
+                </Link>
+              </div>
             </div>
-            {brands.length === 0 ? (
-              <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: 48 }}>
-                <p style={{ fontSize: 13, fontWeight: 600, color: "#9CA3AF" }}>No brands added yet.</p>
-                <p style={{ fontSize: 11, color: "#D1D5DB", marginTop: 4 }}>Add brands to monitor in Settings.</p>
+
+            {/* Edit mode: brand selector */}
+            {editingFavs && (
+              <div style={{ padding: "16px 32px", borderBottom: CARD_DIVIDER, background: "rgba(249,250,251,0.8)", flexShrink: 0 }}>
+                <p style={{ fontSize: 11, color: "#9CA3AF", marginBottom: 10, fontWeight: 600 }}>
+                  Select up to 8 brands to pin — pulls live from your 24h ad scan
+                </p>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6, maxHeight: 120, overflowY: "auto" }}>
+                  {allBrandNames.length === 0 ? (
+                    <p style={{ fontSize: 12, color: "#D1D5DB" }}>No brands or companies found. Add contacts with company names.</p>
+                  ) : allBrandNames.map(name => {
+                    const selected = favBrands.includes(name);
+                    const atMax = !selected && favBrands.length >= 8;
+                    return (
+                      <button
+                        key={name}
+                        onClick={() => !atMax && toggleFav(name)}
+                        style={{
+                          fontSize: 11, fontWeight: 700,
+                          padding: "5px 12px", borderRadius: 20, cursor: atMax ? "not-allowed" : "pointer",
+                          background: selected ? "#EA580C" : "rgba(0,0,0,0.05)",
+                          color: selected ? "white" : atMax ? "#D1D5DB" : "#374151",
+                          border: `1px solid ${selected ? "#EA580C" : "rgba(0,0,0,0.08)"}`,
+                          transition: "all 0.12s",
+                        }}
+                      >
+                        {selected && "✓ "}{name}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Favourited brands list */}
+            {displayedBrands.length === 0 ? (
+              <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: 40 }}>
+                <Star size={28} style={{ color: "#E5E7EB", marginBottom: 12 }} />
+                <p style={{ fontSize: 13, fontWeight: 600, color: "#9CA3AF" }}>No brands pinned yet.</p>
+                <p style={{ fontSize: 11, color: "#D1D5DB", marginTop: 4 }}>Click Edit to select up to 8 brands to watch.</p>
               </div>
             ) : (
-              <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", alignContent: "start", padding: 24, gap: 16, overflow: "hidden" }}>
-                {brands.map((brand, i) => (
-                  <div
-                    key={brand.name + i}
-                    className="flex items-center gap-3 px-3 py-3 rounded-2xl hover:bg-orange-50/30 transition-colors"
-                    style={{ border: "1px solid rgba(0,0,0,0.06)" }}
-                  >
+              <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", alignContent: "start", padding: "16px 24px", gap: 10, overflowY: "auto" }}>
+                {displayedBrands.map((brand, i) => {
+                  const hasData = brand.runningAds !== null;
+                  return (
                     <div
-                      style={{ width: 34, height: 34, borderRadius: 11, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, background: BRAND_AVATAR_COLOURS[i % BRAND_AVATAR_COLOURS.length], color: "white", fontSize: 13, fontWeight: 800 }}
+                      key={brand.name}
+                      className="flex items-center gap-3 rounded-2xl hover:bg-orange-50/30 transition-colors"
+                      style={{ padding: "14px 16px", border: "1px solid rgba(0,0,0,0.06)" }}
                     >
-                      {brand.name[0]?.toUpperCase()}
+                      <div style={{ width: 36, height: 36, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, background: BRAND_AVATAR_COLOURS[i % BRAND_AVATAR_COLOURS.length], color: "white", fontSize: 13, fontWeight: 800 }}>
+                        {brand.name[0]?.toUpperCase()}
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <span style={{ fontWeight: 700, color: "#111827", fontSize: 12, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", display: "block" }}>{brand.name}</span>
+                        {brand.checkedAt && (
+                          <span style={{ fontSize: 10, color: "#D1D5DB" }}>
+                            {Math.floor((Date.now() - new Date(brand.checkedAt).getTime()) / 3600000)}h ago
+                          </span>
+                        )}
+                      </div>
+                      {hasData ? (
+                        <span style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", padding: "4px 8px", borderRadius: 20, flexShrink: 0, background: brand.runningAds ? "#DCFCE7" : "#FEE2E2", color: brand.runningAds ? "#15803D" : "#DC2626", border: `1px solid ${brand.runningAds ? "#BBF7D0" : "#FECACA"}` }}>
+                          {brand.runningAds ? "Active" : "Paused"}
+                        </span>
+                      ) : (
+                        <span style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", padding: "4px 8px", borderRadius: 20, flexShrink: 0, background: "#F3F4F6", color: "#9CA3AF", border: "1px solid #E5E7EB" }}>
+                          Unseen
+                        </span>
+                      )}
                     </div>
-                    <span style={{ flex: 1, fontWeight: 700, color: "#111827", fontSize: 13, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{brand.name}</span>
-                    <span style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase" as const, letterSpacing: "0.06em", padding: "3px 8px", borderRadius: 20, flexShrink: 0, background: brand.runningAds ? "#DCFCE7" : "#FEE2E2", color: brand.runningAds ? "#15803D" : "#DC2626", border: `1px solid ${brand.runningAds ? "#BBF7D0" : "#FECACA"}` }}>
-                      {brand.runningAds ? "Active" : "Paused"}
-                    </span>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
         </div>
 
         {/* RIGHT COLUMN */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "24px", minHeight: 0 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "28px", minHeight: 0 }}>
 
           {/* Deal Pipeline */}
           <div style={{ ...CARD, flex: 1, minHeight: 0, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 20px", borderBottom: CARD_DIVIDER, flexShrink: 0 }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "22px 32px", borderBottom: CARD_DIVIDER, flexShrink: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <TrendingUp size={14} style={{ color: "#EA580C" }} />
                 <span style={{ fontSize: 14, fontWeight: 800, color: "#111827" }}>Deal Pipeline</span>
@@ -380,7 +538,7 @@ export default function DashboardPage() {
               </div>
               <Link
                 href="/pipeline"
-                style={{ fontSize: 11, color: "#9CA3AF", fontWeight: 600, textDecoration: "none", transition: "color 0.12s" }}
+                style={{ fontSize: 11, color: "#9CA3AF", fontWeight: 600, textDecoration: "none" }}
                 onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = "#EA580C"}
                 onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = "#9CA3AF"}
               >
@@ -395,18 +553,15 @@ export default function DashboardPage() {
                 <p style={{ fontSize: 11, color: "#D1D5DB", marginTop: 4 }}>Positive replies in your inbox get flagged automatically.</p>
               </div>
             ) : (
-              <div className="scrollbar-thin" style={{ flex: 1, overflowY: "auto", padding: "20px 24px", display: "flex", flexDirection: "column", gap: 12 }}>
+              <div className="scrollbar-thin" style={{ flex: 1, overflowY: "auto", padding: "18px 24px", display: "flex", flexDirection: "column", gap: 10 }}>
                 {recentDeals.map((deal) => {
                   const accent = DEAL_STAGE_ACCENT[deal.status] || "#6B7280";
                   return (
                     <div
                       key={deal.id}
                       style={{
-                        borderRadius: 16,
-                        padding: "28px 32px",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 24,
+                        borderRadius: 16, padding: "16px 20px",
+                        display: "flex", alignItems: "center", gap: 16,
                         background: "rgba(255,255,255,0.72)",
                         border: "1px solid rgba(0,0,0,0.04)",
                         borderLeft: `4px solid ${accent}`,
@@ -437,7 +592,7 @@ export default function DashboardPage() {
 
           {/* Follow-up Reminders */}
           <div style={{ ...CARD, flex: 1, minHeight: 0, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 20px", borderBottom: CARD_DIVIDER, flexShrink: 0 }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "22px 32px", borderBottom: CARD_DIVIDER, flexShrink: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <Bell size={14} style={{ color: "#EA580C" }} />
                 <span style={{ fontSize: 14, fontWeight: 800, color: "#111827" }}>Follow-up Reminders</span>
@@ -449,7 +604,7 @@ export default function DashboardPage() {
               </div>
               <Link
                 href="/contacts"
-                style={{ fontSize: 11, color: "#9CA3AF", fontWeight: 600, textDecoration: "none", transition: "color 0.12s" }}
+                style={{ fontSize: 11, color: "#9CA3AF", fontWeight: 600, textDecoration: "none" }}
                 onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = "#EA580C"}
                 onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = "#9CA3AF"}
               >
@@ -469,7 +624,7 @@ export default function DashboardPage() {
                   <div
                     key={f.email}
                     className="flex items-center gap-3 hover:bg-orange-50/20 transition-colors"
-                    style={{ padding: "28px 40px", borderBottom: i < followUps.length - 1 ? CARD_DIVIDER : "none" }}
+                    style={{ padding: "18px 32px", borderBottom: i < followUps.length - 1 ? CARD_DIVIDER : "none" }}
                   >
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <p style={{ fontSize: 14, fontWeight: 800, color: "#111827", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.name}</p>
@@ -481,7 +636,7 @@ export default function DashboardPage() {
                       </span>
                       <Link
                         href={`/send?to=${encodeURIComponent(f.email)}&name=${encodeURIComponent(f.name)}`}
-                        style={{ padding: 6, borderRadius: 8, color: "#9CA3AF", display: "flex", alignItems: "center", transition: "all 0.12s" }}
+                        style={{ padding: 8, borderRadius: 8, color: "#9CA3AF", display: "flex", alignItems: "center", transition: "all 0.12s" }}
                         onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(234,88,12,0.08)"; (e.currentTarget as HTMLElement).style.color = "#EA580C"; }}
                         onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "transparent"; (e.currentTarget as HTMLElement).style.color = "#9CA3AF"; }}
                       >

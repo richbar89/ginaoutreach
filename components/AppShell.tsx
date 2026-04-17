@@ -30,7 +30,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   if (isOnboarding) return <>{children}</>;
 
   return (
-    <div style={{ height: "100vh", display: "flex", overflow: "hidden", padding: "16px", gap: "16px" }}>
+    <div style={{ height: "100vh", display: "flex", overflow: "hidden", padding: "24px", gap: "20px" }}>
 
       {/* Mobile nudge */}
       <div
@@ -78,7 +78,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <Sidebar />
       </div>
 
-      {/* Main content — white rounded block */}
+      {/* Main content — transparent so cards float on terracotta */}
       <div
         style={{
           flex: 1,
@@ -86,9 +86,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           overflow: "hidden",
           display: "flex",
           flexDirection: "column",
-          background: "#ffffff",
-          borderRadius: 24,
-          boxShadow: "0 8px 40px rgba(0,0,0,0.12)",
         }}
       >
         <AnnouncementBanner />
