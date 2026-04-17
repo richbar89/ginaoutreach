@@ -7,6 +7,7 @@ import {
   AlertCircle, Loader2, LogIn, LogOut,
 } from "lucide-react";
 
+// ── Types ─────────────────────────────────────────────────────
 type Post = {
   id: string;
   caption?: string;
@@ -33,47 +34,163 @@ type Profile = {
 
 type ConnectionStatus = "checking" | "connected" | "disconnected";
 
+// ── Helpers ───────────────────────────────────────────────────
 function mediaTypeLabel(t: string) {
   if (t === "VIDEO") return "Reel";
   if (t === "CAROUSEL_ALBUM") return "Carousel";
   return "Photo";
 }
-
 function mediaTypeIcon(t: string) {
   if (t === "VIDEO") return <Video size={10} />;
   if (t === "CAROUSEL_ALBUM") return <Layers size={10} />;
   return <Image size={10} />;
 }
-
-function StatCard({
-  label, value, sub, icon, highlight,
-}: {
-  label: string; value: string | number; sub?: string; icon: React.ReactNode; highlight?: boolean;
-}) {
-  return (
-    <div className="bg-white border border-cream-200 rounded-2xl p-5 shadow-sm">
-      <div className="flex items-center justify-between mb-3">
-        <p className="text-[10px] font-bold uppercase tracking-widest text-navy-400">{label}</p>
-        <span className={`${highlight ? "text-coral-500" : "text-navy-300"}`}>{icon}</span>
-      </div>
-      <p className={`font-serif text-3xl font-bold leading-none ${highlight ? "text-coral-500" : "text-navy-900"}`}>
-        {value}
-      </p>
-      {sub && <p className="text-xs text-navy-400 mt-1">{sub}</p>}
-    </div>
-  );
-}
-
 function getOAuthError(code: string | null): string {
   switch (code) {
     case "auth_cancelled": return "Facebook login was cancelled.";
     case "token_exchange": return "Could not exchange login code for a token. Try again.";
-    case "config": return "App is missing META_APP_ID or META_APP_SECRET in Replit Secrets.";
+    case "config": return "App is missing META_APP_ID or META_APP_SECRET.";
     case "server": return "An unexpected server error occurred during login.";
     default: return "Something went wrong. Please try connecting again.";
   }
 }
 
+// ── Placeholder weekly chart ──────────────────────────────────
+const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const PLACEHOLDER_VIEWS = [4200, 6800, 5100, 9400, 7700, 12300, 8600];
+
+function WeeklyChart({ data = PLACEHOLDER_VIEWS, placeholder = false }: { data?: number[]; placeholder?: boolean }) {
+  const max = Math.max(...data);
+  return (
+    <div>
+      <div style={{ display: "flex", alignItems: "flex-end", gap: 8, height: 120 }}>
+        {data.map((v, i) => {
+          const pct = max > 0 ? (v / max) * 100 : 0;
+          return (
+            <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 4, height: "100%", justifyContent: "flex-end" }}>
+              <span style={{ fontSize: 10, color: "#B5AFA8", fontWeight: 600 }}>
+                {placeholder ? "" : v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v}
+              </span>
+              <div
+                style={{
+                  width: "100%",
+                  height: `${pct}%`,
+                  minHeight: 8,
+                  borderRadius: "6px 6px 0 0",
+                  background: placeholder
+                    ? "linear-gradient(180deg, #E8E2DA 0%, #F0EBE5 100%)"
+                    : i === 5
+                    ? "linear-gradient(180deg, #D4795C 0%, #E89478 100%)"
+                    : "linear-gradient(180deg, #4BBFB0 0%, #7DD4CD 100%)",
+                  transition: "height 0.5s ease",
+                  opacity: placeholder ? 0.5 : 1,
+                }}
+              />
+            </div>
+          );
+        })}
+      </div>
+      <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+        {DAYS.map(d => (
+          <div key={d} style={{ flex: 1, textAlign: "center", fontSize: 11, color: "#B5AFA8", fontWeight: 600 }}>{d}</div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── Social platform cards ─────────────────────────────────────
+const PLATFORMS = [
+  {
+    key: "instagram",
+    label: "Instagram",
+    color: "#E1306C",
+    bg: "rgba(225,48,108,0.08)",
+    icon: (
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke="#E1306C" strokeWidth="2" fill="none"/>
+        <circle cx="12" cy="12" r="4" stroke="#E1306C" strokeWidth="2" fill="none"/>
+        <circle cx="17.5" cy="6.5" r="1.2" fill="#E1306C"/>
+      </svg>
+    ),
+  },
+  {
+    key: "tiktok",
+    label: "TikTok",
+    color: "#010101",
+    bg: "rgba(0,0,0,0.06)",
+    icon: (
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="#010101">
+        <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.31 6.31 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.22 8.22 0 004.82 1.56V6.78a4.85 4.85 0 01-1.05-.09z"/>
+      </svg>
+    ),
+  },
+  {
+    key: "youtube",
+    label: "YouTube",
+    color: "#FF0000",
+    bg: "rgba(255,0,0,0.07)",
+    icon: (
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="#FF0000">
+        <path d="M23.5 6.19a3.02 3.02 0 00-2.12-2.14C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.38.55A3.02 3.02 0 00.5 6.19C0 8.08 0 12 0 12s0 3.92.5 5.81a3.02 3.02 0 002.12 2.14C4.5 20.5 12 20.5 12 20.5s7.5 0 9.38-.55a3.02 3.02 0 002.12-2.14C24 15.92 24 12 24 12s0-3.92-.5-5.81zM9.75 15.52V8.48L15.82 12l-6.07 3.52z"/>
+      </svg>
+    ),
+  },
+  {
+    key: "pinterest",
+    label: "Pinterest",
+    color: "#E60023",
+    bg: "rgba(230,0,35,0.07)",
+    icon: (
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="#E60023">
+        <path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/>
+      </svg>
+    ),
+  },
+];
+
+function SocialCard({ platform, followers, placeholder }: { platform: typeof PLATFORMS[0]; followers?: number; placeholder?: boolean }) {
+  return (
+    <div style={{ background: "#fff", border: "1.5px solid #EDE8E1", borderRadius: 16, padding: "18px 20px", display: "flex", alignItems: "center", gap: 14 }}>
+      <div style={{ width: 44, height: 44, borderRadius: 12, background: platform.bg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+        {platform.icon}
+      </div>
+      <div>
+        <p style={{ fontSize: 11, fontWeight: 600, color: "#9E9790", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 2 }}>{platform.label}</p>
+        {placeholder ? (
+          <div style={{ height: 20, width: 64, background: "#EDE8E1", borderRadius: 6, opacity: 0.6 }} />
+        ) : (
+          <p style={{ fontSize: 22, fontWeight: 800, color: "#1A1A1A", fontFamily: "'Sora', sans-serif", letterSpacing: "-0.04em", lineHeight: 1 }}>
+            {followers !== undefined ? followers.toLocaleString() : "—"}
+          </p>
+        )}
+      </div>
+      {!placeholder && (
+        <div style={{ marginLeft: "auto", fontSize: 11, fontWeight: 600, color: "#4BBFB0", background: "rgba(75,191,176,0.1)", borderRadius: 20, padding: "3px 10px" }}>Live</div>
+      )}
+    </div>
+  );
+}
+
+// ── Stat card ─────────────────────────────────────────────────
+function StatCard({ label, value, sub, icon, highlight }: {
+  label: string; value: string | number; sub?: string; icon: React.ReactNode; highlight?: boolean;
+}) {
+  return (
+    <div style={{ background: "#fff", border: "1.5px solid #EDE8E1", borderRadius: 16, padding: "18px 20px" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+        <p style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#9E9790" }}>{label}</p>
+        <span style={{ color: highlight ? "#D4795C" : "#C5C0BA" }}>{icon}</span>
+      </div>
+      <p style={{ fontSize: 28, fontWeight: 800, fontFamily: "'Sora', sans-serif", letterSpacing: "-0.04em", color: highlight ? "#D4795C" : "#1A1A1A", lineHeight: 1 }}>
+        {value}
+      </p>
+      {sub && <p style={{ fontSize: 11, color: "#9E9790", marginTop: 4 }}>{sub}</p>}
+    </div>
+  );
+}
+
+// ── Page ──────────────────────────────────────────────────────
 export default function AnalyticsPage() {
   const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>("checking");
   const [connectedName, setConnectedName] = useState("");
@@ -85,404 +202,264 @@ export default function AnalyticsPage() {
   const [analysing, setAnalysing] = useState(false);
 
   const fetchData = useCallback(async () => {
-    setLoading(true);
-    setError("");
-    setAnalysis("");
+    setLoading(true); setError(""); setAnalysis("");
     try {
       const res = await fetch("/api/instagram");
       const data = await res.json();
-      if (data.error) {
-        setError(data.error);
-      } else {
-        setProfile(data.profile);
-        setPosts(data.posts);
-      }
-    } catch {
-      setError("Failed to connect to Instagram. Check your token has the right permissions.");
-    } finally {
-      setLoading(false);
-    }
+      if (data.error) setError(data.error);
+      else { setProfile(data.profile); setPosts(data.posts); }
+    } catch { setError("Failed to connect to Instagram."); }
+    finally { setLoading(false); }
   }, []);
 
-  // On mount: handle OAuth redirect params, then check connection status
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const connected = params.get("connected");
     const errorCode = params.get("error");
-
-    if (connected || errorCode) {
-      window.history.replaceState({}, "", "/analytics");
-    }
-
-    if (errorCode) {
-      setError(getOAuthError(errorCode));
-      setConnectionStatus("disconnected");
-      return;
-    }
-
-    const checkStatus = async () => {
+    if (connected || errorCode) window.history.replaceState({}, "", "/analytics");
+    if (errorCode) { setError(getOAuthError(errorCode)); setConnectionStatus("disconnected"); return; }
+    (async () => {
       try {
         const res = await fetch("/api/auth/instagram/status");
         const data = await res.json();
-        if (data.connected) {
-          setConnectionStatus("connected");
-          setConnectedName(data.name || "");
-          fetchData();
-        } else {
-          setConnectionStatus("disconnected");
-          if (data.expired) {
-            setError("Your Instagram connection has expired. Please reconnect.");
-          }
-        }
-      } catch {
-        setConnectionStatus("disconnected");
-      }
-    };
-
-    checkStatus();
+        if (data.connected) { setConnectionStatus("connected"); setConnectedName(data.name || ""); fetchData(); }
+        else { setConnectionStatus("disconnected"); if (data.expired) setError("Your Instagram connection has expired. Please reconnect."); }
+      } catch { setConnectionStatus("disconnected"); }
+    })();
   }, [fetchData]);
 
   const disconnect = async () => {
     await fetch("/api/auth/instagram/disconnect", { method: "POST" });
-    setConnectionStatus("disconnected");
-    setConnectedName("");
-    setProfile(null);
-    setPosts([]);
-    setAnalysis("");
-    setError("");
+    setConnectionStatus("disconnected"); setConnectedName(""); setProfile(null); setPosts([]); setAnalysis(""); setError("");
   };
 
   const runAnalysis = async () => {
     if (!profile || !posts.length) return;
-    setAnalysing(true);
-    setAnalysis("");
+    setAnalysing(true); setAnalysis("");
     try {
-      const res = await fetch("/api/instagram/analyze", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ profile, posts }),
-      });
-      if (!res.ok || !res.body) {
-        const err = await res.json();
-        setError(err.error || "Analysis failed");
-        setAnalysing(false);
-        return;
-      }
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let text = "";
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        text += decoder.decode(value, { stream: true });
-        setAnalysis(text);
-      }
-    } catch {
-      setError("Analysis failed. Check your ANTHROPIC_API_KEY is set in Replit Secrets.");
-    } finally {
-      setAnalysing(false);
-    }
+      const res = await fetch("/api/instagram/analyze", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ profile, posts }) });
+      if (!res.ok || !res.body) { const err = await res.json(); setError(err.error || "Analysis failed"); setAnalysing(false); return; }
+      const reader = res.body.getReader(); const decoder = new TextDecoder(); let text = "";
+      while (true) { const { done, value } = await reader.read(); if (done) break; text += decoder.decode(value, { stream: true }); setAnalysis(text); }
+    } catch { setError("Analysis failed."); }
+    finally { setAnalysing(false); }
   };
 
-  const avgLikes = posts.length
-    ? Math.round(posts.reduce((s, p) => s + p.like_count, 0) / posts.length)
-    : 0;
-  const avgComments = posts.length
-    ? Math.round(posts.reduce((s, p) => s + p.comments_count, 0) / posts.length)
-    : 0;
-  const engagementRate = profile?.followers_count
-    ? ((avgLikes + avgComments) / profile.followers_count * 100).toFixed(2)
-    : "0";
-
+  const avgLikes = posts.length ? Math.round(posts.reduce((s, p) => s + p.like_count, 0) / posts.length) : 0;
+  const avgComments = posts.length ? Math.round(posts.reduce((s, p) => s + p.comments_count, 0) / posts.length) : 0;
+  const engagementRate = profile?.followers_count ? ((avgLikes + avgComments) / profile.followers_count * 100).toFixed(2) : "0";
   const byType = posts.reduce<Record<string, { count: number; likes: number }>>((acc, p) => {
     if (!acc[p.media_type]) acc[p.media_type] = { count: 0, likes: 0 };
-    acc[p.media_type].count++;
-    acc[p.media_type].likes += p.like_count;
+    acc[p.media_type].count++; acc[p.media_type].likes += p.like_count;
     return acc;
   }, {});
+  const bestType = Object.entries(byType).sort((a, b) => b[1].likes / b[1].count - a[1].likes / a[1].count)[0]?.[0];
 
-  const bestType = Object.entries(byType).sort(
-    (a, b) => b[1].likes / b[1].count - a[1].likes / a[1].count
-  )[0]?.[0];
+  const isConnected = connectionStatus === "connected";
 
   return (
-    <div className="p-8 max-w-5xl mx-auto">
+    <div style={{ padding: "32px", maxWidth: 960, margin: "0 auto" }}>
+
       {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-5">
-          <div className="h-px w-10 bg-coral-400" />
-          <span className="text-[11px] font-bold uppercase tracking-widest text-coral-500">
-            Social Intelligence
-          </span>
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, marginBottom: 28 }}>
+        <div>
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#D4795C", marginBottom: 6 }}>Social Intelligence</p>
+          <h1 style={{ fontFamily: "'Sora', sans-serif", fontSize: 30, fontWeight: 800, color: "#1A1A1A", letterSpacing: "-0.035em", lineHeight: 1 }}>
+            My Analytics
+          </h1>
+          <p style={{ fontSize: 14, color: "#9E9790", marginTop: 6 }}>
+            {profile ? `@${profile.username} · ${profile.followers_count?.toLocaleString()} followers` : isConnected ? `Connected as ${connectedName}` : "Connect your platforms to see live data"}
+          </p>
         </div>
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <h1 className="font-serif text-4xl font-bold text-navy-900 leading-tight">
-              My Analytics
-            </h1>
-            <p className="mt-2 text-navy-500 text-base">
-              {profile
-                ? `@${profile.username} · ${profile.followers_count?.toLocaleString()} followers`
-                : connectionStatus === "connected"
-                ? `Connected as ${connectedName}`
-                : "Connect your Instagram to get started"}
-            </p>
-          </div>
-          <div className="flex items-center gap-2 mt-1">
-            {posts.length > 0 && !analysing && (
-              <button
-                onClick={runAnalysis}
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-navy-800 hover:bg-navy-900 text-white text-sm font-semibold rounded-xl transition-colors"
-              >
-                <Sparkles size={14} />
-                AI Analysis
-              </button>
-            )}
-            {connectionStatus === "connected" && (
-              <button
-                onClick={fetchData}
-                disabled={loading}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-60"
-              >
-                {loading ? <Loader2 size={14} className="animate-spin" /> : <RefreshCw size={14} />}
-                Refresh
-              </button>
-            )}
-            {connectionStatus === "connected" && (
-              <button
-                onClick={disconnect}
-                className="inline-flex items-center gap-2 px-4 py-2.5 border border-cream-300 text-navy-500 hover:text-navy-800 hover:border-navy-300 text-sm font-semibold rounded-xl transition-colors"
-              >
-                <LogOut size={14} />
-                Disconnect
-              </button>
-            )}
-          </div>
+        <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
+          {posts.length > 0 && !analysing && (
+            <button onClick={runAnalysis} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "9px 16px", background: "#1A1A1A", color: "#fff", border: "none", borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+              <Sparkles size={13} /> AI Analysis
+            </button>
+          )}
+          {isConnected && (
+            <button onClick={fetchData} disabled={loading} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "9px 16px", background: "#D4795C", color: "#fff", border: "none", borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: "pointer", opacity: loading ? 0.6 : 1 }}>
+              {loading ? <Loader2 size={13} className="animate-spin" /> : <RefreshCw size={13} />} Refresh
+            </button>
+          )}
+          {isConnected && (
+            <button onClick={disconnect} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "9px 16px", background: "transparent", color: "#9E9790", border: "1.5px solid #EDE8E1", borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+              <LogOut size={13} /> Disconnect
+            </button>
+          )}
         </div>
       </div>
 
       {/* Error */}
       {error && (
-        <div className="mb-6 flex items-start gap-3 px-5 py-4 bg-red-50 border border-red-200 rounded-2xl">
-          <AlertCircle size={16} className="text-red-500 flex-shrink-0 mt-0.5" />
-          <div>
-            <p className="text-sm font-semibold text-red-800">Error</p>
-            <p className="text-xs text-red-600 mt-0.5">{error}</p>
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 10, padding: "14px 16px", background: "#FEF2F2", border: "1.5px solid #FECACA", borderRadius: 14, marginBottom: 20 }}>
+          <AlertCircle size={15} style={{ color: "#EF4444", flexShrink: 0, marginTop: 1 }} />
+          <div><p style={{ fontSize: 13, fontWeight: 600, color: "#991B1B" }}>Error</p><p style={{ fontSize: 12, color: "#DC2626", marginTop: 2 }}>{error}</p></div>
+        </div>
+      )}
+
+      {/* ── OVERVIEW: chart + social platforms ── */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
+
+        {/* Weekly views chart */}
+        <div style={{ background: "#fff", border: "1.5px solid #EDE8E1", borderRadius: 20, padding: "24px" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+            <div>
+              <p style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#9E9790", marginBottom: 3 }}>Weekly Views</p>
+              <p style={{ fontFamily: "'Sora', sans-serif", fontSize: 24, fontWeight: 800, color: "#1A1A1A", letterSpacing: "-0.04em", lineHeight: 1 }}>
+                {isConnected && profile ? profile.media_count?.toLocaleString() : "54.4k"}
+              </p>
+            </div>
+            <div style={{ fontSize: 11, fontWeight: 600, color: "#4BBFB0", background: "rgba(75,191,176,0.1)", borderRadius: 20, padding: "4px 10px" }}>
+              {isConnected ? "Live" : "Preview"}
+            </div>
           </div>
+          <WeeklyChart placeholder={!isConnected} />
         </div>
-      )}
 
-      {/* Checking connection */}
+        {/* Social platforms */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {PLATFORMS.map(p => (
+            <SocialCard
+              key={p.key}
+              platform={p}
+              followers={p.key === "instagram" && profile ? profile.followers_count : undefined}
+              placeholder={!isConnected || p.key !== "instagram"}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Checking */}
       {connectionStatus === "checking" && (
-        <div className="flex items-center justify-center py-24">
-          <Loader2 size={20} className="animate-spin text-navy-300" />
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "60px 0" }}>
+          <Loader2 size={20} style={{ color: "#C5C0BA", animation: "spin 1s linear infinite" }} />
         </div>
       )}
 
-      {/* Disconnected — connect prompt */}
+      {/* Connect prompt */}
       {connectionStatus === "disconnected" && (
-        <div className="bg-white border border-cream-200 rounded-2xl p-16 text-center shadow-sm">
-          <div className="w-16 h-16 rounded-2xl bg-[#1877F2]/10 flex items-center justify-center mx-auto mb-5">
-            <svg viewBox="0 0 24 24" fill="#1877F2" className="w-8 h-8">
+        <div style={{ background: "#fff", border: "1.5px solid #EDE8E1", borderRadius: 20, padding: "48px 32px", textAlign: "center" }}>
+          <div style={{ width: 60, height: 60, borderRadius: 16, background: "rgba(24,119,242,0.08)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
+            <svg viewBox="0 0 24 24" fill="#1877F2" style={{ width: 28, height: 28 }}>
               <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
             </svg>
           </div>
-          <h2 className="font-serif text-2xl font-bold text-navy-800 mb-2">
+          <h2 style={{ fontFamily: "'Sora', sans-serif", fontSize: 22, fontWeight: 800, color: "#1A1A1A", letterSpacing: "-0.03em", marginBottom: 8 }}>
             Connect your Instagram
           </h2>
-          <p className="text-sm text-navy-400 max-w-sm mx-auto mb-6 leading-relaxed">
+          <p style={{ fontSize: 14, color: "#9E9790", maxWidth: 360, margin: "0 auto 24px", lineHeight: 1.6 }}>
             Connect your Instagram Business or Creator account via Facebook to see post performance, engagement rates, and AI-powered recommendations.
           </p>
-          {error?.includes("missing META_APP_ID") || error?.includes("config") ? (
-            <div className="inline-flex items-start gap-3 px-5 py-4 bg-amber-50 border border-amber-200 rounded-xl text-left max-w-sm mx-auto">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2" className="w-4 h-4 flex-shrink-0 mt-0.5"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-              <p className="text-xs text-amber-700 leading-relaxed">
-                <span className="font-semibold">Setup required:</span> Add <code className="bg-amber-100 px-1 rounded">META_APP_ID</code> and <code className="bg-amber-100 px-1 rounded">META_APP_SECRET</code> to Replit Secrets, then add your domain to the Meta app&apos;s allowed origins.
-              </p>
-            </div>
-          ) : (
-            <a
-              href="/api/auth/facebook"
-              className="inline-flex items-center gap-2.5 px-7 py-3.5 bg-[#1877F2] hover:bg-[#166FE5] text-white text-sm font-semibold rounded-xl transition-colors shadow-sm"
-            >
-              <LogIn size={15} />
-              Continue with Facebook
-            </a>
-          )}
-          <p className="text-xs text-navy-300 mt-5">
+          <a
+            href="/api/auth/facebook"
+            style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", background: "#1877F2", color: "#fff", borderRadius: 12, fontSize: 14, fontWeight: 700, textDecoration: "none" }}
+          >
+            <LogIn size={15} /> Continue with Facebook
+          </a>
+          <p style={{ fontSize: 12, color: "#C5C0BA", marginTop: 16 }}>
             Requires an Instagram Business or Creator account linked to a Facebook page.
           </p>
         </div>
       )}
 
       {/* Loading skeleton */}
-      {connectionStatus === "connected" && loading && (
-        <div className="space-y-4">
-          <div className="grid grid-cols-4 gap-4">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="bg-white border border-cream-200 rounded-2xl p-5 h-24 animate-pulse" />
-            ))}
+      {isConnected && loading && (
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
+            {[...Array(4)].map((_, i) => <div key={i} style={{ background: "#F5F0EA", borderRadius: 16, height: 90, animation: "pulse 1.5s ease-in-out infinite" }} />)}
           </div>
-          <div className="bg-white border border-cream-200 rounded-2xl p-6 h-48 animate-pulse" />
+          <div style={{ background: "#F5F0EA", borderRadius: 20, height: 200, animation: "pulse 1.5s ease-in-out infinite" }} />
         </div>
       )}
 
-      {/* Data loaded */}
+      {/* Connected data */}
       {profile && !loading && (
         <>
-          {/* Profile header */}
-          <div className="bg-white border border-cream-200 rounded-2xl p-6 mb-6 shadow-sm flex items-center gap-5">
+          {/* Profile card */}
+          <div style={{ background: "#fff", border: "1.5px solid #EDE8E1", borderRadius: 20, padding: "20px 24px", marginBottom: 16, display: "flex", alignItems: "center", gap: 16 }}>
             {profile.profile_picture_url ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={profile.profile_picture_url}
-                alt={profile.username}
-                className="w-16 h-16 rounded-2xl object-cover flex-shrink-0"
-              />
+              <img src={profile.profile_picture_url} alt={profile.username} style={{ width: 56, height: 56, borderRadius: 14, objectFit: "cover", flexShrink: 0 }} />
             ) : (
-              <div className="w-16 h-16 rounded-2xl bg-coral-100 flex items-center justify-center flex-shrink-0">
-                <span className="font-serif text-2xl font-bold text-coral-500">
-                  {profile.username?.charAt(0).toUpperCase()}
-                </span>
+              <div style={{ width: 56, height: 56, borderRadius: 14, background: "rgba(212,121,92,0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <span style={{ fontFamily: "'Sora', sans-serif", fontSize: 22, fontWeight: 800, color: "#D4795C" }}>{profile.username?.charAt(0).toUpperCase()}</span>
               </div>
             )}
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <h2 className="font-serif text-xl font-bold text-navy-900">@{profile.username}</h2>
-                <a
-                  href={`https://instagram.com/${profile.username}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-navy-300 hover:text-navy-600"
-                >
-                  <ExternalLink size={13} />
-                </a>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
+                <span style={{ fontFamily: "'Sora', sans-serif", fontSize: 17, fontWeight: 800, color: "#1A1A1A" }}>@{profile.username}</span>
+                <a href={`https://instagram.com/${profile.username}`} target="_blank" rel="noopener noreferrer" style={{ color: "#C5C0BA" }}><ExternalLink size={12} /></a>
               </div>
-              {profile.name && <p className="text-sm text-navy-500">{profile.name}</p>}
-              {profile.biography && (
-                <p className="text-xs text-navy-400 mt-1 truncate max-w-lg">{profile.biography}</p>
-              )}
+              {profile.biography && <p style={{ fontSize: 12, color: "#9E9790", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 500 }}>{profile.biography}</p>}
             </div>
-            <div className="flex items-center gap-6 flex-shrink-0 text-center">
-              <div>
-                <p className="font-serif text-2xl font-bold text-navy-900">{profile.followers_count?.toLocaleString()}</p>
-                <p className="text-xs text-navy-400">Followers</p>
-              </div>
-              <div>
-                <p className="font-serif text-2xl font-bold text-navy-900">{profile.follows_count?.toLocaleString()}</p>
-                <p className="text-xs text-navy-400">Following</p>
-              </div>
-              <div>
-                <p className="font-serif text-2xl font-bold text-navy-900">{profile.media_count?.toLocaleString()}</p>
-                <p className="text-xs text-navy-400">Posts</p>
-              </div>
+            <div style={{ display: "flex", gap: 28, flexShrink: 0, textAlign: "center" }}>
+              {[{ v: profile.followers_count, l: "Followers" }, { v: profile.follows_count, l: "Following" }, { v: profile.media_count, l: "Posts" }].map(({ v, l }) => (
+                <div key={l}>
+                  <p style={{ fontFamily: "'Sora', sans-serif", fontSize: 20, fontWeight: 800, color: "#1A1A1A", letterSpacing: "-0.03em" }}>{v?.toLocaleString()}</p>
+                  <p style={{ fontSize: 11, color: "#9E9790" }}>{l}</p>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Stats row */}
-          <div className="grid grid-cols-4 gap-4 mb-6">
-            <StatCard label="Avg Likes" value={avgLikes.toLocaleString()} icon={<Heart size={15} />} />
-            <StatCard label="Avg Comments" value={avgComments.toLocaleString()} icon={<MessageCircle size={15} />} />
-            <StatCard
-              label="Engagement Rate"
-              value={`${engagementRate}%`}
-              sub="likes + comments / followers"
-              icon={<BarChart2 size={15} />}
-              highlight={parseFloat(engagementRate) >= 2}
-            />
-            <StatCard
-              label="Best Content Type"
-              value={bestType ? mediaTypeLabel(bestType) : "—"}
-              sub="highest avg likes"
-              icon={<Sparkles size={15} />}
-            />
+          {/* Stat row */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginBottom: 16 }}>
+            <StatCard label="Avg Likes" value={avgLikes.toLocaleString()} icon={<Heart size={14} />} />
+            <StatCard label="Avg Comments" value={avgComments.toLocaleString()} icon={<MessageCircle size={14} />} />
+            <StatCard label="Engagement Rate" value={`${engagementRate}%`} sub="likes + comments / followers" icon={<BarChart2 size={14} />} highlight={parseFloat(engagementRate) >= 2} />
+            <StatCard label="Best Content" value={bestType ? mediaTypeLabel(bestType) : "—"} sub="highest avg likes" icon={<Sparkles size={14} />} />
           </div>
 
-          {/* Content type breakdown */}
+          {/* Content breakdown */}
           {Object.keys(byType).length > 0 && (
-            <div className="bg-white border border-cream-200 rounded-2xl p-6 mb-6 shadow-sm">
-              <h3 className="text-sm font-semibold text-navy-800 mb-4">Content Breakdown</h3>
-              <div className="space-y-3">
-                {Object.entries(byType)
-                  .sort((a, b) => b[1].likes / b[1].count - a[1].likes / a[1].count)
-                  .map(([type, data]) => {
-                    const avgL = Math.round(data.likes / data.count);
-                    const maxAvg = Math.max(
-                      ...Object.values(byType).map((d) => Math.round(d.likes / d.count))
-                    );
-                    const pct = Math.round((avgL / maxAvg) * 100);
-                    return (
-                      <div key={type}>
-                        <div className="flex items-center justify-between mb-1.5">
-                          <div className="flex items-center gap-2">
-                            <span className="text-navy-400">{mediaTypeIcon(type)}</span>
-                            <span className="text-sm font-medium text-navy-700">{mediaTypeLabel(type)}</span>
-                            <span className="text-xs text-navy-400">{data.count} posts</span>
-                          </div>
-                          <span className="text-sm font-semibold text-navy-800">{avgL.toLocaleString()} avg likes</span>
+            <div style={{ background: "#fff", border: "1.5px solid #EDE8E1", borderRadius: 20, padding: "20px 24px", marginBottom: 16 }}>
+              <p style={{ fontSize: 13, fontWeight: 700, color: "#1A1A1A", marginBottom: 16 }}>Content Breakdown</p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                {Object.entries(byType).sort((a, b) => b[1].likes / b[1].count - a[1].likes / a[1].count).map(([type, data]) => {
+                  const avgL = Math.round(data.likes / data.count);
+                  const maxAvg = Math.max(...Object.values(byType).map(d => Math.round(d.likes / d.count)));
+                  return (
+                    <div key={type}>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                          <span style={{ color: "#9E9790" }}>{mediaTypeIcon(type)}</span>
+                          <span style={{ fontSize: 13, fontWeight: 600, color: "#1A1A1A" }}>{mediaTypeLabel(type)}</span>
+                          <span style={{ fontSize: 11, color: "#C5C0BA" }}>{data.count} posts</span>
                         </div>
-                        <div className="h-2 bg-cream-100 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-coral-400 rounded-full transition-all"
-                            style={{ width: `${pct}%` }}
-                          />
-                        </div>
+                        <span style={{ fontSize: 13, fontWeight: 700, color: "#1A1A1A" }}>{avgL.toLocaleString()} avg likes</span>
                       </div>
-                    );
-                  })}
+                      <div style={{ height: 8, background: "#F0EBE5", borderRadius: 99, overflow: "hidden" }}>
+                        <div style={{ height: "100%", width: `${Math.round((avgL / maxAvg) * 100)}%`, background: "linear-gradient(90deg, #4BBFB0, #7DD4CD)", borderRadius: 99, transition: "width 0.5s ease" }} />
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}
 
-          {/* Recent posts grid */}
+          {/* Recent posts */}
           {posts.length > 0 && (
-            <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm mb-6">
-              <div className="px-6 py-4 border-b border-cream-100 flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-navy-800">Recent Posts</h3>
-                <span className="text-xs text-navy-400">{posts.length} posts analysed</span>
+            <div style={{ background: "#fff", border: "1.5px solid #EDE8E1", borderRadius: 20, overflow: "hidden", marginBottom: 16 }}>
+              <div style={{ padding: "16px 24px", borderBottom: "1px solid #F0EBE5", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <p style={{ fontSize: 13, fontWeight: 700, color: "#1A1A1A" }}>Recent Posts</p>
+                <span style={{ fontSize: 12, color: "#C5C0BA" }}>{posts.length} posts analysed</span>
               </div>
-              <div className="grid grid-cols-5 gap-0 divide-x divide-cream-100">
-                {posts.slice(0, 10).map((post) => (
-                  <a
-                    key={post.id}
-                    href={post.permalink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group relative aspect-square overflow-hidden block hover:opacity-90 transition-opacity bg-cream-50"
-                  >
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)" }}>
+                {posts.slice(0, 10).map(post => (
+                  <a key={post.id} href={post.permalink} target="_blank" rel="noopener noreferrer"
+                    style={{ position: "relative", aspectRatio: "1", overflow: "hidden", display: "block", background: "#F5F0EA" }}>
                     {(post.thumbnail_url || post.media_url) ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={post.thumbnail_url || post.media_url}
-                        alt=""
-                        className="w-full h-full object-cover"
-                      />
+                      <img src={post.thumbnail_url || post.media_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-cream-100">
-                        {mediaTypeIcon(post.media_type)}
-                      </div>
+                      <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>{mediaTypeIcon(post.media_type)}</div>
                     )}
-                    <div className="absolute inset-0 bg-navy-900/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1">
-                      <div className="flex items-center gap-1 text-white text-xs font-semibold">
-                        <Heart size={11} /> {post.like_count?.toLocaleString()}
-                      </div>
-                      <div className="flex items-center gap-1 text-white text-xs">
-                        <MessageCircle size={11} /> {post.comments_count?.toLocaleString()}
-                      </div>
-                      {post.insights?.reach ? (
-                        <div className="flex items-center gap-1 text-white text-xs">
-                          <Eye size={11} /> {post.insights.reach?.toLocaleString()}
-                        </div>
-                      ) : null}
-                      {post.insights?.saved ? (
-                        <div className="flex items-center gap-1 text-white text-xs">
-                          <Bookmark size={11} /> {post.insights.saved?.toLocaleString()}
-                        </div>
-                      ) : null}
-                    </div>
-                    <div className="absolute top-1.5 left-1.5 flex items-center gap-0.5 px-1.5 py-0.5 bg-black/50 rounded text-white text-[9px] font-medium">
-                      {mediaTypeIcon(post.media_type)}
-                      <span className="ml-0.5">{mediaTypeLabel(post.media_type)}</span>
+                    <div className="group-hover:opacity-100" style={{ position: "absolute", inset: 0, background: "rgba(26,26,26,0.7)", opacity: 0, transition: "opacity 0.2s", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 4 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 4, color: "#fff", fontSize: 11, fontWeight: 600 }}><Heart size={10} /> {post.like_count?.toLocaleString()}</div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 4, color: "#fff", fontSize: 11 }}><MessageCircle size={10} /> {post.comments_count?.toLocaleString()}</div>
+                      {post.insights?.reach && <div style={{ display: "flex", alignItems: "center", gap: 4, color: "#fff", fontSize: 11 }}><Eye size={10} /> {post.insights.reach?.toLocaleString()}</div>}
                     </div>
                   </a>
                 ))}
@@ -491,63 +468,36 @@ export default function AnalyticsPage() {
           )}
 
           {/* AI Analysis */}
-          <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm">
-            <div className="px-6 py-4 border-b border-cream-100 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Sparkles size={14} className="text-coral-500" />
-                <h3 className="text-sm font-semibold text-navy-800">AI Analysis</h3>
+          <div style={{ background: "#fff", border: "1.5px solid #EDE8E1", borderRadius: 20, overflow: "hidden" }}>
+            <div style={{ padding: "16px 24px", borderBottom: "1px solid #F0EBE5", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <Sparkles size={14} style={{ color: "#D4795C" }} />
+                <p style={{ fontSize: 13, fontWeight: 700, color: "#1A1A1A" }}>AI Analysis</p>
               </div>
               {!analysis && !analysing && (
-                <button
-                  onClick={runAnalysis}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-coral-500 hover:bg-coral-600 text-white text-xs font-semibold rounded-xl transition-colors"
-                >
-                  <Sparkles size={12} /> Analyse Now
+                <button onClick={runAnalysis} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 14px", background: "#D4795C", color: "#fff", border: "none", borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
+                  <Sparkles size={11} /> Analyse Now
                 </button>
               )}
-              {analysing && (
-                <div className="flex items-center gap-1.5 text-xs text-navy-400">
-                  <Loader2 size={12} className="animate-spin" /> Analysing…
-                </div>
-              )}
+              {analysing && <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#9E9790" }}><Loader2 size={12} className="animate-spin" /> Analysing…</div>}
             </div>
-            <div className="px-6 py-5">
+            <div style={{ padding: "20px 24px" }}>
               {!analysis && !analysing && (
-                <div className="text-center py-8">
-                  <Sparkles size={28} className="text-cream-300 mx-auto mb-3" />
-                  <p className="text-sm text-navy-400">
-                    Click &quot;Analyse Now&quot; and Claude will review your data and give personalised recommendations.
-                  </p>
-                  <p className="text-xs text-navy-300 mt-1">Takes about 10–15 seconds.</p>
+                <div style={{ textAlign: "center", padding: "32px 0" }}>
+                  <Sparkles size={24} style={{ color: "#C5C0BA", margin: "0 auto 12px" }} />
+                  <p style={{ fontSize: 13, color: "#9E9790" }}>Click &ldquo;Analyse Now&rdquo; and Claude will review your data and give personalised recommendations.</p>
+                  <p style={{ fontSize: 11, color: "#C5C0BA", marginTop: 4 }}>Takes about 10–15 seconds.</p>
                 </div>
               )}
               {(analysis || analysing) && (
-                <div className="prose prose-sm max-w-none text-navy-700 leading-relaxed">
+                <div style={{ fontSize: 13, color: "#4B4540", lineHeight: 1.7 }}>
                   {analysis.split("\n").map((line, i) => {
-                    if (line.startsWith("**") && line.endsWith("**")) {
-                      return (
-                        <p key={i} className="font-semibold text-navy-900 mt-4 mb-1">
-                          {line.replace(/\*\*/g, "")}
-                        </p>
-                      );
-                    }
-                    if (line.startsWith("- ") || line.startsWith("• ")) {
-                      return (
-                        <p key={i} className="ml-4 text-sm text-navy-600 my-0.5">
-                          {line}
-                        </p>
-                      );
-                    }
-                    if (line.trim() === "") return <div key={i} className="h-2" />;
-                    return (
-                      <p key={i} className="text-sm text-navy-700 my-0.5">
-                        {line.replace(/\*\*(.*?)\*\*/g, "$1")}
-                      </p>
-                    );
+                    if (line.startsWith("**") && line.endsWith("**")) return <p key={i} style={{ fontWeight: 700, color: "#1A1A1A", marginTop: 14, marginBottom: 4 }}>{line.replace(/\*\*/g, "")}</p>;
+                    if (line.startsWith("- ") || line.startsWith("• ")) return <p key={i} style={{ marginLeft: 14, marginBottom: 2 }}>{line}</p>;
+                    if (line.trim() === "") return <div key={i} style={{ height: 6 }} />;
+                    return <p key={i} style={{ marginBottom: 2 }}>{line.replace(/\*\*(.*?)\*\*/g, "$1")}</p>;
                   })}
-                  {analysing && (
-                    <span className="inline-block w-1.5 h-4 bg-coral-400 animate-pulse ml-0.5 rounded-sm" />
-                  )}
+                  {analysing && <span style={{ display: "inline-block", width: 6, height: 16, background: "#D4795C", borderRadius: 2, marginLeft: 2, animation: "pulse 1s ease-in-out infinite" }} />}
                 </div>
               )}
             </div>
