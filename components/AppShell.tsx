@@ -30,51 +30,67 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   if (isOnboarding) return <>{children}</>;
 
   return (
-    <div style={{ height: "100vh", display: "flex", overflow: "hidden", background: "var(--bg)" }}>
+    <div style={{ height: "100vh", display: "flex", overflow: "hidden", padding: "24px", gap: "20px" }}>
 
       {/* Mobile nudge */}
       <div
         className="md:hidden fixed inset-0 z-[999] flex flex-col items-center justify-center p-8 text-center"
-        style={{ background: "var(--ink)" }}
+        style={{ background: "#B5684E" }}
       >
         <div
           style={{
-            background: "var(--bg)",
-            border: "1px solid var(--border)",
+            background: "#fff",
+            borderRadius: 24,
             padding: "40px 32px",
+            boxShadow: "0 16px 60px rgba(0,0,0,0.18)",
             maxWidth: 340,
             width: "100%",
           }}
         >
-          <Monitor size={24} style={{ color: "var(--accent)", marginBottom: 20, display: "inline-block" }} />
-          <h2 style={{ fontSize: 16, fontWeight: 900, color: "var(--text)", letterSpacing: "0.1em", marginBottom: 10, textTransform: "uppercase", fontFamily: "'Inter', sans-serif" }}>
+          <div
+            style={{
+              width: 52,
+              height: 52,
+              background: "rgba(212,121,92,0.1)",
+              borderRadius: 14,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              margin: "0 auto 20px",
+            }}
+          >
+            <Monitor size={24} style={{ color: "#D4795C" }} />
+          </div>
+          <h2 style={{ fontSize: 20, fontWeight: 800, color: "#1A1A1A", letterSpacing: "-0.03em", marginBottom: 10, fontFamily: "'Sora', sans-serif" }}>
             Best on desktop
           </h2>
-          <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.6, marginBottom: 24 }}>
-            Collabi is designed for a full-screen experience. Open it on your laptop or desktop.
+          <p style={{ fontSize: 14, color: "#7A736B", lineHeight: 1.6, marginBottom: 24 }}>
+            Collabi is designed for a full-screen experience. For the best results, open it on your laptop or desktop.
           </p>
-          <a href="/" style={{ fontSize: 11, color: "var(--accent)", fontWeight: 700, textDecoration: "none", textTransform: "uppercase", letterSpacing: "0.15em" }}>
+          <a href="/" style={{ display: "inline-block", fontSize: 13, color: "#D4795C", fontWeight: 700, textDecoration: "none" }}>
             ← Back to home
           </a>
         </div>
       </div>
 
       {/* Sidebar */}
-      <Sidebar />
+      <div style={{ display: "flex", alignItems: "center", flexShrink: 0 }}>
+        <Sidebar />
+      </div>
 
-      {/* Main content */}
+      {/* Main content — fully transparent, cards float on terracotta */}
       <div
         style={{
           flex: 1,
           minWidth: 0,
           display: "flex",
           flexDirection: "column",
-          background: "var(--bg)",
+          background: "transparent",
           overflow: "hidden",
         }}
       >
         <AnnouncementBanner />
-        <div style={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column" }}>{children}</div>
+        <div style={{ flex: 1, overflowY: "auto", background: "transparent" }}>{children}</div>
       </div>
 
     </div>

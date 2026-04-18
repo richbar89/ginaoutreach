@@ -6,9 +6,9 @@ import { X } from "lucide-react";
 type Announcement = { id: string; message: string; type: "info" | "warning" | "success" };
 
 const TYPE_STYLES: Record<string, { bg: string; text: string; border: string }> = {
-  info:    { bg: "var(--surface)",   text: "var(--text)",       border: "var(--border)" },
-  warning: { bg: "var(--surface-2)", text: "var(--accent)",     border: "var(--border)" },
-  success: { bg: "var(--ink)",       text: "var(--bg)",         border: "var(--border)" },
+  info:    { bg: "#EFF6FF", text: "#1D4ED8", border: "#BFDBFE" },
+  warning: { bg: "#FFFBEB", text: "#B45309", border: "#FDE68A" },
+  success: { bg: "#ECFDF5", text: "#065F46", border: "#A7F3D0" },
 };
 
 export default function AnnouncementBanner() {
