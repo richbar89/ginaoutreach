@@ -31,10 +31,12 @@ const NAV_ITEMS = [
 ];
 
 const PILL: React.CSSProperties = {
-  background: "linear-gradient(150deg, #C97B5C 0%, #B5684E 55%, #9A4535 100%)",
+  background: "rgba(251, 247, 242, 0.97)",
+  backdropFilter: "blur(24px)",
+  WebkitBackdropFilter: "blur(24px)",
   borderRadius: 30,
-  border: "1px solid rgba(255,255,255,0.18)",
-  boxShadow: "0 4px 28px rgba(0,0,0,0.15), 0 1px 6px rgba(0,0,0,0.08)",
+  border: "1px solid rgba(255,255,255,0.9)",
+  boxShadow: "0 4px 28px rgba(0,0,0,0.12), 0 1px 6px rgba(0,0,0,0.06)",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
@@ -58,12 +60,13 @@ export default function Sidebar() {
         style={{
           width: 38,
           height: 38,
-          background: "rgba(255,255,255,0.22)",
+          background: "#D4795C",
           borderRadius: 12,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           marginBottom: 12,
+          boxShadow: "0 2px 10px rgba(212,121,92,0.35)",
           flexShrink: 0,
         }}
       >
@@ -85,21 +88,21 @@ export default function Sidebar() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              background: active ? "rgba(255,255,255,0.18)" : "transparent",
-              color: active ? "#ffffff" : "rgba(255,255,255,0.65)",
+              background: active ? "rgba(75,191,176,0.12)" : "transparent",
+              color: active ? "#4BBFB0" : "#9CA3AF",
               transition: "all 0.12s",
               flexShrink: 0,
             }}
             onMouseEnter={e => {
               if (!active) {
-                (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.12)";
-                (e.currentTarget as HTMLElement).style.color = "#ffffff";
+                (e.currentTarget as HTMLElement).style.background = "rgba(0,0,0,0.04)";
+                (e.currentTarget as HTMLElement).style.color = "#374151";
               }
             }}
             onMouseLeave={e => {
               if (!active) {
                 (e.currentTarget as HTMLElement).style.background = "transparent";
-                (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.65)";
+                (e.currentTarget as HTMLElement).style.color = "#9CA3AF";
               }
             }}
           >
@@ -120,8 +123,8 @@ export default function Sidebar() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            background: pathname.startsWith("/admin") ? "rgba(255,255,255,0.18)" : "transparent",
-            color: pathname.startsWith("/admin") ? "#ffffff" : "rgba(255,255,255,0.65)",
+            background: pathname.startsWith("/admin") ? "rgba(75,191,176,0.12)" : "transparent",
+            color: pathname.startsWith("/admin") ? "#4BBFB0" : "#9CA3AF",
             transition: "all 0.12s",
             flexShrink: 0,
           }}
@@ -144,21 +147,21 @@ export default function Sidebar() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: pathname === "/settings" ? "rgba(255,255,255,0.18)" : "transparent",
-          color: pathname === "/settings" ? "#ffffff" : "rgba(255,255,255,0.65)",
+          background: pathname === "/settings" ? "rgba(75,191,176,0.12)" : "transparent",
+          color: pathname === "/settings" ? "#4BBFB0" : "#9CA3AF",
           transition: "all 0.12s",
           flexShrink: 0,
         }}
         onMouseEnter={e => {
           if (pathname !== "/settings") {
-            (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.12)";
-            (e.currentTarget as HTMLElement).style.color = "#ffffff";
+            (e.currentTarget as HTMLElement).style.background = "rgba(0,0,0,0.04)";
+            (e.currentTarget as HTMLElement).style.color = "#374151";
           }
         }}
         onMouseLeave={e => {
           if (pathname !== "/settings") {
             (e.currentTarget as HTMLElement).style.background = "transparent";
-            (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.65)";
+            (e.currentTarget as HTMLElement).style.color = "#9CA3AF";
           }
         }}
       >
@@ -174,7 +177,7 @@ export default function Sidebar() {
             height: 34,
             borderRadius: "50%",
             overflow: "hidden",
-            background: "rgba(255,255,255,0.22)",
+            background: "#D4795C",
             border: "none",
             cursor: "pointer",
             display: "flex",

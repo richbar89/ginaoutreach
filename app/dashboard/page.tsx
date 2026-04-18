@@ -37,13 +37,15 @@ const BRAND_AVATAR_COLOURS = [
 const FAV_KEY = "dashboard_fav_brands";
 
 const CARD: React.CSSProperties = {
-  background: "linear-gradient(150deg, #C97B5C 0%, #B5684E 55%, #9A4535 100%)",
+  background: "rgba(255, 253, 251, 0.97)",
+  backdropFilter: "blur(16px)",
+  WebkitBackdropFilter: "blur(16px)",
   borderRadius: 24,
-  border: "1px solid rgba(255, 255, 255, 0.18)",
-  boxShadow: "0 4px 24px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.06)",
+  border: "1px solid rgba(255, 255, 255, 0.7)",
+  boxShadow: "0 4px 24px rgba(0, 0, 0, 0.10)",
 };
 
-const CARD_DIVIDER = "1px solid rgba(255, 255, 255, 0.12)";
+const CARD_DIVIDER = "1px solid rgba(0, 0, 0, 0.06)";
 
 type FollowUp = { email: string; name: string; subject: string; daysAgo: number };
 
@@ -207,10 +209,10 @@ export default function DashboardPage() {
                 : <Mail size={20} style={{ color: "#EA580C" }} />}
             </div>
             <div>
-              <p style={{ fontSize: 15, fontWeight: 800, color: "rgba(255,255,255,0.95)", letterSpacing: "-0.02em" }}>
+              <p style={{ fontSize: 15, fontWeight: 800, color: "#111827", letterSpacing: "-0.02em" }}>
                 {emailConnected === "expired" ? "Gmail session expired" : `Welcome, ${firstName} — connect your email to get started`}
               </p>
-              <p style={{ fontSize: 12, color: "rgba(255,255,255,0.55)", marginTop: 2 }}>
+              <p style={{ fontSize: 12, color: "#9CA3AF", marginTop: 2 }}>
                 {emailConnected === "expired"
                   ? "Your emails won't send until you reconnect."
                   : "Send outreach directly from your Gmail or Microsoft inbox."}
@@ -230,10 +232,10 @@ export default function DashboardPage() {
           /* Normal greeting */
           <>
             <div>
-              <p style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.4)", marginBottom: 4 }}>
+              <p style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#C4B5A5", marginBottom: 4 }}>
                 {today}
               </p>
-              <h1 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.04em", color: "rgba(255,255,255,0.95)", lineHeight: 1 }}>
+              <h1 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.04em", color: "#111827", lineHeight: 1 }}>
                 Hey {firstName}!
               </h1>
             </div>
@@ -241,9 +243,9 @@ export default function DashboardPage() {
               <Link
                 href="/contacts"
                 className="inline-flex items-center gap-2 text-sm font-semibold rounded-xl transition-all"
-                style={{ padding: "9px 18px", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.25)", color: "rgba(255,255,255,0.9)" }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.18)"; (e.currentTarget as HTMLElement).style.color = "#ffffff"; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.1)"; (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.9)"; }}
+                style={{ padding: "9px 18px", background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.08)", color: "#374151" }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "#EA580C"; (e.currentTarget as HTMLElement).style.color = "#EA580C"; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,0,0,0.08)"; (e.currentTarget as HTMLElement).style.color = "#374151"; }}
               >
                 <Users size={13} /> New Campaign
               </Link>
@@ -276,17 +278,17 @@ export default function DashboardPage() {
           <div style={{ ...CARD, flexShrink: 0, padding: "20px 26px" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
               <div>
-                <p style={{ fontSize: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.4)", marginBottom: 2 }}>Analytics</p>
-                <p style={{ fontSize: 18, fontWeight: 900, letterSpacing: "-0.03em", color: "rgba(255,255,255,0.95)", lineHeight: 1 }}>Daily Social Views</p>
+                <p style={{ fontSize: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.1em", color: "#C4B5A5", marginBottom: 2 }}>Analytics</p>
+                <p style={{ fontSize: 18, fontWeight: 900, letterSpacing: "-0.03em", color: "#111827", lineHeight: 1 }}>Daily Social Views</p>
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 10, fontWeight: 700, padding: "4px 10px", borderRadius: 20, color: "#4BBFB0", background: "rgba(75,191,176,0.1)", border: "1px solid rgba(75,191,176,0.25)" }}>
                   <span className="animate-pulse" style={{ width: 5, height: 5, borderRadius: "50%", background: "#4BBFB0", display: "inline-block" }} />
                   Live
                 </span>
-                <Link href="/analytics" style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", fontWeight: 600, textDecoration: "none" }}
+                <Link href="/analytics" style={{ fontSize: 11, color: "#C4B5A5", fontWeight: 600, textDecoration: "none" }}
                   onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = "#EA580C"}
-                  onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.4)"}
+                  onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = "#C4B5A5"}
                 >
                   View all →
                 </Link>
@@ -295,7 +297,7 @@ export default function DashboardPage() {
             <Sparkline data={sparkData} color="#4BBFB0" height={60} />
             <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6 }}>
               {dayLabels.map(d => (
-                <span key={d} style={{ fontSize: 9, fontWeight: 600, color: "rgba(255,255,255,0.38)" }}>{d}</span>
+                <span key={d} style={{ fontSize: 9, fontWeight: 600, color: "#D1C4B8" }}>{d}</span>
               ))}
             </div>
             <div style={{ borderTop: CARD_DIVIDER, marginTop: 14, paddingTop: 14, display: "grid", gridTemplateColumns: "1fr 1fr 1fr" }}>
@@ -305,7 +307,7 @@ export default function DashboardPage() {
                 { label: "Facebook",  count: "52K",  colour: "#1877F2" },
               ].map(({ label, count, colour }) => (
                 <div key={label} style={{ textAlign: "center" }}>
-                  <p style={{ fontSize: 17, fontWeight: 900, letterSpacing: "-0.03em", color: "rgba(255,255,255,0.95)", lineHeight: 1, marginBottom: 2 }}>{count}</p>
+                  <p style={{ fontSize: 17, fontWeight: 900, letterSpacing: "-0.03em", color: "#111827", lineHeight: 1, marginBottom: 2 }}>{count}</p>
                   <p style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: colour }}>{label}</p>
                 </div>
               ))}
@@ -317,7 +319,7 @@ export default function DashboardPage() {
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 24px", borderBottom: CARD_DIVIDER, flexShrink: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <Star size={13} style={{ color: "#EA580C" }} />
-                <span style={{ fontSize: 13, fontWeight: 800, color: "rgba(255,255,255,0.95)" }}>Meta Ads</span>
+                <span style={{ fontSize: 13, fontWeight: 800, color: "#111827" }}>Meta Ads</span>
                 <span style={{ fontSize: 9, fontWeight: 700, background: "#FEF0EB", color: "#EA580C", padding: "2px 7px", borderRadius: 20, border: "1px solid #FDDBC8" }}>
                   {favBrands.length}/8
                 </span>
@@ -325,14 +327,14 @@ export default function DashboardPage() {
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                 <button
                   onClick={() => setEditingFavs(v => !v)}
-                  style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 10, fontWeight: 700, color: editingFavs ? "#ffffff" : "rgba(255,255,255,0.7)", background: editingFavs ? "rgba(255,255,255,0.18)" : "rgba(255,255,255,0.1)", border: `1px solid ${editingFavs ? "rgba(255,255,255,0.4)" : "rgba(255,255,255,0.2)"}`, borderRadius: 7, padding: "4px 9px", cursor: "pointer" }}
+                  style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 10, fontWeight: 700, color: editingFavs ? "#10B981" : "#9CA3AF", background: editingFavs ? "rgba(16,185,129,0.08)" : "rgba(0,0,0,0.04)", border: `1px solid ${editingFavs ? "rgba(16,185,129,0.25)" : "rgba(0,0,0,0.08)"}`, borderRadius: 7, padding: "4px 9px", cursor: "pointer" }}
                 >
                   {editingFavs ? <Check size={11} /> : <Edit2 size={11} />}
                   {editingFavs ? "Done" : "Edit"}
                 </button>
-                <Link href="/ads" style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", fontWeight: 600, textDecoration: "none" }}
+                <Link href="/ads" style={{ fontSize: 10, color: "#C4B5A5", fontWeight: 600, textDecoration: "none" }}
                   onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = "#EA580C"}
-                  onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.4)"}
+                  onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = "#C4B5A5"}
                 >
                   Full scan →
                 </Link>
@@ -340,13 +342,13 @@ export default function DashboardPage() {
             </div>
 
             {editingFavs && (
-              <div style={{ padding: "12px 24px", borderBottom: CARD_DIVIDER, background: "rgba(0,0,0,0.12)", flexShrink: 0 }}>
-                <p style={{ fontSize: 10, color: "rgba(255,255,255,0.55)", marginBottom: 8, fontWeight: 600 }}>
+              <div style={{ padding: "12px 24px", borderBottom: CARD_DIVIDER, background: "rgba(249,250,251,0.8)", flexShrink: 0 }}>
+                <p style={{ fontSize: 10, color: "#9CA3AF", marginBottom: 8, fontWeight: 600 }}>
                   Pin up to 8 brands — pulls live from your 24h ad scan
                 </p>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 5, maxHeight: 90, overflowY: "auto" }}>
                   {allBrandNames.length === 0 ? (
-                    <p style={{ fontSize: 11, color: "rgba(255,255,255,0.35)" }}>No companies found. Add contacts with company names.</p>
+                    <p style={{ fontSize: 11, color: "#D1D5DB" }}>No companies found. Add contacts with company names.</p>
                   ) : allBrandNames.map(name => {
                     const selected = favBrands.includes(name);
                     const atMax = !selected && favBrands.length >= 8;
@@ -362,30 +364,27 @@ export default function DashboardPage() {
 
             {displayedBrands.length === 0 ? (
               <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: 32 }}>
-                <Star size={24} style={{ color: "rgba(255,255,255,0.25)", marginBottom: 10 }} />
-                <p style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.55)" }}>No brands pinned yet.</p>
-                <p style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", marginTop: 3 }}>Click Edit to select up to 8 brands.</p>
+                <Star size={24} style={{ color: "#E5E7EB", marginBottom: 10 }} />
+                <p style={{ fontSize: 12, fontWeight: 600, color: "#9CA3AF" }}>No brands pinned yet.</p>
+                <p style={{ fontSize: 10, color: "#D1D5DB", marginTop: 3 }}>Click Edit to select up to 8 brands.</p>
               </div>
             ) : (
               <div className="scrollbar-thin" style={{ flex: 1, overflowY: "auto", display: "grid", gridTemplateColumns: "1fr 1fr", alignContent: "start", padding: "12px 18px", gap: 8 }}>
                 {displayedBrands.map((brand, i) => (
-                  <div key={brand.name} className="flex items-center gap-2 rounded-2xl transition-colors" style={{ padding: "10px 12px", border: "1px solid rgba(255,255,255,0.12)" }}
-                    onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.08)"}
-                    onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = "transparent"}
-                  >
+                  <div key={brand.name} className="flex items-center gap-2 rounded-2xl hover:bg-orange-50/30 transition-colors" style={{ padding: "10px 12px", border: "1px solid rgba(0,0,0,0.06)" }}>
                     <div style={{ width: 30, height: 30, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, background: BRAND_AVATAR_COLOURS[i % BRAND_AVATAR_COLOURS.length], color: "white", fontSize: 11, fontWeight: 800 }}>
                       {brand.name[0]?.toUpperCase()}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <span style={{ fontWeight: 700, color: "rgba(255,255,255,0.95)", fontSize: 11, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", display: "block" }}>{brand.name}</span>
-                      {brand.checkedAt && <span style={{ fontSize: 9, color: "rgba(255,255,255,0.38)" }}>{Math.floor((Date.now() - new Date(brand.checkedAt).getTime()) / 3600000)}h ago</span>}
+                      <span style={{ fontWeight: 700, color: "#111827", fontSize: 11, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", display: "block" }}>{brand.name}</span>
+                      {brand.checkedAt && <span style={{ fontSize: 9, color: "#D1C4B8" }}>{Math.floor((Date.now() - new Date(brand.checkedAt).getTime()) / 3600000)}h ago</span>}
                     </div>
                     {brand.runningAds !== null ? (
                       <span style={{ fontSize: 8, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", padding: "3px 7px", borderRadius: 20, flexShrink: 0, background: brand.runningAds ? "#DCFCE7" : "#FEE2E2", color: brand.runningAds ? "#15803D" : "#DC2626", border: `1px solid ${brand.runningAds ? "#BBF7D0" : "#FECACA"}` }}>
                         {brand.runningAds ? "Active" : "Paused"}
                       </span>
                     ) : (
-                      <span style={{ fontSize: 8, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", padding: "3px 7px", borderRadius: 20, flexShrink: 0, background: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.5)", border: "1px solid rgba(255,255,255,0.2)" }}>
+                      <span style={{ fontSize: 8, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", padding: "3px 7px", borderRadius: 20, flexShrink: 0, background: "#F3F4F6", color: "#C4B5A5", border: "1px solid #E5E7EB" }}>
                         —
                       </span>
                     )}
@@ -404,14 +403,14 @@ export default function DashboardPage() {
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 24px", borderBottom: CARD_DIVIDER, flexShrink: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <TrendingUp size={13} style={{ color: "#EA580C" }} />
-                <span style={{ fontSize: 13, fontWeight: 800, color: "rgba(255,255,255,0.95)" }}>Deal Pipeline</span>
+                <span style={{ fontSize: 13, fontWeight: 800, color: "#111827" }}>Deal Pipeline</span>
                 {activeDeals.length > 0 && (
                   <span style={{ fontSize: 9, fontWeight: 700, background: "#FEF0EB", color: "#EA580C", padding: "2px 7px", borderRadius: 20, border: "1px solid #FDDBC8" }}>
                     {activeDeals.length} active
                   </span>
                 )}
               </div>
-              <Link href="/pipeline" style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", fontWeight: 600, textDecoration: "none" }}
+              <Link href="/pipeline" style={{ fontSize: 10, color: "#C4B5A5", fontWeight: 600, textDecoration: "none" }}
                 onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = "#EA580C"}
                 onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = "#C4B5A5"}
               >
@@ -421,21 +420,21 @@ export default function DashboardPage() {
 
             {deals.length === 0 ? (
               <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: 32 }}>
-                <TrendingUp size={24} style={{ color: "rgba(255,255,255,0.25)", marginBottom: 10 }} />
-                <p style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.55)" }}>No deals yet.</p>
-                <p style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", marginTop: 3 }}>Positive replies get flagged automatically.</p>
+                <TrendingUp size={24} style={{ color: "#E5E7EB", marginBottom: 10 }} />
+                <p style={{ fontSize: 12, fontWeight: 600, color: "#9CA3AF" }}>No deals yet.</p>
+                <p style={{ fontSize: 10, color: "#D1D5DB", marginTop: 3 }}>Positive replies get flagged automatically.</p>
               </div>
             ) : (
               <div className="scrollbar-thin" style={{ flex: 1, overflowY: "auto", padding: "12px 16px", display: "flex", flexDirection: "column", gap: 7 }}>
                 {recentDeals.map((deal) => {
                   const accent = DEAL_STAGE_ACCENT[deal.status] || "#6B7280";
                   return (
-                    <div key={deal.id} style={{ borderRadius: 14, padding: "12px 16px", display: "flex", alignItems: "center", gap: 12, background: "rgba(0,0,0,0.08)", border: "1px solid rgba(255,255,255,0.1)", borderLeft: `3px solid ${accent}` }}>
+                    <div key={deal.id} style={{ borderRadius: 14, padding: "12px 16px", display: "flex", alignItems: "center", gap: 12, background: "rgba(255,255,255,0.6)", border: "1px solid rgba(0,0,0,0.04)", borderLeft: `3px solid ${accent}` }}>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.95)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        <p style={{ fontSize: 13, fontWeight: 700, color: "#111827", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                           {deal.company || deal.contactName}
                         </p>
-                        {deal.company && <p style={{ fontSize: 10, color: "rgba(255,255,255,0.55)", marginTop: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{deal.contactName}</p>}
+                        {deal.company && <p style={{ fontSize: 10, color: "#9CA3AF", marginTop: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{deal.contactName}</p>}
                       </div>
                       <div style={{ display: "flex", alignItems: "center", gap: 7, flexShrink: 0 }}>
                         {deal.value && <span style={{ fontSize: 12, fontWeight: 800, color: "#059669" }}>{deal.value}</span>}
@@ -455,14 +454,14 @@ export default function DashboardPage() {
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 24px", borderBottom: CARD_DIVIDER, flexShrink: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <Bell size={13} style={{ color: "#EA580C" }} />
-                <span style={{ fontSize: 13, fontWeight: 800, color: "rgba(255,255,255,0.95)" }}>Follow-up Reminders</span>
+                <span style={{ fontSize: 13, fontWeight: 800, color: "#111827" }}>Follow-up Reminders</span>
                 {followUps.length > 0 && (
                   <span style={{ fontSize: 9, fontWeight: 700, background: "#FEE2E2", color: "#DC2626", padding: "2px 7px", borderRadius: 20, border: "1px solid #FECACA" }}>
                     {followUps.length} due
                   </span>
                 )}
               </div>
-              <Link href="/contacts" style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", fontWeight: 600, textDecoration: "none" }}
+              <Link href="/contacts" style={{ fontSize: 10, color: "#C4B5A5", fontWeight: 600, textDecoration: "none" }}
                 onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = "#EA580C"}
                 onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = "#C4B5A5"}
               >
@@ -472,20 +471,17 @@ export default function DashboardPage() {
 
             {followUps.length === 0 ? (
               <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: 32 }}>
-                <Clock size={20} style={{ color: "rgba(255,255,255,0.25)", marginBottom: 10 }} />
-                <p style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.55)" }}>All up to date.</p>
-                <p style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", marginTop: 3 }}>Contacts emailed 5+ days ago appear here.</p>
+                <Clock size={20} style={{ color: "#E5E7EB", marginBottom: 10 }} />
+                <p style={{ fontSize: 12, fontWeight: 600, color: "#9CA3AF" }}>All up to date.</p>
+                <p style={{ fontSize: 10, color: "#D1D5DB", marginTop: 3 }}>Contacts emailed 5+ days ago appear here.</p>
               </div>
             ) : (
               <div className="scrollbar-thin" style={{ flex: 1, overflowY: "auto" }}>
                 {followUps.map((f, i) => (
-                  <div key={f.email} className="flex items-center gap-3 transition-colors" style={{ padding: "13px 24px", borderBottom: i < followUps.length - 1 ? CARD_DIVIDER : "none" }}
-                    onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.07)"}
-                    onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = "transparent"}
-                  >
+                  <div key={f.email} className="flex items-center gap-3 hover:bg-orange-50/20 transition-colors" style={{ padding: "13px 24px", borderBottom: i < followUps.length - 1 ? CARD_DIVIDER : "none" }}>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{ fontSize: 13, fontWeight: 800, color: "rgba(255,255,255,0.95)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.name}</p>
-                      <p style={{ fontSize: 11, color: "rgba(255,255,255,0.55)", fontWeight: 500, marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.subject}</p>
+                      <p style={{ fontSize: 13, fontWeight: 800, color: "#111827", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.name}</p>
+                      <p style={{ fontSize: 11, color: "#9CA3AF", fontWeight: 500, marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.subject}</p>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 5, flexShrink: 0 }}>
                       <span style={{ fontSize: 9, fontWeight: 700, padding: "4px 9px", borderRadius: 20, background: f.daysAgo >= 14 ? "#FEE2E2" : "#FEF3C7", color: f.daysAgo >= 14 ? "#DC2626" : "#D97706" }}>
@@ -493,9 +489,9 @@ export default function DashboardPage() {
                       </span>
                       <Link
                         href={`/send?to=${encodeURIComponent(f.email)}&name=${encodeURIComponent(f.name)}`}
-                        style={{ padding: 6, borderRadius: 7, color: "rgba(255,255,255,0.4)", display: "flex", alignItems: "center", transition: "all 0.12s" }}
-                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.15)"; (e.currentTarget as HTMLElement).style.color = "#ffffff"; }}
-                        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "transparent"; (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.4)"; }}
+                        style={{ padding: 6, borderRadius: 7, color: "#C4B5A5", display: "flex", alignItems: "center", transition: "all 0.12s" }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(234,88,12,0.08)"; (e.currentTarget as HTMLElement).style.color = "#EA580C"; }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "transparent"; (e.currentTarget as HTMLElement).style.color = "#C4B5A5"; }}
                       >
                         <ChevronRight size={12} />
                       </Link>

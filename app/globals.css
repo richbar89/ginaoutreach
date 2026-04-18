@@ -23,14 +23,15 @@
 }
 
 html {
-  background: #FBF7F2;
+  background: linear-gradient(150deg, #C97B5C 0%, #B5684E 55%, #9A4535 100%);
+  background-attachment: fixed;
   min-height: 100vh;
 }
 
 body {
   font-family: 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
-  background: #FBF7F2;
+  background: transparent;
   min-height: 100vh;
   color: var(--text);
 }
@@ -82,10 +83,11 @@ h1, h2, h3 {
   }
 
   .card {
-    background: linear-gradient(150deg, #C97B5C 0%, #B5684E 55%, #9A4535 100%);
+    background: rgba(251, 247, 242, 0.96);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
     border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.06);
-    color: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07), 0 1px 4px rgba(0, 0, 0, 0.04);
   }
 }
