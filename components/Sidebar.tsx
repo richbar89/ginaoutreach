@@ -11,7 +11,6 @@ import {
   TrendingUp,
   BarChart3,
   BookOpen,
-  Sparkles,
   ShieldCheck,
   LineChart,
 } from "lucide-react";
@@ -30,21 +29,6 @@ const NAV_ITEMS = [
   { href: "/analytics",  label: "My Analytics",    icon: LineChart,       exact: false },
 ];
 
-const PILL: React.CSSProperties = {
-  background: "rgba(251, 247, 242, 0.97)",
-  backdropFilter: "blur(24px)",
-  WebkitBackdropFilter: "blur(24px)",
-  borderRadius: 30,
-  border: "1px solid rgba(255,255,255,0.9)",
-  boxShadow: "0 4px 28px rgba(0,0,0,0.12), 0 1px 6px rgba(0,0,0,0.06)",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  padding: "14px 0",
-  gap: 4,
-  width: 62,
-};
-
 export default function Sidebar() {
   const pathname = usePathname();
   const { user } = useUser();
@@ -53,147 +37,178 @@ export default function Sidebar() {
     .split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2);
 
   return (
-    <div style={PILL}>
+    <div style={{
+      width: 220,
+      flexShrink: 0,
+      height: "100vh",
+      display: "flex",
+      flexDirection: "column",
+      background: "var(--bg)",
+      borderRight: "1px solid var(--border)",
+    }}>
 
-      {/* Logo mark */}
-      <div
-        style={{
-          width: 38,
-          height: 38,
-          background: "#D4795C",
-          borderRadius: 12,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          marginBottom: 12,
-          boxShadow: "0 2px 10px rgba(212,121,92,0.35)",
-          flexShrink: 0,
-        }}
-      >
-        <Sparkles size={17} color="white" strokeWidth={2.5} />
+      {/* Logo */}
+      <div style={{ padding: "20px 24px", borderBottom: "1px solid var(--border)", flexShrink: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ width: 30, height: 30, background: "var(--ink)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            <span style={{ color: "var(--bg)", fontSize: 13, fontWeight: 900, fontFamily: "'Inter', sans-serif" }}>C</span>
+          </div>
+          <span style={{ fontSize: 13, fontWeight: 900, color: "var(--text)", letterSpacing: "0.08em", textTransform: "uppercase", fontFamily: "'Inter', sans-serif" }}>
+            Colla<span style={{ fontFamily: "'Instrument Serif', serif", fontStyle: "italic", fontWeight: 400, textTransform: "lowercase", color: "var(--accent)" }}>b</span>i
+          </span>
+        </div>
       </div>
 
-      {/* Nav icons */}
-      {NAV_ITEMS.map(({ href, label, icon: Icon, exact }) => {
-        const active = exact ? pathname === href : pathname.startsWith(href);
-        return (
+      {/* Nav items */}
+      <nav style={{ flex: 1, overflowY: "auto", padding: "8px 0" }}>
+        {NAV_ITEMS.map(({ href, label, icon: Icon, exact }) => {
+          const active = exact ? pathname === href : pathname.startsWith(href);
+          return (
+            <Link
+              key={href}
+              href={href}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 11,
+                padding: "9px 24px",
+                fontSize: 12,
+                fontWeight: active ? 700 : 500,
+                letterSpacing: active ? "0.06em" : "0.01em",
+                textTransform: active ? "uppercase" : "none",
+                color: active ? "var(--bg)" : "var(--text-muted)",
+                background: active ? "var(--ink)" : "transparent",
+                textDecoration: "none",
+                transition: "background 120ms ease-out, color 120ms ease-out",
+                fontFamily: "'Inter', sans-serif",
+              }}
+              onMouseEnter={e => {
+                if (!active) {
+                  (e.currentTarget as HTMLElement).style.background = "var(--surface)";
+                  (e.currentTarget as HTMLElement).style.color = "var(--text)";
+                }
+              }}
+              onMouseLeave={e => {
+                if (!active) {
+                  (e.currentTarget as HTMLElement).style.background = "transparent";
+                  (e.currentTarget as HTMLElement).style.color = "var(--text-muted)";
+                }
+              }}
+            >
+              <Icon size={15} strokeWidth={active ? 2.5 : 1.75} />
+              {label}
+            </Link>
+          );
+        })}
+
+        {isAdmin && (
           <Link
-            key={href}
-            href={href}
-            title={label}
+            href="/admin"
             style={{
-              width: 46,
-              height: 46,
-              borderRadius: 13,
               display: "flex",
               alignItems: "center",
-              justifyContent: "center",
-              background: active ? "rgba(75,191,176,0.12)" : "transparent",
-              color: active ? "#4BBFB0" : "#9CA3AF",
-              transition: "all 0.12s",
-              flexShrink: 0,
+              gap: 11,
+              padding: "9px 24px",
+              fontSize: 12,
+              fontWeight: pathname.startsWith("/admin") ? 700 : 500,
+              letterSpacing: pathname.startsWith("/admin") ? "0.06em" : "0.01em",
+              textTransform: pathname.startsWith("/admin") ? "uppercase" : "none",
+              color: pathname.startsWith("/admin") ? "var(--bg)" : "var(--text-muted)",
+              background: pathname.startsWith("/admin") ? "var(--ink)" : "transparent",
+              textDecoration: "none",
+              transition: "background 120ms ease-out, color 120ms ease-out",
+              fontFamily: "'Inter', sans-serif",
             }}
             onMouseEnter={e => {
-              if (!active) {
-                (e.currentTarget as HTMLElement).style.background = "rgba(0,0,0,0.04)";
-                (e.currentTarget as HTMLElement).style.color = "#374151";
+              if (!pathname.startsWith("/admin")) {
+                (e.currentTarget as HTMLElement).style.background = "var(--surface)";
+                (e.currentTarget as HTMLElement).style.color = "var(--text)";
               }
             }}
             onMouseLeave={e => {
-              if (!active) {
+              if (!pathname.startsWith("/admin")) {
                 (e.currentTarget as HTMLElement).style.background = "transparent";
-                (e.currentTarget as HTMLElement).style.color = "#9CA3AF";
+                (e.currentTarget as HTMLElement).style.color = "var(--text-muted)";
               }
             }}
           >
-            <Icon size={21} strokeWidth={active ? 2.5 : 1.75} />
+            <ShieldCheck size={15} strokeWidth={1.75} />
+            Admin
           </Link>
-        );
-      })}
+        )}
+      </nav>
 
-      {/* Admin icon */}
-      {isAdmin && (
+      {/* Bottom: settings + user */}
+      <div style={{ borderTop: "1px solid var(--border)", flexShrink: 0 }}>
         <Link
-          href="/admin"
-          title="Admin Dashboard"
+          href="/settings"
           style={{
-            width: 46,
-            height: 46,
-            borderRadius: 13,
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
-            background: pathname.startsWith("/admin") ? "rgba(75,191,176,0.12)" : "transparent",
-            color: pathname.startsWith("/admin") ? "#4BBFB0" : "#9CA3AF",
-            transition: "all 0.12s",
-            flexShrink: 0,
+            gap: 11,
+            padding: "9px 24px",
+            fontSize: 12,
+            fontWeight: pathname === "/settings" ? 700 : 500,
+            letterSpacing: pathname === "/settings" ? "0.06em" : "0.01em",
+            textTransform: pathname === "/settings" ? "uppercase" : "none",
+            color: pathname === "/settings" ? "var(--bg)" : "var(--text-muted)",
+            background: pathname === "/settings" ? "var(--ink)" : "transparent",
+            textDecoration: "none",
+            transition: "background 120ms ease-out, color 120ms ease-out",
+            fontFamily: "'Inter', sans-serif",
+          }}
+          onMouseEnter={e => {
+            if (pathname !== "/settings") {
+              (e.currentTarget as HTMLElement).style.background = "var(--surface)";
+              (e.currentTarget as HTMLElement).style.color = "var(--text)";
+            }
+          }}
+          onMouseLeave={e => {
+            if (pathname !== "/settings") {
+              (e.currentTarget as HTMLElement).style.background = "transparent";
+              (e.currentTarget as HTMLElement).style.color = "var(--text-muted)";
+            }
           }}
         >
-          <ShieldCheck size={21} strokeWidth={1.75} />
+          <Settings size={15} strokeWidth={1.75} />
+          Settings
         </Link>
-      )}
 
-      {/* Spacer */}
-      <div style={{ flex: 1, minHeight: 12 }} />
-
-      {/* Settings */}
-      <Link
-        href="/settings"
-        title="Settings"
-        style={{
-          width: 46,
-          height: 46,
-          borderRadius: 13,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: pathname === "/settings" ? "rgba(75,191,176,0.12)" : "transparent",
-          color: pathname === "/settings" ? "#4BBFB0" : "#9CA3AF",
-          transition: "all 0.12s",
-          flexShrink: 0,
-        }}
-        onMouseEnter={e => {
-          if (pathname !== "/settings") {
-            (e.currentTarget as HTMLElement).style.background = "rgba(0,0,0,0.04)";
-            (e.currentTarget as HTMLElement).style.color = "#374151";
-          }
-        }}
-        onMouseLeave={e => {
-          if (pathname !== "/settings") {
-            (e.currentTarget as HTMLElement).style.background = "transparent";
-            (e.currentTarget as HTMLElement).style.color = "#9CA3AF";
-          }
-        }}
-      >
-        <Settings size={21} strokeWidth={1.75} />
-      </Link>
-
-      {/* User avatar */}
-      <SignOutButton>
-        <button
-          title={`Sign out (${user?.firstName || ""})`}
-          style={{
-            width: 34,
-            height: 34,
-            borderRadius: "50%",
-            overflow: "hidden",
-            background: "#D4795C",
-            border: "none",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            marginTop: 4,
-            flexShrink: 0,
-          }}
-        >
-          {user?.imageUrl ? (
-            <img src={user.imageUrl} alt={initials} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-          ) : (
-            <span style={{ color: "white", fontSize: 11, fontWeight: 800 }}>{initials}</span>
-          )}
-        </button>
-      </SignOutButton>
+        <SignOutButton>
+          <button
+            title={`Sign out (${user?.firstName || ""})`}
+            style={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              padding: "12px 24px",
+              background: "transparent",
+              border: "none",
+              borderTop: "1px solid var(--border-soft)",
+              cursor: "pointer",
+              textAlign: "left",
+              transition: "background 120ms ease-out",
+            }}
+            onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = "var(--surface)"}
+            onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = "transparent"}
+          >
+            <div style={{ width: 28, height: 28, background: "var(--ink)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, overflow: "hidden", borderRadius: 2 }}>
+              {user?.imageUrl ? (
+                <img src={user.imageUrl} alt={initials} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              ) : (
+                <span style={{ color: "var(--bg)", fontSize: 10, fontWeight: 900, fontFamily: "'Inter', sans-serif" }}>{initials}</span>
+              )}
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={{ fontSize: 11, fontWeight: 700, color: "var(--text)", letterSpacing: "0.02em", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", margin: 0, fontFamily: "'Inter', sans-serif" }}>
+                {user?.fullName || user?.firstName || "Account"}
+              </p>
+              <p style={{ fontSize: 10, color: "var(--text-dim)", marginTop: 1, fontFamily: "'Inter', sans-serif" }}>Sign out</p>
+            </div>
+          </button>
+        </SignOutButton>
+      </div>
 
     </div>
   );
