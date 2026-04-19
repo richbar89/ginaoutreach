@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getSupabaseAdmin } from "@/lib/supabase";
+
+const PAGE_ID_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 
 function normalize(s: string): string {
   return s.toLowerCase().replace(/[^a-z0-9\s]/g, "").replace(/\s+/g, " ").trim();
@@ -8,6 +11,22 @@ export async function GET(req: NextRequest) {
   const company = req.nextUrl.searchParams.get("company");
   if (!company) {
     return NextResponse.json({ error: "Missing company param" }, { status: 400 });
+  }
+
+  const supabase = getSupabaseAdmin();
+
+  // Check Supabase cache first
+  const { data: cached } = await supabase
+    .from("meta_page_ids")
+    .select("page_id, cached_at")
+    .eq("company", company)
+    .single();
+
+  if (cached) {
+    const age = Date.now() - new Date(cached.cached_at).getTime();
+    if (age < PAGE_ID_TTL_MS) {
+      return NextResponse.json({ pageId: cached.page_id });
+    }
   }
 
   const accessToken =
@@ -45,20 +64,24 @@ export async function GET(req: NextRequest) {
     const pages: { id: string; name: string; verification_status?: string; fan_count?: number }[] =
       data.data ?? [];
 
-    if (pages.length === 0) {
-      return NextResponse.json({ pageId: null });
-    }
+    const pageId = (() => {
+      if (!pages.length) return null;
+      const normCompany = normalize(company);
+      const exact = pages.find((p) => normalize(p.name) === normCompany);
+      const verified = pages.find(
+        (p) => p.verification_status === "blue_verified" || p.verification_status === "gray_verified"
+      );
+      return (exact ?? verified ?? pages[0]).id;
+    })();
 
-    const normCompany = normalize(company);
+    // Persist to Supabase
+    await supabase.from("meta_page_ids").upsert({
+      company,
+      page_id: pageId,
+      cached_at: new Date().toISOString(),
+    });
 
-    // Prefer verified pages, then exact name match, then closest match
-    const exact = pages.find((p) => normalize(p.name) === normCompany);
-    const verified = pages.find(
-      (p) => p.verification_status === "blue_verified" || p.verification_status === "gray_verified"
-    );
-    const best = exact ?? verified ?? pages[0];
-
-    return NextResponse.json({ pageId: best.id, pageName: best.name });
+    return NextResponse.json({ pageId });
   } catch {
     return NextResponse.json({ pageId: null, error: "Failed to reach Meta API" });
   }

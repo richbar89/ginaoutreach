@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getSupabaseAdmin } from "@/lib/supabase";
 
 function normalize(s: string): string {
   return s.toLowerCase().replace(/[^a-z0-9\s]/g, "").replace(/\s+/g, " ").trim();
@@ -52,7 +53,11 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: data.error.message }, { status: 400 });
       }
       const ads = data.data ?? [];
-      return NextResponse.json({ hasAds: ads.length > 0, count: ads.length, ads });
+      const hasAds = ads.length > 0;
+      await getSupabaseAdmin().from("meta_ad_statuses").upsert({
+        company, has_ads: hasAds, ad_count: ads.length, checked_at: new Date().toISOString(),
+      });
+      return NextResponse.json({ hasAds, count: ads.length, ads });
     } catch {
       return NextResponse.json({ error: "Failed to reach Meta API" }, { status: 500 });
     }
@@ -83,12 +88,13 @@ export async function GET(req: NextRequest) {
     const allAds: { id: string; page_name: string; ad_snapshot_url: string }[] =
       data.data ?? [];
     const matchingAds = allAds.filter((ad) => isNameMatch(ad.page_name, company));
+    const hasAds = matchingAds.length > 0;
 
-    return NextResponse.json({
-      hasAds: matchingAds.length > 0,
-      count: matchingAds.length,
-      ads: matchingAds,
+    await getSupabaseAdmin().from("meta_ad_statuses").upsert({
+      company, has_ads: hasAds, ad_count: matchingAds.length, checked_at: new Date().toISOString(),
     });
+
+    return NextResponse.json({ hasAds, count: matchingAds.length, ads: matchingAds });
   } catch {
     return NextResponse.json({ error: "Failed to reach Meta API" }, { status: 500 });
   }

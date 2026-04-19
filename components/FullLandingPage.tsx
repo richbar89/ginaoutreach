@@ -332,7 +332,7 @@ export default function LandingPage() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        .cl-page { font-family: 'Inter', sans-serif; background: #ffffff; color: #0D1B2A; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+        .cl-page { font-family: 'Inter', sans-serif; background: linear-gradient(150deg, #F0CBB4 0%, #E3AD8E 55%, #D4916C 100%) fixed; color: #0D1B2A; line-height: 1.5; -webkit-font-smoothing: antialiased; }
         .cl-h { font-family: 'Inter', sans-serif; }
         .cl-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; transition: all 0.25s; }
         .cl-nav-inner { max-width: 1160px; margin: 0 auto; padding: 0 28px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
@@ -405,7 +405,7 @@ export default function LandingPage() {
         </nav>
 
         {/* ── HERO ── */}
-        <section className="cl-dot cl-hero-section" style={{ paddingTop: 140, paddingBottom: 100, paddingLeft: 28, paddingRight: 28, background: "#fff", position: "relative", overflow: "hidden", minHeight: 760 }}>
+        <section className="cl-dot cl-hero-section" style={{ paddingTop: 140, paddingBottom: 100, paddingLeft: 28, paddingRight: 28, background: "transparent", position: "relative", overflow: "hidden", minHeight: 760 }}>
           <div style={{ position: "absolute", top: "20%", right: "8%", width: 480, height: 480, background: "radial-gradient(ellipse, rgba(232,98,42,0.06) 0%, transparent 70%)", pointerEvents: "none" }} />
           <div className="cl-inner">
             <div ref={hero.ref} className={`cl-hero-grid cl-fade${hero.vis ? " vis" : ""}`}>
@@ -511,7 +511,7 @@ export default function LandingPage() {
               { emoji: "✉️", title: "Email campaigns", body: "Send from your own Gmail or Outlook" },
               { emoji: "💼", title: "Deal pipeline", body: "Track every conversation to paid" },
             ].map(({ emoji, title, body }) => (
-              <div key={title} style={{ background: "#F9FAFB", borderRadius: 16, padding: "20px 18px", border: "1px solid #F0F0F2" }}>
+              <div key={title} style={{ background: "rgba(251,247,242,0.7)", borderRadius: 16, padding: "20px 18px", border: "1px solid #F0F0F2" }}>
                 <div style={{ fontSize: 24, marginBottom: 10 }}>{emoji}</div>
                 <p style={{ fontSize: 14, fontWeight: 700, color: "#0D1B2A", marginBottom: 5, letterSpacing: "-0.02em" }}>{title}</p>
                 <p style={{ fontSize: 12, color: "#9CA3AF", lineHeight: 1.5 }}>{body}</p>
@@ -521,7 +521,7 @@ export default function LandingPage() {
         </div>
 
         {/* ── CREATOR SPOTS ── */}
-        <section className="cl-section" style={{ background: "#F9FAFB", padding: "90px 28px" }}>
+        <section className="cl-section" style={{ background: "rgba(251,247,242,0.7)", padding: "90px 28px" }}>
           <div className="cl-inner" style={{ maxWidth: 860 }}>
             <div ref={urgency.ref} className={`cl-fade${urgency.vis ? " vis" : ""}`}>
               <div style={{ textAlign: "center", marginBottom: 48 }}>

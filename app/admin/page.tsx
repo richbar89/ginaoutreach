@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Ticket, Users, AlertTriangle, Megaphone, Activity, Upload, Save, Loader2, ListOrdered } from "lucide-react";
+import { Ticket, Users, AlertTriangle, Megaphone, Activity, Upload, Save, Loader2, ListOrdered, Zap, CheckCircle } from "lucide-react";
 
 const NAV = [
   { href: "/admin/waitlist",     label: "Waitlist",      icon: ListOrdered,  desc: "Landing page sign-ups" },
@@ -31,6 +31,8 @@ type CapacityRow = {
 
 export default function AdminPage() {
   const [stats, setStats] = useState<Stats | null>(null);
+  const [scanRunning, setScanRunning] = useState(false);
+  const [scanResult, setScanResult] = useState<{ processed: number; errors: number; totalCompanies: number } | null>(null);
 
   // Capacity state
   const [capacity, setCapacity] = useState<CapacityRow[]>([]);
@@ -68,6 +70,21 @@ export default function AdminPage() {
       prev.map(row => row.category === category ? { ...row, [field]: isNaN(value) ? 0 : value } : row)
     );
     setCapacitySaved(false);
+  };
+
+  const forceMetaScan = async () => {
+    setScanRunning(true);
+    setScanResult(null);
+    try {
+      const secret = process.env.NEXT_PUBLIC_CRON_SECRET || "";
+      const res = await fetch(`/api/cron/meta-scan?secret=${encodeURIComponent(secret)}`);
+      const data = await res.json();
+      setScanResult({ processed: data.processed ?? 0, errors: data.errors ?? 0, totalCompanies: data.totalCompanies ?? 0 });
+    } catch {
+      setScanResult({ processed: 0, errors: 1, totalCompanies: 0 });
+    } finally {
+      setScanRunning(false);
+    }
   };
 
   const saveCapacity = async () => {
@@ -184,6 +201,35 @@ export default function AdminPage() {
                 </div>
               );
             })}
+          </div>
+        )}
+      </div>
+
+      {/* Meta Ad Scan */}
+      <div className="bg-white border rounded-2xl p-6 mb-8" style={{ borderColor: "var(--border)" }}>
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-base font-black text-navy-900">Meta Ad Library Scan</h2>
+            <p className="text-xs text-navy-400 mt-0.5">
+              Runs automatically every 48h (200 companies per batch). Force a run to pick up new contacts immediately.
+            </p>
+          </div>
+          <button
+            onClick={forceMetaScan}
+            disabled={scanRunning}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-coral-500 hover:bg-coral-600 disabled:opacity-50 text-white text-sm font-bold rounded-xl transition-colors flex-shrink-0"
+          >
+            {scanRunning
+              ? <><Loader2 size={13} className="animate-spin" /> Scanning…</>
+              : <><Zap size={13} /> Force Scan</>
+            }
+          </button>
+        </div>
+        {scanResult && (
+          <div className={`mt-4 flex items-center gap-2 text-sm font-medium ${scanResult.errors > 0 ? "text-amber-600" : "text-emerald-600"}`}>
+            <CheckCircle size={14} />
+            Processed {scanResult.processed} of {scanResult.totalCompanies} companies
+            {scanResult.errors > 0 && ` · ${scanResult.errors} errors`}
           </div>
         )}
       </div>
