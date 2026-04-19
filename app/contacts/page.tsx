@@ -232,7 +232,11 @@ export default function ContactsPage() {
   const [activeVertical, setActiveVertical] = useState<VerticalKey>(null);
   const [activeSubcategory, setActiveSubcategory] = useState<string | null>(null);
   const [activeCountry, setActiveCountry] = useState("All");
-  const [adStatuses] = useState<Record<string, AdStatus>>(() => getAllCachedStatuses());
+  const [adStatuses, setAdStatuses] = useState<Record<string, AdStatus>>({});
+
+  useEffect(() => {
+    getAllCachedStatuses().then(setAdStatuses);
+  }, []);
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [page, setPage] = useState(1);
 

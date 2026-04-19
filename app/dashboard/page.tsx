@@ -113,7 +113,7 @@ export default function DashboardPage() {
     else setEmailConnected(null);
     const stored = localStorage.getItem(FAV_KEY);
     if (stored) setFavBrands(JSON.parse(stored));
-    setAdStatuses(getAllCachedStatuses());
+    getAllCachedStatuses().then(setAdStatuses);
   }, []);
 
   useEffect(() => {
