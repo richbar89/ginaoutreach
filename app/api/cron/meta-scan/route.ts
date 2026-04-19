@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase";
 
+export const dynamic = "force-dynamic";
+
 const BATCH_LIMIT = 200;       // companies per run (keeps runtime under ~3 min)
 const STALE_HOURS = 48;        // re-scan companies older than this
 const REQUEST_DELAY_MS = 300;  // pause between Meta API calls
