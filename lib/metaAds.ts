@@ -4,6 +4,16 @@ export type AdStatus = {
   checkedAt: string;
 };
 
+/** Fetch a single company's cached status from Supabase. */
+export async function getCachedAdStatus(company: string): Promise<AdStatus | null> {
+  try {
+    const all = await getAllCachedStatuses();
+    return all[company] ?? null;
+  } catch {
+    return null;
+  }
+}
+
 /** Fetch all cached statuses from Supabase via the API route. */
 export async function getAllCachedStatuses(): Promise<Record<string, AdStatus>> {
   try {

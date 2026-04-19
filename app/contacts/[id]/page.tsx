@@ -34,8 +34,14 @@ function formatDate(iso: string) {
 }
 
 function AdStatusBadge({ company }: { company?: string }) {
-  if (!company) return null;
-  const status = getCachedAdStatus(company);
+  const [status, setStatus] = useState<{ hasAds: boolean } | null | undefined>(undefined);
+
+  useEffect(() => {
+    if (!company) return;
+    getCachedAdStatus(company).then(setStatus);
+  }, [company]);
+
+  if (!company || status === undefined) return null;
   if (!status) return (
     <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-gray-100 text-gray-400 text-xs font-medium rounded-full">
       Meta ads not yet checked
