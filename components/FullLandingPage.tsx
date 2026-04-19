@@ -354,7 +354,7 @@ export default function LandingPage() {
         .cl-fade.vis { opacity: 1; transform: none; }
         .cl-feat-card { transition: transform 0.25s ease, box-shadow 0.25s ease; border-radius: 14px; border: 1px solid #f0f0f0; padding: 28px; }
         .cl-feat-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.08); border-color: #fbd6c8; }
-        .cl-price-card { border: 1.5px solid #f0f0f0; border-radius: 20px; padding: 48px; background: #fff; transition: border-color 0.25s, box-shadow 0.25s; box-shadow: 0 4px 24px rgba(0,0,0,0.05); }
+        .cl-price-card { border: 1.5px solid rgba(0,0,0,0.08); border-radius: 20px; padding: 48px; background: rgba(251,247,242,0.85); transition: border-color 0.25s, box-shadow 0.25s; box-shadow: 0 4px 24px rgba(0,0,0,0.05); }
         .cl-price-card:hover { border-color: #E8622A; box-shadow: 0 8px 40px rgba(232,98,42,0.12); }
         .cl-logo-item { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 15px; color: #c8cdd4; letter-spacing: -0.01em; transition: color 0.2s; white-space: nowrap; }
         .cl-logo-item:hover { color: #9ba3ae; }
@@ -439,7 +439,7 @@ export default function LandingPage() {
               {/* Mockup */}
               <div className="cl-float cl-mockup-hide" style={{ position: "relative" }}>
                 <HeroDashboard />
-                <div style={{ position: "absolute", bottom: -12, right: -16, background: "#fff", border: "1px solid #f0f0f0", borderRadius: 12, padding: "10px 14px", boxShadow: "0 8px 24px rgba(0,0,0,0.1)" }}>
+                <div style={{ position: "absolute", bottom: -12, right: -16, background: "rgba(251,247,242,0.95)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 12, padding: "10px 14px", boxShadow: "0 8px 24px rgba(0,0,0,0.1)" }}>
                   <p style={{ fontSize: 10, color: "#9ca3af", marginBottom: 2 }}>Deal closed</p>
                   <p style={{ fontSize: 13, fontWeight: 700, color: "#10B981" }}>Innocent Drinks · £2,400</p>
                 </div>
@@ -449,7 +449,7 @@ export default function LandingPage() {
         </section>
 
         {/* ── LOGOS ── */}
-        <div ref={logos.ref} style={{ borderTop: "1px solid #f3f4f6", borderBottom: "1px solid #f3f4f6", padding: "28px", background: "#fafafa" }}>
+        <div ref={logos.ref} style={{ borderTop: "1px solid rgba(0,0,0,0.07)", borderBottom: "1px solid rgba(0,0,0,0.07)", padding: "28px", background: "rgba(255,255,255,0.15)" }}>
           <div className="cl-inner">
             <div className={`cl-fade${logos.vis ? " vis" : ""}`} style={{ display: "flex", alignItems: "center", gap: 40, flexWrap: "wrap", justifyContent: "center" }}>
               <p style={{ fontSize: 12, color: "#c4c9d1", fontWeight: 600, letterSpacing: "0.07em", textTransform: "uppercase", flexShrink: 0 }}>Creators working with</p>
@@ -466,7 +466,7 @@ export default function LandingPage() {
             const fr = fRefs[i];
             const reverse = i % 2 !== 0;
             return (
-              <section key={f.tag} className="cl-section" style={{ background: i % 2 === 0 ? "#fff" : "#fafafa", padding: "100px 28px" }}>
+              <section key={f.tag} className="cl-section" style={{ background: i % 2 === 0 ? "rgba(255,255,255,0.18)" : "rgba(255,255,255,0.08)", padding: "100px 28px" }}>
                 <div className="cl-inner">
                   <div
                     ref={fr.ref}
@@ -499,7 +499,7 @@ export default function LandingPage() {
         </div>
 
         {/* ── MOBILE FEATURES (mobile only) ── */}
-        <div className="cl-mobile-only" style={{ background: "#fff", padding: "56px 24px" }}>
+        <div className="cl-mobile-only" style={{ background: "rgba(255,255,255,0.18)", padding: "56px 24px" }}>
           <p style={{ textAlign: "center", fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#E8622A", marginBottom: 10 }}>Everything you need</p>
           <h2 className="cl-h" style={{ textAlign: "center", fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em", color: "#0D1B2A", marginBottom: 32, lineHeight: 1.2 }}>
             One platform.<br />Every tool.
@@ -539,7 +539,7 @@ export default function LandingPage() {
                   const pct = cap > 0 ? Math.round((filled / cap) * 100) : 0;
                   const left = cap - filled;
                   return (
-                    <div key={category} style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 16, padding: "24px 28px", boxShadow: "0 1px 4px rgba(0,0,0,0.05)" }}>
+                    <div key={category} style={{ background: "rgba(251,247,242,0.85)", border: "1px solid rgba(0,0,0,0.08)", borderRadius: 16, padding: "24px 28px", boxShadow: "0 1px 4px rgba(0,0,0,0.05)" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
                         <span style={{ fontSize: 22 }}>{emoji}</span>
                         <span style={{ fontWeight: 700, fontSize: 16, color: "#0D1B2A" }}>{label} creators</span>
@@ -625,7 +625,7 @@ export default function LandingPage() {
         </section>
 
         {/* ── FOOTER ── */}
-        <footer style={{ borderTop: "1px solid #f3f4f6", padding: "32px 28px", background: "#fff" }}>
+        <footer style={{ borderTop: "1px solid rgba(0,0,0,0.07)", padding: "32px 28px", background: "rgba(255,255,255,0.15)" }}>
           <div className="cl-inner" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
             <span className="cl-h" style={{ fontSize: 15, fontWeight: 800, color: "#9ca3af", letterSpacing: "-0.03em" }}>Collabi © 2025</span>
             <div style={{ display: "flex", gap: 24 }}>
