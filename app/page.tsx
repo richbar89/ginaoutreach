@@ -1,10 +1,8 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 
-/* ── Types ────────────────────────────────────────────── */
 type Brand = { name: string; category: string; country: string };
 
-/* ── Avatar colour palette ────────────────────────────── */
 const PALETTE = [
   { bg: "#FFE4DC", fg: "#C4603A" },
   { bg: "#E8E4FF", fg: "#6B50C4" },
@@ -22,7 +20,6 @@ function avatarColor(name: string) {
   return PALETTE[h % PALETTE.length];
 }
 
-/* ── Fallback brands shown before API responds ────────── */
 const FALLBACKS: Brand[] = [
   { name: "Kinder & Co.", category: "Beauty", country: "Manchester" },
   { name: "Pebble", category: "Wellness", country: "Bristol" },
@@ -48,15 +45,36 @@ const FALLBACKS: Brand[] = [
   { name: "Ember", category: "Beauty", country: "Paris" },
   { name: "Coba", category: "Lifestyle", country: "Barcelona" },
   { name: "Willow", category: "Wellness", country: "Amsterdam" },
+  { name: "Fern", category: "Food", country: "Copenhagen" },
+  { name: "Quartz", category: "Tech", country: "Zurich" },
+  { name: "Harbour", category: "Lifestyle", country: "Auckland" },
+  { name: "Bloom", category: "Beauty", country: "Seoul" },
+  { name: "Cedar", category: "Wellness", country: "Vancouver" },
+  { name: "Atlas", category: "Travel", country: "NYC" },
+  { name: "Vela", category: "Fashion", country: "Milan" },
+  { name: "Tide", category: "Lifestyle", country: "Cape Town" },
+  { name: "Penny Lane", category: "Fashion", country: "Liverpool" },
+  { name: "Sundry", category: "Lifestyle", country: "LA" },
+  { name: "Oaken", category: "Food", country: "Dublin" },
+  { name: "Flint", category: "Tech", country: "Chicago" },
 ];
 
-/* ── Features ─────────────────────────────────────────── */
+const NUM_ROWS = 16;
+const DURATIONS = [50, 66, 44, 73, 55, 69, 47, 76, 52, 62, 46, 71, 57, 65, 49, 74];
+
+function getRowBrands(all: Brand[], row: number): Brand[] {
+  if (all.length === 0) return [];
+  const offset = Math.floor((row * all.length) / NUM_ROWS) % all.length;
+  const rotated = [...all.slice(offset), ...all.slice(0, offset)];
+  return rotated.slice(0, 25);
+}
+
 const FEATURES = [
   {
     emoji: "📋",
     tag: "Brand Contacts",
     title: "10,000+ verified contacts",
-    body: "Every contact is a real, verified marketing decision-maker at a brand you'd love to work with. Food, drink, lifestyle, wellness, beauty — filtered by category, contactable in one click.",
+    body: "Every contact is a real, verified marketing decision-maker at a brand you'd love to work with. Filtered by category, contactable in one click.",
     bullets: ["Brand managers & marketing leads", "Filtered by category & industry", "Request any missing contact"],
   },
   {
@@ -70,7 +88,7 @@ const FEATURES = [
     emoji: "✉️",
     tag: "Email Outreach",
     title: "Personal at scale. Powerful by default.",
-    body: "Send campaigns from your own Gmail or Outlook — not a bulk sender with a strange domain. Use merge tags to personalise every line. Every reply tracked.",
+    body: "Send campaigns from your own Gmail or Outlook. Use merge tags to personalise every line. Every reply tracked.",
     bullets: ["Sends from your own inbox", "Mass campaigns with personalisation", "Auto follow-up reminders"],
   },
   {
@@ -82,48 +100,39 @@ const FEATURES = [
   },
 ];
 
-/* ── BrandCard ────────────────────────────────────────── */
 function BrandCard({ brand }: { brand: Brand }) {
   const col = avatarColor(brand.name);
   const letter = brand.name[0]?.toUpperCase() ?? "?";
   const sub = [brand.category, brand.country].filter(Boolean).join(" · ");
   return (
     <div style={{
-      display: "inline-flex",
-      alignItems: "center",
-      gap: 10,
-      background: "rgba(255,255,255,0.72)",
-      border: "1px solid rgba(200,185,170,0.28)",
-      borderRadius: 14,
-      padding: "9px 14px",
-      flexShrink: 0,
+      display: "inline-flex", alignItems: "center", gap: 9,
+      background: "rgba(255,255,255,0.68)", border: "1px solid rgba(200,185,170,0.26)",
+      borderRadius: 12, padding: "7px 12px", flexShrink: 0,
     }}>
       <div style={{
-        width: 36, height: 36, borderRadius: 10,
+        width: 32, height: 32, borderRadius: 8,
         background: col.bg, color: col.fg,
         display: "flex", alignItems: "center", justifyContent: "center",
-        fontSize: 15, fontWeight: 700, flexShrink: 0,
+        fontSize: 13, fontWeight: 700, flexShrink: 0,
         fontFamily: "'Inter', sans-serif",
       }}>{letter}</div>
       <div>
-        <div style={{ fontSize: 13, fontWeight: 600, color: "#1A1110", lineHeight: 1.3, whiteSpace: "nowrap" }}>{brand.name}</div>
-        {sub && <div style={{ fontSize: 11, color: "#9E9790", lineHeight: 1.4, whiteSpace: "nowrap" }}>{sub}</div>}
+        <div style={{ fontSize: 12, fontWeight: 600, color: "#1A1110", lineHeight: 1.3, whiteSpace: "nowrap" }}>{brand.name}</div>
+        {sub && <div style={{ fontSize: 10.5, color: "#9E9790", lineHeight: 1.3, whiteSpace: "nowrap" }}>{sub}</div>}
       </div>
     </div>
   );
 }
 
-/* ── ScrollRow ────────────────────────────────────────── */
 function ScrollRow({ brands, direction, duration }: { brands: Brand[]; direction: "left" | "right"; duration: number }) {
   const items = [...brands, ...brands];
   return (
     <div style={{ overflow: "hidden", width: "100%", flexShrink: 0 }}>
       <div style={{
-        display: "flex",
-        gap: 12,
-        width: "max-content",
+        display: "flex", gap: 10, width: "max-content",
         willChange: "transform",
-        animation: `${direction === "left" ? "lp-scroll-left" : "lp-scroll-right"} ${duration}s linear infinite`,
+        animation: `${direction === "left" ? "lp-sl" : "lp-sr"} ${duration}s linear infinite`,
       }}>
         {items.map((b, i) => <BrandCard key={i} brand={b} />)}
       </div>
@@ -131,14 +140,12 @@ function ScrollRow({ brands, direction, duration }: { brands: Brand[]; direction
   );
 }
 
-/* ── Page ─────────────────────────────────────────────── */
 export default function WaitlistPage() {
-  const [step, setStep] = useState<"email" | "details">("email");
   const [form, setForm] = useState({ email: "", first_name: "", last_name: "", niche: "" });
   const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
   const [brands, setBrands] = useState<Brand[]>(FALLBACKS);
   const glowRef = useRef<HTMLDivElement>(null);
-  const emailRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetch("/api/brands-public")
@@ -162,11 +169,6 @@ export default function WaitlistPage() {
       setForm(f => ({ ...f, [field]: e.target.value }));
   }
 
-  function handleEmailNext(e: React.FormEvent) {
-    e.preventDefault();
-    if (form.email) setStep("details");
-  }
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setStatus("loading");
@@ -183,86 +185,49 @@ export default function WaitlistPage() {
     }
   }
 
-  const rows = [0, 1, 2, 3].map(r => {
-    const row = brands.filter((_, i) => i % 4 === r);
-    return row.length >= 6 ? row : FALLBACKS.filter((_, i) => i % 4 === r);
-  });
-  const durations = [52, 68, 44, 72];
-
   return (
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,600&family=Inter:wght@400;500;600;700&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html, body { background: #F5F0EA; }
-
-        .lp { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; background: #F5F0EA; min-height: 100vh; }
-
-        /* Nav */
-        .lp-nav {
-          position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-          display: flex; align-items: center; justify-content: space-between;
-          padding: 18px 36px;
-          background: rgba(245,240,234,0.88);
-          backdrop-filter: blur(14px);
-          -webkit-backdrop-filter: blur(14px);
-        }
-        .lp-logo {
-          font-family: system-ui, -apple-system, sans-serif;
-          font-size: 22px; font-weight: 600; letter-spacing: -0.04em;
-          background: linear-gradient(to right, #FFD4A3, #FF9D6F);
-          -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-          background-clip: text; text-decoration: none;
-        }
-        .lp-nav-link {
-          font-size: 14px; font-weight: 500; color: #6B6560;
-          text-decoration: none; transition: color 0.15s;
-        }
-        .lp-nav-link:hover { color: #1A1110; }
-        .lp-nav-btn {
-          background: #1A1110; color: #fff; border: none; border-radius: 100px;
-          padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer;
-          font-family: 'Inter', sans-serif; transition: background 0.15s;
-        }
-        .lp-nav-btn:hover { background: #333; }
+        .lp { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; background: #F5F0EA; }
 
         /* Hero */
         .lp-hero {
-          position: relative; height: 100vh; min-height: 620px;
-          overflow: hidden; display: flex; flex-direction: column;
-          align-items: center; justify-content: center;
+          position: relative; min-height: 100vh;
+          display: flex; align-items: center; justify-content: center;
+          overflow: hidden;
         }
+
+        /* Background rows — tightly packed, fills viewport */
         .lp-bg-rows {
-          position: absolute; inset: 0;
-          display: flex; flex-direction: column; justify-content: space-around;
-          padding: 12px 0; pointer-events: none; user-select: none;
+          position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+          display: flex; flex-direction: column; justify-content: center;
+          gap: 8px; padding: 8px 0;
+          pointer-events: none; user-select: none; overflow: hidden;
         }
-        @keyframes lp-scroll-left {
-          from { transform: translateX(0); }
-          to   { transform: translateX(-50%); }
-        }
-        @keyframes lp-scroll-right {
-          from { transform: translateX(-50%); }
-          to   { transform: translateX(0); }
-        }
+
+        @keyframes lp-sl { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        @keyframes lp-sr { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+
+        /* Strong centre vignette for readability */
         .lp-vignette {
           position: absolute; inset: 0; pointer-events: none; z-index: 2;
-          background: radial-gradient(ellipse 56% 68% at 50% 47%,
-            rgba(245,240,234,0.92) 0%,
-            rgba(245,240,234,0.68) 38%,
-            rgba(245,240,234,0.22) 68%,
-            transparent 100%
+          background: radial-gradient(ellipse 52% 62% at 50% 50%,
+            rgba(245,240,234,0.97) 0%,
+            rgba(245,240,234,0.82) 32%,
+            rgba(245,240,234,0.38) 58%,
+            transparent 80%
           );
         }
 
-        /* Cursor glow */
+        /* Orange cursor glow */
         .lp-glow {
-          position: fixed; width: 300px; height: 300px; border-radius: 50%;
-          background: radial-gradient(circle, rgba(200,96,58,0.32) 0%, rgba(200,96,58,0.12) 42%, transparent 70%);
-          filter: blur(32px);
-          transform: translate(-50%, -50%);
-          pointer-events: none; z-index: 5;
-          will-change: left, top;
+          position: fixed; width: 320px; height: 320px; border-radius: 50%;
+          background: radial-gradient(circle, rgba(200,96,58,0.28) 0%, rgba(200,96,58,0.1) 45%, transparent 70%);
+          filter: blur(36px); transform: translate(-50%, -50%);
+          pointer-events: none; z-index: 5; will-change: left, top;
           left: 50%; top: 50%;
         }
 
@@ -270,83 +235,84 @@ export default function WaitlistPage() {
         .lp-center {
           position: relative; z-index: 10;
           display: flex; flex-direction: column; align-items: center; text-align: center;
-          padding: 80px 24px 128px; max-width: 720px; width: 100%;
+          padding: 56px 24px 64px; max-width: 680px; width: 100%;
         }
+
+        /* Logo — big, centred */
+        .lp-logo {
+          font-family: system-ui, -apple-system, sans-serif;
+          font-size: clamp(52px, 8vw, 80px);
+          font-weight: 600; letter-spacing: -0.04em; line-height: 1;
+          background: linear-gradient(to right, #FFD4A3, #FF9D6F);
+          -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+          background-clip: text; margin-bottom: 20px;
+        }
+
+        /* Badge */
         .lp-badge {
           display: inline-flex; align-items: center; gap: 7px;
           background: rgba(255,255,255,0.82); border: 1px solid rgba(200,185,170,0.38);
           border-radius: 100px; padding: 6px 14px;
           font-size: 12px; font-weight: 500; color: #6B6560;
-          margin-bottom: 32px; letter-spacing: 0.01em;
+          margin-bottom: 22px; letter-spacing: 0.01em;
         }
-        .lp-dot-orange { width: 7px; height: 7px; border-radius: 50%; background: #C4603A; flex-shrink: 0; }
-        .lp-headline {
+        .lp-dot-o { width: 7px; height: 7px; border-radius: 50%; background: #C4603A; flex-shrink: 0; }
+
+        /* Headline */
+        .lp-hl {
           font-family: 'Playfair Display', serif;
-          font-size: clamp(52px, 7.5vw, 96px);
-          font-weight: 900; color: #1A1110;
-          line-height: 1.04; letter-spacing: -0.02em; margin-bottom: 24px;
+          font-size: clamp(36px, 5.5vw, 64px);
+          font-weight: 900; color: #1A1110; line-height: 1.08;
+          letter-spacing: -0.02em; margin-bottom: 18px;
         }
-        .lp-headline em { font-style: italic; font-weight: 400; color: #C4603A; }
+        .lp-hl em { font-style: italic; font-weight: 400; color: #C4603A; }
+
+        /* Sub-heading */
         .lp-sub {
-          font-size: 16px; color: #6B6560; line-height: 1.7;
-          max-width: 520px; margin-bottom: 36px;
+          font-size: 15px; color: #6B6560; line-height: 1.7;
+          max-width: 480px; margin-bottom: 32px;
         }
 
-        /* Form pill */
-        .lp-form {
-          display: flex; background: #fff;
-          border: 1.5px solid rgba(200,185,170,0.48);
-          border-radius: 100px; padding: 6px 6px 6px 22px;
-          box-shadow: 0 4px 24px rgba(0,0,0,0.07);
-          gap: 8px; width: 100%; max-width: 440px; margin-bottom: 14px;
+        /* Form card */
+        .lp-card {
+          width: 100%; max-width: 400px;
+          background: rgba(255,255,255,0.92);
+          border: 1.5px solid rgba(200,185,170,0.42);
+          border-radius: 20px; padding: 22px;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+          display: flex; flex-direction: column; gap: 10px;
+          margin-bottom: 16px;
         }
-        .lp-email {
-          flex: 1; border: none; outline: none; background: transparent;
-          font-size: 15px; color: #1A1110; font-family: 'Inter', sans-serif; min-width: 0;
+        .lp-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .lp-field {
+          width: 100%; padding: 11px 14px;
+          border: 1.5px solid #E8E2DA; border-radius: 11px;
+          font-size: 14px; font-family: 'Inter', sans-serif; color: #1A1110;
+          background: #FAFAF9; outline: none;
+          transition: border-color 0.15s, box-shadow 0.15s;
         }
-        .lp-email::placeholder { color: #B5AFA8; }
-        .lp-submit {
-          background: #1A1110; color: #fff; border: none; border-radius: 100px;
-          padding: 12px 22px; font-size: 14px; font-weight: 600;
-          font-family: 'Inter', sans-serif; cursor: pointer; white-space: nowrap;
-          transition: background 0.14s, transform 0.12s; flex-shrink: 0;
+        .lp-field::placeholder { color: #B5AFA8; }
+        .lp-field:focus { border-color: #C4603A; box-shadow: 0 0 0 3px rgba(196,96,58,0.09); background: #fff; }
+        .lp-sel {
+          appearance: none; cursor: pointer;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23B5AFA8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+          background-repeat: no-repeat; background-position: right 14px center;
         }
-        .lp-submit:hover:not(:disabled) { background: #333; transform: scale(1.02); }
-        .lp-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+        .lp-btn {
+          width: 100%; padding: 13px;
+          background: #1A1110; color: #fff; border: none; border-radius: 11px;
+          font-size: 14px; font-weight: 600; font-family: 'Inter', sans-serif;
+          cursor: pointer; transition: background 0.14s, transform 0.12s;
+        }
+        .lp-btn:hover:not(:disabled) { background: #333; transform: translateY(-1px); }
+        .lp-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        /* Social proof */
         .lp-proof {
           display: flex; align-items: center; gap: 7px;
           font-size: 12.5px; color: #7A736B;
         }
-        .lp-dot-green { width: 7px; height: 7px; border-radius: 50%; background: #4BBFB0; flex-shrink: 0; }
-
-        /* Stats bar */
-        .lp-stats {
-          position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
-          z-index: 10; display: flex; align-items: center;
-          background: rgba(255,255,255,0.85); border: 1px solid rgba(200,185,170,0.28);
-          border-radius: 100px; padding: 14px 28px;
-          backdrop-filter: blur(10px); box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-          white-space: nowrap;
-        }
-        .lp-stat { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-        .lp-stat-label { font-size: 10px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: #9E9790; }
-        .lp-stat-value { font-size: 14px; font-weight: 700; color: #1A1110; }
-        .lp-stat-div { width: 1px; height: 32px; background: rgba(200,185,170,0.38); margin: 0 24px; }
-
-        /* Step 2 fields */
-        .lp-field {
-          width: 100%; padding: 12px 14px;
-          border: 1.5px solid #E8E2DA; border-radius: 12px;
-          font-size: 14px; font-family: 'Inter', sans-serif; color: #1A1110;
-          background: #FAFAF9; outline: none;
-          transition: border-color 0.18s, box-shadow 0.18s;
-        }
-        .lp-field::placeholder { color: #B5AFA8; }
-        .lp-field:focus { border-color: #C4603A; box-shadow: 0 0 0 3px rgba(196,96,58,0.1); background: #fff; }
-        .lp-select { appearance: none; cursor: pointer;
-          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23B5AFA8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-          background-repeat: no-repeat; background-position: right 14px center;
-        }
+        .lp-dot-g { width: 7px; height: 7px; border-radius: 50%; background: #4BBFB0; flex-shrink: 0; }
 
         /* Features */
         .lp-features { background: #EDE8E0; padding: 96px 24px; }
@@ -362,16 +328,22 @@ export default function WaitlistPage() {
         /* Footer */
         .lp-footer {
           background: #E5DED4; padding: 22px 36px;
-          display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+          display: flex; align-items: center; justify-content: space-between;
+          flex-wrap: wrap; gap: 12px;
+        }
+        .lp-footer-logo {
+          font-family: system-ui, -apple-system, sans-serif;
+          font-size: 17px; font-weight: 600; letter-spacing: -0.04em;
+          background: linear-gradient(to right, #FFD4A3, #FF9D6F);
+          -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+          background-clip: text;
         }
 
-        @media (max-width: 640px) {
-          .lp-nav { padding: 16px 20px; }
-          .lp-headline { font-size: clamp(42px, 11vw, 64px); }
+        @media (max-width: 600px) {
+          .lp-hl { font-size: clamp(32px, 9vw, 48px); }
+          .lp-logo { font-size: clamp(44px, 12vw, 64px); }
+          .lp-row2 { grid-template-columns: 1fr; }
           .lp-feat-grid { grid-template-columns: 1fr; }
-          .lp-stats { padding: 12px 18px; }
-          .lp-stat-div { margin: 0 14px; }
-          .lp-center { padding-bottom: 148px; }
           .lp-footer { padding: 18px 20px; }
         }
       `}</style>
@@ -380,89 +352,68 @@ export default function WaitlistPage() {
         {/* Cursor glow */}
         <div className="lp-glow" ref={glowRef} />
 
-        {/* ── NAV ── */}
-        <nav className="lp-nav">
-          <span className="lp-logo">collabi</span>
-          <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
-            <a href="#features" className="lp-nav-link">Features</a>
-            <button className="lp-nav-btn" onClick={() => { window.scrollTo({ top: 0, behavior: "smooth" }); emailRef.current?.focus(); }}>
-              Join waitlist
-            </button>
-          </div>
-        </nav>
-
         {/* ── HERO ── */}
         <div className="lp-hero">
 
-          {/* Scrolling brand rows */}
+          {/* Scrolling brand rows — tightly packed */}
           <div className="lp-bg-rows">
-            {rows.map((row, i) => (
-              <ScrollRow key={i} brands={row} direction={i % 2 === 0 ? "left" : "right"} duration={durations[i]} />
+            {Array.from({ length: NUM_ROWS }, (_, i) => (
+              <ScrollRow
+                key={i}
+                brands={getRowBrands(brands, i)}
+                direction={i % 2 === 0 ? "left" : "right"}
+                duration={DURATIONS[i]}
+              />
             ))}
           </div>
 
-          {/* Centre vignette */}
+          {/* Vignette */}
           <div className="lp-vignette" />
 
           {/* Centre content */}
           <div className="lp-center">
+
+            {/* Logo */}
+            <div className="lp-logo">collabi</div>
+
+            {/* Badge */}
             <div className="lp-badge">
-              <span className="lp-dot-orange" />
+              <span className="lp-dot-o" />
               Invite-only beta · Spring 2026
             </div>
 
-            <h1 className="lp-headline">
+            {/* Headline */}
+            <h1 className="lp-hl">
               Find the <em>humans</em><br />
               behind your<br />
               favourite brands.
             </h1>
 
+            {/* Sub-heading */}
             <p className="lp-sub">
-              Collabi is outreach for creators. Search thousands of brands,
+              Collabi is an outreach tool for creators. Search thousands of brands,
               see who&apos;s actively spending on marketing, and reach the right
               person in their inbox — all from one place.
             </p>
 
+            {/* Form */}
             {status === "done" ? (
-              <div style={{ textAlign: "center" }}>
-                <div style={{ width: 56, height: 56, borderRadius: "50%", background: "rgba(75,191,176,0.12)", border: "2px solid rgba(75,191,176,0.3)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4BBFB0" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <div style={{ textAlign: "center", marginBottom: 16 }}>
+                <div style={{ width: 52, height: 52, borderRadius: "50%", background: "rgba(75,191,176,0.12)", border: "2px solid rgba(75,191,176,0.3)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px" }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4BBFB0" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                 </div>
-                <p style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, fontWeight: 700, color: "#1A1110", marginBottom: 8 }}>You&apos;re on the list!</p>
+                <p style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 700, color: "#1A1110", marginBottom: 8 }}>You&apos;re on the list!</p>
                 <p style={{ fontSize: 14, color: "#7A736B" }}>We&apos;ll be in touch when Collabi launches.</p>
               </div>
-            ) : step === "email" ? (
-              <>
-                <form onSubmit={handleEmailNext} className="lp-form">
-                  <input
-                    ref={emailRef}
-                    className="lp-email"
-                    type="email"
-                    placeholder="your@email.com"
-                    value={form.email}
-                    onChange={set("email")}
-                    required
-                  />
-                  <button className="lp-submit" type="submit">
-                    Join waitlist →
-                  </button>
-                </form>
-                <div className="lp-proof">
-                  <span className="lp-dot-green" />
-                  Joining <strong style={{ color: "#1A1110", marginLeft: 3 }}>1,284</strong>&nbsp;creators already on the list
-                </div>
-              </>
             ) : (
-              <div style={{ width: "100%", maxWidth: 440, background: "rgba(255,255,255,0.9)", border: "1.5px solid rgba(200,185,170,0.45)", borderRadius: 20, padding: "24px 24px 20px", boxShadow: "0 4px 24px rgba(0,0,0,0.07)" }}>
-                <p style={{ fontSize: 13, color: "#9E9790", marginBottom: 16, fontWeight: 500 }}>
-                  Almost there — just a couple more details.
-                </p>
-                <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+              <div className="lp-card" ref={formRef}>
+                <form onSubmit={handleSubmit} style={{ display: "contents" }}>
+                  <div className="lp-row2">
                     <input className="lp-field" type="text" placeholder="First name" value={form.first_name} onChange={set("first_name")} required disabled={status === "loading"} />
                     <input className="lp-field" type="text" placeholder="Last name" value={form.last_name} onChange={set("last_name")} required disabled={status === "loading"} />
                   </div>
-                  <select className="lp-field lp-select" value={form.niche} onChange={set("niche")} required disabled={status === "loading"}>
+                  <input className="lp-field" type="email" placeholder="your@email.com" value={form.email} onChange={set("email")} required disabled={status === "loading"} />
+                  <select className="lp-field lp-sel" value={form.niche} onChange={set("niche")} required disabled={status === "loading"}>
                     <option value="" disabled>What do you create?</option>
                     <option value="food">Food & Drink</option>
                     <option value="lifestyle">Lifestyle</option>
@@ -475,31 +426,19 @@ export default function WaitlistPage() {
                     <option value="finance">Finance & Business</option>
                     <option value="other">Other</option>
                   </select>
-                  <button className="lp-submit" type="submit" disabled={status === "loading"} style={{ width: "100%", borderRadius: 12, padding: "13px" }}>
-                    {status === "loading" ? "Joining…" : "Complete signup →"}
+                  <button className="lp-btn" type="submit" disabled={status === "loading"}>
+                    {status === "loading" ? "Joining…" : "Join the waitlist →"}
                   </button>
                   {status === "error" && <p style={{ fontSize: 12, color: "#e05252", textAlign: "center" }}>Something went wrong — please try again.</p>}
                   <p style={{ fontSize: 11, color: "#B5AFA8", textAlign: "center" }}>No spam, ever. Unsubscribe anytime.</p>
                 </form>
               </div>
             )}
-          </div>
 
-          {/* Stats bar */}
-          <div className="lp-stats">
-            <div className="lp-stat">
-              <span className="lp-stat-label">Brands</span>
-              <span className="lp-stat-value">18,400+</span>
-            </div>
-            <div className="lp-stat-div" />
-            <div className="lp-stat">
-              <span className="lp-stat-label">Verified Contacts</span>
-              <span className="lp-stat-value">62K</span>
-            </div>
-            <div className="lp-stat-div" />
-            <div className="lp-stat">
-              <span className="lp-stat-label">Meta Ads</span>
-              <span className="lp-stat-value">LIVE</span>
+            {/* Social proof */}
+            <div className="lp-proof">
+              <span className="lp-dot-g" />
+              Joining <strong style={{ color: "#1A1110", marginLeft: 3 }}>1,284</strong>&nbsp;creators already on the list
             </div>
           </div>
         </div>
@@ -512,7 +451,6 @@ export default function WaitlistPage() {
               One platform. Every tool.
             </h2>
           </div>
-
           <div className="lp-feat-grid">
             {FEATURES.map(f => (
               <div key={f.tag} className="lp-feat-card">
@@ -520,9 +458,7 @@ export default function WaitlistPage() {
                   <span style={{ fontSize: 13 }}>{f.emoji}</span>
                   <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: "#C4603A" }}>{f.tag}</span>
                 </div>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 21, fontWeight: 700, color: "#1A1110", letterSpacing: "-0.02em", lineHeight: 1.2, marginBottom: 12 }}>
-                  {f.title}
-                </h3>
+                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 21, fontWeight: 700, color: "#1A1110", letterSpacing: "-0.02em", lineHeight: 1.2, marginBottom: 12 }}>{f.title}</h3>
                 <p style={{ fontSize: 14, color: "#7A736B", lineHeight: 1.7, marginBottom: 20 }}>{f.body}</p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   {f.bullets.map(b => (
@@ -537,12 +473,11 @@ export default function WaitlistPage() {
               </div>
             ))}
           </div>
-
           <div style={{ textAlign: "center", marginTop: 60 }}>
             <p style={{ fontSize: 15, color: "#7A736B", marginBottom: 20 }}>Ready to land more brand deals?</p>
             <a
               href="#"
-              onClick={e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); setTimeout(() => emailRef.current?.focus(), 600); }}
+              onClick={e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); setTimeout(() => formRef.current?.querySelector("input")?.focus(), 600); }}
               style={{ display: "inline-block", background: "#1A1110", color: "#fff", fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 15, padding: "14px 32px", borderRadius: 100, textDecoration: "none" }}
             >
               Join the waitlist →
@@ -552,7 +487,7 @@ export default function WaitlistPage() {
 
         {/* ── FOOTER ── */}
         <div className="lp-footer">
-          <span className="lp-logo" style={{ fontSize: 17 }}>collabi</span>
+          <span className="lp-footer-logo">collabi</span>
           <span style={{ fontSize: 12, color: "#9E9790" }}>© Collabi 2025</span>
           <div style={{ display: "flex", gap: 20 }}>
             {[["Privacy", "/privacy"], ["Terms", "/terms"]].map(([l, h]) => (
