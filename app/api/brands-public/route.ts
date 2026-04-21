@@ -24,7 +24,8 @@ export async function GET() {
     .limit(500);
 
   if (error) {
-    return NextResponse.json({ brands: [] });
+    console.error("[brands-public] Supabase error:", error.message, error.details, error.hint);
+    return NextResponse.json({ brands: [], error: error.message });
   }
 
   const DOMAIN_RE = /^[a-z0-9][a-z0-9-]*\.[a-z]{2,}(\.[a-z]{2,})?$/i;

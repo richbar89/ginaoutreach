@@ -3,6 +3,32 @@ import { useState, useEffect, useRef } from "react";
 
 type Brand = { name: string; category: string; country: string; domain?: string };
 
+// Module-level cache so duplicate card instances share one fetch per brand name
+const _domainCache = new Map<string, string>();
+const _domainPending = new Map<string, Promise<string>>();
+
+function resolveDomainByName(name: string): Promise<string> {
+  if (_domainCache.has(name)) return Promise.resolve(_domainCache.get(name)!);
+  if (_domainPending.has(name)) return _domainPending.get(name)!;
+  const p = fetch(
+    `https://autocomplete.clearbit.com/v1/companies/suggest?query=${encodeURIComponent(name)}`
+  )
+    .then(r => r.json())
+    .then((results: Array<{ domain: string }>) => {
+      const d = results[0]?.domain ?? "";
+      _domainCache.set(name, d);
+      _domainPending.delete(name);
+      return d;
+    })
+    .catch(() => {
+      _domainCache.set(name, "");
+      _domainPending.delete(name);
+      return "";
+    });
+  _domainPending.set(name, p);
+  return p;
+}
+
 const PALETTE = [
   { bg: "#FFE4DC", fg: "#C4603A" },
   { bg: "#E8E4FF", fg: "#6B50C4" },
@@ -59,14 +85,16 @@ const FALLBACKS: Brand[] = [
   { name: "Form Nutrition", category: "Fitness", country: "UK", domain: "formnutrition.com" },
 ];
 
-const NUM_ROWS = 16;
-const DURATIONS = [90, 118, 80, 130, 100, 122, 86, 135, 95, 112, 84, 128, 104, 116, 88, 132];
+const NUM_ROWS = 10;
+const DURATIONS = [180, 220, 195, 240, 205, 185, 230, 210, 200, 215];
+// Vertical stagger per row (px) — gives an organic, non-grid feel
+const ROW_OFFSETS = [0, -18, 12, -24, 16, -10, 22, -14, 8, -20];
 
 function getRowBrands(all: Brand[], row: number): Brand[] {
   if (all.length === 0) return [];
   const offset = Math.floor((row * all.length) / NUM_ROWS) % all.length;
   const rotated = [...all.slice(offset), ...all.slice(0, offset)];
-  return rotated.slice(0, 25);
+  return rotated.slice(0, 14);
 }
 
 const FEATURES = [
@@ -105,46 +133,53 @@ function BrandCard({ brand }: { brand: Brand }) {
   const letter = brand.name[0]?.toUpperCase() ?? "?";
   const sub = [brand.category, brand.country].filter(Boolean).join(" · ");
   const [logoFailed, setLogoFailed] = useState(false);
-  const showLogo = !!brand.domain && !logoFailed;
+  const [domain, setDomain] = useState(brand.domain ?? "");
+
+  useEffect(() => {
+    if (domain || logoFailed) return;
+    resolveDomainByName(brand.name).then(d => { if (d) setDomain(d); });
+  }, [brand.name, domain, logoFailed]);
+
+  const showLogo = !!domain && !logoFailed;
 
   return (
     <div style={{
-      display: "inline-flex", alignItems: "center", gap: 9,
+      display: "inline-flex", alignItems: "center", gap: 11,
       background: "rgba(255,255,255,0.68)", border: "1px solid rgba(200,185,170,0.26)",
-      borderRadius: 12, padding: "7px 12px", flexShrink: 0,
+      borderRadius: 14, padding: "9px 16px", flexShrink: 0,
     }}>
       <div style={{
-        width: 32, height: 32, borderRadius: 8, flexShrink: 0, overflow: "hidden",
+        width: 38, height: 38, borderRadius: 10, flexShrink: 0, overflow: "hidden",
         background: showLogo ? "#fff" : col.bg,
         display: "flex", alignItems: "center", justifyContent: "center",
         border: showLogo ? "1px solid rgba(0,0,0,0.06)" : "none",
       }}>
         {showLogo ? (
           <img
-            src={`https://logo.clearbit.com/${brand.domain}`}
+            src={`https://logo.clearbit.com/${domain}`}
             alt={brand.name}
-            width={28} height={28}
-            style={{ objectFit: "contain", width: 28, height: 28 }}
+            width={32} height={32}
+            style={{ objectFit: "contain", width: 32, height: 32 }}
             onError={() => setLogoFailed(true)}
           />
         ) : (
-          <span style={{ fontSize: 13, fontWeight: 700, color: col.fg, fontFamily: "'Inter', sans-serif" }}>{letter}</span>
+          <span style={{ fontSize: 15, fontWeight: 700, color: col.fg, fontFamily: "'Inter', sans-serif" }}>{letter}</span>
         )}
       </div>
       <div>
-        <div style={{ fontSize: 12, fontWeight: 600, color: "#1A1110", lineHeight: 1.3, whiteSpace: "nowrap" }}>{brand.name}</div>
-        {sub && <div style={{ fontSize: 10.5, color: "#9E9790", lineHeight: 1.3, whiteSpace: "nowrap" }}>{sub}</div>}
+        <div style={{ fontSize: 13, fontWeight: 600, color: "#1A1110", lineHeight: 1.3, whiteSpace: "nowrap" }}>{brand.name}</div>
+        {sub && <div style={{ fontSize: 11, color: "#9E9790", lineHeight: 1.3, whiteSpace: "nowrap" }}>{sub}</div>}
       </div>
     </div>
   );
 }
 
-function ScrollRow({ brands, direction, duration }: { brands: Brand[]; direction: "left" | "right"; duration: number }) {
+function ScrollRow({ brands, direction, duration, offset = 0 }: { brands: Brand[]; direction: "left" | "right"; duration: number; offset?: number }) {
   const items = [...brands, ...brands];
   return (
-    <div style={{ overflow: "hidden", width: "100%", flexShrink: 0 }}>
+    <div style={{ overflow: "hidden", width: "100%", flexShrink: 0, transform: `translateY(${offset}px)` }}>
       <div style={{
-        display: "flex", gap: 10, width: "max-content",
+        display: "flex", gap: 16, width: "max-content",
         willChange: "transform",
         animation: `${direction === "left" ? "lp-sl" : "lp-sr"} ${duration}s linear infinite`,
       }}>
@@ -214,11 +249,11 @@ export default function WaitlistPage() {
           overflow: hidden;
         }
 
-        /* Background rows — tightly packed, fills viewport */
+        /* Background rows */
         .lp-bg-rows {
           position: absolute; top: 0; left: 0; right: 0; bottom: 0;
           display: flex; flex-direction: column; justify-content: center;
-          gap: 8px; padding: 8px 0;
+          gap: 22px; padding: 24px 0;
           pointer-events: none; user-select: none; overflow: hidden;
         }
 
@@ -362,7 +397,7 @@ export default function WaitlistPage() {
         {/* ── HERO ── */}
         <div className="lp-hero">
 
-          {/* Scrolling brand rows — tightly packed */}
+          {/* Scrolling brand rows */}
           <div className="lp-bg-rows">
             {Array.from({ length: NUM_ROWS }, (_, i) => (
               <ScrollRow
@@ -370,6 +405,7 @@ export default function WaitlistPage() {
                 brands={getRowBrands(brands, i)}
                 direction={i % 2 === 0 ? "left" : "right"}
                 duration={DURATIONS[i]}
+                offset={ROW_OFFSETS[i]}
               />
             ))}
           </div>
