@@ -85,16 +85,14 @@ const FALLBACKS: Brand[] = [
   { name: "Form Nutrition", category: "Fitness", country: "UK", domain: "formnutrition.com" },
 ];
 
-const NUM_ROWS = 10;
-const DURATIONS = [180, 220, 195, 240, 205, 185, 230, 210, 200, 215];
-// Vertical stagger per row (px) — gives an organic, non-grid feel
-const ROW_OFFSETS = [0, -18, 12, -24, 16, -10, 22, -14, 8, -20];
+const NUM_ROWS = 7;
+const DURATIONS = [190, 225, 200, 240, 210, 185, 215];
 
 function getRowBrands(all: Brand[], row: number): Brand[] {
   if (all.length === 0) return [];
   const offset = Math.floor((row * all.length) / NUM_ROWS) % all.length;
   const rotated = [...all.slice(offset), ...all.slice(0, offset)];
-  return rotated.slice(0, 14);
+  return rotated.slice(0, 7);
 }
 
 const FEATURES = [
@@ -174,12 +172,12 @@ function BrandCard({ brand }: { brand: Brand }) {
   );
 }
 
-function ScrollRow({ brands, direction, duration, offset = 0 }: { brands: Brand[]; direction: "left" | "right"; duration: number; offset?: number }) {
+function ScrollRow({ brands, direction, duration }: { brands: Brand[]; direction: "left" | "right"; duration: number }) {
   const items = [...brands, ...brands];
   return (
-    <div style={{ overflow: "hidden", width: "100%", flexShrink: 0, transform: `translateY(${offset}px)` }}>
+    <div style={{ overflow: "hidden", width: "100%", flexShrink: 0 }}>
       <div style={{
-        display: "flex", gap: 16, width: "max-content",
+        display: "flex", gap: 80, width: "max-content",
         willChange: "transform",
         animation: `${direction === "left" ? "lp-sl" : "lp-sr"} ${duration}s linear infinite`,
       }}>
@@ -253,7 +251,7 @@ export default function WaitlistPage() {
         .lp-bg-rows {
           position: absolute; top: 0; left: 0; right: 0; bottom: 0;
           display: flex; flex-direction: column; justify-content: center;
-          gap: 22px; padding: 24px 0;
+          gap: 68px; padding: 40px 0;
           pointer-events: none; user-select: none; overflow: hidden;
         }
 
@@ -405,7 +403,6 @@ export default function WaitlistPage() {
                 brands={getRowBrands(brands, i)}
                 direction={i % 2 === 0 ? "left" : "right"}
                 duration={DURATIONS[i]}
-                offset={ROW_OFFSETS[i]}
               />
             ))}
           </div>
