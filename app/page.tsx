@@ -60,7 +60,7 @@ const FALLBACKS: Brand[] = [
 ];
 
 const NUM_ROWS = 16;
-const DURATIONS = [50, 66, 44, 73, 55, 69, 47, 76, 52, 62, 46, 71, 57, 65, 49, 74];
+const DURATIONS = [90, 118, 80, 130, 100, 122, 86, 135, 95, 112, 84, 128, 104, 116, 88, 132];
 
 function getRowBrands(all: Brand[], row: number): Brand[] {
   if (all.length === 0) return [];
@@ -243,9 +243,10 @@ export default function WaitlistPage() {
           font-family: system-ui, -apple-system, sans-serif;
           font-size: clamp(52px, 8vw, 80px);
           font-weight: 600; letter-spacing: -0.04em; line-height: 1;
-          background: linear-gradient(to right, #FFD4A3, #FF9D6F);
+          background: linear-gradient(to right, #FF8C42, #C4603A);
           -webkit-background-clip: text; -webkit-text-fill-color: transparent;
           background-clip: text; margin-bottom: 20px;
+          filter: drop-shadow(0 2px 16px rgba(196,96,58,0.35));
         }
 
         /* Badge */
@@ -306,13 +307,6 @@ export default function WaitlistPage() {
         }
         .lp-btn:hover:not(:disabled) { background: #333; transform: translateY(-1px); }
         .lp-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
-        /* Social proof */
-        .lp-proof {
-          display: flex; align-items: center; gap: 7px;
-          font-size: 12.5px; color: #7A736B;
-        }
-        .lp-dot-g { width: 7px; height: 7px; border-radius: 50%; background: #4BBFB0; flex-shrink: 0; }
 
         /* Features */
         .lp-features { background: #EDE8E0; padding: 96px 24px; }
@@ -379,7 +373,7 @@ export default function WaitlistPage() {
             {/* Badge */}
             <div className="lp-badge">
               <span className="lp-dot-o" />
-              Invite-only beta · Spring 2026
+              Invite-only beta · Coming June 2026
             </div>
 
             {/* Headline */}
@@ -435,11 +429,6 @@ export default function WaitlistPage() {
               </div>
             )}
 
-            {/* Social proof */}
-            <div className="lp-proof">
-              <span className="lp-dot-g" />
-              Joining <strong style={{ color: "#1A1110", marginLeft: 3 }}>1,284</strong>&nbsp;creators already on the list
-            </div>
           </div>
         </div>
 
