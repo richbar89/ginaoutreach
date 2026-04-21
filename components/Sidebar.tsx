@@ -11,7 +11,6 @@ import {
   TrendingUp,
   BarChart3,
   BookOpen,
-  Sparkles,
   ShieldCheck,
   LineChart,
 } from "lucide-react";
@@ -58,20 +57,21 @@ export default function Sidebar() {
       {/* Logo mark */}
       <div
         style={{
-          width: 38,
-          height: 38,
-          background: "#D4795C",
-          borderRadius: 12,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          marginBottom: 12,
-          boxShadow: "0 2px 10px rgba(212,121,92,0.35)",
+          fontFamily: "system-ui, -apple-system, sans-serif",
+          fontSize: 32,
+          fontWeight: 600,
+          letterSpacing: "-0.04em",
+          lineHeight: 1,
+          background: "linear-gradient(135deg, #FF8C42, #C4603A)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text",
+          filter: "drop-shadow(0 1px 6px rgba(196,96,58,0.3))",
+          marginBottom: 10,
+          userSelect: "none",
           flexShrink: 0,
         }}
-      >
-        <Sparkles size={17} color="white" strokeWidth={2.5} />
-      </div>
+      >c</div>
 
       {/* Nav icons */}
       {NAV_ITEMS.map(({ href, label, icon: Icon, exact }) => {

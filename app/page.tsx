@@ -281,7 +281,6 @@ export default function WaitlistPage() {
           border: 1.5px solid rgba(200,185,170,0.42);
           border-radius: 20px; padding: 22px;
           box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-          display: flex; flex-direction: column; gap: 10px;
           margin-bottom: 16px;
         }
         .lp-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -401,7 +400,7 @@ export default function WaitlistPage() {
               </div>
             ) : (
               <div className="lp-card" ref={formRef}>
-                <form onSubmit={handleSubmit} style={{ display: "contents" }}>
+                <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                   <div className="lp-row2">
                     <input className="lp-field" type="text" placeholder="First name" value={form.first_name} onChange={set("first_name")} required disabled={status === "loading"} />
                     <input className="lp-field" type="text" placeholder="Last name" value={form.last_name} onChange={set("last_name")} required disabled={status === "loading"} />
