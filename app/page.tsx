@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 
-type Brand = { name: string; category: string; country: string };
+type Brand = { name: string; category: string; country: string; domain?: string };
 
 const PALETTE = [
   { bg: "#FFE4DC", fg: "#C4603A" },
@@ -21,42 +21,42 @@ function avatarColor(name: string) {
 }
 
 const FALLBACKS: Brand[] = [
-  { name: "Kinder & Co.", category: "Beauty", country: "Manchester" },
-  { name: "Pebble", category: "Wellness", country: "Bristol" },
-  { name: "Tally", category: "Fintech", country: "London" },
-  { name: "Oru", category: "Wellness", country: "Brighton" },
-  { name: "Papercut", category: "Stationery", country: "UK" },
-  { name: "Ridge", category: "Lifestyle", country: "US" },
-  { name: "Figtree", category: "Wellness", country: "Austin" },
-  { name: "Halcyon", category: "Travel", country: "London" },
-  { name: "Murray", category: "Food", country: "Glasgow" },
-  { name: "Juno", category: "Audio", country: "Stockholm" },
-  { name: "Cove", category: "Wellness", country: "Dublin" },
-  { name: "Lumen", category: "Tech", country: "Berlin" },
-  { name: "Bramble", category: "Food", country: "Edinburgh" },
-  { name: "Cobalt", category: "Tech", country: "Berlin" },
-  { name: "Nomad", category: "Travel", country: "SF" },
-  { name: "Denim & Soul", category: "Fashion", country: "London" },
-  { name: "Solace", category: "Wellness", country: "NYC" },
-  { name: "Lark", category: "Lifestyle", country: "Sydney" },
-  { name: "Grove", category: "Food", country: "Portland" },
-  { name: "Beacon", category: "Tech", country: "London" },
-  { name: "Haywood", category: "Fitness", country: "Melbourne" },
-  { name: "Ember", category: "Beauty", country: "Paris" },
-  { name: "Coba", category: "Lifestyle", country: "Barcelona" },
-  { name: "Willow", category: "Wellness", country: "Amsterdam" },
-  { name: "Fern", category: "Food", country: "Copenhagen" },
-  { name: "Quartz", category: "Tech", country: "Zurich" },
-  { name: "Harbour", category: "Lifestyle", country: "Auckland" },
-  { name: "Bloom", category: "Beauty", country: "Seoul" },
-  { name: "Cedar", category: "Wellness", country: "Vancouver" },
-  { name: "Atlas", category: "Travel", country: "NYC" },
-  { name: "Vela", category: "Fashion", country: "Milan" },
-  { name: "Tide", category: "Lifestyle", country: "Cape Town" },
-  { name: "Penny Lane", category: "Fashion", country: "Liverpool" },
-  { name: "Sundry", category: "Lifestyle", country: "LA" },
-  { name: "Oaken", category: "Food", country: "Dublin" },
-  { name: "Flint", category: "Tech", country: "Chicago" },
+  { name: "Nike", category: "Fashion", country: "US", domain: "nike.com" },
+  { name: "Gymshark", category: "Fitness", country: "UK", domain: "gymshark.com" },
+  { name: "Glossier", category: "Beauty", country: "US", domain: "glossier.com" },
+  { name: "Oatly", category: "Food", country: "Sweden", domain: "oatly.com" },
+  { name: "Allbirds", category: "Fashion", country: "US", domain: "allbirds.com" },
+  { name: "Notion", category: "Tech", country: "US", domain: "notion.so" },
+  { name: "Lush", category: "Beauty", country: "UK", domain: "lush.com" },
+  { name: "Patagonia", category: "Lifestyle", country: "US", domain: "patagonia.com" },
+  { name: "BrewDog", category: "Food", country: "UK", domain: "brewdog.com" },
+  { name: "Monzo", category: "Fintech", country: "UK", domain: "monzo.com" },
+  { name: "Innocent", category: "Food", country: "UK", domain: "innocentdrinks.co.uk" },
+  { name: "Revolut", category: "Fintech", country: "UK", domain: "revolut.com" },
+  { name: "Aesop", category: "Beauty", country: "Australia", domain: "aesop.com" },
+  { name: "Headspace", category: "Wellness", country: "US", domain: "headspace.com" },
+  { name: "Fever-Tree", category: "Food", country: "UK", domain: "fever-tree.com" },
+  { name: "Depop", category: "Fashion", country: "UK", domain: "depop.com" },
+  { name: "Peloton", category: "Fitness", country: "US", domain: "onepeloton.com" },
+  { name: "Rapha", category: "Fitness", country: "UK", domain: "rapha.cc" },
+  { name: "Graze", category: "Food", country: "UK", domain: "graze.com" },
+  { name: "Calm", category: "Wellness", country: "US", domain: "calm.com" },
+  { name: "Butternut Box", category: "Food", country: "UK", domain: "butternutbox.com" },
+  { name: "Wild", category: "Beauty", country: "UK", domain: "wearewild.com" },
+  { name: "Huel", category: "Food", country: "UK", domain: "huel.com" },
+  { name: "Duolingo", category: "Tech", country: "US", domain: "duolingo.com" },
+  { name: "Pact Coffee", category: "Food", country: "UK", domain: "pactcoffee.com" },
+  { name: "Finisterre", category: "Fashion", country: "UK", domain: "finisterre.com" },
+  { name: "Ohh Deer", category: "Lifestyle", country: "UK", domain: "ohhdeer.com" },
+  { name: "Papier", category: "Lifestyle", country: "UK", domain: "papier.com" },
+  { name: "Bloom & Wild", category: "Lifestyle", country: "UK", domain: "bloomandwild.com" },
+  { name: "Dash Water", category: "Food", country: "UK", domain: "drinkdash.com" },
+  { name: "Passenger", category: "Fashion", country: "UK", domain: "passenger-clothing.com" },
+  { name: "Seedlip", category: "Food", country: "UK", domain: "seedlipdrinks.com" },
+  { name: "Heights", category: "Wellness", country: "UK", domain: "yourheights.com" },
+  { name: "Ned's Neon", category: "Lifestyle", country: "UK", domain: "nedsneon.com" },
+  { name: "Represent", category: "Fashion", country: "UK", domain: "representclo.com" },
+  { name: "Form Nutrition", category: "Fitness", country: "UK", domain: "formnutrition.com" },
 ];
 
 const NUM_ROWS = 16;
@@ -104,6 +104,9 @@ function BrandCard({ brand }: { brand: Brand }) {
   const col = avatarColor(brand.name);
   const letter = brand.name[0]?.toUpperCase() ?? "?";
   const sub = [brand.category, brand.country].filter(Boolean).join(" · ");
+  const [logoFailed, setLogoFailed] = useState(false);
+  const showLogo = !!brand.domain && !logoFailed;
+
   return (
     <div style={{
       display: "inline-flex", alignItems: "center", gap: 9,
@@ -111,12 +114,23 @@ function BrandCard({ brand }: { brand: Brand }) {
       borderRadius: 12, padding: "7px 12px", flexShrink: 0,
     }}>
       <div style={{
-        width: 32, height: 32, borderRadius: 8,
-        background: col.bg, color: col.fg,
+        width: 32, height: 32, borderRadius: 8, flexShrink: 0, overflow: "hidden",
+        background: showLogo ? "#fff" : col.bg,
         display: "flex", alignItems: "center", justifyContent: "center",
-        fontSize: 13, fontWeight: 700, flexShrink: 0,
-        fontFamily: "'Inter', sans-serif",
-      }}>{letter}</div>
+        border: showLogo ? "1px solid rgba(0,0,0,0.06)" : "none",
+      }}>
+        {showLogo ? (
+          <img
+            src={`https://logo.clearbit.com/${brand.domain}`}
+            alt={brand.name}
+            width={28} height={28}
+            style={{ objectFit: "contain", width: 28, height: 28 }}
+            onError={() => setLogoFailed(true)}
+          />
+        ) : (
+          <span style={{ fontSize: 13, fontWeight: 700, color: col.fg, fontFamily: "'Inter', sans-serif" }}>{letter}</span>
+        )}
+      </div>
       <div>
         <div style={{ fontSize: 12, fontWeight: 600, color: "#1A1110", lineHeight: 1.3, whiteSpace: "nowrap" }}>{brand.name}</div>
         {sub && <div style={{ fontSize: 10.5, color: "#9E9790", lineHeight: 1.3, whiteSpace: "nowrap" }}>{sub}</div>}
