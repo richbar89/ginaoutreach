@@ -27,6 +27,16 @@ export async function GET() {
     return NextResponse.json({ brands: [] });
   }
 
+  const DOMAIN_RE = /^[a-z0-9][a-z0-9-]*\.[a-z]{2,}(\.[a-z]{2,})?$/i;
+
+  function resolveDomain(company: string, email: string): string {
+    // Company field already is a domain (e.g. "nike.com")
+    if (DOMAIN_RE.test(company.trim())) return company.trim().toLowerCase();
+    // Otherwise derive from email
+    const emailDomain = email?.split("@")[1]?.toLowerCase().trim() ?? "";
+    return emailDomain && !GENERIC_DOMAINS.has(emailDomain) ? emailDomain : "";
+  }
+
   const seen = new Set<string>();
   const brands: { name: string; category: string; country: string; domain: string }[] = [];
 
@@ -34,13 +44,11 @@ export async function GET() {
     const name = row.company?.trim();
     if (name && !seen.has(name.toLowerCase())) {
       seen.add(name.toLowerCase());
-      const emailDomain = row.email?.split("@")[1]?.toLowerCase().trim() ?? "";
-      const domain = emailDomain && !GENERIC_DOMAINS.has(emailDomain) ? emailDomain : "";
       brands.push({
         name,
         category: row.category ?? "",
         country: row.country ?? "",
-        domain,
+        domain: resolveDomain(name, row.email ?? ""),
       });
     }
   }
