@@ -122,7 +122,7 @@ function BrandCard({ brand }: { brand: Brand }) {
       }}>
         {showLogo ? (
           <img
-            src={`https://logo.clearbit.com/${brand.domain}`}
+            src={`https://www.google.com/s2/favicons?domain=${brand.domain}&sz=64`}
             alt={brand.name}
             width={32} height={32}
             style={{ objectFit: "contain", width: 32, height: 32 }}
