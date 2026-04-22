@@ -60,5 +60,23 @@ export async function GET() {
     [brands[i], brands[j]] = [brands[j], brands[i]];
   }
 
+  // Resolve missing domains server-side via Clearbit autocomplete.
+  // Server→Clearbit has no CORS restrictions; browser→Clearbit is blocked.
+  const unresolved = brands.filter(b => !b.domain).slice(0, 60);
+  if (unresolved.length > 0) {
+    await Promise.allSettled(
+      unresolved.map(async (b) => {
+        try {
+          const res = await fetch(
+            `https://autocomplete.clearbit.com/v1/companies/suggest?query=${encodeURIComponent(b.name)}`,
+            { signal: AbortSignal.timeout(2000) }
+          );
+          const results = await res.json() as Array<{ domain: string }>;
+          if (results[0]?.domain) b.domain = results[0].domain;
+        } catch { /* timeout or API unavailable — stays as initials */ }
+      })
+    );
+  }
+
   return NextResponse.json({ brands: brands.slice(0, 120) });
 }

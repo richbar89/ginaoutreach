@@ -3,31 +3,6 @@ import { useState, useEffect, useRef } from "react";
 
 type Brand = { name: string; category: string; country: string; domain?: string };
 
-// Module-level cache so duplicate card instances share one fetch per brand name
-const _domainCache = new Map<string, string>();
-const _domainPending = new Map<string, Promise<string>>();
-
-function resolveDomainByName(name: string): Promise<string> {
-  if (_domainCache.has(name)) return Promise.resolve(_domainCache.get(name)!);
-  if (_domainPending.has(name)) return _domainPending.get(name)!;
-  const p = fetch(
-    `https://autocomplete.clearbit.com/v1/companies/suggest?query=${encodeURIComponent(name)}`
-  )
-    .then(r => r.json())
-    .then((results: Array<{ domain: string }>) => {
-      const d = results[0]?.domain ?? "";
-      _domainCache.set(name, d);
-      _domainPending.delete(name);
-      return d;
-    })
-    .catch(() => {
-      _domainCache.set(name, "");
-      _domainPending.delete(name);
-      return "";
-    });
-  _domainPending.set(name, p);
-  return p;
-}
 
 const PALETTE = [
   { bg: "#FFE4DC", fg: "#C4603A" },
@@ -131,14 +106,7 @@ function BrandCard({ brand }: { brand: Brand }) {
   const letter = brand.name[0]?.toUpperCase() ?? "?";
   const sub = [brand.category, brand.country].filter(Boolean).join(" · ");
   const [logoFailed, setLogoFailed] = useState(false);
-  const [domain, setDomain] = useState(brand.domain ?? "");
-
-  useEffect(() => {
-    if (domain || logoFailed) return;
-    resolveDomainByName(brand.name).then(d => { if (d) setDomain(d); });
-  }, [brand.name, domain, logoFailed]);
-
-  const showLogo = !!domain && !logoFailed;
+  const showLogo = !!brand.domain && !logoFailed;
 
   return (
     <div style={{
@@ -154,7 +122,7 @@ function BrandCard({ brand }: { brand: Brand }) {
       }}>
         {showLogo ? (
           <img
-            src={`https://logo.clearbit.com/${domain}`}
+            src={`https://logo.clearbit.com/${brand.domain}`}
             alt={brand.name}
             width={32} height={32}
             style={{ objectFit: "contain", width: 32, height: 32 }}
