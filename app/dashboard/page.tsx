@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import { useDb } from "@/lib/useDb";
-import { dbGetEmailLog, dbGetDeals, dbGetBrands } from "@/lib/db";
+import { dbGetEmailLog, dbGetDeals, dbGetBrands, dbUpdateBrandDomain } from "@/lib/db";
 import { getGoogleUser, isGoogleTokenExpired } from "@/lib/googleClient";
 import { getMicrosoftUser } from "@/lib/graphClient";
 import { getAllCachedStatuses } from "@/lib/metaAds";
@@ -34,37 +34,11 @@ const BRAND_AVATAR_COLOURS = [
   "#EF4444","#EC4899","#06B6D4","#84CC16","#F97316","#6366F1",
 ];
 
-// Module-level cache — deduplicates fetches across all BrandLogo instances
-const _domainCache = new Map<string, string>();
-const _domainPending = new Map<string, Promise<string>>();
-
-function fetchBrandDomain(name: string): Promise<string> {
-  if (_domainCache.has(name)) return Promise.resolve(_domainCache.get(name)!);
-  if (_domainPending.has(name)) return _domainPending.get(name)!;
-  const p = fetch(`/api/resolve-domain?name=${encodeURIComponent(name)}`)
-    .then(r => r.json())
-    .then(({ domain }: { domain: string }) => {
-      _domainCache.set(name, domain ?? "");
-      _domainPending.delete(name);
-      return domain ?? "";
-    })
-    .catch(() => { _domainCache.set(name, ""); _domainPending.delete(name); return ""; });
-  _domainPending.set(name, p);
-  return p;
-}
-
-function BrandLogo({ name, size = 30 }: { name: string; size?: number }) {
+function BrandLogo({ name, size = 30, domain }: { name: string; size?: number; domain?: string }) {
   const colour = BRAND_AVATAR_COLOURS[
     name.split("").reduce((h, c) => (h * 31 + c.charCodeAt(0)) & 0xffff, 0) % BRAND_AVATAR_COLOURS.length
   ];
-  const [domain, setDomain] = useState(() => _domainCache.get(name) ?? "");
   const [failed, setFailed] = useState(false);
-
-  useEffect(() => {
-    if (domain || failed) return;
-    fetchBrandDomain(name).then(d => { if (d) setDomain(d); });
-  }, [name, domain, failed]);
-
   const showLogo = !!domain && !failed;
   return (
     <div style={{
@@ -204,6 +178,21 @@ export default function DashboardPage() {
       const brandsData = await dbGetBrands(db);
       setBrands(brandsData);
 
+      // Resolve and permanently store domains for any brands that don't have one yet
+      const missing = brandsData.filter(b => !b.domain);
+      if (missing.length > 0) {
+        Promise.allSettled(missing.map(async (b) => {
+          try {
+            const res = await fetch(`/api/resolve-domain?name=${encodeURIComponent(b.name)}`);
+            const { domain } = await res.json() as { domain: string };
+            if (domain) {
+              await dbUpdateBrandDomain(db, b.name, domain);
+              setBrands(prev => prev.map(p => p.name === b.name ? { ...p, domain } : p));
+            }
+          } catch { /* ignore */ }
+        }));
+      }
+
       const stored = localStorage.getItem(FAV_KEY);
       if (!stored && brandsData.length > 0) {
         const initial = brandsData.slice(0, 8).map(b => b.name);
@@ -232,7 +221,7 @@ export default function DashboardPage() {
   const displayedBrands = favBrands.map(name => {
     const dbBrand = brands.find(b => b.name === name);
     const cached = adStatuses[name];
-    return { name, runningAds: cached?.hasAds ?? dbBrand?.runningAds ?? null, checkedAt: cached?.checkedAt ?? null };
+    return { name, runningAds: cached?.hasAds ?? dbBrand?.runningAds ?? null, checkedAt: cached?.checkedAt ?? null, domain: dbBrand?.domain };
   });
 
   const emailReady = emailConnected === "gmail" || emailConnected === "microsoft";
@@ -423,7 +412,7 @@ export default function DashboardPage() {
               <div className="scrollbar-thin" style={{ flex: 1, overflowY: "auto", display: "grid", gridTemplateColumns: "1fr 1fr", alignContent: "start", padding: "12px 18px", gap: 8 }}>
                 {displayedBrands.map((brand, i) => (
                   <div key={brand.name} className="flex items-center gap-2 rounded-2xl hover:bg-orange-50/30 transition-colors" style={{ padding: "10px 12px", border: "1px solid rgba(0,0,0,0.06)" }}>
-                    <BrandLogo name={brand.name} size={30} />
+                    <BrandLogo name={brand.name} size={30} domain={brand.domain} />
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <span style={{ fontWeight: 700, color: "#111827", fontSize: 11, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", display: "block" }}>{brand.name}</span>
                       {brand.checkedAt && <span style={{ fontSize: 9, color: "#D1C4B8" }}>{Math.floor((Date.now() - new Date(brand.checkedAt).getTime()) / 3600000)}h ago</span>}

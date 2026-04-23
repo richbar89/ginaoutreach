@@ -122,10 +122,10 @@ export default function OnboardingPage() {
 
         if (existingBrands.length === 0) {
           await dbSaveBrands(db, [
-            { name: "Graze",           runningAds: true },
-            { name: "Oatly",           runningAds: false },
-            { name: "Innocent Drinks", runningAds: true },
-            { name: "Pip & Nut",       runningAds: false },
+            { name: "Graze",           runningAds: true,  domain: "graze.com" },
+            { name: "Oatly",           runningAds: false, domain: "oatly.com" },
+            { name: "Innocent Drinks", runningAds: true,  domain: "innocentdrinks.co.uk" },
+            { name: "Pip & Nut",       runningAds: false, domain: "pipandnut.com" },
           ]);
         }
       }

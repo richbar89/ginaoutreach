@@ -116,6 +116,7 @@ export type MediaKit = {
 export type Brand = {
   name: string;
   runningAds: boolean;
+  domain?: string;
 };
 
 // ── Content Planner ─────────────────────────────────────────

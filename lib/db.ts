@@ -215,15 +215,30 @@ function rowToPost(r: Record<string, unknown>): ScheduledPost {
 
 export async function dbGetBrands(db: DB): Promise<Brand[]> {
   const { data } = await db.from("brands").select("*");
-  return (data || []).map((r) => ({ name: r.name as string, runningAds: r.running_ads as boolean }));
+  return (data || []).map((r) => ({
+    name: r.name as string,
+    runningAds: r.running_ads as boolean,
+    domain: (r.domain as string | null) ?? undefined,
+  }));
 }
 
 export async function dbSaveBrands(db: DB, brands: Brand[]): Promise<void> {
-  // Replace all brands for this user
+  // Preserve existing domains when replacing the brand list
+  const { data: existing } = await db.from("brands").select("name, domain");
+  const domainMap = new Map((existing || []).map((r) => [r.name as string, r.domain as string | null]));
+
   await db.from("brands").delete().neq("id", "00000000-0000-0000-0000-000000000000");
   if (brands.length > 0) {
-    await db.from("brands").insert(brands.map((b) => ({ name: b.name, running_ads: b.runningAds })));
+    await db.from("brands").insert(brands.map((b) => ({
+      name: b.name,
+      running_ads: b.runningAds,
+      domain: b.domain ?? domainMap.get(b.name) ?? null,
+    })));
   }
+}
+
+export async function dbUpdateBrandDomain(db: DB, name: string, domain: string): Promise<void> {
+  await db.from("brands").update({ domain }).eq("name", name);
 }
 
 // ── User settings (signature + media kit) ───────────────────
