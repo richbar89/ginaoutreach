@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import {
-  RefreshCw, Link2, Plus, Trash2, Loader2, CheckCircle,
-  Instagram, Eye, Copy, ExternalLink,
+  Link2, Plus, Trash2, Loader2, CheckCircle,
+  Eye, Copy, ExternalLink,
 } from "lucide-react";
 import { useDb } from "@/lib/useDb";
 import { dbGetMediaKit, dbSaveMediaKit } from "@/lib/db";
@@ -13,8 +13,6 @@ import type { MediaKit } from "@/lib/types";
 export default function MediaKitPage() {
   const getDb = useDb();
   const [kit, setKit] = useState<MediaKit | null>(null);
-  const [refreshing, setRefreshing] = useState(false);
-  const [refreshMsg, setRefreshMsg] = useState("");
   const [generating, setGenerating] = useState(false);
   const [shareUrl, setShareUrl] = useState("");
   const [copied, setCopied] = useState(false);
@@ -40,44 +38,6 @@ export default function MediaKitPage() {
     await dbSaveMediaKit(db, kit);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
-  };
-
-  const refreshInstagram = async () => {
-    setRefreshing(true);
-    setRefreshMsg("");
-    try {
-      const res = await fetch("/api/meta/analytics");
-      if (!res.ok) {
-        setRefreshMsg("Instagram not connected — go to My Analytics to connect.");
-        return;
-      }
-      const data = await res.json();
-      if (data.error === "not_connected") {
-        setRefreshMsg("Instagram not connected — go to My Analytics to connect.");
-        return;
-      }
-      const { profile, posts, engagementRate } = data;
-      const avgLikes = posts?.length
-        ? Math.round(posts.reduce((s: number, p: { like_count?: number }) => s + (p.like_count ?? 0), 0) / posts.length)
-        : undefined;
-      update({
-        igFollowers: profile?.followers_count,
-        igEngagementRate: engagementRate,
-        igAvgLikes: avgLikes,
-        igPostCount: profile?.media_count,
-        igLastRefreshed: new Date().toISOString(),
-        name: kit?.name || profile?.name || "",
-        handle: kit?.handle || (profile?.username ? `@${profile.username}` : ""),
-        bio: kit?.bio || profile?.biography || "",
-        profileImageUrl: profile?.profile_picture_url || kit?.profileImageUrl,
-      });
-      setRefreshMsg("Instagram stats updated.");
-      setTimeout(() => setRefreshMsg(""), 3000);
-    } catch {
-      setRefreshMsg("Failed to refresh. Try again.");
-    } finally {
-      setRefreshing(false);
-    }
   };
 
   const generateLink = async () => {
@@ -178,49 +138,6 @@ export default function MediaKitPage() {
         </div>
       </div>
 
-      {/* Instagram refresh */}
-      <div className="mb-8 flex items-center justify-between px-5 py-4 bg-white border border-cream-200 rounded-2xl shadow-sm">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-            <Instagram size={14} className="text-white" />
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-navy-900">Instagram Stats</p>
-            <p className="text-xs text-navy-400">
-              {kit.igLastRefreshed
-                ? `Last updated ${new Date(kit.igLastRefreshed).toLocaleDateString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}`
-                : "Not yet pulled"}
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center gap-4">
-          {kit.igFollowers && (
-            <div className="text-right">
-              <p className="text-lg font-serif font-bold text-navy-900">{kit.igFollowers.toLocaleString()}</p>
-              <p className="text-[10px] text-navy-400 uppercase tracking-wide">Followers</p>
-            </div>
-          )}
-          {kit.igEngagementRate && (
-            <div className="text-right">
-              <p className="text-lg font-serif font-bold text-coral-500">{kit.igEngagementRate}%</p>
-              <p className="text-[10px] text-navy-400 uppercase tracking-wide">Engagement</p>
-            </div>
-          )}
-          <button
-            onClick={refreshInstagram}
-            disabled={refreshing}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-coral-500 hover:bg-coral-600 text-white text-xs font-semibold rounded-xl transition-colors disabled:opacity-60"
-          >
-            <RefreshCw size={12} className={refreshing ? "animate-spin" : ""} />
-            {refreshing ? "Refreshing…" : "Refresh"}
-          </button>
-        </div>
-      </div>
-      {refreshMsg && (
-        <p className={`-mt-5 mb-6 text-xs px-1 ${refreshMsg.includes("updated") ? "text-emerald-600" : "text-amber-600"}`}>
-          {refreshMsg}
-        </p>
-      )}
 
       <div className="space-y-6">
         {/* About */}
