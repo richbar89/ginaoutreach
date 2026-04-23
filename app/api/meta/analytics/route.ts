@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 import { getSupabase } from "@/lib/supabase";
+import { auth } from "@clerk/nextjs/server";
 
 export async function GET() {
+  const { userId } = await auth();
+  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const supabase = getSupabase();
   const { data: conn, error } = await supabase
     .from("meta_connections")

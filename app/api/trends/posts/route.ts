@@ -1,7 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabase } from "@/lib/supabase";
+import { auth } from "@clerk/nextjs/server";
+
+const ADMIN_USER_ID = process.env.NEXT_PUBLIC_ADMIN_USER_ID;
+
+async function requireAdmin() {
+  const { userId } = await auth();
+  if (!userId || userId !== ADMIN_USER_ID) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  return null;
+}
 
 export async function GET(req: NextRequest) {
+  const err = await requireAdmin();
+  if (err) return err;
+
   const { searchParams } = new URL(req.url);
   const flaggedOnly = searchParams.get("flagged") === "1";
   const handle = searchParams.get("handle");
@@ -28,6 +40,9 @@ export async function GET(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
+  const err = await requireAdmin();
+  if (err) return err;
+
   const { id, notes } = await req.json();
   const sb = getSupabase();
   const { data, error } = await sb

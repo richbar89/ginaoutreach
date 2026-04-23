@@ -37,7 +37,7 @@ async function waitForRun(runId: string, token: string): Promise<string> {
 export async function POST(req: NextRequest) {
   // Protect endpoint (used by GitHub Actions cron)
   const secret = req.headers.get("x-cron-secret");
-  if (process.env.CRON_SECRET && secret !== process.env.CRON_SECRET) {
+  if (!process.env.CRON_SECRET || secret !== process.env.CRON_SECRET) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

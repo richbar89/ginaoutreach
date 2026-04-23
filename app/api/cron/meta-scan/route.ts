@@ -94,10 +94,10 @@ async function checkAds(
 export async function GET(req: NextRequest) {
   // Accept Vercel's Authorization header or a ?secret= query param
   const cronSecret = process.env.CRON_SECRET;
-  if (cronSecret) {
+  {
     const auth = req.headers.get("authorization");
     const qs = req.nextUrl.searchParams.get("secret");
-    if (auth !== `Bearer ${cronSecret}` && qs !== cronSecret) {
+    if (!cronSecret || (auth !== `Bearer ${cronSecret}` && qs !== cronSecret)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
   }
