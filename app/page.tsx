@@ -229,11 +229,11 @@ export default function WaitlistPage() {
         /* Strong centre vignette for readability */
         .lp-vignette {
           position: absolute; inset: 0; pointer-events: none; z-index: 2;
-          background: radial-gradient(ellipse 52% 62% at 50% 50%,
-            rgba(245,240,234,0.97) 0%,
-            rgba(245,240,234,0.82) 32%,
-            rgba(245,240,234,0.38) 58%,
-            transparent 80%
+          background: radial-gradient(ellipse 56% 66% at 50% 50%,
+            rgba(245,240,234,0.86) 0%,
+            rgba(245,240,234,0.60) 30%,
+            rgba(245,240,234,0.18) 58%,
+            transparent 76%
           );
         }
 
@@ -257,22 +257,23 @@ export default function WaitlistPage() {
         .lp-logo {
           font-family: system-ui, -apple-system, sans-serif;
           font-size: clamp(52px, 8vw, 80px);
-          font-weight: 600; letter-spacing: -0.04em; line-height: 1;
-          background: linear-gradient(to right, #FF8C42, #C4603A);
+          font-weight: 700; letter-spacing: -0.04em; line-height: 1;
+          background: linear-gradient(135deg, #FF8C42 0%, #C4603A 100%);
           -webkit-background-clip: text; -webkit-text-fill-color: transparent;
           background-clip: text; margin-bottom: 20px;
-          filter: drop-shadow(0 2px 16px rgba(196,96,58,0.35));
+          filter: drop-shadow(0 2px 28px rgba(196,96,58,0.55));
         }
 
         /* Badge */
         .lp-badge {
           display: inline-flex; align-items: center; gap: 7px;
-          background: rgba(255,255,255,0.82); border: 1px solid rgba(200,185,170,0.38);
-          border-radius: 100px; padding: 6px 14px;
-          font-size: 12px; font-weight: 500; color: #6B6560;
+          background: #FFFFFF; border: 1.5px solid rgba(196,96,58,0.28);
+          border-radius: 100px; padding: 7px 16px;
+          font-size: 12px; font-weight: 600; color: #2E2521;
           margin-bottom: 22px; letter-spacing: 0.01em;
+          box-shadow: 0 2px 12px rgba(0,0,0,0.09);
         }
-        .lp-dot-o { width: 7px; height: 7px; border-radius: 50%; background: #C4603A; flex-shrink: 0; }
+        .lp-dot-o { width: 7px; height: 7px; border-radius: 50%; background: #E8622A; flex-shrink: 0; }
 
         /* Headline */
         .lp-hl {
@@ -407,8 +408,8 @@ export default function WaitlistPage() {
             {/* Form */}
             {status === "done" ? (
               <div style={{ textAlign: "center", marginBottom: 16 }}>
-                <div style={{ width: 52, height: 52, borderRadius: "50%", background: "rgba(75,191,176,0.12)", border: "2px solid rgba(75,191,176,0.3)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px" }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4BBFB0" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                <div style={{ width: 52, height: 52, borderRadius: "50%", background: "rgba(232,98,42,0.10)", border: "2px solid rgba(232,98,42,0.28)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px" }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E8622A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                 </div>
                 <p style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 700, color: "#1A1110", marginBottom: 8 }}>You&apos;re on the list!</p>
                 <p style={{ fontSize: 14, color: "#7A736B" }}>We&apos;ll be in touch when Collabi launches.</p>
