@@ -1,16 +1,15 @@
 import { NextResponse } from "next/server";
-import { getSupabase } from "@/lib/supabase";
+import { getSupabaseAdmin } from "@/lib/supabase";
 import { auth } from "@clerk/nextjs/server";
 
 export async function GET() {
   const { userId } = await auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const supabase = getSupabase();
-  const { data: conn, error } = await supabase
+  const { data: conn, error } = await getSupabaseAdmin()
     .from("meta_connections")
     .select("*")
-    .eq("id", 1)
+    .eq("user_id", userId)
     .single();
 
   if (error || !conn) {
@@ -81,7 +80,7 @@ export async function GET() {
           type: p.media_type ?? "IMAGE",
         }),
       );
-      await supabase
+      await getSupabaseAdmin()
         .from("meta_posts")
         .upsert(rows, { onConflict: "post_url" });
     }

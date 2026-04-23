@@ -1,15 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSupabase } from "@/lib/supabase";
+import { getSupabaseAdmin } from "@/lib/supabase";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
   const error = searchParams.get("error");
+  const userId = searchParams.get("state");
+
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
 
   if (error || !code) {
-    return NextResponse.redirect(
-      `${process.env.NEXT_PUBLIC_APP_URL}/meta-analytics?error=auth_failed`,
-    );
+    return NextResponse.redirect(`${appUrl}/meta-analytics?error=auth_failed`);
+  }
+
+  if (!userId) {
+    return NextResponse.redirect(`${appUrl}/meta-analytics?error=missing_state`);
   }
 
   const appId = process.env.META_APP_ID!;
@@ -52,25 +57,20 @@ export async function GET(request: NextRequest) {
     const igData = await igRes.json();
     const igAccountId = igData.instagram_business_account?.id;
 
-    const supabase = getSupabase();
-    await supabase.from("meta_connections").upsert({
-      id: 1,
+    await getSupabaseAdmin().from("meta_connections").upsert({
+      user_id: userId,
       access_token: longTokenData.access_token,
       page_id: page.id,
       page_name: page.name,
       ig_account_id: igAccountId ?? null,
       expires_at: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString(),
       connected_at: new Date().toISOString(),
-    });
+    }, { onConflict: "user_id" });
 
-    return NextResponse.redirect(
-      `${process.env.NEXT_PUBLIC_APP_URL}/meta-analytics?connected=true`,
-    );
+    return NextResponse.redirect(`${appUrl}/meta-analytics?connected=true`);
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Unknown error";
     console.error("Meta OAuth error:", message);
-    return NextResponse.redirect(
-      `${process.env.NEXT_PUBLIC_APP_URL}/meta-analytics?error=${encodeURIComponent(message)}`,
-    );
+    return NextResponse.redirect(`${appUrl}/meta-analytics?error=${encodeURIComponent(message)}`);
   }
 }

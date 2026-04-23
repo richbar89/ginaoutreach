@@ -1,21 +1,20 @@
 import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
 
-// Step 1 of Meta OAuth: redirect user to Meta's login page
 export async function GET() {
+  const { userId } = await auth();
+  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const appId = process.env.META_APP_ID;
   const redirectUri = process.env.META_REDIRECT_URI;
 
   if (!appId || !redirectUri) {
     return NextResponse.json(
-      {
-        error:
-          "META_APP_ID and META_REDIRECT_URI must be set in environment variables",
-      },
+      { error: "META_APP_ID and META_REDIRECT_URI must be set in environment variables" },
       { status: 500 },
     );
   }
 
-  // Scopes needed: read Instagram business account data + insights
   const scopes = [
     "instagram_basic",
     "instagram_manage_insights",
@@ -29,7 +28,8 @@ export async function GET() {
     `client_id=${appId}` +
     `&redirect_uri=${encodeURIComponent(redirectUri)}` +
     `&scope=${encodeURIComponent(scopes)}` +
-    `&response_type=code`;
+    `&response_type=code` +
+    `&state=${encodeURIComponent(userId)}`;
 
   return NextResponse.redirect(metaAuthUrl);
 }
