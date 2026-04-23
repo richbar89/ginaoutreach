@@ -37,12 +37,10 @@ const BRAND_AVATAR_COLOURS = [
 const FAV_KEY = "dashboard_fav_brands";
 
 const CARD: React.CSSProperties = {
-  background: "rgba(255, 253, 251, 0.97)",
-  backdropFilter: "blur(16px)",
-  WebkitBackdropFilter: "blur(16px)",
-  borderRadius: 24,
-  border: "1px solid rgba(255, 255, 255, 0.7)",
-  boxShadow: "0 4px 24px rgba(0, 0, 0, 0.10)",
+  background: "#FFFFFF",
+  borderRadius: 20,
+  border: "1px solid rgba(0, 0, 0, 0.07)",
+  boxShadow: "0 2px 12px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04)",
 };
 
 const CARD_DIVIDER = "1px solid rgba(0, 0, 0, 0.06)";
@@ -54,7 +52,7 @@ const DEMO_VIEWS = [3800, 5200, 4600, 6800, 5900, 7400, 6100, 8300, 7700, 9100,
   8500, 10200, 9400, 11000, 10100, 9200, 11800, 12400, 11200, 13100,
   12300, 11600, 14000, 13500, 12800, 15200, 14600, 13900, 16100, 15400];
 
-function Sparkline({ data, color = "#4BBFB0", height = 64 }: { data: number[]; color?: string; height?: number }) {
+function Sparkline({ data, color = "#E8622A", height = 64 }: { data: number[]; color?: string; height?: number }) {
   const W = 500; const H = height; const pad = 4;
   const max = Math.max(...data); const min = Math.min(...data); const range = max - min || 1;
   const pts = data.map((v, i) => ({
@@ -282,8 +280,8 @@ export default function DashboardPage() {
                 <p style={{ fontSize: 18, fontWeight: 900, letterSpacing: "-0.03em", color: "#111827", lineHeight: 1 }}>Daily Social Views</p>
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 10, fontWeight: 700, padding: "4px 10px", borderRadius: 20, color: "#4BBFB0", background: "rgba(75,191,176,0.1)", border: "1px solid rgba(75,191,176,0.25)" }}>
-                  <span className="animate-pulse" style={{ width: 5, height: 5, borderRadius: "50%", background: "#4BBFB0", display: "inline-block" }} />
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 10, fontWeight: 700, padding: "4px 10px", borderRadius: 20, color: "#E8622A", background: "rgba(232,98,42,0.08)", border: "1px solid rgba(232,98,42,0.20)" }}>
+                  <span className="animate-pulse" style={{ width: 5, height: 5, borderRadius: "50%", background: "#E8622A", display: "inline-block" }} />
                   Live
                 </span>
                 <Link href="/analytics" style={{ fontSize: 11, color: "#C4B5A5", fontWeight: 600, textDecoration: "none" }}
@@ -294,7 +292,7 @@ export default function DashboardPage() {
                 </Link>
               </div>
             </div>
-            <Sparkline data={sparkData} color="#4BBFB0" height={60} />
+            <Sparkline data={sparkData} color="#E8622A" height={60} />
             <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6 }}>
               {dayLabels.map(d => (
                 <span key={d} style={{ fontSize: 9, fontWeight: 600, color: "#D1C4B8" }}>{d}</span>

@@ -5,17 +5,14 @@
 @tailwind utilities;
 
 :root {
-  --orange:        #D4795C;
-  --orange-light:  #E89478;
-  --orange-dim:    rgba(212, 121, 92, 0.10);
-  --teal:          #4BBFB0;
-  --teal-dim:      rgba(75, 191, 176, 0.12);
-  --blush:         transparent;
-  --border:        rgba(0, 0, 0, 0.06);
-  --text:          #1A1A1A;
+  --orange:        #E8622A;
+  --orange-light:  #F07844;
+  --orange-dim:    rgba(232, 98, 42, 0.10);
+  --border:        rgba(0, 0, 0, 0.07);
+  --text:          #1A1110;
   --muted:         #7A736B;
-  --card-bg:       #FBF7F2;
-  --card-shadow:   0 4px 24px rgba(0, 0, 0, 0.07), 0 1px 4px rgba(0, 0, 0, 0.04);
+  --card-bg:       #FFFFFF;
+  --card-shadow:   0 2px 12px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 * {
@@ -23,8 +20,7 @@
 }
 
 html {
-  background: linear-gradient(150deg, #F0CBB4 0%, #E3AD8E 55%, #D4916C 100%);
-  background-attachment: fixed;
+  background: #F5F0EA;
   min-height: 100vh;
 }
 
@@ -63,8 +59,8 @@ h1, h2, h3 {
 
   .input-base {
     @apply w-full px-4 py-2.5 bg-white rounded-xl text-sm text-gray-900
-           placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400/30
-           focus:border-teal-400 transition;
+           placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400/30
+           focus:border-orange-400 transition;
     border: 1px solid rgba(0,0,0,0.09);
     box-shadow: 0 1px 3px rgba(0,0,0,0.04);
   }
@@ -72,22 +68,20 @@ h1, h2, h3 {
   .btn-primary {
     @apply inline-flex items-center gap-2 px-5 py-2.5 text-white text-sm font-semibold
            rounded-xl transition-colors;
-    background: #D4795C;
-    box-shadow: 0 2px 12px rgba(212,121,92,0.35);
+    background: #E8622A;
+    box-shadow: 0 2px 12px rgba(232,98,42,0.30);
   }
   .btn-primary:hover {
-    background: #BF6849;
+    background: #C4603A;
   }
   .btn-primary:disabled {
     opacity: 0.4;
   }
 
   .card {
-    background: rgba(251, 247, 242, 0.96);
-    -webkit-backdrop-filter: blur(20px);
-    backdrop-filter: blur(20px);
-    border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.85);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07), 0 1px 4px rgba(0, 0, 0, 0.04);
+    background: #FFFFFF;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.07);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
   }
 }

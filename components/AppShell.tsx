@@ -35,7 +35,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       {/* Mobile nudge */}
       <div
         className="md:hidden fixed inset-0 z-[999] flex flex-col items-center justify-center p-8 text-center"
-        style={{ background: "#B5684E" }}
+        style={{ background: "#E8622A" }}
       >
         <div
           style={{

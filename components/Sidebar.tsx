@@ -30,12 +30,10 @@ const NAV_ITEMS = [
 ];
 
 const PILL: React.CSSProperties = {
-  background: "rgba(251, 247, 242, 0.97)",
-  backdropFilter: "blur(24px)",
-  WebkitBackdropFilter: "blur(24px)",
+  background: "#FFFFFF",
   borderRadius: 30,
-  border: "1px solid rgba(255,255,255,0.9)",
-  boxShadow: "0 4px 28px rgba(0,0,0,0.12), 0 1px 6px rgba(0,0,0,0.06)",
+  border: "1px solid rgba(0,0,0,0.07)",
+  boxShadow: "0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
@@ -88,8 +86,8 @@ export default function Sidebar() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              background: active ? "rgba(75,191,176,0.12)" : "transparent",
-              color: active ? "#4BBFB0" : "#9CA3AF",
+              background: active ? "rgba(232,98,42,0.10)" : "transparent",
+              color: active ? "#E8622A" : "#9CA3AF",
               transition: "all 0.12s",
               flexShrink: 0,
             }}
@@ -123,8 +121,8 @@ export default function Sidebar() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            background: pathname.startsWith("/admin") ? "rgba(75,191,176,0.12)" : "transparent",
-            color: pathname.startsWith("/admin") ? "#4BBFB0" : "#9CA3AF",
+            background: pathname.startsWith("/admin") ? "rgba(232,98,42,0.10)" : "transparent",
+            color: pathname.startsWith("/admin") ? "#E8622A" : "#9CA3AF",
             transition: "all 0.12s",
             flexShrink: 0,
           }}
@@ -147,8 +145,8 @@ export default function Sidebar() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: pathname === "/settings" ? "rgba(75,191,176,0.12)" : "transparent",
-          color: pathname === "/settings" ? "#4BBFB0" : "#9CA3AF",
+          background: pathname === "/settings" ? "rgba(232,98,42,0.10)" : "transparent",
+          color: pathname === "/settings" ? "#E8622A" : "#9CA3AF",
           transition: "all 0.12s",
           flexShrink: 0,
         }}
@@ -177,7 +175,7 @@ export default function Sidebar() {
             height: 34,
             borderRadius: "50%",
             overflow: "hidden",
-            background: "#D4795C",
+            background: "#E8622A",
             border: "none",
             cursor: "pointer",
             display: "flex",
