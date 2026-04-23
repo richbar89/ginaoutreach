@@ -364,7 +364,7 @@ export default function WaitlistPage() {
 
         @media (max-width: 600px) {
           .lp-hl { font-size: clamp(32px, 9vw, 48px); }
-          .lp-logo { font-size: clamp(44px, 12vw, 64px); }
+          .lp-logo { font-size: clamp(72px, 20vw, 96px); }
           .lp-center { padding: 24px 20px 28px; }
           .lp-row2 { grid-template-columns: 1fr; }
           .lp-feat-grid { grid-template-columns: 1fr; }
