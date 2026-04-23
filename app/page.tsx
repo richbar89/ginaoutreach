@@ -226,14 +226,25 @@ export default function WaitlistPage() {
         @keyframes lp-sl { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         @keyframes lp-sr { from { transform: translateX(-50%); } to { transform: translateX(0); } }
 
+        /* Blur layer — softens brand cards in the centre */
+        .lp-blur-center {
+          position: absolute; inset: 0; pointer-events: none; z-index: 1;
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          mask-image: radial-gradient(ellipse 68% 78% at 50% 50%,
+            black 0%, black 22%, rgba(0,0,0,0.55) 52%, transparent 74%);
+          -webkit-mask-image: radial-gradient(ellipse 68% 78% at 50% 50%,
+            black 0%, black 22%, rgba(0,0,0,0.55) 52%, transparent 74%);
+        }
+
         /* Strong centre vignette for readability */
         .lp-vignette {
           position: absolute; inset: 0; pointer-events: none; z-index: 2;
-          background: radial-gradient(ellipse 56% 66% at 50% 50%,
-            rgba(245,240,234,0.86) 0%,
-            rgba(245,240,234,0.60) 30%,
-            rgba(245,240,234,0.18) 58%,
-            transparent 76%
+          background: radial-gradient(ellipse 58% 68% at 50% 50%,
+            rgba(245,240,234,0.94) 0%,
+            rgba(245,240,234,0.72) 25%,
+            rgba(245,240,234,0.30) 54%,
+            transparent 74%
           );
         }
 
@@ -293,8 +304,10 @@ export default function WaitlistPage() {
         /* Form card */
         .lp-card {
           width: 100%; max-width: 400px;
-          background: rgba(255,255,255,0.92);
-          border: 1.5px solid rgba(200,185,170,0.42);
+          background: rgba(245,240,234,0.82);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          border: 1.5px solid rgba(200,185,170,0.38);
           border-radius: 20px; padding: 22px;
           box-shadow: 0 8px 32px rgba(0,0,0,0.08);
           margin-bottom: 16px;
@@ -316,11 +329,12 @@ export default function WaitlistPage() {
         }
         .lp-btn {
           width: 100%; padding: 13px;
-          background: #1A1110; color: #fff; border: none; border-radius: 11px;
+          background: #E8622A; color: #fff; border: none; border-radius: 11px;
           font-size: 14px; font-weight: 600; font-family: 'Inter', sans-serif;
           cursor: pointer; transition: background 0.14s, transform 0.12s;
+          box-shadow: 0 4px 18px rgba(232,98,42,0.38);
         }
-        .lp-btn:hover:not(:disabled) { background: #333; transform: translateY(-1px); }
+        .lp-btn:hover:not(:disabled) { background: #C4500A; transform: translateY(-1px); }
         .lp-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
         /* Features */
@@ -375,6 +389,9 @@ export default function WaitlistPage() {
               />
             ))}
           </div>
+
+          {/* Blur centre layer */}
+          <div className="lp-blur-center" />
 
           {/* Vignette */}
           <div className="lp-vignette" />
@@ -482,7 +499,7 @@ export default function WaitlistPage() {
             <a
               href="#"
               onClick={e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); setTimeout(() => formRef.current?.querySelector("input")?.focus(), 600); }}
-              style={{ display: "inline-block", background: "#1A1110", color: "#fff", fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 15, padding: "14px 32px", borderRadius: 100, textDecoration: "none" }}
+              style={{ display: "inline-block", background: "#E8622A", color: "#fff", fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 15, padding: "14px 32px", borderRadius: 100, textDecoration: "none", boxShadow: "0 4px 18px rgba(232,98,42,0.38)" }}
             >
               Join the waitlist →
             </a>
