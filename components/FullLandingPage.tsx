@@ -521,7 +521,7 @@ export default function LandingPage() {
         </div>
 
         {/* ── CREATOR SPOTS ── */}
-        <section className="cl-section" style={{ background: "rgba(251,247,242,0.7)", padding: "90px 28px" }}>
+        <section className="cl-section" style={{ background: "rgba(255,255,255,0.12)", padding: "90px 28px" }}>
           <div className="cl-inner" style={{ maxWidth: 860 }}>
             <div ref={urgency.ref} className={`cl-fade${urgency.vis ? " vis" : ""}`}>
               <div style={{ textAlign: "center", marginBottom: 48 }}>
@@ -570,25 +570,14 @@ export default function LandingPage() {
         </section>
 
         {/* ── PRICING ── */}
-        <section className="cl-section cl-pricing-grain" style={{ padding: "110px 28px", position: "relative", overflow: "hidden" }}>
-          {/* SVG grain filter — hidden, just defines the filter */}
-          <svg width="0" height="0" style={{ position: "absolute" }}>
-            <defs>
-              <filter id="cl-grain">
-                <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" result="noise" />
-                <feColorMatrix type="saturate" values="0" in="noise" result="grayNoise" />
-                <feBlend in="SourceGraphic" in2="grayNoise" mode="overlay" result="blended" />
-                <feComposite in="blended" in2="SourceGraphic" operator="in" />
-              </filter>
-            </defs>
-          </svg>
+        <section style={{ padding: "110px 28px", position: "relative", overflow: "hidden", background: "rgba(255,255,255,0.12)" }}>
           <div className="cl-inner" style={{ maxWidth: 620, position: "relative", zIndex: 1 }}>
             <div ref={pricing.ref} className={`cl-fade${pricing.vis ? " vis" : ""}`} style={{ textAlign: "center" }}>
-              <div style={{ display: "inline-block", fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: "rgba(255,255,255,0.5)", background: "rgba(255,255,255,0.1)", padding: "4px 12px", borderRadius: 100, marginBottom: 16 }}>Pricing</div>
-              <h2 className="cl-h" style={{ fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 800, letterSpacing: "-0.035em", color: "#fff", marginBottom: 48 }}>
+              <div className="cl-tag">Pricing</div>
+              <h2 className="cl-h" style={{ fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 800, letterSpacing: "-0.035em", color: "#0D1B2A", marginBottom: 48 }}>
                 One price.<br />Everything included.
               </h2>
-              <div style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 20, padding: "48px", backdropFilter: "blur(10px)" }}>
+              <div style={{ background: "#0D1B2A", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 20, padding: "48px", boxShadow: "0 32px 80px rgba(13,27,42,0.25)" }}>
                 <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "center", gap: 4, marginBottom: 6 }}>
                   <span className="cl-h" style={{ fontSize: 72, fontWeight: 800, color: "#fff", letterSpacing: "-0.05em", lineHeight: 1 }}>£29</span>
                   <span style={{ fontSize: 18, color: "rgba(255,255,255,0.45)", marginBottom: 10 }}>/month</span>
@@ -615,7 +604,7 @@ export default function LandingPage() {
                   ))}
                 </div>
 
-                <Link href="/sign-up" className="cl-btn cl-btn-primary-lg" style={{ width: "100%", justifyContent: "center", display: "flex", textDecoration: "none", borderRadius: 12, padding: "16px", background: "#fff", color: "#0D1B2A" }}>
+                <Link href="/sign-up" className="cl-btn cl-btn-primary-lg" style={{ width: "100%", justifyContent: "center", display: "flex", textDecoration: "none", borderRadius: 12, padding: "16px", background: "#E8622A", color: "#fff" }}>
                   Start 7-day free trial — it&apos;s free
                 </Link>
                 <p style={{ fontSize: 13, color: "rgba(255,255,255,0.35)", marginTop: 14 }}>No credit card needed. Cancel at any time.</p>
@@ -625,7 +614,7 @@ export default function LandingPage() {
         </section>
 
         {/* ── FOOTER ── */}
-        <footer style={{ borderTop: "1px solid rgba(0,0,0,0.07)", padding: "32px 28px", background: "rgba(255,255,255,0.15)" }}>
+        <footer style={{ borderTop: "1px solid rgba(0,0,0,0.07)", padding: "32px 28px", background: "rgba(255,255,255,0.12)" }}>
           <div className="cl-inner" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
             <span className="cl-h" style={{ fontSize: 15, fontWeight: 800, color: "#9ca3af", letterSpacing: "-0.03em" }}>Collabi © 2025</span>
             <div style={{ display: "flex", gap: 24 }}>

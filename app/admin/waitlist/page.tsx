@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Loader2, Download } from "lucide-react";
+import { Loader2, Download, Trash2 } from "lucide-react";
 
 const NICHE_LABELS: Record<string, string> = {
   food: "Food & Drink",
@@ -43,6 +43,18 @@ export default function WaitlistAdminPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filterNiche, setFilterNiche] = useState("");
+  const [deleting, setDeleting] = useState<string | null>(null);
+
+  async function handleDelete(id: string) {
+    setDeleting(id);
+    await fetch("/api/admin/waitlist", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+    setEntries(prev => prev.filter(e => e.id !== id));
+    setDeleting(null);
+  }
 
   useEffect(() => {
     fetch("/api/admin/waitlist")
@@ -158,7 +170,7 @@ export default function WaitlistAdminPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b" style={{ borderColor: "var(--border)" }}>
-                {["Name", "Email", "Niche", "Signed Up"].map(h => (
+                {["Name", "Email", "Niche", "Signed Up", ""].map(h => (
                   <th key={h} className="text-left px-5 py-3 text-[11px] font-bold uppercase tracking-widest text-navy-400">{h}</th>
                 ))}
               </tr>
@@ -179,6 +191,15 @@ export default function WaitlistAdminPage() {
                     </td>
                     <td className="px-5 py-3.5 text-navy-400">
                       {new Date(e.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <button
+                        onClick={() => handleDelete(e.id)}
+                        disabled={deleting === e.id}
+                        className="p-1.5 rounded-lg text-navy-300 hover:text-red-500 hover:bg-red-50 transition-colors disabled:opacity-40"
+                      >
+                        {deleting === e.id ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
+                      </button>
                     </td>
                   </tr>
                 );
