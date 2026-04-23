@@ -365,7 +365,6 @@ export default function WaitlistPage() {
         @media (max-width: 600px) {
           .lp-hl { font-size: clamp(32px, 9vw, 48px); }
           .lp-logo { font-size: clamp(44px, 12vw, 64px); }
-          .lp-sub { display: none; }
           .lp-center { padding: 24px 20px 28px; }
           .lp-row2 { grid-template-columns: 1fr; }
           .lp-feat-grid { grid-template-columns: 1fr; }
@@ -417,8 +416,8 @@ export default function WaitlistPage() {
               favourite brands.
             </h1>
 
-            {/* Sub-heading */}
-            <p className="lp-sub">
+            {/* Sub-heading — hidden on mobile via Tailwind so form fits on screen */}
+            <p className="lp-sub hidden sm:block">
               Collabi is an outreach tool for creators. Search thousands of brands,
               see who&apos;s actively spending on marketing, and reach the right
               person in their inbox — all from one place.
