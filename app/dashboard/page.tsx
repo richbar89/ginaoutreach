@@ -34,6 +34,59 @@ const BRAND_AVATAR_COLOURS = [
   "#EF4444","#EC4899","#06B6D4","#84CC16","#F97316","#6366F1",
 ];
 
+// Module-level cache — deduplicates fetches across all BrandLogo instances
+const _domainCache = new Map<string, string>();
+const _domainPending = new Map<string, Promise<string>>();
+
+function fetchBrandDomain(name: string): Promise<string> {
+  if (_domainCache.has(name)) return Promise.resolve(_domainCache.get(name)!);
+  if (_domainPending.has(name)) return _domainPending.get(name)!;
+  const p = fetch(`/api/resolve-domain?name=${encodeURIComponent(name)}`)
+    .then(r => r.json())
+    .then(({ domain }: { domain: string }) => {
+      _domainCache.set(name, domain ?? "");
+      _domainPending.delete(name);
+      return domain ?? "";
+    })
+    .catch(() => { _domainCache.set(name, ""); _domainPending.delete(name); return ""; });
+  _domainPending.set(name, p);
+  return p;
+}
+
+function BrandLogo({ name, size = 30 }: { name: string; size?: number }) {
+  const colour = BRAND_AVATAR_COLOURS[
+    name.split("").reduce((h, c) => (h * 31 + c.charCodeAt(0)) & 0xffff, 0) % BRAND_AVATAR_COLOURS.length
+  ];
+  const [domain, setDomain] = useState(() => _domainCache.get(name) ?? "");
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    if (domain || failed) return;
+    fetchBrandDomain(name).then(d => { if (d) setDomain(d); });
+  }, [name, domain, failed]);
+
+  const showLogo = !!domain && !failed;
+  return (
+    <div style={{
+      width: size, height: size, borderRadius: 9, flexShrink: 0, overflow: "hidden",
+      background: showLogo ? "#fff" : colour,
+      border: showLogo ? "1px solid rgba(0,0,0,0.07)" : "none",
+      display: "flex", alignItems: "center", justifyContent: "center",
+    }}>
+      {showLogo ? (
+        <img
+          src={`https://www.google.com/s2/favicons?domain=${domain}&sz=64`}
+          alt={name} width={size - 6} height={size - 6}
+          style={{ objectFit: "contain", width: size - 6, height: size - 6 }}
+          onError={() => setFailed(true)}
+        />
+      ) : (
+        <span style={{ color: "white", fontSize: 11, fontWeight: 800 }}>{name[0]?.toUpperCase()}</span>
+      )}
+    </div>
+  );
+}
+
 const FAV_KEY = "dashboard_fav_brands";
 
 const CARD: React.CSSProperties = {
@@ -370,9 +423,7 @@ export default function DashboardPage() {
               <div className="scrollbar-thin" style={{ flex: 1, overflowY: "auto", display: "grid", gridTemplateColumns: "1fr 1fr", alignContent: "start", padding: "12px 18px", gap: 8 }}>
                 {displayedBrands.map((brand, i) => (
                   <div key={brand.name} className="flex items-center gap-2 rounded-2xl hover:bg-orange-50/30 transition-colors" style={{ padding: "10px 12px", border: "1px solid rgba(0,0,0,0.06)" }}>
-                    <div style={{ width: 30, height: 30, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, background: BRAND_AVATAR_COLOURS[i % BRAND_AVATAR_COLOURS.length], color: "white", fontSize: 11, fontWeight: 800 }}>
-                      {brand.name[0]?.toUpperCase()}
-                    </div>
+                    <BrandLogo name={brand.name} size={30} />
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <span style={{ fontWeight: 700, color: "#111827", fontSize: 11, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", display: "block" }}>{brand.name}</span>
                       {brand.checkedAt && <span style={{ fontSize: 9, color: "#D1C4B8" }}>{Math.floor((Date.now() - new Date(brand.checkedAt).getTime()) / 3600000)}h ago</span>}
