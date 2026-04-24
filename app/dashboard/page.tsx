@@ -43,6 +43,13 @@ function BrandLogo({ name, size = 30, domain }: { name: string; size?: number; d
   );
   const [failed, setFailed] = useState(false);
 
+  useEffect(() => {
+    if (domain) {
+      setImgSrc(`https://logo.clearbit.com/${domain}`);
+      setFailed(false);
+    }
+  }, [domain]);
+
   function handleError() {
     if (domain && imgSrc?.includes("logo.clearbit.com")) {
       setImgSrc(`https://www.google.com/s2/favicons?domain=${domain}&sz=64`);
