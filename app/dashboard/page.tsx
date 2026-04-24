@@ -113,6 +113,7 @@ export default function DashboardPage() {
   const [extraDomains, setExtraDomains] = useState<Record<string, string>>(() => {
     try { return JSON.parse(localStorage.getItem(DOMAINS_KEY) ?? "{}"); } catch { return {}; }
   });
+  const [resolvingDomains, setResolvingDomains] = useState(false);
   const [companyCategories, setCompanyCategories] = useState<Record<string, string>>({});
   const [emailDomainMap, setEmailDomainMap] = useState<Record<string, string>>({});
 
@@ -170,6 +171,19 @@ export default function DashboardPage() {
       const brandsData = await dbGetBrands(db);
       setBrands(brandsData);
 
+      // Push known domains into the localStorage cache immediately
+      const domainsFromDb = brandsData.reduce<Record<string, string>>((acc, b) => {
+        if (b.domain) acc[b.name] = b.domain;
+        return acc;
+      }, {});
+      if (Object.keys(domainsFromDb).length > 0) {
+        setExtraDomains(prev => {
+          const next = { ...prev, ...domainsFromDb };
+          localStorage.setItem(DOMAINS_KEY, JSON.stringify(next));
+          return next;
+        });
+      }
+
       // Resolve and permanently store domains for any brands that don't have one yet
       const missing = brandsData.filter(b => !b.domain);
       if (missing.length > 0) {
@@ -180,6 +194,11 @@ export default function DashboardPage() {
             if (domain) {
               await dbUpdateBrandDomain(db, b.name, domain);
               setBrands(prev => prev.map(p => p.name === b.name ? { ...p, domain } : p));
+              setExtraDomains(prev => {
+                const next = { ...prev, [b.name]: domain };
+                localStorage.setItem(DOMAINS_KEY, JSON.stringify(next));
+                return next;
+              });
             }
           } catch { /* ignore */ }
         }));
@@ -194,8 +213,14 @@ export default function DashboardPage() {
 
       // Resolve domains for fav brands not already in the brands table
       const favStored: string[] = stored ? JSON.parse(stored) : [];
-      const unresolved = favStored.filter(name => !brandsData.find(b => b.name === name));
+      const cachedDomains: Record<string, string> = (() => {
+        try { return JSON.parse(localStorage.getItem(DOMAINS_KEY) ?? "{}"); } catch { return {}; }
+      })();
+      const unresolved = favStored.filter(name =>
+        !brandsData.find(b => b.name === name && b.domain) && !cachedDomains[name]
+      );
       if (unresolved.length > 0) {
+        setResolvingDomains(true);
         Promise.allSettled(unresolved.map(async (name) => {
           try {
             const res = await fetch(`/api/resolve-domain?name=${encodeURIComponent(name)}`);
@@ -206,7 +231,7 @@ export default function DashboardPage() {
               return next;
             });
           } catch { /* ignore */ }
-        }));
+        })).finally(() => setResolvingDomains(false));
       }
     })();
   }, [getDb]);
@@ -345,6 +370,13 @@ export default function DashboardPage() {
                 </Link>
               </div>
             </div>
+
+            {resolvingDomains && !editingFavs && (
+              <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 20px", background: "rgba(234,88,12,0.04)", borderBottom: CARD_DIVIDER, flexShrink: 0 }}>
+                <RefreshCw size={10} className="animate-spin" style={{ color: "#EA580C" }} />
+                <span style={{ fontSize: 10, color: "#EA580C", fontWeight: 600 }}>Building brand intelligence…</span>
+              </div>
+            )}
 
             {editingFavs && (
               <div style={{ borderBottom: CARD_DIVIDER, background: "rgba(249,250,251,0.8)", flexShrink: 0 }}>
