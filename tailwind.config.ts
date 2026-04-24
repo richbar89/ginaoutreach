@@ -10,8 +10,8 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans:    ["Inter", "system-ui", "sans-serif"],
-        display: ["Sora", "system-ui", "sans-serif"],
-        serif:   ["Sora", "system-ui", "sans-serif"],
+        display: ["Bricolage Grotesque", "system-ui", "sans-serif"],
+        serif:   ["Bricolage Grotesque", "system-ui", "sans-serif"],
       },
       colors: {
         // Warm terracotta — primary accent
