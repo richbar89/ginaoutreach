@@ -100,6 +100,10 @@ export default function DashboardPage() {
   const [adStatuses, setAdStatuses] = useState<Record<string, AdStatus>>({});
   const [favBrands, setFavBrands] = useState<string[]>([]);
   const [editingFavs, setEditingFavs] = useState(false);
+  const [pickerSearch, setPickerSearch] = useState("");
+  const [pickerCategory, setPickerCategory] = useState("");
+  const [extraDomains, setExtraDomains] = useState<Record<string, string>>({});
+  const [companyCategories, setCompanyCategories] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const gUser = getGoogleUser();
@@ -115,13 +119,19 @@ export default function DashboardPage() {
   useEffect(() => {
     (async () => {
       const [db, contactsRes] = await Promise.all([getDb(), fetch("/api/contacts")]);
-      const contactsList: { email: string; name: string; company?: string }[] =
+      const contactsList: { email: string; name: string; company?: string; category?: string }[] =
         contactsRes.ok ? await contactsRes.json() : [];
 
       const companies = Array.from(
-        new Set(contactsList.map(c => (c as any).company).filter(Boolean))
+        new Set(contactsList.map(c => c.company).filter(Boolean))
       ) as string[];
       setAllCompanies(companies);
+
+      const catMap: Record<string, string> = {};
+      for (const c of contactsList) {
+        if (c.company && c.category && !catMap[c.company]) catMap[c.company] = c.category;
+      }
+      setCompanyCategories(catMap);
 
       const log = await dbGetEmailLog(db);
       setEmailsSent(log.length);
@@ -166,9 +176,22 @@ export default function DashboardPage() {
 
       const stored = localStorage.getItem(FAV_KEY);
       if (!stored && brandsData.length > 0) {
-        const initial = brandsData.slice(0, 8).map(b => b.name);
+        const initial = brandsData.slice(0, 10).map(b => b.name);
         setFavBrands(initial);
         localStorage.setItem(FAV_KEY, JSON.stringify(initial));
+      }
+
+      // Resolve domains for fav brands not already in the brands table
+      const favStored: string[] = stored ? JSON.parse(stored) : [];
+      const unresolved = favStored.filter(name => !brandsData.find(b => b.name === name));
+      if (unresolved.length > 0) {
+        Promise.allSettled(unresolved.map(async (name) => {
+          try {
+            const res = await fetch(`/api/resolve-domain?name=${encodeURIComponent(name)}`);
+            const { domain } = await res.json() as { domain: string };
+            if (domain) setExtraDomains(prev => ({ ...prev, [name]: domain }));
+          } catch { /* ignore */ }
+        }));
       }
     })();
   }, [getDb]);
@@ -192,7 +215,7 @@ export default function DashboardPage() {
   const displayedBrands = favBrands.map(name => {
     const dbBrand = brands.find(b => b.name === name);
     const cached = adStatuses[name];
-    return { name, runningAds: cached?.hasAds ?? dbBrand?.runningAds ?? null, checkedAt: cached?.checkedAt ?? null, domain: dbBrand?.domain };
+    return { name, runningAds: cached?.hasAds ?? dbBrand?.runningAds ?? null, checkedAt: cached?.checkedAt ?? null, domain: dbBrand?.domain ?? extraDomains[name] };
   });
 
   const emailReady = emailConnected === "gmail" || emailConnected === "microsoft";
@@ -293,7 +316,7 @@ export default function DashboardPage() {
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                 <button
-                  onClick={() => setEditingFavs(v => !v)}
+                  onClick={() => { setEditingFavs(v => !v); setPickerSearch(""); setPickerCategory(""); }}
                   style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 10, fontWeight: 700, color: editingFavs ? "#10B981" : "#9CA3AF", background: editingFavs ? "rgba(16,185,129,0.08)" : "rgba(0,0,0,0.04)", border: `1px solid ${editingFavs ? "rgba(16,185,129,0.25)" : "rgba(0,0,0,0.08)"}`, borderRadius: 7, padding: "4px 9px", cursor: "pointer" }}
                 >
                   {editingFavs ? <Check size={11} /> : <Edit2 size={11} />}
@@ -309,22 +332,76 @@ export default function DashboardPage() {
             </div>
 
             {editingFavs && (
-              <div style={{ padding: "12px 24px", borderBottom: CARD_DIVIDER, background: "rgba(249,250,251,0.8)", flexShrink: 0 }}>
-                <p style={{ fontSize: 10, color: "#9CA3AF", marginBottom: 8, fontWeight: 600 }}>
-                  Pin up to 10 brands — pulls live from your 24h ad scan
-                </p>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 5, maxHeight: 90, overflowY: "auto" }}>
-                  {allBrandNames.length === 0 ? (
-                    <p style={{ fontSize: 11, color: "#D1D5DB" }}>No companies found. Add contacts with company names.</p>
-                  ) : allBrandNames.map(name => {
-                    const selected = favBrands.includes(name);
-                    const atMax = !selected && favBrands.length >= 10;
-                    return (
-                      <button key={name} onClick={() => !atMax && toggleFav(name)} style={{ fontSize: 10, fontWeight: 700, padding: "4px 10px", borderRadius: 20, cursor: atMax ? "not-allowed" : "pointer", background: selected ? "#EA580C" : "rgba(0,0,0,0.05)", color: selected ? "white" : atMax ? "#D1D5DB" : "#374151", border: `1px solid ${selected ? "#EA580C" : "rgba(0,0,0,0.08)"}`, transition: "all 0.12s" }}>
-                        {selected && "✓ "}{name}
-                      </button>
+              <div style={{ borderBottom: CARD_DIVIDER, background: "rgba(249,250,251,0.8)", flexShrink: 0 }}>
+                {/* Search + category filter */}
+                <div style={{ display: "flex", gap: 8, padding: "10px 16px" }}>
+                  <input
+                    type="text"
+                    placeholder="Search brands..."
+                    value={pickerSearch}
+                    onChange={e => setPickerSearch(e.target.value)}
+                    style={{ flex: 1, fontSize: 11, padding: "6px 10px", borderRadius: 8, border: "1px solid rgba(0,0,0,0.1)", background: "#fff", outline: "none", color: "#111827" }}
+                    autoFocus
+                  />
+                  {Object.keys(companyCategories).length > 0 && (
+                    <select
+                      value={pickerCategory}
+                      onChange={e => setPickerCategory(e.target.value)}
+                      style={{ fontSize: 11, padding: "6px 8px", borderRadius: 8, border: "1px solid rgba(0,0,0,0.1)", background: "#fff", color: "#374151", cursor: "pointer" }}
+                    >
+                      <option value="">All categories</option>
+                      {Array.from(new Set(Object.values(companyCategories))).sort().map(cat => (
+                        <option key={cat} value={cat}>{cat}</option>
+                      ))}
+                    </select>
+                  )}
+                </div>
+                {/* A-Z brand list */}
+                <div className="scrollbar-thin" style={{ maxHeight: 180, overflowY: "auto", padding: "0 16px 10px" }}>
+                  {(() => {
+                    const filtered = allBrandNames.filter(name => {
+                      const matchSearch = !pickerSearch || name.toLowerCase().includes(pickerSearch.toLowerCase());
+                      const matchCat = !pickerCategory || companyCategories[name] === pickerCategory;
+                      return matchSearch && matchCat;
+                    });
+                    if (filtered.length === 0) return (
+                      <p style={{ fontSize: 11, color: "#D1D5DB", padding: "8px 0" }}>No brands match.</p>
                     );
-                  })}
+                    const grouped = filtered.reduce<Record<string, string[]>>((acc, name) => {
+                      const letter = name[0].toUpperCase();
+                      if (!acc[letter]) acc[letter] = [];
+                      acc[letter].push(name);
+                      return acc;
+                    }, {});
+                    return Object.keys(grouped).sort().map(letter => (
+                      <div key={letter}>
+                        <p style={{ fontSize: 9, fontWeight: 800, color: "#C4B5A5", letterSpacing: "0.1em", textTransform: "uppercase", margin: "8px 0 4px" }}>{letter}</p>
+                        {grouped[letter].map(name => {
+                          const selected = favBrands.includes(name);
+                          const atMax = !selected && favBrands.length >= 10;
+                          return (
+                            <button
+                              key={name}
+                              onClick={() => !atMax && toggleFav(name)}
+                              style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "5px 8px", borderRadius: 8, border: "none", background: selected ? "rgba(234,88,12,0.08)" : "transparent", cursor: atMax ? "not-allowed" : "pointer", textAlign: "left", transition: "background 0.1s" }}
+                            >
+                              <span style={{ width: 14, height: 14, borderRadius: 4, border: `1.5px solid ${selected ? "#EA580C" : "rgba(0,0,0,0.15)"}`, background: selected ? "#EA580C" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                                {selected && <span style={{ color: "white", fontSize: 9, fontWeight: 900, lineHeight: 1 }}>✓</span>}
+                              </span>
+                              <span style={{ fontSize: 11, fontWeight: 600, color: atMax && !selected ? "#D1D5DB" : selected ? "#EA580C" : "#374151" }}>{name}</span>
+                              {companyCategories[name] && <span style={{ fontSize: 9, color: "#C4B5A5", marginLeft: "auto" }}>{companyCategories[name]}</span>}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    ));
+                  })()}
+                </div>
+                <div style={{ padding: "6px 16px 10px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <span style={{ fontSize: 10, color: "#9CA3AF" }}>{favBrands.length}/10 selected</span>
+                  {favBrands.length > 0 && (
+                    <button onClick={() => { setFavBrands([]); localStorage.setItem(FAV_KEY, JSON.stringify([])); }} style={{ fontSize: 10, color: "#EF4444", background: "none", border: "none", cursor: "pointer", fontWeight: 600 }}>Clear all</button>
+                  )}
                 </div>
               </div>
             )}
@@ -332,8 +409,14 @@ export default function DashboardPage() {
             {displayedBrands.length === 0 ? (
               <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: 32 }}>
                 <Star size={24} style={{ color: "#E5E7EB", marginBottom: 10 }} />
-                <p style={{ fontSize: 12, fontWeight: 600, color: "#9CA3AF" }}>No brands pinned yet.</p>
-                <p style={{ fontSize: 10, color: "#D1D5DB", marginTop: 3 }}>Click Edit to select up to 10 brands.</p>
+                <p style={{ fontSize: 13, fontWeight: 700, color: "#374151", marginBottom: 4 }}>Pick your 10 favourite brands</p>
+                <p style={{ fontSize: 11, color: "#9CA3AF", marginBottom: 14 }}>We'll track whether they're running Meta ads in real time.</p>
+                <button
+                  onClick={() => setEditingFavs(true)}
+                  style={{ fontSize: 11, fontWeight: 700, padding: "8px 18px", borderRadius: 10, background: "#EA580C", color: "white", border: "none", cursor: "pointer" }}
+                >
+                  Select brands →
+                </button>
               </div>
             ) : (
               <div className="scrollbar-thin" style={{ flex: 1, overflowY: "auto", padding: "10px 18px", display: "flex", flexDirection: "column", gap: 6 }}>
