@@ -6,16 +6,20 @@ Things to complete before selling to real users.
 
 ## Domain & Hosting
 
-- [ ] Buy a custom domain (e.g. `collabi.io` or `collabi.co`)
-- [ ] Connect custom domain to Replit deployment
+- [x] Buy a custom domain (`collabi.io`)
+- [x] Connect custom domain to Vercel
 - [ ] Confirm HTTPS/SSL is working on custom domain
+- [ ] **Meta Access Token** — replace `META_ACCESS_TOKEN` in Vercel env vars with a non-expiring System User token:
+  1. Go to business.facebook.com → Settings → Users → System Users
+  2. Create a system user, assign to your Meta app with required permissions
+  3. Generate token → update `META_ACCESS_TOKEN` in Vercel → redeploy
 
 ---
 
 ## Authentication (Clerk + Google OAuth)
 
 - [ ] Deploy Clerk app to production (Dashboard → "Deploy your app to production")
-  - Update `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` in Replit Secrets with the new production keys
+  - Update `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` in Vercel env vars with the new production keys
 - [ ] Add custom domain to Clerk's allowed domains
 - [ ] In Google Cloud Console → OAuth consent screen → **Publish App** (moves from Testing to Production)
 - [ ] In Google Cloud Console → OAuth 2.0 Credentials:
@@ -91,6 +95,7 @@ Things to complete before selling to real users.
 - [x] **Deal Pipeline** — add drag-and-drop between stages (currently static cards)
 - [x] **Remove Trend Monitor** — `/trends` page and sidebar link to be deleted
 - [ ] **Meta Ad Alerts** — improve the `/ads` page (better UI, more actionable data)
+- [ ] **Sponsored Content Monitor** — twice-weekly Apify scrape of a watchlist of influencers, detecting captions containing `#ad`, `#sponsored`, or the word "ad". Alert admin when detected. Future: auto-identify the brand from the post. Complements Meta Ad Scanning (which tracks paid ads) — this tracks organic influencer partnerships. Possible page: `/influencer-intel`.
 - [ ] **Sidebar** — restructure into cleaner sections, easier to navigate
 - [ ] **Sidebar Outreach section** — tidy up items (review labels, order, remove clutter)
 
