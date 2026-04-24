@@ -12,7 +12,7 @@ import {
   BarChart3,
   BookOpen,
   ShieldCheck,
-  LineChart,
+
 } from "lucide-react";
 import { useUser, SignOutButton } from "@clerk/nextjs";
 
@@ -26,7 +26,6 @@ const NAV_ITEMS = [
   { href: "/pipeline",   label: "Deal Pipeline",   icon: TrendingUp,      exact: false },
   { href: "/media-kit",  label: "Media Kit",       icon: BookOpen,        exact: false },
   { href: "/ads",        label: "Meta Ad Alerts",  icon: BarChart3,       exact: false },
-  { href: "/analytics",  label: "My Analytics",    icon: LineChart,       exact: false },
 ];
 
 const PILL: React.CSSProperties = {
