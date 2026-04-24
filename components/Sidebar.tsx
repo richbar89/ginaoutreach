@@ -52,11 +52,12 @@ export default function Sidebar() {
       {/* Wordmark */}
       <div style={{ padding: "6px 10px 14px" }}>
         <span style={{
-          fontFamily: "'Bricolage Grotesque', system-ui, sans-serif",
-          fontSize: 24,
+          fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+          fontSize: 34,
           fontWeight: 800,
-          letterSpacing: "-0.04em",
+          letterSpacing: "-0.05em",
           lineHeight: 1,
+          display: "block",
           background: "linear-gradient(135deg, #FF8C42, #C4603A)",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
@@ -105,7 +106,7 @@ export default function Sidebar() {
               fontSize: 13,
               fontWeight: active ? 700 : 500,
               letterSpacing: "-0.01em",
-              fontFamily: "'Bricolage Grotesque', system-ui, sans-serif",
+              fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
             }}>
               {label}
             </span>
@@ -130,7 +131,7 @@ export default function Sidebar() {
           }}
         >
           <ShieldCheck size={17} strokeWidth={1.75} style={{ flexShrink: 0 }} />
-          <span style={{ fontSize: 13, fontWeight: 500, letterSpacing: "-0.01em", fontFamily: "'Bricolage Grotesque', system-ui, sans-serif" }}>
+          <span style={{ fontSize: 13, fontWeight: 500, letterSpacing: "-0.01em", fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
             Admin
           </span>
         </Link>
@@ -167,7 +168,7 @@ export default function Sidebar() {
         }}
       >
         <Settings size={17} strokeWidth={1.75} style={{ flexShrink: 0 }} />
-        <span style={{ fontSize: 13, fontWeight: 500, letterSpacing: "-0.01em", fontFamily: "'Bricolage Grotesque', system-ui, sans-serif" }}>Settings</span>
+        <span style={{ fontSize: 13, fontWeight: 500, letterSpacing: "-0.01em", fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>Settings</span>
       </Link>
 
       {/* User + sign out */}
