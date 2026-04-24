@@ -80,6 +80,7 @@ function BrandLogo({ name, size = 30, domain }: { name: string; size?: number; d
 }
 
 const FAV_KEY = "dashboard_fav_brands";
+const DOMAINS_KEY = "dashboard_brand_domains";
 
 const CARD: React.CSSProperties = {
   background: "#FFFFFF",
@@ -109,8 +110,11 @@ export default function DashboardPage() {
   const [editingFavs, setEditingFavs] = useState(false);
   const [pickerSearch, setPickerSearch] = useState("");
   const [pickerCategory, setPickerCategory] = useState("");
-  const [extraDomains, setExtraDomains] = useState<Record<string, string>>({});
+  const [extraDomains, setExtraDomains] = useState<Record<string, string>>(() => {
+    try { return JSON.parse(localStorage.getItem(DOMAINS_KEY) ?? "{}"); } catch { return {}; }
+  });
   const [companyCategories, setCompanyCategories] = useState<Record<string, string>>({});
+  const [emailDomainMap, setEmailDomainMap] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const gUser = getGoogleUser();
@@ -196,7 +200,11 @@ export default function DashboardPage() {
           try {
             const res = await fetch(`/api/resolve-domain?name=${encodeURIComponent(name)}`);
             const { domain } = await res.json() as { domain: string };
-            if (domain) setExtraDomains(prev => ({ ...prev, [name]: domain }));
+            if (domain) setExtraDomains(prev => {
+              const next = { ...prev, [name]: domain };
+              localStorage.setItem(DOMAINS_KEY, JSON.stringify(next));
+              return next;
+            });
           } catch { /* ignore */ }
         }));
       }
