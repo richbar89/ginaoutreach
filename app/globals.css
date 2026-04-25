@@ -20,10 +20,7 @@
 }
 
 html {
-  background:
-    radial-gradient(ellipse at 15% 10%, rgba(255,140,66,0.13) 0%, transparent 55%),
-    radial-gradient(ellipse at 88% 92%, rgba(196,96,58,0.09) 0%, transparent 50%),
-    #F5EDE5;
+  background: #F8F9FA;
   min-height: 100vh;
 }
 
