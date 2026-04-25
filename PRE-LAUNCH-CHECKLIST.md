@@ -123,6 +123,29 @@ Core feature — influencers select contacts, build a sequence, system sends aut
 
 ---
 
+## Data Collection & Market Intelligence
+
+> The long-term moat. Every deal logged makes the platform smarter for every user. Anonymised + aggregated = network effect.
+
+### Deal & Rate Data (collect from day 1)
+- [ ] **Structured deal logging** — when a deal moves to Contracted/Paid, capture: brand, content type (post/reel/story/YouTube/TikTok), agreed amount, follower count at time of deal, niche, platform
+- [ ] **Offer tracking** — log opening offer vs final agreed amount to build negotiation intelligence over time
+- [ ] **Payment timing** — log invoice date and payment received date to flag slow-paying brands
+
+### Benchmarking Insights (build once enough data exists)
+- [ ] **Rate benchmarking** — "Creators with 25K–75K followers in food & drink typically earn £400–£900 for an Instagram Reel" — anonymised aggregate across all users
+- [ ] **Brand reputation scores** — community-sourced: paid on time, clear brief, good to work with (Glassdoor for brands)
+- [ ] **Negotiation intelligence** — "Brands in this niche typically increase their offer by X% when countered"
+- [ ] **Response rate benchmarks** — "Your reply rate is 11% vs platform average of 7%"
+- [ ] **Seasonal spend patterns** — highlight when brands in each niche are most active (Q4 gifting, Jan fitness etc.)
+
+### Data Strategy Notes
+- All rate/deal data should be stored server-side in Supabase (not IndexedDB) so it's aggregatable
+- Anonymise before any aggregation — never expose individual user's deal values
+- This dataset becomes a significant competitive moat — start collecting from beta day 1 even if insights UI comes later
+
+---
+
 ## Additional Feature Ideas
 
 - [ ] **AI first-line personalisation** — before sending, Claude generates a personalised opening line per contact based on their company/role. Huge differentiator (Lemlist charges extra for this)
