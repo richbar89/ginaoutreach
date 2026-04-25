@@ -30,15 +30,17 @@ Things to complete before selling to real users.
 
 ---
 
-## Payments (Stripe)
+## Payments (Stripe) — POST-BETA
+
+> Beta is free — skip until after beta closes.
 
 - [ ] Create Stripe account
 - [ ] Set up a £29/month product + price in Stripe dashboard
-- [ ] Add Stripe keys to Replit Secrets
+- [ ] Add Stripe keys to Vercel env vars
 - [ ] Build checkout flow (sign-up → payment → dashboard)
 - [ ] Set up Stripe webhook to activate/deactivate user access on payment events
 - [ ] Test payment end-to-end with Stripe test cards
-- [ ] Switch Stripe to live mode before launch
+- [ ] Switch Stripe to live mode before paid launch
 
 ---
 
@@ -90,14 +92,55 @@ Things to complete before selling to real users.
 
 ---
 
+## Visual & Design Polish
+
+- [ ] Perfect overall app aesthetic — spacing, card styling, typography hierarchy
+- [ ] Dark sidebar (deep charcoal + white labels + orange accent)
+- [ ] Review every page for consistency — padding, font weights, button styles
+- [ ] Empty states — every page needs a good empty state (not just blank)
+- [ ] Loading states — skeletons or spinners where data loads async
+- [ ] Mobile layout — landing page at minimum, app screens if time allows
+
+---
+
+## Email Sequences & Automated Campaigns
+
+Core feature — influencers select contacts, build a sequence, system sends automatically with rate limiting.
+
+### Build
+- [ ] **Campaign builder** — select contacts from list, give campaign a name/niche
+- [ ] **Sequence editor** — write emails with placeholders: `{{firstName}}`, `{{companyName}}`, `{{position}}`
+- [ ] **Multi-step sequences** — Step 1 (initial pitch), Step 2 (follow-up if no reply, e.g. +4 days), Step 3 (final bump, e.g. +7 days)
+- [ ] **Send queue** — store pending sends in Supabase (`campaign_queue` table) with status: pending / sent / failed / skipped
+- [ ] **Rate limiting** — cap at 40 emails/day per user, send one every 5–10 mins via Vercel Cron
+- [ ] **Auto-pause on reply** — when inbox detects a reply, mark contact as replied and skip remaining steps
+- [ ] **Unsubscribe link** — legally required (UK GDPR); one-click opt-out that suppresses future sends
+
+### Analytics
+- [ ] **Campaign stats** — sent count, open rate, reply rate, bounce rate per campaign
+- [ ] **Open tracking** — tracking pixel in emails to detect opens
+- [ ] **Per-contact status** — show each contact's journey through the sequence
+
+---
+
+## Additional Feature Ideas
+
+- [ ] **AI first-line personalisation** — before sending, Claude generates a personalised opening line per contact based on their company/role. Huge differentiator (Lemlist charges extra for this)
+- [ ] **Media kit auto-attach** — option to attach your media kit PDF or link to outreach emails automatically
+- [ ] **Inbox rotation** — connect multiple Gmail/Outlook accounts and distribute sends across them (improves deliverability)
+- [ ] **Email warmup guidance** — tip/warning if user tries to send too many too fast from a new inbox
+- [ ] **Rate calculator** — simple tool: enter follower count + engagement rate → get suggested rate card for posts/stories/reels
+- [ ] **Invoice generator** — once a deal moves to "Contracted" or "Paid", generate a simple PDF invoice
+- [ ] **Sponsored Content Monitor** — twice-weekly Apify scrape of a watchlist of influencers, detecting `#ad`/`#sponsored` in captions. Alert admin when detected. Possible page: `/influencer-intel`
+- [ ] **Meta Ad Alerts** — improve the `/ads` page (better UI, more actionable data)
+
+---
+
 ## App UI & Features — Backlog
 
-- [x] **Deal Pipeline** — add drag-and-drop between stages (currently static cards)
-- [x] **Remove Trend Monitor** — `/trends` page and sidebar link to be deleted
-- [ ] **Meta Ad Alerts** — improve the `/ads` page (better UI, more actionable data)
-- [ ] **Sponsored Content Monitor** — twice-weekly Apify scrape of a watchlist of influencers, detecting captions containing `#ad`, `#sponsored`, or the word "ad". Alert admin when detected. Future: auto-identify the brand from the post. Complements Meta Ad Scanning (which tracks paid ads) — this tracks organic influencer partnerships. Possible page: `/influencer-intel`.
-- [ ] **Sidebar** — restructure into cleaner sections, easier to navigate
-- [ ] **Sidebar Outreach section** — tidy up items (review labels, order, remove clutter)
+- [x] **Deal Pipeline** — add drag-and-drop between stages
+- [x] **Remove Trend Monitor** — `/trends` page and sidebar link deleted
+- [ ] **Sidebar** — restructure into cleaner sections once dark sidebar is done
 
 ---
 
