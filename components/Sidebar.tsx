@@ -52,7 +52,7 @@ export default function Sidebar() {
       {/* Wordmark */}
       <div style={{ padding: "6px 8px 14px" }}>
         <span style={{
-          fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+          fontFamily: "'Inter', system-ui, sans-serif",
           fontSize: 44,
           fontWeight: 800,
           letterSpacing: "-0.05em",
@@ -106,7 +106,7 @@ export default function Sidebar() {
               fontSize: 13,
               fontWeight: active ? 700 : 500,
               letterSpacing: "-0.01em",
-              fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+              fontFamily: "'Inter', system-ui, sans-serif",
             }}>
               {label}
             </span>
@@ -131,7 +131,7 @@ export default function Sidebar() {
           }}
         >
           <ShieldCheck size={17} strokeWidth={1.75} style={{ flexShrink: 0 }} />
-          <span style={{ fontSize: 13, fontWeight: 500, letterSpacing: "-0.01em", fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
+          <span style={{ fontSize: 13, fontWeight: 500, letterSpacing: "-0.01em", fontFamily: "'Inter', system-ui, sans-serif" }}>
             Admin
           </span>
         </Link>
@@ -168,7 +168,7 @@ export default function Sidebar() {
         }}
       >
         <Settings size={17} strokeWidth={1.75} style={{ flexShrink: 0 }} />
-        <span style={{ fontSize: 13, fontWeight: 500, letterSpacing: "-0.01em", fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>Settings</span>
+        <span style={{ fontSize: 13, fontWeight: 500, letterSpacing: "-0.01em", fontFamily: "'Inter', system-ui, sans-serif" }}>Settings</span>
       </Link>
 
       {/* User + sign out */}

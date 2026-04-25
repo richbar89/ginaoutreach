@@ -9,9 +9,9 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans:    ["Plus Jakarta Sans", "system-ui", "sans-serif"],
-        display: ["Plus Jakarta Sans", "system-ui", "sans-serif"],
-        serif:   ["Plus Jakarta Sans", "system-ui", "sans-serif"],
+        sans:    ["Inter", "system-ui", "sans-serif"],
+        display: ["Inter", "system-ui", "sans-serif"],
+        serif:   ["Inter", "system-ui", "sans-serif"],
       },
       colors: {
         // Warm terracotta — primary accent
