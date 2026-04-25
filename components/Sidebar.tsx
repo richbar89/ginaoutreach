@@ -50,10 +50,10 @@ export default function Sidebar() {
     }}>
 
       {/* Wordmark */}
-      <div style={{ padding: "6px 10px 14px" }}>
+      <div style={{ padding: "6px 8px 14px" }}>
         <span style={{
           fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
-          fontSize: 34,
+          fontSize: 44,
           fontWeight: 800,
           letterSpacing: "-0.05em",
           lineHeight: 1,
