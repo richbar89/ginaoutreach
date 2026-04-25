@@ -45,7 +45,7 @@ export default function Sidebar() {
       flexDirection: "column",
       padding: "16px 10px",
       gap: 2,
-      width: 196,
+      width: 168,
       height: "100%",
     }}>
 
@@ -53,7 +53,7 @@ export default function Sidebar() {
       <div style={{ padding: "6px 8px 14px" }}>
         <span style={{
           fontFamily: "'Inter', system-ui, sans-serif",
-          fontSize: 44,
+          fontSize: 36,
           fontWeight: 800,
           letterSpacing: "-0.05em",
           lineHeight: 1,
