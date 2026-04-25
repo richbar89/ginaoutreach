@@ -146,14 +146,36 @@ Core feature — influencers select contacts, build a sequence, system sends aut
 
 ---
 
+## Deal Management — Completing the Workflow
+
+- [ ] **Invoice generator** — when a deal hits "Paid", auto-generate a professional PDF invoice (creator name, brand, deliverables, amount, date). Self-employed creators need this for every deal
+- [ ] **Brief storage** — attach the brand's creative brief to each deal card. Single source of truth — no more digging through emails
+- [ ] **Deliverables checklist** — structured list per deal: e.g. "2x Instagram Reels, 3x Stories, 1x TikTok". Tick off as delivered. Shows at a glance what's outstanding
+- [ ] **Content calendar** — calendar view of all active deals showing when content is due to go live. Filter by platform, niche, status
+
+---
+
+## Creator Profile & Stats
+
+- [ ] **Instagram stats pull** — connect Instagram account via API and pull real follower count, engagement rate, average reach into the media kit automatically
+- [ ] **TikTok stats pull** — same for TikTok: followers, average views, engagement rate
+- [ ] Note: both require OAuth app approval from Meta/TikTok — start the approval process early as it can take weeks
+
+---
+
+## Tax & Earnings Tracker
+
+- [ ] **Annual earnings summary** — pull all "Paid" deals for the tax year, total income by month, exportable as CSV for accountant/self-assessment
+- [ ] **Expense notes** — simple field to log deductible expenses against deals (equipment, props, travel)
+- [ ] **Tax year toggle** — UK tax year (April–April) view vs calendar year
+
+---
+
 ## Additional Feature Ideas
 
-- [ ] **AI first-line personalisation** — before sending, Claude generates a personalised opening line per contact based on their company/role. Huge differentiator (Lemlist charges extra for this)
-- [ ] **Media kit auto-attach** — option to attach your media kit PDF or link to outreach emails automatically
+- [ ] **AI first-line personalisation** — Claude generates a personalised opening line per contact based on their company/role. Lemlist charges extra for this
+- [ ] **Media kit auto-attach** — option to attach media kit link to outreach emails automatically
 - [ ] **Inbox rotation** — connect multiple Gmail/Outlook accounts and distribute sends across them (improves deliverability)
-- [ ] **Email warmup guidance** — tip/warning if user tries to send too many too fast from a new inbox
-- [ ] **Rate calculator** — simple tool: enter follower count + engagement rate → get suggested rate card for posts/stories/reels
-- [ ] **Invoice generator** — once a deal moves to "Contracted" or "Paid", generate a simple PDF invoice
 - [ ] **Sponsored Content Monitor** — twice-weekly Apify scrape of a watchlist of influencers, detecting `#ad`/`#sponsored` in captions. Alert admin when detected. Possible page: `/influencer-intel`
 - [ ] **Meta Ad Alerts** — improve the `/ads` page (better UI, more actionable data)
 
