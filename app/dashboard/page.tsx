@@ -293,10 +293,10 @@ export default function DashboardPage() {
                 : <Mail size={20} style={{ color: "#EA580C" }} />}
             </div>
             <div>
-              <p style={{ fontSize: 15, fontWeight: 800, color: "#111827", letterSpacing: "-0.02em" }}>
+              <p style={{ fontSize: 16, fontWeight: 700, color: "#111827", letterSpacing: "-0.02em" }}>
                 {emailConnected === "expired" ? "Gmail session expired" : `Welcome, ${firstName} — connect your email to get started`}
               </p>
-              <p style={{ fontSize: 12, color: "#9CA3AF", marginTop: 2 }}>
+              <p style={{ fontSize: 13, color: "#9CA3AF", marginTop: 3 }}>
                 {emailConnected === "expired"
                   ? "Your emails won't send until you reconnect."
                   : "Send outreach directly from your Gmail or Microsoft inbox."}
@@ -316,10 +316,10 @@ export default function DashboardPage() {
           /* Normal greeting */
           <>
             <div>
-              <p style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#C4B5A5", marginBottom: 4 }}>
+              <p style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: "#C4B5A5", marginBottom: 6 }}>
                 {today}
               </p>
-              <h1 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.04em", color: "#111827", lineHeight: 1 }}>
+              <h1 style={{ fontSize: 34, fontWeight: 800, letterSpacing: "-0.04em", color: "#111827", lineHeight: 1 }}>
                 Hey {firstName}!
               </h1>
             </div>
@@ -361,7 +361,7 @@ export default function DashboardPage() {
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 24px", borderBottom: CARD_DIVIDER, flexShrink: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <Star size={13} style={{ color: "#EA580C" }} />
-                <span style={{ fontSize: 14, fontWeight: 700, color: "#111827" }}>Meta Ads</span>
+                <span style={{ fontSize: 15, fontWeight: 700, color: "#111827" }}>Meta Ads</span>
                 <span style={{ fontSize: 11, fontWeight: 600, background: "#FEF0EB", color: "#EA580C", padding: "2px 8px", borderRadius: 20, border: "1px solid #FDDBC8" }}>
                   {favBrands.length}/10
                 </span>
@@ -483,7 +483,7 @@ export default function DashboardPage() {
                   <div key={brand.name} className="flex items-center gap-3 rounded-2xl hover:bg-orange-50/30 transition-colors" style={{ padding: "9px 14px", border: "1px solid rgba(0,0,0,0.06)" }}>
                     <BrandLogo name={brand.name} size={34} domain={brand.domain} />
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <span style={{ fontWeight: 700, color: "#111827", fontSize: 12, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", display: "block" }}>{brand.name}</span>
+                      <span style={{ fontWeight: 700, color: "#111827", fontSize: 13, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", display: "block" }}>{brand.name}</span>
                       {brand.checkedAt && <span style={{ fontSize: 11, color: "#C4B5A5" }}>{Math.floor((Date.now() - new Date(brand.checkedAt).getTime()) / 3600000)}h ago</span>}
                     </div>
                     {brand.runningAds !== null ? (
@@ -518,7 +518,7 @@ export default function DashboardPage() {
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 24px", borderBottom: CARD_DIVIDER, flexShrink: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <TrendingUp size={13} style={{ color: "#EA580C" }} />
-                <span style={{ fontSize: 14, fontWeight: 700, color: "#111827" }}>Deal Pipeline</span>
+                <span style={{ fontSize: 15, fontWeight: 700, color: "#111827" }}>Deal Pipeline</span>
                 {activeDeals.length > 0 && (
                   <span style={{ fontSize: 11, fontWeight: 600, background: "#FEF0EB", color: "#EA580C", padding: "2px 8px", borderRadius: 20, border: "1px solid #FDDBC8" }}>
                     {activeDeals.length} active
@@ -546,10 +546,10 @@ export default function DashboardPage() {
                   return (
                     <div key={deal.id} style={{ borderRadius: 14, padding: "12px 16px", display: "flex", alignItems: "center", gap: 12, background: "rgba(255,255,255,0.6)", border: "1px solid rgba(0,0,0,0.04)", borderLeft: `3px solid ${accent}` }}>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ fontSize: 13, fontWeight: 700, color: "#111827", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        <p style={{ fontSize: 14, fontWeight: 700, color: "#111827", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                           {deal.company || deal.contactName}
                         </p>
-                        {deal.company && <p style={{ fontSize: 10, color: "#9CA3AF", marginTop: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{deal.contactName}</p>}
+                        {deal.company && <p style={{ fontSize: 12, color: "#9CA3AF", marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{deal.contactName}</p>}
                       </div>
                       <div style={{ display: "flex", alignItems: "center", gap: 7, flexShrink: 0 }}>
                         {deal.value && <span style={{ fontSize: 12, fontWeight: 800, color: "#059669" }}>{deal.value}</span>}
@@ -569,7 +569,7 @@ export default function DashboardPage() {
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 24px", borderBottom: CARD_DIVIDER, flexShrink: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <Bell size={13} style={{ color: "#EA580C" }} />
-                <span style={{ fontSize: 14, fontWeight: 700, color: "#111827" }}>Follow-up Reminders</span>
+                <span style={{ fontSize: 15, fontWeight: 700, color: "#111827" }}>Follow-up Reminders</span>
                 {followUps.length > 0 && (
                   <span style={{ fontSize: 11, fontWeight: 600, background: "#FEE2E2", color: "#DC2626", padding: "2px 8px", borderRadius: 20, border: "1px solid #FECACA" }}>
                     {followUps.length} due
@@ -595,8 +595,8 @@ export default function DashboardPage() {
                 {followUps.map((f, i) => (
                   <div key={f.email} className="flex items-center gap-3 hover:bg-orange-50/20 transition-colors" style={{ padding: "13px 24px", borderBottom: i < followUps.length - 1 ? CARD_DIVIDER : "none" }}>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{ fontSize: 13, fontWeight: 800, color: "#111827", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.name}</p>
-                      <p style={{ fontSize: 11, color: "#9CA3AF", fontWeight: 500, marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.subject}</p>
+                      <p style={{ fontSize: 14, fontWeight: 700, color: "#111827", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.name}</p>
+                      <p style={{ fontSize: 12, color: "#9CA3AF", fontWeight: 500, marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.subject}</p>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 5, flexShrink: 0 }}>
                       <span style={{ fontSize: 11, fontWeight: 600, padding: "3px 9px", borderRadius: 20, background: f.daysAgo >= 14 ? "#FEE2E2" : "#FEF3C7", color: f.daysAgo >= 14 ? "#DC2626" : "#D97706" }}>

@@ -52,7 +52,7 @@ export default function Sidebar() {
       {/* Wordmark */}
       <div style={{ padding: "6px 8px 14px", textAlign: "center" }}>
         <span style={{
-          fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+          fontFamily: "'Sora', system-ui, sans-serif",
           fontSize: 30,
           fontWeight: 800,
           letterSpacing: "-0.05em",
@@ -103,7 +103,7 @@ export default function Sidebar() {
           >
             <Icon size={16} strokeWidth={active ? 2.5 : 1.75} style={{ flexShrink: 0 }} />
             <span style={{
-              fontSize: 12.5,
+              fontSize: 13,
               fontWeight: active ? 700 : 500,
               letterSpacing: "-0.01em",
             }}>
@@ -182,7 +182,7 @@ export default function Sidebar() {
           )}
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <p style={{ fontSize: 11.5, fontWeight: 700, color: "#111827", letterSpacing: "-0.01em", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", margin: 0 }}>
+          <p style={{ fontSize: 12, fontWeight: 700, color: "#111827", letterSpacing: "-0.01em", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", margin: 0 }}>
             {user?.firstName || user?.fullName || "Account"}
           </p>
         </div>
