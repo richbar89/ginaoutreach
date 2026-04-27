@@ -24,14 +24,11 @@ import type { Campaign, Contact } from "@/lib/types";
 
 const SEND_DELAY_MS = 4000; // 4 seconds between emails
 
-const UNSUBSCRIBE_FOOTER = `\n\n--\nTo stop receiving emails like this, reply with UNSUBSCRIBE in the subject line.`;
-
 function buildMailto(subject: string, body: string, contact: Contact) {
-  const fullBody = applyMerge(body, contact) + UNSUBSCRIBE_FOOTER;
   return (
     `mailto:${encodeURIComponent(contact.email)}` +
     `?subject=${encodeURIComponent(applyMerge(subject, contact))}` +
-    `&body=${encodeURIComponent(fullBody)}`
+    `&body=${encodeURIComponent(applyMerge(body, contact))}`
   );
 }
 
@@ -79,7 +76,7 @@ export default function CampaignDetailPage() {
   const sendOne = async (contact: Contact) => {
     setContactState((s) => ({ ...s, [contact.email]: "sending" }));
     try {
-      const body = applyMerge(campaign.body, contact) + UNSUBSCRIBE_FOOTER;
+      const body = applyMerge(campaign.body, contact);
       const subject = applyMerge(campaign.subject, contact);
       if (msUser) {
         await sendEmailViaGraph({ to: contact.email, subject, body });
@@ -312,7 +309,7 @@ export default function CampaignDetailPage() {
           <div>
             <span className="text-xs font-semibold text-navy-400 uppercase tracking-widest">Body</span>
             <pre className="text-sm text-navy-700 mt-1 whitespace-pre-wrap font-sans leading-relaxed">
-              {applyMerge(campaign.body, campaign.contacts[0])}{UNSUBSCRIBE_FOOTER}
+              {applyMerge(campaign.body, campaign.contacts[0])}
             </pre>
           </div>
         </div>
