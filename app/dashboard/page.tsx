@@ -42,37 +42,49 @@ function BrandLogo({ name, size = 30, domain }: { name: string; size?: number; d
     domain ? `https://logo.clearbit.com/${domain}` : null
   );
   const [failed, setFailed] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     if (domain) {
       setImgSrc(`https://logo.clearbit.com/${domain}`);
       setFailed(false);
+      setLoaded(false);
     }
   }, [domain]);
 
   function handleError() {
     if (domain && imgSrc?.includes("logo.clearbit.com")) {
       setImgSrc(`https://www.google.com/s2/favicons?domain=${domain}&sz=64`);
+      setLoaded(false);
     } else {
       setFailed(true);
     }
   }
 
-  const showLogo = !!imgSrc && !failed;
+  const hasImg = !!imgSrc && !failed;
+  const showLogo = hasImg && loaded;
+  const loadingLogo = hasImg && !loaded;
+
   return (
     <div style={{
       width: size, height: size, borderRadius: 9, flexShrink: 0, overflow: "hidden",
-      background: showLogo ? "#fff" : colour,
-      border: showLogo ? "1px solid rgba(0,0,0,0.07)" : "none",
+      background: showLogo ? "#fff" : loadingLogo ? "#F0F0F0" : colour,
+      border: (showLogo || loadingLogo) ? "1px solid rgba(0,0,0,0.07)" : "none",
       display: "flex", alignItems: "center", justifyContent: "center",
+      position: "relative",
     }}>
-      {showLogo ? (
+      {hasImg && (
         <img
           src={imgSrc} alt={name} width={size - 6} height={size - 6}
-          style={{ objectFit: "contain", width: size - 6, height: size - 6 }}
+          style={{ objectFit: "contain", width: size - 6, height: size - 6, opacity: loaded ? 1 : 0, position: "absolute" }}
+          onLoad={() => setLoaded(true)}
           onError={handleError}
         />
-      ) : (
+      )}
+      {loadingLogo && (
+        <div className="animate-pulse" style={{ width: "100%", height: "100%", background: "#E5E7EB" }} />
+      )}
+      {!hasImg && (
         <span style={{ color: "white", fontSize: 11, fontWeight: 800 }}>{name[0]?.toUpperCase()}</span>
       )}
     </div>

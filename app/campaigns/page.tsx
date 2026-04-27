@@ -18,12 +18,14 @@ function formatDate(iso: string) {
 export default function CampaignsPage() {
   const getDb = useDb();
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
       const db = await getDb();
       const data = await dbGetCampaigns(db);
       setCampaigns(data);
+      setLoading(false);
     })();
   }, [getDb]);
 
@@ -58,7 +60,22 @@ export default function CampaignsPage() {
         </Link>
       </div>
 
-      {campaigns.length === 0 ? (
+      {loading ? (
+        <div className="space-y-3 animate-pulse">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="bg-white border border-cream-200 rounded-2xl px-7 py-5 flex items-center gap-4">
+              <div className="w-10 h-10 bg-cream-200 rounded-xl flex-shrink-0" />
+              <div className="flex-1 space-y-2">
+                <div className="h-3.5 bg-cream-200 rounded w-48" />
+                <div className="h-3 bg-cream-100 rounded w-72" />
+              </div>
+              <div className="h-3 bg-cream-100 rounded w-20" />
+              <div className="h-3 bg-cream-100 rounded w-16" />
+              <div className="h-8 bg-cream-200 rounded-xl w-24" />
+            </div>
+          ))}
+        </div>
+      ) : campaigns.length === 0 ? (
         <div className="bg-white border border-cream-200 rounded-2xl p-16 text-center shadow-sm shadow-cream-200">
           <div className="w-14 h-14 bg-coral-50 rounded-2xl flex items-center justify-center mx-auto mb-5">
             <MailOpen size={24} className="text-coral-400" />

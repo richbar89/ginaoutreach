@@ -12,19 +12,26 @@ import {
   Wifi,
   WifiOff,
   SendHorizonal,
+  Clock,
 } from "lucide-react";
 import InitialsAvatar from "@/components/InitialsAvatar";
 import { useDb } from "@/lib/useDb";
 import { dbGetCampaigns, dbAppendEmailRecord } from "@/lib/db";
 import { applyMerge } from "@/lib/storage";
 import { getMicrosoftUser, sendEmailViaGraph } from "@/lib/graphClient";
+import { getGoogleUser, sendEmailViaGmail } from "@/lib/googleClient";
 import type { Campaign, Contact } from "@/lib/types";
 
+const SEND_DELAY_MS = 4000; // 4 seconds between emails
+
+const UNSUBSCRIBE_FOOTER = `\n\n--\nTo stop receiving emails like this, reply with UNSUBSCRIBE in the subject line.`;
+
 function buildMailto(subject: string, body: string, contact: Contact) {
+  const fullBody = applyMerge(body, contact) + UNSUBSCRIBE_FOOTER;
   return (
     `mailto:${encodeURIComponent(contact.email)}` +
     `?subject=${encodeURIComponent(applyMerge(subject, contact))}` +
-    `&body=${encodeURIComponent(applyMerge(body, contact))}`
+    `&body=${encodeURIComponent(fullBody)}`
   );
 }
 
@@ -35,9 +42,10 @@ export default function CampaignDetailPage() {
   const [campaign, setCampaign] = useState<Campaign | null>(null);
   const [sent, setSent] = useState<Set<string>>(new Set());
   const [msUser, setMsUser] = useState<{ name: string; email: string } | null>(null);
-  // Per-contact sending state: email → "sending" | "error"
+  const [gmailUser, setGmailUser] = useState<{ name: string; email: string } | null>(null);
   const [contactState, setContactState] = useState<Record<string, "sending" | "error">>({});
   const [sendingAll, setSendingAll] = useState(false);
+  const [sendingIndex, setSendingIndex] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -46,13 +54,15 @@ export default function CampaignDetailPage() {
       const found = campaigns.find((c) => c.id === id);
       if (!found) { router.push("/campaigns"); return; }
       setCampaign(found);
-      // Note: email log filtering for sent status would require dbGetEmailLog;
-      // keeping sent state empty on load is acceptable — sent state is tracked in session.
       setMsUser(getMicrosoftUser());
+      setGmailUser(getGoogleUser());
     })();
   }, [id, router, getDb]);
 
   if (!campaign) return null;
+
+  const provider = msUser ? "microsoft" : gmailUser ? "gmail" : null;
+  const connectedEmail = msUser?.email || gmailUser?.email;
 
   const markSent = async (contact: Contact) => {
     setSent((prev) => new Set([...prev, contact.email.toLowerCase()]));
@@ -66,40 +76,45 @@ export default function CampaignDetailPage() {
     });
   };
 
-  const sendViaGraph = async (contact: Contact) => {
+  const sendOne = async (contact: Contact) => {
     setContactState((s) => ({ ...s, [contact.email]: "sending" }));
     try {
-      await sendEmailViaGraph({
-        to: contact.email,
-        subject: applyMerge(campaign.subject, contact),
-        body: applyMerge(campaign.body, contact),
-      });
+      const body = applyMerge(campaign.body, contact) + UNSUBSCRIBE_FOOTER;
+      const subject = applyMerge(campaign.subject, contact);
+      if (msUser) {
+        await sendEmailViaGraph({ to: contact.email, subject, body });
+      } else if (gmailUser) {
+        await sendEmailViaGmail({ to: contact.email, subject, body });
+      }
       await markSent(contact);
       setContactState((s) => { const n = { ...s }; delete n[contact.email]; return n; });
     } catch {
       setContactState((s) => ({ ...s, [contact.email]: "error" }));
       setTimeout(() => {
         setContactState((s) => { const n = { ...s }; delete n[contact.email]; return n; });
-      }, 3000);
+      }, 4000);
     }
   };
 
   const sendAll = async () => {
     if (!campaign) return;
     setSendingAll(true);
-    const remaining = campaign.contacts.filter(
-      (c) => !sent.has(c.email.toLowerCase())
-    );
-    for (const contact of remaining) {
-      await sendViaGraph(contact);
-      // Small delay between sends to avoid rate limiting
-      await new Promise((r) => setTimeout(r, 400));
+    const remaining = campaign.contacts.filter((c) => !sent.has(c.email.toLowerCase()));
+    for (let i = 0; i < remaining.length; i++) {
+      setSendingIndex(i + 1);
+      await sendOne(remaining[i]);
+      if (i < remaining.length - 1) {
+        await new Promise((r) => setTimeout(r, SEND_DELAY_MS));
+      }
     }
     setSendingAll(false);
+    setSendingIndex(0);
   };
 
   const remaining = campaign.contacts.filter((c) => !sent.has(c.email.toLowerCase()));
   const allSent = remaining.length === 0;
+  const estimatedSeconds = remaining.length * (SEND_DELAY_MS / 1000);
+  const estimatedMins = Math.ceil(estimatedSeconds / 60);
 
   return (
     <div className="p-8 max-w-4xl mx-auto">
@@ -131,11 +146,11 @@ export default function CampaignDetailPage() {
           </div>
 
           <div className="flex items-center gap-2 flex-shrink-0 mt-1">
-            {/* Connection badge */}
-            {msUser ? (
+            {provider ? (
               <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 border border-emerald-100 px-2.5 py-1.5 rounded-full">
                 <Wifi size={11} />
-                Microsoft connected
+                {provider === "gmail" ? "Gmail" : "Outlook"} connected
+                <span className="opacity-60 ml-0.5">({connectedEmail})</span>
               </span>
             ) : (
               <Link
@@ -143,12 +158,11 @@ export default function CampaignDetailPage() {
                 className="inline-flex items-center gap-1.5 text-xs font-medium text-navy-400 hover:text-coral-500 bg-cream-100 hover:bg-coral-50 border border-cream-200 hover:border-coral-200 px-2.5 py-1.5 rounded-full transition-all"
               >
                 <WifiOff size={11} />
-                Connect Microsoft
+                Connect email to send
               </Link>
             )}
 
-            {/* Send All button — only when MS connected and emails remain */}
-            {msUser && !allSent && (
+            {provider && !allSent && (
               <button
                 onClick={sendAll}
                 disabled={sendingAll}
@@ -159,7 +173,9 @@ export default function CampaignDetailPage() {
                 ) : (
                   <SendHorizonal size={14} />
                 )}
-                {sendingAll ? "Sending…" : `Send All (${remaining.length})`}
+                {sendingAll
+                  ? `Sending ${sendingIndex} of ${remaining.length}…`
+                  : `Send All (${remaining.length})`}
               </button>
             )}
 
@@ -172,6 +188,18 @@ export default function CampaignDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Rate limiting notice */}
+      {provider && !allSent && remaining.length > 1 && !sendingAll && (
+        <div className="mb-5 flex items-center gap-2.5 px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-700">
+          <Clock size={13} className="flex-shrink-0" />
+          <span>
+            Sends are spaced {SEND_DELAY_MS / 1000}s apart to protect your deliverability.{" "}
+            <strong>Estimated time:</strong> ~{estimatedMins} min{estimatedMins !== 1 ? "s" : ""} for {remaining.length} emails.
+            Keep this tab open while sending.
+          </span>
+        </div>
+      )}
 
       {/* Progress bar */}
       {sent.size > 0 && (
@@ -195,7 +223,11 @@ export default function CampaignDetailPage() {
           <Users size={15} className="text-navy-400" />
           <span className="text-sm font-semibold text-navy-700">Recipients</span>
           <span className="ml-auto text-xs text-navy-400">
-            {msUser ? "Sends directly via your Outlook" : "Opens your mail app for each email"}
+            {provider === "gmail"
+              ? "Sends directly via your Gmail"
+              : provider === "microsoft"
+              ? "Sends directly via your Outlook"
+              : "Connect email in Settings to send directly"}
           </span>
         </div>
 
@@ -233,9 +265,9 @@ export default function CampaignDetailPage() {
                   </span>
                 ) : state === "error" ? (
                   <span className="text-xs text-red-500 font-medium">Failed — retry</span>
-                ) : msUser ? (
+                ) : provider ? (
                   <button
-                    onClick={() => sendViaGraph(contact)}
+                    onClick={() => sendOne(contact)}
                     disabled={state === "sending" || sendingAll}
                     className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-coral-500 hover:bg-coral-600 disabled:opacity-60 text-white text-xs font-semibold rounded-lg transition-colors flex-shrink-0"
                   >
@@ -280,7 +312,7 @@ export default function CampaignDetailPage() {
           <div>
             <span className="text-xs font-semibold text-navy-400 uppercase tracking-widest">Body</span>
             <pre className="text-sm text-navy-700 mt-1 whitespace-pre-wrap font-sans leading-relaxed">
-              {applyMerge(campaign.body, campaign.contacts[0])}
+              {applyMerge(campaign.body, campaign.contacts[0])}{UNSUBSCRIBE_FOOTER}
             </pre>
           </div>
         </div>

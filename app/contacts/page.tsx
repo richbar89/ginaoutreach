@@ -480,7 +480,39 @@ export default function ContactsPage() {
       {/* Table */}
       <div className="bg-white border border-cream-200 rounded-2xl shadow-sm overflow-hidden">
         {loading ? (
-          <div className="px-6 py-16 text-center text-sm text-navy-300">Loading contacts…</div>
+          <table className="w-full text-sm">
+            <thead className="border-b border-cream-200 bg-cream-50/60">
+              <tr>
+                <th className="text-left px-5 py-3 text-xs font-semibold text-navy-400 uppercase tracking-widest">Name</th>
+                <th className="text-left px-5 py-3 text-xs font-semibold text-navy-400 uppercase tracking-widest">Company</th>
+                <th className="text-left px-5 py-3 text-xs font-semibold text-navy-400 uppercase tracking-widest">Category</th>
+                <th className="px-5 py-3" />
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-cream-100 animate-pulse">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <tr key={i}>
+                  <td className="px-5 py-3.5">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-cream-200 flex-shrink-0" />
+                      <div className="space-y-1.5">
+                        <div className="h-3 bg-cream-200 rounded w-28" />
+                        <div className="h-2.5 bg-cream-100 rounded w-20" />
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-5 py-3.5"><div className="h-3 bg-cream-200 rounded w-24" /></td>
+                  <td className="px-5 py-3.5"><div className="h-5 bg-cream-100 rounded-full w-20" /></td>
+                  <td className="px-5 py-3.5">
+                    <div className="flex gap-2 justify-end">
+                      <div className="h-6 bg-cream-100 rounded-lg w-16" />
+                      <div className="h-6 bg-cream-200 rounded-lg w-14" />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         ) : filtered.length === 0 ? (
           <div className="px-6 py-16 text-center">
             {activeSubcategory ? (
@@ -493,6 +525,11 @@ export default function ContactsPage() {
               </>
             ) : activeVertical && verticalCounts[activeVertical] === 0 ? (
               <p className="text-sm text-navy-300">This category is coming soon — check back shortly.</p>
+            ) : contacts.length === 0 && !isFiltering ? (
+              <>
+                <p className="text-sm font-semibold text-navy-500 mb-1">Contact database is being populated</p>
+                <p className="text-xs text-navy-300">Brand contacts will appear here shortly. Check back soon.</p>
+              </>
             ) : (
               <p className="text-sm text-navy-300">No contacts match your search.</p>
             )}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Plus, Trash2, X, Check, Pencil, TrendingUp, Loader2 } from "lucide-react";
+import { Plus, Trash2, X, Check, Pencil, TrendingUp } from "lucide-react";
 import { useDb } from "@/lib/useDb";
 import { useAuth } from "@clerk/nextjs";
 import { dbGetDeals, dbUpsertDeal, dbDeleteDeal } from "@/lib/db";
@@ -228,8 +228,47 @@ export default function PipelinePage() {
       {/* Kanban board */}
       <div className="flex-1 min-h-0 overflow-x-auto overflow-y-hidden px-6 py-5">
         {loading ? (
+          <div className="flex gap-4 h-full animate-pulse" style={{ minWidth: "max-content" }}>
+            {Array.from({ length: 6 }).map((_, col) => (
+              <div key={col} className="flex flex-col rounded-2xl border border-cream-200 bg-cream-50" style={{ width: 256, minWidth: 256 }}>
+                <div className="flex items-center justify-between px-4 py-3 border-b border-cream-200">
+                  <div className="h-3 bg-cream-200 rounded w-20" />
+                  <div className="h-3 bg-cream-100 rounded w-4" />
+                </div>
+                <div className="flex-1 p-3 space-y-2.5">
+                  {Array.from({ length: col === 0 ? 3 : col === 1 ? 2 : 1 }).map((_, i) => (
+                    <div key={i} className="bg-white rounded-xl p-3.5 border border-cream-200 space-y-2">
+                      <div className="flex items-center gap-2">
+                        <div className="w-7 h-7 rounded-full bg-cream-200 flex-shrink-0" />
+                        <div className="space-y-1.5 flex-1">
+                          <div className="h-3 bg-cream-200 rounded w-3/4" />
+                          <div className="h-2.5 bg-cream-100 rounded w-1/2" />
+                        </div>
+                      </div>
+                      <div className="h-5 bg-cream-100 rounded-lg w-14" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : deals.length === 0 ? (
           <div className="flex items-center justify-center h-full">
-            <Loader2 size={24} className="text-navy-300 animate-spin" />
+            <div className="text-center max-w-sm">
+              <div className="w-16 h-16 bg-coral-50 rounded-2xl flex items-center justify-center mx-auto mb-5">
+                <TrendingUp size={28} className="text-coral-400" />
+              </div>
+              <h2 className="font-serif text-2xl font-bold text-navy-900 mb-2">No deals yet</h2>
+              <p className="text-navy-400 text-sm mb-2 leading-relaxed">
+                Add your first deal manually, or send some outreach — positive replies get flagged automatically in your inbox.
+              </p>
+              <button
+                onClick={() => setEditing("new")}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold rounded-xl transition-all hover:shadow-lg hover:shadow-coral-200 mt-3"
+              >
+                <Plus size={15} /> Add Deal
+              </button>
+            </div>
           </div>
         ) : (
           <div className="flex gap-4 h-full" style={{ minWidth: "max-content" }}>
