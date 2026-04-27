@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, Suspense } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { Search, X, Plus, Linkedin, Send, UtensilsCrossed, Sun, Sparkles, Dumbbell } from "lucide-react";
 import { getAllCachedStatuses } from "@/lib/metaAds";
 import type { AdStatus } from "@/lib/metaAds";
@@ -225,10 +226,11 @@ function RequestContactModal({ onClose }: { onClose: () => void }) {
   );
 }
 
-export default function ContactsPage() {
+function ContactsPage() {
+  const searchParams = useSearchParams();
   const [contacts, setContacts] = useState<ContactRow[]>([]);
   const [loading, setLoading] = useState(true);
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(searchParams.get("q") ?? "");
   const [activeVertical, setActiveVertical] = useState<VerticalKey>(null);
   const [activeSubcategory, setActiveSubcategory] = useState<string | null>(null);
   const [activeCountry, setActiveCountry] = useState("All");
@@ -631,5 +633,13 @@ export default function ContactsPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function ContactsPageWrapper() {
+  return (
+    <Suspense>
+      <ContactsPage />
+    </Suspense>
   );
 }

@@ -480,7 +480,7 @@ export default function DashboardPage() {
             ) : (
               <div className="scrollbar-thin" style={{ flex: 1, overflowY: "auto", padding: "10px 18px", display: "flex", flexDirection: "column", gap: 6 }}>
                 {displayedBrands.map((brand) => (
-                  <div key={brand.name} className="flex items-center gap-3 rounded-2xl hover:bg-orange-50/30 transition-colors" style={{ padding: "11px 14px", border: "1px solid rgba(0,0,0,0.06)" }}>
+                  <div key={brand.name} className="flex items-center gap-3 rounded-2xl hover:bg-orange-50/30 transition-colors" style={{ padding: "9px 14px", border: "1px solid rgba(0,0,0,0.06)" }}>
                     <BrandLogo name={brand.name} size={34} domain={brand.domain} />
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <span style={{ fontWeight: 700, color: "#111827", fontSize: 12, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", display: "block" }}>{brand.name}</span>
@@ -488,13 +488,21 @@ export default function DashboardPage() {
                     </div>
                     {brand.runningAds !== null ? (
                       <span style={{ fontSize: 8, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", padding: "3px 8px", borderRadius: 20, flexShrink: 0, background: brand.runningAds ? "#DCFCE7" : "#FEE2E2", color: brand.runningAds ? "#15803D" : "#DC2626", border: `1px solid ${brand.runningAds ? "#BBF7D0" : "#FECACA"}` }}>
-                        {brand.runningAds ? "Active" : "Paused"}
+                        {brand.runningAds ? "Live ads" : "No ads"}
                       </span>
                     ) : (
                       <span style={{ fontSize: 8, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", padding: "3px 8px", borderRadius: 20, flexShrink: 0, background: "#F3F4F6", color: "#C4B5A5", border: "1px solid #E5E7EB" }}>
                         —
                       </span>
                     )}
+                    <Link
+                      href={`/contacts?q=${encodeURIComponent(brand.name)}`}
+                      style={{ fontSize: 10, fontWeight: 700, padding: "4px 10px", borderRadius: 8, background: "rgba(234,88,12,0.08)", color: "#EA580C", border: "1px solid rgba(234,88,12,0.15)", textDecoration: "none", flexShrink: 0, whiteSpace: "nowrap" }}
+                      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(234,88,12,0.15)"; }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "rgba(234,88,12,0.08)"; }}
+                    >
+                      Contact
+                    </Link>
                   </div>
                 ))}
               </div>
