@@ -361,20 +361,20 @@ export default function DashboardPage() {
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 24px", borderBottom: CARD_DIVIDER, flexShrink: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <Star size={13} style={{ color: "#EA580C" }} />
-                <span style={{ fontSize: 13, fontWeight: 800, color: "#111827" }}>Meta Ads</span>
-                <span style={{ fontSize: 9, fontWeight: 700, background: "#FEF0EB", color: "#EA580C", padding: "2px 7px", borderRadius: 20, border: "1px solid #FDDBC8" }}>
+                <span style={{ fontSize: 14, fontWeight: 700, color: "#111827" }}>Meta Ads</span>
+                <span style={{ fontSize: 11, fontWeight: 600, background: "#FEF0EB", color: "#EA580C", padding: "2px 8px", borderRadius: 20, border: "1px solid #FDDBC8" }}>
                   {favBrands.length}/10
                 </span>
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                 <button
                   onClick={() => { setEditingFavs(v => !v); setPickerSearch(""); setPickerCategory(""); }}
-                  style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 10, fontWeight: 700, color: editingFavs ? "#10B981" : "#9CA3AF", background: editingFavs ? "rgba(16,185,129,0.08)" : "rgba(0,0,0,0.04)", border: `1px solid ${editingFavs ? "rgba(16,185,129,0.25)" : "rgba(0,0,0,0.08)"}`, borderRadius: 7, padding: "4px 9px", cursor: "pointer" }}
+                  style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11, fontWeight: 600, color: editingFavs ? "#10B981" : "#9CA3AF", background: editingFavs ? "rgba(16,185,129,0.08)" : "rgba(0,0,0,0.04)", border: `1px solid ${editingFavs ? "rgba(16,185,129,0.25)" : "rgba(0,0,0,0.08)"}`, borderRadius: 7, padding: "4px 10px", cursor: "pointer" }}
                 >
                   {editingFavs ? <Check size={11} /> : <Edit2 size={11} />}
                   {editingFavs ? "Done" : "Edit"}
                 </button>
-                <Link href="/ads" style={{ fontSize: 10, color: "#C4B5A5", fontWeight: 600, textDecoration: "none" }}
+                <Link href="/ads" style={{ fontSize: 11, color: "#C4B5A5", fontWeight: 600, textDecoration: "none" }}
                   onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = "#EA580C"}
                   onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = "#C4B5A5"}
                 >
@@ -385,8 +385,8 @@ export default function DashboardPage() {
 
             {resolvingDomains && !editingFavs && (
               <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 20px", background: "rgba(234,88,12,0.04)", borderBottom: CARD_DIVIDER, flexShrink: 0 }}>
-                <RefreshCw size={10} className="animate-spin" style={{ color: "#EA580C" }} />
-                <span style={{ fontSize: 10, color: "#EA580C", fontWeight: 600 }}>Building brand intelligence…</span>
+                <RefreshCw size={11} className="animate-spin" style={{ color: "#EA580C" }} />
+                <span style={{ fontSize: 11, color: "#EA580C", fontWeight: 600 }}>Building brand intelligence…</span>
               </div>
             )}
 
@@ -484,14 +484,14 @@ export default function DashboardPage() {
                     <BrandLogo name={brand.name} size={34} domain={brand.domain} />
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <span style={{ fontWeight: 700, color: "#111827", fontSize: 12, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", display: "block" }}>{brand.name}</span>
-                      {brand.checkedAt && <span style={{ fontSize: 9, color: "#D1C4B8" }}>{Math.floor((Date.now() - new Date(brand.checkedAt).getTime()) / 3600000)}h ago</span>}
+                      {brand.checkedAt && <span style={{ fontSize: 11, color: "#C4B5A5" }}>{Math.floor((Date.now() - new Date(brand.checkedAt).getTime()) / 3600000)}h ago</span>}
                     </div>
                     {brand.runningAds !== null ? (
-                      <span style={{ fontSize: 8, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", padding: "3px 8px", borderRadius: 20, flexShrink: 0, background: brand.runningAds ? "#DCFCE7" : "#FEE2E2", color: brand.runningAds ? "#15803D" : "#DC2626", border: `1px solid ${brand.runningAds ? "#BBF7D0" : "#FECACA"}` }}>
+                      <span style={{ fontSize: 11, fontWeight: 600, padding: "3px 9px", borderRadius: 20, flexShrink: 0, background: brand.runningAds ? "#DCFCE7" : "#FEE2E2", color: brand.runningAds ? "#15803D" : "#DC2626", border: `1px solid ${brand.runningAds ? "#BBF7D0" : "#FECACA"}` }}>
                         {brand.runningAds ? "Live ads" : "No ads"}
                       </span>
                     ) : (
-                      <span style={{ fontSize: 8, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", padding: "3px 8px", borderRadius: 20, flexShrink: 0, background: "#F3F4F6", color: "#C4B5A5", border: "1px solid #E5E7EB" }}>
+                      <span style={{ fontSize: 11, fontWeight: 600, padding: "3px 9px", borderRadius: 20, flexShrink: 0, background: "#F3F4F6", color: "#9CA3AF", border: "1px solid #E5E7EB" }}>
                         —
                       </span>
                     )}
@@ -518,14 +518,14 @@ export default function DashboardPage() {
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 24px", borderBottom: CARD_DIVIDER, flexShrink: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <TrendingUp size={13} style={{ color: "#EA580C" }} />
-                <span style={{ fontSize: 13, fontWeight: 800, color: "#111827" }}>Deal Pipeline</span>
+                <span style={{ fontSize: 14, fontWeight: 700, color: "#111827" }}>Deal Pipeline</span>
                 {activeDeals.length > 0 && (
-                  <span style={{ fontSize: 9, fontWeight: 700, background: "#FEF0EB", color: "#EA580C", padding: "2px 7px", borderRadius: 20, border: "1px solid #FDDBC8" }}>
+                  <span style={{ fontSize: 11, fontWeight: 600, background: "#FEF0EB", color: "#EA580C", padding: "2px 8px", borderRadius: 20, border: "1px solid #FDDBC8" }}>
                     {activeDeals.length} active
                   </span>
                 )}
               </div>
-              <Link href="/pipeline" style={{ fontSize: 10, color: "#C4B5A5", fontWeight: 600, textDecoration: "none" }}
+              <Link href="/pipeline" style={{ fontSize: 11, color: "#C4B5A5", fontWeight: 600, textDecoration: "none" }}
                 onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = "#EA580C"}
                 onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = "#C4B5A5"}
               >
@@ -535,9 +535,9 @@ export default function DashboardPage() {
 
             {deals.length === 0 ? (
               <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: 32 }}>
-                <TrendingUp size={24} style={{ color: "#E5E7EB", marginBottom: 10 }} />
-                <p style={{ fontSize: 12, fontWeight: 600, color: "#9CA3AF" }}>No deals yet.</p>
-                <p style={{ fontSize: 10, color: "#D1D5DB", marginTop: 3 }}>Positive replies get flagged automatically.</p>
+                <TrendingUp size={24} style={{ color: "#E5E7EB", marginBottom: 12 }} />
+                <p style={{ fontSize: 14, fontWeight: 600, color: "#374151", marginBottom: 4 }}>No deals yet.</p>
+                <p style={{ fontSize: 12, color: "#9CA3AF", marginTop: 0 }}>Positive replies get flagged automatically.</p>
               </div>
             ) : (
               <div className="scrollbar-thin" style={{ flex: 1, overflowY: "auto", padding: "12px 16px", display: "flex", flexDirection: "column", gap: 7 }}>
@@ -553,7 +553,7 @@ export default function DashboardPage() {
                       </div>
                       <div style={{ display: "flex", alignItems: "center", gap: 7, flexShrink: 0 }}>
                         {deal.value && <span style={{ fontSize: 12, fontWeight: 800, color: "#059669" }}>{deal.value}</span>}
-                        <span style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", padding: "4px 9px", borderRadius: 20, background: `${accent}18`, color: accent }}>
+                        <span style={{ fontSize: 11, fontWeight: 600, padding: "3px 9px", borderRadius: 20, background: `${accent}18`, color: accent }}>
                           {DEAL_STAGE_LABELS[deal.status] || deal.status}
                         </span>
                       </div>
@@ -569,14 +569,14 @@ export default function DashboardPage() {
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 24px", borderBottom: CARD_DIVIDER, flexShrink: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <Bell size={13} style={{ color: "#EA580C" }} />
-                <span style={{ fontSize: 13, fontWeight: 800, color: "#111827" }}>Follow-up Reminders</span>
+                <span style={{ fontSize: 14, fontWeight: 700, color: "#111827" }}>Follow-up Reminders</span>
                 {followUps.length > 0 && (
-                  <span style={{ fontSize: 9, fontWeight: 700, background: "#FEE2E2", color: "#DC2626", padding: "2px 7px", borderRadius: 20, border: "1px solid #FECACA" }}>
+                  <span style={{ fontSize: 11, fontWeight: 600, background: "#FEE2E2", color: "#DC2626", padding: "2px 8px", borderRadius: 20, border: "1px solid #FECACA" }}>
                     {followUps.length} due
                   </span>
                 )}
               </div>
-              <Link href="/contacts" style={{ fontSize: 10, color: "#C4B5A5", fontWeight: 600, textDecoration: "none" }}
+              <Link href="/contacts" style={{ fontSize: 11, color: "#C4B5A5", fontWeight: 600, textDecoration: "none" }}
                 onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = "#EA580C"}
                 onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = "#C4B5A5"}
               >
@@ -586,9 +586,9 @@ export default function DashboardPage() {
 
             {followUps.length === 0 ? (
               <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: 32 }}>
-                <Clock size={20} style={{ color: "#E5E7EB", marginBottom: 10 }} />
-                <p style={{ fontSize: 12, fontWeight: 600, color: "#9CA3AF" }}>All up to date.</p>
-                <p style={{ fontSize: 10, color: "#D1D5DB", marginTop: 3 }}>Contacts emailed 5+ days ago appear here.</p>
+                <Clock size={20} style={{ color: "#E5E7EB", marginBottom: 12 }} />
+                <p style={{ fontSize: 14, fontWeight: 600, color: "#374151", marginBottom: 4 }}>All up to date.</p>
+                <p style={{ fontSize: 12, color: "#9CA3AF", marginTop: 0 }}>Contacts emailed 5+ days ago appear here.</p>
               </div>
             ) : (
               <div className="scrollbar-thin" style={{ flex: 1, overflowY: "auto" }}>
@@ -599,7 +599,7 @@ export default function DashboardPage() {
                       <p style={{ fontSize: 11, color: "#9CA3AF", fontWeight: 500, marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.subject}</p>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 5, flexShrink: 0 }}>
-                      <span style={{ fontSize: 9, fontWeight: 700, padding: "4px 9px", borderRadius: 20, background: f.daysAgo >= 14 ? "#FEE2E2" : "#FEF3C7", color: f.daysAgo >= 14 ? "#DC2626" : "#D97706" }}>
+                      <span style={{ fontSize: 11, fontWeight: 600, padding: "3px 9px", borderRadius: 20, background: f.daysAgo >= 14 ? "#FEE2E2" : "#FEF3C7", color: f.daysAgo >= 14 ? "#DC2626" : "#D97706" }}>
                         {f.daysAgo}d ago
                       </span>
                       <Link

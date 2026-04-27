@@ -37,21 +37,23 @@ export default function Sidebar() {
 
   return (
     <div style={{
-      background: "#1C1917",
+      background: "#FFFFFF",
       borderRadius: 20,
+      border: "1px solid rgba(0,0,0,0.07)",
+      boxShadow: "0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)",
       display: "flex",
       flexDirection: "column",
-      padding: "16px 10px",
+      padding: "14px 8px",
       gap: 2,
-      width: 168,
+      width: 152,
       height: "100%",
     }}>
 
       {/* Wordmark */}
-      <div style={{ padding: "6px 8px 16px" }}>
+      <div style={{ padding: "6px 8px 14px", textAlign: "center" }}>
         <span style={{
-          fontFamily: "'Inter', system-ui, sans-serif",
-          fontSize: 36,
+          fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+          fontSize: 30,
           fontWeight: 800,
           letterSpacing: "-0.05em",
           lineHeight: 1,
@@ -60,6 +62,7 @@ export default function Sidebar() {
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
           backgroundClip: "text",
+          filter: "drop-shadow(0 1px 4px rgba(196,96,58,0.2))",
           userSelect: "none",
         }}>
           collabi
@@ -76,34 +79,33 @@ export default function Sidebar() {
             style={{
               display: "flex",
               alignItems: "center",
-              gap: 10,
-              padding: "10px 12px",
-              borderRadius: 12,
-              background: active ? "rgba(232,98,42,0.18)" : "transparent",
-              color: active ? "#F97316" : "rgba(255,255,255,0.45)",
+              gap: 9,
+              padding: "9px 10px",
+              borderRadius: 11,
+              background: active ? "rgba(232,98,42,0.10)" : "transparent",
+              color: active ? "#E8622A" : "#6B7280",
               textDecoration: "none",
               transition: "all 0.12s",
               flexShrink: 0,
             }}
             onMouseEnter={e => {
               if (!active) {
-                (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.07)";
-                (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.85)";
+                (e.currentTarget as HTMLElement).style.background = "rgba(0,0,0,0.04)";
+                (e.currentTarget as HTMLElement).style.color = "#374151";
               }
             }}
             onMouseLeave={e => {
               if (!active) {
                 (e.currentTarget as HTMLElement).style.background = "transparent";
-                (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.45)";
+                (e.currentTarget as HTMLElement).style.color = "#6B7280";
               }
             }}
           >
-            <Icon size={17} strokeWidth={active ? 2.5 : 1.75} style={{ flexShrink: 0 }} />
+            <Icon size={16} strokeWidth={active ? 2.5 : 1.75} style={{ flexShrink: 0 }} />
             <span style={{
-              fontSize: 13,
+              fontSize: 12.5,
               fontWeight: active ? 700 : 500,
               letterSpacing: "-0.01em",
-              fontFamily: "'Inter', system-ui, sans-serif",
             }}>
               {label}
             </span>
@@ -118,19 +120,17 @@ export default function Sidebar() {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 10,
-            padding: "10px 12px",
-            borderRadius: 12,
-            background: pathname.startsWith("/admin") ? "rgba(232,98,42,0.18)" : "transparent",
-            color: pathname.startsWith("/admin") ? "#F97316" : "rgba(255,255,255,0.45)",
+            gap: 9,
+            padding: "9px 10px",
+            borderRadius: 11,
+            background: pathname.startsWith("/admin") ? "rgba(232,98,42,0.10)" : "transparent",
+            color: pathname.startsWith("/admin") ? "#E8622A" : "#6B7280",
             textDecoration: "none",
             transition: "all 0.12s",
           }}
         >
-          <ShieldCheck size={17} strokeWidth={1.75} style={{ flexShrink: 0 }} />
-          <span style={{ fontSize: 13, fontWeight: 500, letterSpacing: "-0.01em", fontFamily: "'Inter', system-ui, sans-serif" }}>
-            Admin
-          </span>
+          <ShieldCheck size={16} strokeWidth={1.75} style={{ flexShrink: 0 }} />
+          <span style={{ fontSize: 12.5, fontWeight: 500, letterSpacing: "-0.01em" }}>Admin</span>
         </Link>
       )}
 
@@ -143,35 +143,35 @@ export default function Sidebar() {
         style={{
           display: "flex",
           alignItems: "center",
-          gap: 10,
-          padding: "10px 12px",
-          borderRadius: 12,
-          background: pathname === "/settings" ? "rgba(232,98,42,0.18)" : "transparent",
-          color: pathname === "/settings" ? "#F97316" : "rgba(255,255,255,0.45)",
+          gap: 9,
+          padding: "9px 10px",
+          borderRadius: 11,
+          background: pathname === "/settings" ? "rgba(232,98,42,0.10)" : "transparent",
+          color: pathname === "/settings" ? "#E8622A" : "#6B7280",
           textDecoration: "none",
           transition: "all 0.12s",
         }}
         onMouseEnter={e => {
           if (pathname !== "/settings") {
-            (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.07)";
-            (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.85)";
+            (e.currentTarget as HTMLElement).style.background = "rgba(0,0,0,0.04)";
+            (e.currentTarget as HTMLElement).style.color = "#374151";
           }
         }}
         onMouseLeave={e => {
           if (pathname !== "/settings") {
             (e.currentTarget as HTMLElement).style.background = "transparent";
-            (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.45)";
+            (e.currentTarget as HTMLElement).style.color = "#6B7280";
           }
         }}
       >
-        <Settings size={17} strokeWidth={1.75} style={{ flexShrink: 0 }} />
-        <span style={{ fontSize: 13, fontWeight: 500, letterSpacing: "-0.01em", fontFamily: "'Inter', system-ui, sans-serif" }}>Settings</span>
+        <Settings size={16} strokeWidth={1.75} style={{ flexShrink: 0 }} />
+        <span style={{ fontSize: 12.5, fontWeight: 500, letterSpacing: "-0.01em" }}>Settings</span>
       </Link>
 
       {/* User + sign out */}
-      <div style={{ display: "flex", alignItems: "center", gap: 9, padding: "12px 12px 2px", borderTop: "1px solid rgba(255,255,255,0.08)", marginTop: 4 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "12px 10px 2px", borderTop: "1px solid rgba(0,0,0,0.06)", marginTop: 4 }}>
         <div style={{
-          width: 30, height: 30, borderRadius: "50%", overflow: "hidden",
+          width: 28, height: 28, borderRadius: "50%", overflow: "hidden",
           background: "#E8622A", flexShrink: 0,
           display: "flex", alignItems: "center", justifyContent: "center",
         }}>
@@ -182,16 +182,16 @@ export default function Sidebar() {
           )}
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <p style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.85)", letterSpacing: "-0.01em", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", margin: 0 }}>
+          <p style={{ fontSize: 11.5, fontWeight: 700, color: "#111827", letterSpacing: "-0.01em", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", margin: 0 }}>
             {user?.firstName || user?.fullName || "Account"}
           </p>
         </div>
         <SignOutButton>
-          <button title="Sign out" style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: "rgba(255,255,255,0.3)", display: "flex", alignItems: "center", borderRadius: 6, transition: "color 0.12s" }}
+          <button title="Sign out" style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: "#9CA3AF", display: "flex", alignItems: "center", borderRadius: 6, transition: "color 0.12s" }}
             onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = "#EF4444"}
-            onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.3)"}
+            onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = "#9CA3AF"}
           >
-            <LogOut size={14} />
+            <LogOut size={13} />
           </button>
         </SignOutButton>
       </div>
