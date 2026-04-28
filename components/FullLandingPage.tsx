@@ -66,7 +66,7 @@ function HeroDashboard() {
           {[{ l: "Contacts", v: "10k+" }, { l: "Emails Sent", v: "47" }, { l: "Active Deals", v: "8" }].map(s => (
             <div key={s.l} style={{ background: "rgba(255,255,255,0.04)", borderRadius: 10, padding: "10px 12px", border: "1px solid rgba(255,255,255,0.06)" }}>
               <p style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 5 }}>{s.l}</p>
-              <p style={{ fontSize: 22, fontWeight: 800, color: "#fff", lineHeight: 1, fontFamily: "'Comfortaa',sans-serif" }}>{s.v}</p>
+              <p style={{ fontSize: 22, fontWeight: 800, color: "#fff", lineHeight: 1 }}>{s.v}</p>
             </div>
           ))}
         </div>
@@ -105,7 +105,7 @@ function ContactsMockup() {
     <div style={{ background: "#0F1E30", borderRadius: 16, border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 32px 60px rgba(0,0,0,0.35)", overflow: "hidden" }}>
       <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div>
-          <p style={{ fontSize: 13, fontWeight: 700, color: "#fff", fontFamily: "'Comfortaa',sans-serif" }}>Contacts</p>
+          <p style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>Contacts</p>
           <p style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 1 }}>10,000+ brand contacts</p>
         </div>
         <div style={{ background: "#E8622A", borderRadius: 7, padding: "5px 11px", fontSize: 10, color: "#fff", fontWeight: 700 }}>+ Add Contact</div>
@@ -142,7 +142,7 @@ function EmailMockup() {
     <div style={{ background: "#0F1E30", borderRadius: 16, border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 32px 60px rgba(0,0,0,0.35)", overflow: "hidden" }}>
       <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div>
-          <p style={{ fontSize: 13, fontWeight: 700, color: "#fff", fontFamily: "'Comfortaa',sans-serif" }}>New Campaign</p>
+          <p style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>New Campaign</p>
           <p style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 1 }}>24 contacts selected</p>
         </div>
         <div style={{ display: "flex", gap: 5 }}>
@@ -190,7 +190,7 @@ function PipelineMockup() {
   return (
     <div style={{ background: "#0F1E30", borderRadius: 16, border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 32px 60px rgba(0,0,0,0.35)", overflow: "hidden" }}>
       <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <p style={{ fontSize: 13, fontWeight: 700, color: "#fff", fontFamily: "'Comfortaa',sans-serif" }}>Deal Pipeline</p>
+        <p style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>Deal Pipeline</p>
         <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
           <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#E8622A", animation: "cl-pulse 2s infinite" }} />
           <span style={{ fontSize: 10, color: "#E8622A", fontWeight: 600 }}>6 active deals · £10,400</span>
@@ -231,7 +231,7 @@ function AdsMockup() {
     <div style={{ background: "#0F1E30", borderRadius: 16, border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 32px 60px rgba(0,0,0,0.35)", overflow: "hidden" }}>
       <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div>
-          <p style={{ fontSize: 13, fontWeight: 700, color: "#fff", fontFamily: "'Comfortaa',sans-serif" }}>Meta Ad Intelligence</p>
+          <p style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>Meta Ad Intelligence</p>
           <p style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 1 }}>Scanned 2 minutes ago</p>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 5, background: "rgba(232,98,42,0.1)", border: "1px solid rgba(232,98,42,0.25)", borderRadius: 7, padding: "4px 10px" }}>
@@ -336,13 +336,13 @@ export default function LandingPage() {
     <>
       <style>{`
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        .cl-page { font-family: var(--font-comfortaa), 'Comfortaa', sans-serif; background: linear-gradient(150deg, #F0CBB4 0%, #E3AD8E 55%, #D4916C 100%) fixed; color: #0D1B2A; line-height: 1.5; -webkit-font-smoothing: antialiased; }
-        .cl-h { font-family: var(--font-comfortaa), 'Comfortaa', sans-serif; }
+        .cl-page { background: linear-gradient(150deg, #F0CBB4 0%, #E3AD8E 55%, #D4916C 100%) fixed; color: #0D1B2A; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+        .cl-h { }
         .cl-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; transition: all 0.25s; }
         .cl-nav-inner { max-width: 1160px; margin: 0 auto; padding: 0 28px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
         .cl-nav-scrolled { background: rgba(255,255,255,0.92); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(0,0,0,0.07); }
         .cl-dot { background-image: radial-gradient(circle, rgba(13,27,42,0.06) 1.2px, transparent 1.2px); background-size: 28px 28px; }
-        .cl-btn { display: inline-flex; align-items: center; gap: 7px; text-decoration: none; border-radius: 9px; font-weight: 600; font-family: 'DM Sans', sans-serif; transition: all 0.18s ease; cursor: pointer; border: none; }
+        .cl-btn { display: inline-flex; align-items: center; gap: 7px; text-decoration: none; border-radius: 9px; font-weight: 600; transition: all 0.18s ease; cursor: pointer; border: none; }
         .cl-btn-primary { background: #E8622A; color: #fff; padding: 11px 22px; font-size: 14px; }
         .cl-btn-primary:hover { background: #d45520; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(232,98,42,0.3); }
         .cl-btn-primary-lg { background: #E8622A; color: #fff; padding: 14px 30px; font-size: 16px; border-radius: 10px; }
@@ -360,7 +360,7 @@ export default function LandingPage() {
         .cl-feat-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.08); border-color: #fbd6c8; }
         .cl-price-card { border: 1.5px solid rgba(0,0,0,0.08); border-radius: 20px; padding: 48px; background: rgba(251,247,242,0.85); transition: border-color 0.25s, box-shadow 0.25s; box-shadow: 0 4px 24px rgba(0,0,0,0.05); }
         .cl-price-card:hover { border-color: #E8622A; box-shadow: 0 8px 40px rgba(232,98,42,0.12); }
-        .cl-logo-item { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 15px; color: #c8cdd4; letter-spacing: -0.01em; transition: color 0.2s; white-space: nowrap; }
+        .cl-logo-item { font-weight: 700; font-size: 15px; color: #c8cdd4; letter-spacing: -0.01em; transition: color 0.2s; white-space: nowrap; }
         .cl-logo-item:hover { color: #9ba3ae; }
         .cl-section { padding: 110px 28px; }
         .cl-section-sm { padding: 72px 28px; }
