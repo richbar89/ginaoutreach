@@ -129,7 +129,7 @@ function BrandCard({ brand }: { brand: Brand }) {
             onError={() => setLogoFailed(true)}
           />
         ) : (
-          <span style={{ fontSize: 15, fontWeight: 700, color: col.fg, fontFamily: "'Inter', sans-serif" }}>{letter}</span>
+          <span style={{ fontSize: 15, fontWeight: 700, color: col.fg,  }}>{letter}</span>
         )}
       </div>
       <div>
@@ -203,10 +203,9 @@ export default function WaitlistPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,600&family=Inter:wght@400;500;600;700&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html, body { background: #F5F0EA; }
-        .lp { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; background: #F5F0EA; }
+        .lp { -webkit-font-smoothing: antialiased; background: #F5F0EA; }
 
         /* Hero */
         .lp-hero {
@@ -266,7 +265,7 @@ export default function WaitlistPage() {
 
         /* Logo — big, centred */
         .lp-logo {
-          font-family: system-ui, -apple-system, sans-serif;
+          
           font-size: clamp(52px, 8vw, 80px);
           font-weight: 700; letter-spacing: -0.04em; line-height: 1;
           background: linear-gradient(135deg, #FF8C42 0%, #C4603A 100%);
@@ -288,7 +287,7 @@ export default function WaitlistPage() {
 
         /* Headline */
         .lp-hl {
-          font-family: 'Playfair Display', serif;
+          
           font-size: clamp(36px, 5.5vw, 64px);
           font-weight: 900; color: #1A1110; line-height: 1.08;
           letter-spacing: -0.02em; margin-bottom: 18px;
@@ -316,7 +315,7 @@ export default function WaitlistPage() {
         .lp-field {
           width: 100%; padding: 11px 14px;
           border: 1.5px solid #E8E2DA; border-radius: 11px;
-          font-size: 14px; font-family: 'Inter', sans-serif; color: #1A1110;
+          font-size: 14px;  color: #1A1110;
           background: #FAFAF9; outline: none;
           transition: border-color 0.15s, box-shadow 0.15s;
         }
@@ -330,7 +329,7 @@ export default function WaitlistPage() {
         .lp-btn {
           width: 100%; padding: 13px;
           background: #E8622A; color: #fff; border: none; border-radius: 11px;
-          font-size: 14px; font-weight: 600; font-family: 'Inter', sans-serif;
+          font-size: 14px; font-weight: 600; 
           cursor: pointer; transition: background 0.14s, transform 0.12s;
           box-shadow: 0 4px 18px rgba(232,98,42,0.38);
         }
@@ -355,7 +354,7 @@ export default function WaitlistPage() {
           flex-wrap: wrap; gap: 12px;
         }
         .lp-footer-logo {
-          font-family: system-ui, -apple-system, sans-serif;
+          
           font-size: 17px; font-weight: 600; letter-spacing: -0.04em;
           background: linear-gradient(to right, #FFD4A3, #FF9D6F);
           -webkit-background-clip: text; -webkit-text-fill-color: transparent;
@@ -429,7 +428,7 @@ export default function WaitlistPage() {
                 <div style={{ width: 52, height: 52, borderRadius: "50%", background: "rgba(232,98,42,0.10)", border: "2px solid rgba(232,98,42,0.28)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px" }}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E8622A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                 </div>
-                <p style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 700, color: "#1A1110", marginBottom: 8 }}>You&apos;re on the list!</p>
+                <p style={{ fontSize: 22, fontWeight: 700, color: "#1A1110", marginBottom: 8 }}>You&apos;re on the list!</p>
                 <p style={{ fontSize: 14, color: "#7A736B" }}>We&apos;ll be in touch when Collabi launches.</p>
               </div>
             ) : (
@@ -469,7 +468,7 @@ export default function WaitlistPage() {
         <div className="lp-features" id="features">
           <div style={{ maxWidth: 960, margin: "0 auto", textAlign: "center" }}>
             <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#9E9790", marginBottom: 10 }}>Everything you need</p>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(28px, 3.5vw, 44px)", fontWeight: 900, color: "#1A1110", letterSpacing: "-0.025em", lineHeight: 1.1 }}>
+            <h2 style={{ fontSize: "clamp(28px, 3.5vw, 44px)", fontWeight: 900, color: "#1A1110", letterSpacing: "-0.025em", lineHeight: 1.1 }}>
               One platform. Every tool.
             </h2>
           </div>
@@ -480,7 +479,7 @@ export default function WaitlistPage() {
                   <span style={{ fontSize: 13 }}>{f.emoji}</span>
                   <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: "#C4603A" }}>{f.tag}</span>
                 </div>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 21, fontWeight: 700, color: "#1A1110", letterSpacing: "-0.02em", lineHeight: 1.2, marginBottom: 12 }}>{f.title}</h3>
+                <h3 style={{ fontSize: 21, fontWeight: 700, color: "#1A1110", letterSpacing: "-0.02em", lineHeight: 1.2, marginBottom: 12 }}>{f.title}</h3>
                 <p style={{ fontSize: 14, color: "#7A736B", lineHeight: 1.7, marginBottom: 20 }}>{f.body}</p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   {f.bullets.map(b => (
@@ -500,7 +499,7 @@ export default function WaitlistPage() {
             <a
               href="#"
               onClick={e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); setTimeout(() => formRef.current?.querySelector("input")?.focus(), 600); }}
-              style={{ display: "inline-block", background: "#E8622A", color: "#fff", fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 15, padding: "14px 32px", borderRadius: 100, textDecoration: "none", boxShadow: "0 4px 18px rgba(232,98,42,0.38)" }}
+              style={{ display: "inline-block", background: "#E8622A", color: "#fff", fontWeight: 700, fontSize: 15, padding: "14px 32px", borderRadius: 100, textDecoration: "none", boxShadow: "0 4px 18px rgba(232,98,42,0.38)" }}
             >
               Join the waitlist →
             </a>
