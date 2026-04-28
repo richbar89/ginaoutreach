@@ -52,7 +52,7 @@ export default function Sidebar() {
       {/* Wordmark */}
       <div style={{ padding: "6px 8px 14px", textAlign: "center" }}>
         <span style={{
-          fontFamily: "var(--font-comfortaa), system-ui, sans-serif",
+          fontFamily: "'Comfortaa', system-ui, sans-serif",
           fontSize: 28,
           fontWeight: 700,
           lineHeight: 1,
