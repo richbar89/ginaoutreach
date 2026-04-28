@@ -9,7 +9,7 @@ import { Analytics } from "@vercel/analytics/next";
 const comfortaa = Comfortaa({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
-  display: "swap",
+  display: "block",
   variable: "--font-comfortaa",
 });
 

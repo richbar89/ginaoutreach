@@ -331,8 +331,8 @@ export default function LandingPage() {
     <>
       <style>{`
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        .cl-page { font-family: 'Comfortaa', sans-serif; background: linear-gradient(150deg, #F0CBB4 0%, #E3AD8E 55%, #D4916C 100%) fixed; color: #0D1B2A; line-height: 1.5; -webkit-font-smoothing: antialiased; }
-        .cl-h { font-family: 'Comfortaa', sans-serif; }
+        .cl-page { font-family: var(--font-comfortaa), 'Comfortaa', sans-serif; background: linear-gradient(150deg, #F0CBB4 0%, #E3AD8E 55%, #D4916C 100%) fixed; color: #0D1B2A; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+        .cl-h { font-family: var(--font-comfortaa), 'Comfortaa', sans-serif; }
         .cl-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; transition: all 0.25s; }
         .cl-nav-inner { max-width: 1160px; margin: 0 auto; padding: 0 28px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
         .cl-nav-scrolled { background: rgba(255,255,255,0.92); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(0,0,0,0.07); }
