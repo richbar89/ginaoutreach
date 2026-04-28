@@ -265,7 +265,7 @@ export default function WaitlistPage() {
 
         /* Logo — big, centred */
         .lp-logo {
-          
+          font-family: system-ui, -apple-system, sans-serif;
           font-size: clamp(52px, 8vw, 80px);
           font-weight: 700; letter-spacing: -0.04em; line-height: 1;
           background: linear-gradient(135deg, #FF8C42 0%, #C4603A 100%);
@@ -354,7 +354,7 @@ export default function WaitlistPage() {
           flex-wrap: wrap; gap: 12px;
         }
         .lp-footer-logo {
-          
+          font-family: system-ui, -apple-system, sans-serif;
           font-size: 17px; font-weight: 600; letter-spacing: -0.04em;
           background: linear-gradient(to right, #FFD4A3, #FF9D6F);
           -webkit-background-clip: text; -webkit-text-fill-color: transparent;
