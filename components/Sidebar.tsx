@@ -49,13 +49,22 @@ export default function Sidebar() {
       height: "100%",
     }}>
 
-      {/* Logo */}
+      {/* Wordmark */}
       <div style={{ padding: "6px 8px 14px", textAlign: "center" }}>
-        <img
-          src="/logo.png"
-          alt="Collabi"
-          style={{ width: 100, height: 100, objectFit: "contain", display: "block", margin: "0 auto" }}
-        />
+        <span style={{
+          fontFamily: "'Comfortaa', system-ui, sans-serif",
+          fontSize: 28,
+          fontWeight: 700,
+          lineHeight: 1,
+          display: "block",
+          background: "linear-gradient(90deg, #FFAE7E 0%, #E8622A 100%)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text",
+          userSelect: "none",
+        }}>
+          collabi
+        </span>
       </div>
 
       {/* Nav items */}

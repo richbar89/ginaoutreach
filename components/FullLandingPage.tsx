@@ -330,7 +330,6 @@ export default function LandingPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
         .cl-page { font-family: 'Comfortaa', sans-serif; background: linear-gradient(150deg, #F0CBB4 0%, #E3AD8E 55%, #D4916C 100%) fixed; color: #0D1B2A; line-height: 1.5; -webkit-font-smoothing: antialiased; }
         .cl-h { font-family: 'Comfortaa', sans-serif; }
