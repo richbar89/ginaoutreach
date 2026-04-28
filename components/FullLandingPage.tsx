@@ -303,6 +303,7 @@ type CapacityRow = { category: string; label: string; emoji: string; filled: num
 export default function LandingPage() {
   const typed = useTyping(NICHES);
   const [scrolled, setScrolled] = useState(false);
+  const [fontsReady, setFontsReady] = useState(false);
   const hero = useInView(0.05);
   const logos = useInView(0.1);
   const f0 = useInView(0.08);
@@ -313,6 +314,10 @@ export default function LandingPage() {
   const urgency = useInView(0.1);
   const fRefs = [f0, f1, f2, f3];
   const [capacityRows, setCapacityRows] = useState<CapacityRow[]>([]);
+
+  useEffect(() => {
+    document.fonts.ready.then(() => setFontsReady(true));
+  }, []);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 10);
@@ -388,7 +393,7 @@ export default function LandingPage() {
         }
       `}</style>
 
-      <div className="cl-page">
+      <div className="cl-page" style={{ visibility: fontsReady ? "visible" : "hidden" }}>
 
         {/* ── NAV ── */}
         <nav className={`cl-nav${scrolled ? " cl-nav-scrolled" : ""}`}>
