@@ -203,11 +203,11 @@ export default function WaitlistPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html, body { background: #F5F0EA; }
         .lp { -webkit-font-smoothing: antialiased; background: #F5F0EA; }
-        .lp h1, .lp h2, .lp h3 { font-family: 'Fraunces', serif; }
+        .lp h1, .lp h2, .lp h3 { font-family: 'Syne', sans-serif; }
 
         /* Hero */
         .lp-hero {
