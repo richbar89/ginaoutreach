@@ -203,9 +203,11 @@ export default function WaitlistPage() {
   return (
     <>
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,600&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html, body { background: #F5F0EA; }
         .lp { -webkit-font-smoothing: antialiased; background: #F5F0EA; }
+        .lp h1, .lp h2, .lp h3 { font-family: 'Playfair Display', serif; }
 
         /* Hero */
         .lp-hero {
