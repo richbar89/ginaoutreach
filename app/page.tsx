@@ -478,7 +478,7 @@ export default function WaitlistPage() {
             {FEATURES.map(f => (
               <div key={f.tag} className="lp-feat-card">
                 <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(196,96,58,0.08)", border: "1px solid rgba(196,96,58,0.18)", borderRadius: 100, padding: "4px 12px", marginBottom: 18 }}>
-                  <span style={{ fontSize: 13 }}>{f.emoji}</span>
+                  <span style={{ fontSize: 13 }} suppressHydrationWarning>{f.emoji}</span>
                   <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: "#C4603A" }}>{f.tag}</span>
                 </div>
                 <h3 style={{ fontSize: 21, fontWeight: 700, color: "#1A1110", letterSpacing: "-0.02em", lineHeight: 1.2, marginBottom: 12 }}>{f.title}</h3>
