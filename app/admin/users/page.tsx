@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowLeft, Trash2, Eye, Copy, Check, X } from "lucide-react";
+import { ArrowLeft, Trash2, Eye, Copy, Check, X, ChevronRight } from "lucide-react";
 
 type DealEntry = {
   company: string;
@@ -242,13 +242,14 @@ export default function AdminUsersPage() {
                 style={{ borderColor: "var(--border)" }}
               >
                 <td className="px-5 py-3">
-                  <div className="flex items-center gap-3">
+                  <Link href={`/admin/users/${u.id}`} className="flex items-center gap-3 group">
                     <Avatar user={u} />
                     <div>
-                      <p className="font-bold text-navy-900">{u.name}</p>
+                      <p className="font-bold text-navy-900 group-hover:text-coral-600 transition-colors">{u.name}</p>
                       <p className="text-xs text-navy-400">{u.email}</p>
                     </div>
-                  </div>
+                    <ChevronRight size={14} className="text-navy-200 group-hover:text-coral-400 transition-colors ml-1" />
+                  </Link>
                 </td>
                 <td className="px-5 py-3 text-navy-500 text-xs">{new Date(u.createdAt).toLocaleDateString("en-GB")}</td>
                 <td className="px-5 py-3 text-navy-500 text-xs">{timeAgo(u.lastActiveAt)}</td>
