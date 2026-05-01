@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Ticket, Users, AlertTriangle, Megaphone, Activity, Upload, Save, Loader2, ListOrdered, Zap, CheckCircle } from "lucide-react";
+import { Ticket, Users, AlertTriangle, Megaphone, Activity, Upload, Save, Loader2, ListOrdered, Zap, CheckCircle, ArrowLeft } from "lucide-react";
 
 const NAV = [
   { href: "/admin/waitlist",     label: "Waitlist",      icon: ListOrdered,  desc: "Landing page sign-ups" },
@@ -115,9 +115,12 @@ export default function AdminPage() {
 
   return (
     <div className="h-full flex flex-col overflow-y-auto p-8" style={{ background: "#F7F8FA" }}>
-      <div className="mb-8">
-        <p className="text-[11px] font-bold uppercase tracking-widest text-navy-400 mb-1">Admin</p>
-        <h1 className="text-3xl font-black tracking-tight text-navy-900">Dashboard</h1>
+      <div className="flex items-center gap-3 mb-8">
+        <Link href="/dashboard" className="text-navy-400 hover:text-navy-700"><ArrowLeft size={18} /></Link>
+        <div>
+          <p className="text-[11px] font-bold uppercase tracking-widest text-navy-400 mb-1">Admin</p>
+          <h1 className="text-3xl font-black tracking-tight text-navy-900">Dashboard</h1>
+        </div>
       </div>
 
       {/* Stat cards */}
