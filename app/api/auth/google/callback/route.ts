@@ -3,11 +3,17 @@ import { NextResponse } from "next/server";
 function html(data: Record<string, string>) {
   return new NextResponse(
     `<!DOCTYPE html><html><body><script>
-      window.opener && window.opener.postMessage(
-        ${JSON.stringify({ type: "google-oauth", ...data })},
-        window.location.origin
-      );
-      window.close();
+      try {
+        const bc = new BroadcastChannel('google-oauth');
+        bc.postMessage(${JSON.stringify({ type: "google-oauth", ...data })});
+        setTimeout(() => { bc.close(); window.close(); }, 200);
+      } catch(e) {
+        window.opener && window.opener.postMessage(
+          ${JSON.stringify({ type: "google-oauth", ...data })},
+          window.location.origin
+        );
+        window.close();
+      }
     </script></body></html>`,
     { headers: { "Content-Type": "text/html" } }
   );

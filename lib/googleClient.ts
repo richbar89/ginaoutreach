@@ -129,32 +129,43 @@ export function signInWithGoogle(): Promise<{ name: string; email: string }> {
       "width=500,height=620,left=100,top=100"
     );
 
-    const handler = (event: MessageEvent) => {
-      if (event.data?.type !== "google-oauth") return;
-      window.removeEventListener("message", handler);
+    function finish(data: Record<string, string>) {
       clearInterval(pollClosed);
+      bc.close();
+      window.removeEventListener("message", legacyHandler);
 
-      if (event.data.error) {
-        reject(new Error(event.data.error));
+      if (data.error) {
+        reject(new Error(data.error));
         return;
       }
-
-      const { email, name, access_token } = event.data;
+      const { email, name, access_token } = data;
       localStorage.setItem("google_access_token", access_token);
       localStorage.setItem("google_user_email", email);
       localStorage.setItem("google_user_name", name || email);
-      // Store expiry — Google access tokens last 1 hour
       localStorage.setItem("google_token_expires_at", String(Date.now() + 3600 * 1000));
       resolve({ email, name: name || email });
+    }
+
+    // Primary: BroadcastChannel (works even when window.opener is cleared by COOP)
+    const bc = new BroadcastChannel("google-oauth");
+    bc.onmessage = (event) => {
+      if (event.data?.type !== "google-oauth") return;
+      finish(event.data);
     };
 
-    window.addEventListener("message", handler);
+    // Fallback: legacy postMessage
+    const legacyHandler = (event: MessageEvent) => {
+      if (event.data?.type !== "google-oauth") return;
+      finish(event.data);
+    };
+    window.addEventListener("message", legacyHandler);
 
     // Detect popup closed without completing
     const pollClosed = setInterval(() => {
       if (popup?.closed) {
         clearInterval(pollClosed);
-        window.removeEventListener("message", handler);
+        bc.close();
+        window.removeEventListener("message", legacyHandler);
         reject(new Error("cancelled"));
       }
     }, 500);
