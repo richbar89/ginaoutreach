@@ -22,7 +22,8 @@ export async function GET(request: Request) {
     return html({ error: error || "No authorisation code returned." });
   }
 
-  const redirectUri = `${url.origin}/api/auth/google/callback`;
+  const base = process.env.NEXT_PUBLIC_APP_URL || url.origin;
+  const redirectUri = `${base}/api/auth/google/callback`;
 
   // Exchange code for tokens
   const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
