@@ -4,10 +4,18 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ArrowLeft, Trash2, Eye, Copy, Check, X } from "lucide-react";
 
+type DealEntry = {
+  company: string;
+  contactName: string;
+  status: string;
+  value: string | null;
+};
+
 type DealStats = {
   total: number;
   agreedCount: number;
   agreedValue: number;
+  entries: DealEntry[];
 };
 
 type UserRow = {
@@ -45,6 +53,23 @@ function Avatar({ user }: { user: UserRow }) {
     <div className="w-8 h-8 rounded-full bg-coral-100 flex items-center justify-center text-coral-600 text-xs font-black flex-shrink-0">
       {user.name[0]?.toUpperCase()}
     </div>
+  );
+}
+
+const STATUS_STYLES: Record<string, string> = {
+  pitched:     "bg-sky-100 text-sky-700",
+  replied:     "bg-violet-100 text-violet-700",
+  negotiating: "bg-amber-100 text-amber-700",
+  contracted:  "bg-emerald-100 text-emerald-700",
+  delivered:   "bg-teal-100 text-teal-700",
+  paid:        "bg-green-100 text-green-700",
+};
+
+function StatusBadge({ status }: { status: string }) {
+  return (
+    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${STATUS_STYLES[status] || "bg-navy-100 text-navy-500"}`}>
+      {status}
+    </span>
   );
 }
 
@@ -237,17 +262,22 @@ export default function AdminUsersPage() {
                     {u.tickets}
                   </span>
                 </td>
-                <td className="px-5 py-3">
+                <td className="px-5 py-3 max-w-[220px]">
                   {u.deals.total === 0 ? (
                     <span className="text-navy-300 text-xs">—</span>
                   ) : (
-                    <div>
-                      <p className="text-sm font-bold text-navy-800">{u.deals.total} deal{u.deals.total !== 1 ? "s" : ""}</p>
-                      {u.deals.agreedCount > 0 && (
-                        <p className="text-xs text-emerald-600 font-semibold">
-                          {fmtValue(u.deals.agreedValue)} agreed
-                        </p>
-                      )}
+                    <div className="space-y-1.5">
+                      {u.deals.entries.map((d, i) => (
+                        <div key={i} className="flex items-center gap-1.5 flex-wrap">
+                          <span className="text-xs font-bold text-navy-800 truncate max-w-[120px]" title={d.company}>
+                            {d.company || d.contactName || "Unknown"}
+                          </span>
+                          <StatusBadge status={d.status} />
+                          {d.value && (
+                            <span className="text-xs text-navy-500">{d.value}</span>
+                          )}
+                        </div>
+                      ))}
                     </div>
                   )}
                 </td>

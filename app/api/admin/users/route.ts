@@ -26,7 +26,7 @@ export async function GET() {
     db.from("tickets").select("user_id"),
     db.from("error_logs").select("user_id"),
     db.from("email_log").select("user_id"),
-    db.from("deals").select("user_id, value, status"),
+    db.from("deals").select("user_id, value, status, company, contact_name"),
   ]);
 
   const ticketsByUser: Record<string, number> = {};
@@ -46,12 +46,19 @@ export async function GET() {
 
   // Agreed = contracted, delivered, or paid
   const AGREED_STATUSES = new Set(["contracted", "delivered", "paid"]);
-  type DealStats = { total: number; agreedValue: number; agreedCount: number };
+  type DealEntry = { company: string; contactName: string; status: string; value: string | null };
+  type DealStats = { total: number; agreedValue: number; agreedCount: number; entries: DealEntry[] };
   const dealsByUser: Record<string, DealStats> = {};
   dealsData?.forEach((d) => {
     if (!d.user_id) return;
-    if (!dealsByUser[d.user_id]) dealsByUser[d.user_id] = { total: 0, agreedValue: 0, agreedCount: 0 };
+    if (!dealsByUser[d.user_id]) dealsByUser[d.user_id] = { total: 0, agreedValue: 0, agreedCount: 0, entries: [] };
     dealsByUser[d.user_id].total++;
+    dealsByUser[d.user_id].entries.push({
+      company: d.company || "",
+      contactName: d.contact_name || "",
+      status: d.status,
+      value: d.value || null,
+    });
     if (AGREED_STATUSES.has(d.status)) {
       dealsByUser[d.user_id].agreedCount++;
       dealsByUser[d.user_id].agreedValue += parseDealValue(d.value);
@@ -68,7 +75,7 @@ export async function GET() {
     tickets: ticketsByUser[u.id] || 0,
     errors: errorsByUser[u.id] || 0,
     emailsSent: emailsByUser[u.id] || 0,
-    deals: dealsByUser[u.id] || { total: 0, agreedValue: 0, agreedCount: 0 },
+    deals: dealsByUser[u.id] || { total: 0, agreedValue: 0, agreedCount: 0, entries: [] },
   }));
 
   return NextResponse.json({ users });
