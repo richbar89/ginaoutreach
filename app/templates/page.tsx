@@ -134,13 +134,18 @@ function TemplateModal({
 export default function TemplatesPage() {
   const getDb = useDb();
   const [templates, setTemplates] = useState<EmailTemplate[]>([]);
+  const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<EmailTemplate | "new" | null>(null);
 
   useEffect(() => {
     (async () => {
-      const db = await getDb();
-      const data = await dbGetTemplates(db);
-      setTemplates(data);
+      try {
+        const db = await getDb();
+        const data = await dbGetTemplates(db);
+        setTemplates(data);
+      } finally {
+        setLoading(false);
+      }
     })();
   }, [getDb]);
 
@@ -208,7 +213,20 @@ export default function TemplatesPage() {
       </div>
 
       {/* Template list */}
-      {templates.length === 0 ? (
+      {loading ? (
+        <div className="space-y-3 animate-pulse">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="bg-white border border-cream-200 rounded-2xl px-6 py-5 flex items-start gap-5">
+              <div className="w-10 h-10 bg-cream-200 rounded-xl flex-shrink-0" />
+              <div className="flex-1 space-y-2">
+                <div className="h-4 bg-cream-200 rounded w-1/3" />
+                <div className="h-3 bg-cream-100 rounded w-1/2" />
+                <div className="h-3 bg-cream-100 rounded w-3/4" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : templates.length === 0 ? (
         <div className="text-center py-20 bg-white border border-cream-200 rounded-2xl">
           <FileText size={36} className="text-cream-300 mx-auto mb-4" />
           <p className="font-serif text-xl font-bold text-navy-900 mb-2">No templates yet</p>
