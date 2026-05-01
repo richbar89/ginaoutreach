@@ -2,7 +2,13 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowLeft, Mail, Trash2, Eye, Copy, Check, X } from "lucide-react";
+import { ArrowLeft, Trash2, Eye, Copy, Check, X } from "lucide-react";
+
+type DealStats = {
+  total: number;
+  agreedCount: number;
+  agreedValue: number;
+};
 
 type UserRow = {
   id: string;
@@ -13,6 +19,8 @@ type UserRow = {
   imageUrl: string;
   tickets: number;
   errors: number;
+  emailsSent: number;
+  deals: DealStats;
 };
 
 function timeAgo(iso: string | null) {
@@ -22,6 +30,11 @@ function timeAgo(iso: string | null) {
   if (d === 0) return "today";
   if (d === 1) return "yesterday";
   return `${d}d ago`;
+}
+
+function fmtValue(v: number) {
+  if (v === 0) return null;
+  return new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP", maximumFractionDigits: 0 }).format(v);
 }
 
 function Avatar({ user }: { user: UserRow }) {
@@ -57,8 +70,8 @@ function ImpersonateModal({ url, onClose }: { url: string; onClose: () => void }
         <p className="text-sm text-navy-500 mb-4">
           Open this link in an <strong>incognito window</strong> to view Collabi as this user. Expires in 15 minutes.
         </p>
-        <div className="flex gap-2 items-center bg-navy-50 rounded-xl px-3 py-2 text-xs text-navy-600 font-mono break-all mb-4">
-          <span className="flex-1 min-w-0 truncate">{url}</span>
+        <div className="bg-navy-50 rounded-xl px-3 py-2 text-xs text-navy-600 font-mono break-all mb-4">
+          <span>{url}</span>
         </div>
         <div className="flex gap-3">
           <button
@@ -85,7 +98,6 @@ function ImpersonateModal({ url, onClose }: { url: string; onClose: () => void }
 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<UserRow[]>([]);
-  const [totalEmails, setTotalEmails] = useState(0);
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
@@ -95,10 +107,7 @@ export default function AdminUsersPage() {
   useEffect(() => {
     fetch("/api/admin/users")
       .then((r) => r.json())
-      .then((d) => {
-        setUsers(d.users || []);
-        setTotalEmails(d.totalEmails || 0);
-      })
+      .then((d) => setUsers(d.users || []))
       .finally(() => setLoading(false));
   }, []);
 
@@ -141,6 +150,9 @@ export default function AdminUsersPage() {
     }
   }
 
+  const totalEmails = users.reduce((s, u) => s + u.emailsSent, 0);
+  const totalAgreedValue = users.reduce((s, u) => s + u.deals.agreedValue, 0);
+
   return (
     <div className="h-full flex flex-col overflow-y-auto p-8" style={{ background: "#F7F8FA" }}>
       {impersonateUrl && (
@@ -156,17 +168,14 @@ export default function AdminUsersPage() {
       </div>
 
       {/* Stats bar */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-4 gap-4 mb-6">
         <div className="bg-white rounded-2xl border p-5" style={{ borderColor: "var(--border)" }}>
           <p className="text-xs text-navy-400 mb-1">Total Users</p>
           <p className="text-3xl font-black text-navy-900">{loading ? "—" : users.length}</p>
         </div>
         <div className="bg-white rounded-2xl border p-5" style={{ borderColor: "var(--border)" }}>
           <p className="text-xs text-navy-400 mb-1">Total Emails Sent</p>
-          <div className="flex items-end gap-2">
-            <p className="text-3xl font-black text-navy-900">{loading ? "—" : totalEmails}</p>
-            <Mail size={16} className="text-navy-300 mb-1" />
-          </div>
+          <p className="text-3xl font-black text-navy-900">{loading ? "—" : totalEmails}</p>
         </div>
         <div className="bg-white rounded-2xl border p-5" style={{ borderColor: "var(--border)" }}>
           <p className="text-xs text-navy-400 mb-1">Avg Emails / User</p>
@@ -174,26 +183,33 @@ export default function AdminUsersPage() {
             {loading || users.length === 0 ? "—" : (totalEmails / users.length).toFixed(1)}
           </p>
         </div>
+        <div className="bg-white rounded-2xl border p-5" style={{ borderColor: "var(--border)" }}>
+          <p className="text-xs text-navy-400 mb-1">Total Agreed Value</p>
+          <p className="text-3xl font-black text-navy-900">
+            {loading ? "—" : (fmtValue(totalAgreedValue) || "£0")}
+          </p>
+        </div>
       </div>
 
       {/* User table */}
-      <div className="bg-white rounded-2xl border overflow-hidden" style={{ borderColor: "var(--border)" }}>
-        <table className="w-full text-sm">
+      <div className="bg-white rounded-2xl border overflow-hidden overflow-x-auto" style={{ borderColor: "var(--border)" }}>
+        <table className="w-full text-sm" style={{ minWidth: 900 }}>
           <thead>
             <tr className="border-b" style={{ borderColor: "var(--border)" }}>
               <th className="text-left px-5 py-3 text-[11px] font-black uppercase tracking-widest text-navy-400">User</th>
               <th className="text-left px-5 py-3 text-[11px] font-black uppercase tracking-widest text-navy-400">Joined</th>
               <th className="text-left px-5 py-3 text-[11px] font-black uppercase tracking-widest text-navy-400">Last Active</th>
+              <th className="text-left px-5 py-3 text-[11px] font-black uppercase tracking-widest text-navy-400">Emails</th>
               <th className="text-left px-5 py-3 text-[11px] font-black uppercase tracking-widest text-navy-400">Tickets</th>
-              <th className="text-left px-5 py-3 text-[11px] font-black uppercase tracking-widest text-navy-400">Errors</th>
+              <th className="text-left px-5 py-3 text-[11px] font-black uppercase tracking-widest text-navy-400">Pipeline</th>
               <th className="px-5 py-3" />
             </tr>
           </thead>
           <tbody>
             {loading ? (
-              <tr><td colSpan={6} className="text-center py-8 text-navy-300 text-sm">Loading…</td></tr>
+              <tr><td colSpan={7} className="text-center py-8 text-navy-300 text-sm">Loading…</td></tr>
             ) : users.length === 0 ? (
-              <tr><td colSpan={6} className="text-center py-8 text-navy-300 text-sm">No users found.</td></tr>
+              <tr><td colSpan={7} className="text-center py-8 text-navy-300 text-sm">No users found.</td></tr>
             ) : users.map((u) => (
               <tr
                 key={u.id}
@@ -212,18 +228,31 @@ export default function AdminUsersPage() {
                 <td className="px-5 py-3 text-navy-500 text-xs">{new Date(u.createdAt).toLocaleDateString("en-GB")}</td>
                 <td className="px-5 py-3 text-navy-500 text-xs">{timeAgo(u.lastActiveAt)}</td>
                 <td className="px-5 py-3">
-                  <span className={`text-xs font-bold ${u.tickets > 0 ? "text-navy-700" : "text-navy-300"}`}>
+                  <span className={`text-sm font-bold ${u.emailsSent > 0 ? "text-navy-800" : "text-navy-300"}`}>
+                    {u.emailsSent}
+                  </span>
+                </td>
+                <td className="px-5 py-3">
+                  <span className={`text-sm font-bold ${u.tickets > 0 ? "text-navy-800" : "text-navy-300"}`}>
                     {u.tickets}
                   </span>
                 </td>
                 <td className="px-5 py-3">
-                  <span className={`text-xs font-bold ${u.errors > 0 ? "text-red-500" : "text-navy-300"}`}>
-                    {u.errors}
-                  </span>
+                  {u.deals.total === 0 ? (
+                    <span className="text-navy-300 text-xs">—</span>
+                  ) : (
+                    <div>
+                      <p className="text-sm font-bold text-navy-800">{u.deals.total} deal{u.deals.total !== 1 ? "s" : ""}</p>
+                      {u.deals.agreedCount > 0 && (
+                        <p className="text-xs text-emerald-600 font-semibold">
+                          {fmtValue(u.deals.agreedValue)} agreed
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </td>
                 <td className="px-5 py-3">
                   <div className="flex items-center justify-end gap-2">
-                    {/* Impersonate */}
                     <button
                       onClick={() => handleImpersonate(u.id)}
                       disabled={impersonatingId === u.id}
@@ -234,7 +263,6 @@ export default function AdminUsersPage() {
                       {impersonatingId === u.id ? "…" : "View as"}
                     </button>
 
-                    {/* Delete */}
                     {deleteConfirm === u.id ? (
                       <div className="flex items-center gap-1">
                         <span className="text-xs text-red-500 font-bold">Sure?</span>

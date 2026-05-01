@@ -57,9 +57,11 @@ export async function dbGetEmailLog(db: DB): Promise<EmailRecord[]> {
 
 export async function dbAppendEmailRecord(
   db: DB,
-  record: Omit<EmailRecord, "id" | "sentAt">
+  record: Omit<EmailRecord, "id" | "sentAt">,
+  userId?: string
 ): Promise<void> {
   await db.from("email_log").insert({
+    user_id: userId || null,
     contact_email: record.contactEmail.toLowerCase(),
     subject: record.subject,
     body: record.body,

@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Send, CheckCircle, Loader2, Wifi, WifiOff, FileText, ChevronDown } from "lucide-react";
 import Link from "next/link";
+import { useAuth } from "@clerk/nextjs";
 import { useDb } from "@/lib/useDb";
 import { dbAppendEmailRecord, dbGetTemplates } from "@/lib/db";
 import { applyMerge } from "@/lib/storage";
@@ -16,6 +17,7 @@ type ConnectedUser = { name: string; email: string } | null;
 function SendEmailForm() {
   const searchParams = useSearchParams();
   const getDb = useDb();
+  const { userId } = useAuth();
   const [form, setForm] = useState({
     to: searchParams.get("to") || "",
     toName: searchParams.get("name") || "",
@@ -67,7 +69,7 @@ function SendEmailForm() {
           await sendEmailViaGraph({ to: form.to, subject: form.subject, body: form.body });
         }
         const db = await getDb();
-        await dbAppendEmailRecord(db, { contactEmail: form.to, subject: form.subject, body: form.body });
+        await dbAppendEmailRecord(db, { contactEmail: form.to, subject: form.subject, body: form.body }, userId ?? undefined);
         setSuccess(true);
         setForm({ to: "", toName: "", subject: "", body: "" });
         setTimeout(() => setSuccess(false), 5000);
@@ -83,7 +85,7 @@ function SendEmailForm() {
         `&body=${encodeURIComponent(form.body)}`;
       window.location.href = mailto;
       const db = await getDb();
-      await dbAppendEmailRecord(db, { contactEmail: form.to, subject: form.subject, body: form.body });
+      await dbAppendEmailRecord(db, { contactEmail: form.to, subject: form.subject, body: form.body }, userId ?? undefined);
       setSuccess(true);
       setTimeout(() => setSuccess(false), 4000);
     }

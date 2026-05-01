@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -36,6 +37,7 @@ export default function CampaignDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const getDb = useDb();
+  const { userId } = useAuth();
   const [campaign, setCampaign] = useState<Campaign | null>(null);
   const [sent, setSent] = useState<Set<string>>(new Set());
   const [msUser, setMsUser] = useState<{ name: string; email: string } | null>(null);
@@ -70,7 +72,7 @@ export default function CampaignDetailPage() {
       body: applyMerge(campaign.body, contact),
       campaignId: campaign.id,
       campaignName: campaign.name,
-    });
+    }, userId ?? undefined);
   };
 
   const sendOne = async (contact: Contact) => {
