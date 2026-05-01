@@ -24,7 +24,7 @@ html {
 }
 
 body {
-  font-family: 'Comfortaa', system-ui, sans-serif;
+  font-family: 'Roboto', system-ui, sans-serif;
   font-size: 14px;
   -webkit-font-smoothing: antialiased;
   background: transparent;
@@ -32,7 +32,7 @@ body {
   color: var(--text);
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4 {
   font-family: 'Comfortaa', system-ui, sans-serif;
   letter-spacing: -0.03em;
   font-weight: 800;
@@ -63,7 +63,7 @@ h1, h2, h3 {
            focus:border-orange-400 transition;
     border: 1px solid rgba(0,0,0,0.09);
     box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-    font-family: 'Comfortaa', system-ui, sans-serif;
+    font-family: 'Roboto', system-ui, sans-serif;
   }
 
   .btn-primary {
