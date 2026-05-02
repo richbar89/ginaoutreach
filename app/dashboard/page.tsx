@@ -9,7 +9,7 @@ import {
 import { useUser } from "@clerk/nextjs";
 import { useDb } from "@/lib/useDb";
 import { dbGetEmailLog, dbGetDeals, dbGetBrands, dbUpdateBrandDomain } from "@/lib/db";
-import { getGoogleUser, isGoogleTokenExpired } from "@/lib/googleClient";
+import { getGoogleUser } from "@/lib/googleClient";
 import { getMicrosoftUser } from "@/lib/graphClient";
 import { getAllCachedStatuses } from "@/lib/metaAds";
 import type { Deal, Brand } from "@/lib/types";
@@ -132,7 +132,7 @@ export default function DashboardPage() {
   useEffect(() => {
     const gUser = getGoogleUser();
     const mUser = getMicrosoftUser();
-    if (gUser) setEmailConnected(isGoogleTokenExpired() ? "expired" : "gmail");
+    if (gUser) setEmailConnected("gmail");
     else if (mUser) setEmailConnected("microsoft");
     else setEmailConnected(null);
     const stored = localStorage.getItem(FAV_KEY);

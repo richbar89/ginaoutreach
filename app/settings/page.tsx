@@ -24,9 +24,9 @@ import {
 } from "@/lib/graphClient";
 import { resetMsalInstance } from "@/lib/msalInstance";
 import {
-  signInWithGoogle,
-  signOutFromGoogle,
   getGoogleUser,
+  setGmailCredentials,
+  clearGmailCredentials,
 } from "@/lib/googleClient";
 import { useDb } from "@/lib/useDb";
 import {
@@ -124,6 +124,8 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
   const [signing, setSigning] = useState<"ms" | "google" | null>(null);
   const [error, setError] = useState("");
+  const [gmailForm, setGmailForm] = useState({ email: "", password: "" });
+  const [gmailError, setGmailError] = useState("");
   const [showInstructions, setShowInstructions] = useState(false);
   const [signature, setSignature] = useState("");
   const [sigSaved, setSigSaved] = useState(false);
@@ -218,23 +220,28 @@ export default function SettingsPage() {
   };
 
   const handleConnectGoogle = async () => {
-    setError("");
+    setGmailError("");
     setSigning("google");
     try {
-      const user = await signInWithGoogle();
-      setGUser(user);
+      const res = await fetch("/api/email/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ gmailEmail: gmailForm.email.trim(), appPassword: gmailForm.password.trim() }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Verification failed.");
+      setGmailCredentials(gmailForm.email.trim(), gmailForm.password.trim());
+      setGUser({ email: gmailForm.email.trim(), name: gmailForm.email.trim() });
+      setGmailForm({ email: "", password: "" });
     } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : "Sign-in failed.";
-      if (!msg.toLowerCase().includes("cancelled")) {
-        setError(msg);
-      }
+      setGmailError(e instanceof Error ? e.message : "Connection failed.");
     } finally {
       setSigning(null);
     }
   };
 
   const handleDisconnectGoogle = () => {
-    signOutFromGoogle();
+    clearGmailCredentials();
     setGUser(null);
   };
 
@@ -259,7 +266,6 @@ export default function SettingsPage() {
       {/* Gmail Connection Card */}
       <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm mb-6">
         <div className="px-7 py-5 border-b border-cream-100 flex items-center gap-3">
-          {/* Gmail / Google logo */}
           <svg width="20" height="20" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
             <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
             <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
@@ -284,8 +290,8 @@ export default function SettingsPage() {
           ) : gUser ? (
             <div className="flex items-center justify-between p-4 bg-emerald-50 border border-emerald-100 rounded-xl">
               <div>
-                <p className="text-sm font-semibold text-navy-900">{gUser.name}</p>
-                <p className="text-xs text-navy-400 mt-0.5">{gUser.email}</p>
+                <p className="text-sm font-semibold text-navy-900">{gUser.email}</p>
+                <p className="text-xs text-navy-400 mt-0.5">Sending via Gmail SMTP</p>
               </div>
               <button
                 onClick={handleDisconnectGoogle}
@@ -296,14 +302,54 @@ export default function SettingsPage() {
               </button>
             </div>
           ) : (
-            <button
-              onClick={handleConnectGoogle}
-              disabled={signing === "google"}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition-colors"
-            >
-              {signing === "google" ? <Loader2 size={15} className="animate-spin" /> : <LogIn size={15} />}
-              {signing === "google" ? "Connecting…" : "Connect Gmail"}
-            </button>
+            <div className="space-y-4">
+              <div className="p-4 bg-amber-50 border border-amber-100 rounded-xl text-xs text-amber-800 leading-relaxed">
+                <strong>Tip:</strong> We recommend creating a <strong>dedicated Gmail account</strong> for outreach (e.g. yourname.outreach@gmail.com). This keeps cold email activity away from your main inbox and protects your personal account from any spam flags.
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-navy-400 mb-1.5 uppercase tracking-widest">Gmail Address</label>
+                <input
+                  type="email"
+                  value={gmailForm.email}
+                  onChange={e => setGmailForm(f => ({ ...f, email: e.target.value }))}
+                  placeholder="yourname.outreach@gmail.com"
+                  className="input-base"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-navy-400 mb-1.5 uppercase tracking-widest">App Password</label>
+                <input
+                  type="password"
+                  value={gmailForm.password}
+                  onChange={e => setGmailForm(f => ({ ...f, password: e.target.value }))}
+                  placeholder="xxxx xxxx xxxx xxxx"
+                  className="input-base font-mono tracking-widest"
+                />
+                <p className="mt-1.5 text-xs text-navy-400">
+                  Not your regular Gmail password.{" "}
+                  <a
+                    href="https://myaccount.google.com/apppasswords"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-coral-500 hover:underline"
+                  >
+                    Generate an App Password here
+                  </a>{" "}
+                  (requires 2-Step Verification to be enabled).
+                </p>
+              </div>
+              {gmailError && (
+                <p className="text-xs text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3">{gmailError}</p>
+              )}
+              <button
+                onClick={handleConnectGoogle}
+                disabled={signing === "google" || !gmailForm.email.trim() || !gmailForm.password.trim()}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition-colors"
+              >
+                {signing === "google" ? <Loader2 size={15} className="animate-spin" /> : <LogIn size={15} />}
+                {signing === "google" ? "Verifying…" : "Connect Gmail"}
+              </button>
+            </div>
           )}
         </div>
       </div>

@@ -7,7 +7,6 @@ import {
   Users,
   Megaphone,
   Settings,
-  Inbox,
   TrendingUp,
   BarChart3,
   BookOpen,
@@ -21,7 +20,6 @@ const ADMIN_USER_ID = process.env.NEXT_PUBLIC_ADMIN_USER_ID;
 const NAV_ITEMS = [
   { href: "/dashboard",  label: "Dashboard",    icon: LayoutDashboard, exact: true },
   { href: "/contacts",   label: "Contacts",     icon: Users,           exact: false },
-  { href: "/inbox",      label: "Inbox",        icon: Inbox,           exact: false },
   { href: "/campaigns",  label: "Campaigns",    icon: Megaphone,       exact: false },
   { href: "/pipeline",   label: "Pipeline",     icon: TrendingUp,      exact: false },
   { href: "/media-kit",  label: "Media Kit",    icon: BookOpen,        exact: false },

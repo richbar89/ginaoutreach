@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { CheckCircle, Loader2, Mail, ArrowRight, User } from "lucide-react";
-import { signInWithGoogle, getGoogleUser } from "@/lib/googleClient";
+import { getGoogleUser, setGmailCredentials } from "@/lib/googleClient";
 import { signInWithMicrosoft, getMicrosoftUser } from "@/lib/graphClient";
 import { useAuth } from "@clerk/nextjs";
 import { useDb } from "@/lib/useDb";
@@ -32,6 +32,9 @@ export default function OnboardingPage() {
   const [connecting, setConnecting] = useState<EmailProvider | null>(null);
   const [connected, setConnected] = useState<Connected>(null);
   const [error, setError] = useState("");
+  const [showGmailForm, setShowGmailForm] = useState(false);
+  const [gmailForm, setGmailForm] = useState({ email: "", password: "" });
+  const [gmailError, setGmailError] = useState("");
 
   // Profile step
   const [name, setName] = useState("");
@@ -52,15 +55,21 @@ export default function OnboardingPage() {
     else if (user?.firstName) setName(user.firstName);
   }, [user]);
 
-  const handleGmail = async () => {
-    setError("");
+  const handleGmailConnect = async () => {
+    setGmailError("");
     setConnecting("gmail");
     try {
-      const result = await signInWithGoogle();
-      setConnected({ provider: "gmail", email: result.email, name: result.name });
+      const res = await fetch("/api/email/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ gmailEmail: gmailForm.email.trim(), appPassword: gmailForm.password.trim() }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Verification failed.");
+      setGmailCredentials(gmailForm.email.trim(), gmailForm.password.trim());
+      setConnected({ provider: "gmail", email: gmailForm.email.trim(), name: gmailForm.email.trim() });
     } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : "Connection failed.";
-      if (!msg.toLowerCase().includes("cancelled")) setError(msg);
+      setGmailError(e instanceof Error ? e.message : "Connection failed.");
     } finally {
       setConnecting(null);
     }
@@ -182,27 +191,72 @@ export default function OnboardingPage() {
             /* Connection buttons */
             <div className="space-y-3">
               {/* Gmail */}
-              <button
-                onClick={handleGmail}
-                disabled={!!connecting}
-                className="w-full flex items-center gap-4 p-5 bg-white border-2 border-cream-200 hover:border-coral-300 hover:shadow-md rounded-2xl transition-all disabled:opacity-60 disabled:cursor-not-allowed text-left"
-              >
-                <div className="flex-shrink-0">
-                  <svg width="32" height="32" viewBox="0 0 48 48">
-                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-                  </svg>
+              {showGmailForm ? (
+                <div className="bg-white border-2 border-coral-200 rounded-2xl p-5 space-y-3">
+                  <div className="flex items-center gap-3 mb-1">
+                    <svg width="24" height="24" viewBox="0 0 48 48" className="flex-shrink-0">
+                      <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                      <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                      <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                      <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                    </svg>
+                    <p className="text-sm font-bold text-navy-900">Connect Gmail</p>
+                  </div>
+                  <input
+                    type="email"
+                    value={gmailForm.email}
+                    onChange={e => setGmailForm(f => ({ ...f, email: e.target.value }))}
+                    placeholder="yourname.outreach@gmail.com"
+                    className="w-full text-sm border border-cream-200 rounded-xl px-4 py-3 outline-none focus:border-coral-300 focus:ring-2 focus:ring-coral-100"
+                  />
+                  <div>
+                    <input
+                      type="password"
+                      value={gmailForm.password}
+                      onChange={e => setGmailForm(f => ({ ...f, password: e.target.value }))}
+                      placeholder="App Password (xxxx xxxx xxxx xxxx)"
+                      className="w-full font-mono tracking-widest text-sm border border-cream-200 rounded-xl px-4 py-3 outline-none focus:border-coral-300 focus:ring-2 focus:ring-coral-100"
+                    />
+                    <p className="text-xs text-navy-400 mt-1.5">
+                      <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener noreferrer" className="text-coral-500 hover:underline">Generate an App Password</a> — requires 2-Step Verification.
+                    </p>
+                  </div>
+                  {gmailError && <p className="text-xs text-red-600 bg-red-50 border border-red-100 rounded-xl px-3 py-2">{gmailError}</p>}
+                  <div className="flex gap-2">
+                    <button
+                      onClick={handleGmailConnect}
+                      disabled={connecting === "gmail" || !gmailForm.email.trim() || !gmailForm.password.trim()}
+                      className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-coral-500 hover:bg-coral-600 disabled:opacity-60 text-white text-sm font-bold rounded-xl transition-colors"
+                    >
+                      {connecting === "gmail" ? <Loader2 size={15} className="animate-spin" /> : null}
+                      {connecting === "gmail" ? "Verifying…" : "Connect"}
+                    </button>
+                    <button onClick={() => setShowGmailForm(false)} className="px-4 py-2.5 text-sm text-navy-500 hover:text-navy-800 border border-cream-200 rounded-xl transition-colors">
+                      Back
+                    </button>
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-bold text-navy-900">Connect Gmail</p>
-                  <p className="text-xs text-navy-400 mt-0.5">Use if your email ends in @gmail.com</p>
-                </div>
-                {connecting === "gmail"
-                  ? <Loader2 size={18} className="flex-shrink-0 text-coral-500 animate-spin" />
-                  : <div className="flex-shrink-0 w-5 h-5 rounded-full border-2 border-cream-300" />}
-              </button>
+              ) : (
+                <button
+                  onClick={() => setShowGmailForm(true)}
+                  disabled={!!connecting}
+                  className="w-full flex items-center gap-4 p-5 bg-white border-2 border-cream-200 hover:border-coral-300 hover:shadow-md rounded-2xl transition-all disabled:opacity-60 disabled:cursor-not-allowed text-left"
+                >
+                  <div className="flex-shrink-0">
+                    <svg width="32" height="32" viewBox="0 0 48 48">
+                      <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                      <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                      <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                      <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                    </svg>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold text-navy-900">Connect Gmail</p>
+                    <p className="text-xs text-navy-400 mt-0.5">Use a dedicated outreach account to protect your main inbox</p>
+                  </div>
+                  <div className="flex-shrink-0 w-5 h-5 rounded-full border-2 border-cream-300" />
+                </button>
+              )}
 
               {/* Microsoft */}
               <button
