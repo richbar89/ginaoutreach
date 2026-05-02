@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { CheckCircle, Loader2, Mail, ArrowRight, User } from "lucide-react";
 import { getGoogleUser, setGmailCredentials } from "@/lib/googleClient";
-import { signInWithMicrosoft, getMicrosoftUser } from "@/lib/graphClient";
+import { getMicrosoftUser } from "@/lib/graphClient";
 import { useAuth } from "@clerk/nextjs";
 import { useDb } from "@/lib/useDb";
 import { dbGetMediaKit, dbSaveMediaKit, dbGetDeals, dbUpsertDeal, dbGetBrands, dbSaveBrands } from "@/lib/db";
@@ -75,21 +75,6 @@ export default function OnboardingPage() {
     }
   };
 
-  const handleMicrosoft = async () => {
-    setError("");
-    setConnecting("microsoft");
-    try {
-      const account = await signInWithMicrosoft();
-      setConnected({ provider: "microsoft", email: account.username, name: account.name || account.username });
-    } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : "Connection failed.";
-      if (!msg.toLowerCase().includes("cancelled") && !msg.toLowerCase().includes("user_cancelled")) {
-        setError(msg);
-      }
-    } finally {
-      setConnecting(null);
-    }
-  };
 
   const handleSaveProfile = async () => {
     setSaving(true);
@@ -257,29 +242,6 @@ export default function OnboardingPage() {
                   <div className="flex-shrink-0 w-5 h-5 rounded-full border-2 border-cream-300" />
                 </button>
               )}
-
-              {/* Microsoft */}
-              <button
-                onClick={handleMicrosoft}
-                disabled={!!connecting}
-                className="w-full flex items-center gap-4 p-5 bg-white border-2 border-cream-200 hover:border-coral-300 hover:shadow-md rounded-2xl transition-all disabled:opacity-60 disabled:cursor-not-allowed text-left"
-              >
-                <div className="flex-shrink-0">
-                  <svg width="32" height="32" viewBox="0 0 21 21" fill="none">
-                    <rect x="1" y="1" width="9" height="9" fill="#F25022"/>
-                    <rect x="11" y="1" width="9" height="9" fill="#7FBA00"/>
-                    <rect x="1" y="11" width="9" height="9" fill="#00A4EF"/>
-                    <rect x="11" y="11" width="9" height="9" fill="#FFB900"/>
-                  </svg>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-bold text-navy-900">Connect Outlook / Microsoft 365</p>
-                  <p className="text-xs text-navy-400 mt-0.5">Use if your email ends in @outlook.com, @hotmail.com, or your company runs Microsoft 365</p>
-                </div>
-                {connecting === "microsoft"
-                  ? <Loader2 size={18} className="flex-shrink-0 text-coral-500 animate-spin" />
-                  : <div className="flex-shrink-0 w-5 h-5 rounded-full border-2 border-cream-300" />}
-              </button>
 
               {error && (
                 <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3">{error}</p>
