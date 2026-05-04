@@ -252,8 +252,10 @@ export default function SettingsPage() {
             </div>
           ) : (
             <div className="space-y-4">
-              <div className="p-4 bg-amber-50 border border-amber-100 rounded-xl text-xs text-amber-800 leading-relaxed">
-                <strong>Tip:</strong> We recommend creating a <strong>dedicated Gmail account</strong> for outreach (e.g. yourname.outreach@gmail.com). This keeps cold email activity away from your main inbox and protects your personal account from any spam flags.
+              <div className="p-4 bg-amber-50 border border-amber-100 rounded-xl text-xs text-amber-800 leading-relaxed space-y-2">
+                <p><strong>Use a dedicated Gmail account for outreach — not your main one.</strong></p>
+                <p>High-volume cold email can trigger spam filters. If your account gets flagged, it affects <em>every</em> email you send — to clients, collaborators, everyone. A dedicated outreach account (e.g. <span className="font-mono bg-amber-100 px-1 rounded">yourname.outreach@gmail.com</span>) takes 2 minutes to create and completely separates the risk. Think of it as a business phone vs. your personal number.</p>
+                <p>It also keeps things tidy — replies from brands land in one place, separate from your personal inbox.</p>
               </div>
               <div>
                 <label className="block text-xs font-semibold text-navy-400 mb-1.5 uppercase tracking-widest">Gmail Address</label>
@@ -302,7 +304,7 @@ export default function SettingsPage() {
               {showGmailInstructions && (
                 <ol className="space-y-3 text-xs text-navy-700 bg-cream-50 border border-cream-200 rounded-xl p-4">
                   {[
-                    <>Create a dedicated Gmail account for outreach at <a href="https://accounts.google.com/signup" target="_blank" rel="noopener noreferrer" className="text-coral-500 hover:underline">gmail.com</a> — e.g. <span className="font-mono bg-cream-200 px-1 rounded">yourname.outreach@gmail.com</span>. This keeps cold email separate from your main inbox.</>,
+                    <>Create a dedicated Gmail account at <a href="https://accounts.google.com/signup" target="_blank" rel="noopener noreferrer" className="text-coral-500 hover:underline">gmail.com</a> — e.g. <span className="font-mono bg-cream-200 px-1 rounded">yourname.outreach@gmail.com</span>. <strong>Do not use your main Gmail.</strong> If this account gets flagged for spam, your outreach stops — but your personal email is completely unaffected.</>,
                     <>Sign into that account, go to <a href="https://myaccount.google.com/security" target="_blank" rel="noopener noreferrer" className="text-coral-500 hover:underline">myaccount.google.com/security</a>, and enable <strong>2-Step Verification</strong> (required for App Passwords).</>,
                     <>Once 2-Step Verification is on, go to <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener noreferrer" className="text-coral-500 hover:underline">myaccount.google.com/apppasswords</a>.</>,
                     <>In the <strong>App name</strong> field type <span className="font-mono bg-cream-200 px-1 rounded">Collabi</span> and click <strong>Create</strong>.</>,

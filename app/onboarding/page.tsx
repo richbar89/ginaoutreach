@@ -175,6 +175,14 @@ export default function OnboardingPage() {
           ) : (
             /* Connection buttons */
             <div className="space-y-3">
+              {/* Dedicated account warning */}
+              {!showGmailForm && (
+                <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl text-xs text-amber-800 leading-relaxed">
+                  <p className="font-bold mb-1">We strongly recommend a dedicated Gmail account for outreach.</p>
+                  <p>High-volume cold email can get accounts flagged for spam. If that happens to your main Gmail, it affects <em>every</em> email you send — personal, work, everything. A separate outreach account (takes 2 mins to create) keeps that risk completely isolated. You can set one up at <a href="https://accounts.google.com/signup" target="_blank" rel="noopener noreferrer" className="text-amber-700 underline font-medium">gmail.com</a> before connecting.</p>
+                </div>
+              )}
+
               {/* Gmail */}
               {showGmailForm ? (
                 <div className="bg-white border-2 border-coral-200 rounded-2xl p-5 space-y-3">
@@ -237,7 +245,7 @@ export default function OnboardingPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-bold text-navy-900">Connect Gmail</p>
-                    <p className="text-xs text-navy-400 mt-0.5">Use a dedicated outreach account to protect your main inbox</p>
+                    <p className="text-xs text-navy-400 mt-0.5">Connect your dedicated outreach Gmail — keep your main account safe</p>
                   </div>
                   <div className="flex-shrink-0 w-5 h-5 rounded-full border-2 border-cream-300" />
                 </button>
