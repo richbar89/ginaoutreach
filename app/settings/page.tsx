@@ -237,18 +237,57 @@ export default function SettingsPage() {
               Checking connection…
             </div>
           ) : gUser ? (
-            <div className="flex items-center justify-between p-4 bg-emerald-50 border border-emerald-100 rounded-xl">
-              <div>
-                <p className="text-sm font-semibold text-navy-900">{gUser.email}</p>
-                <p className="text-xs text-navy-400 mt-0.5">Sending via Gmail SMTP</p>
+            <div className="space-y-5">
+              {/* Connected status */}
+              <div className="flex items-center justify-between p-4 bg-emerald-50 border border-emerald-100 rounded-xl">
+                <div>
+                  <p className="text-sm font-semibold text-navy-900">{gUser.email}</p>
+                  <p className="text-xs text-navy-400 mt-0.5">Sending via Gmail SMTP</p>
+                </div>
+                <button
+                  onClick={handleDisconnectGoogle}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-navy-500 hover:text-red-600 border border-cream-200 hover:border-red-200 bg-white rounded-xl transition-all"
+                >
+                  <LogOut size={12} />
+                  Disconnect
+                </button>
               </div>
-              <button
-                onClick={handleDisconnectGoogle}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-navy-500 hover:text-red-600 border border-cream-200 hover:border-red-200 bg-white rounded-xl transition-all"
-              >
-                <LogOut size={12} />
-                Disconnect
-              </button>
+
+              {/* IMAP inbox setup */}
+              <div className="border border-cream-200 rounded-xl overflow-hidden">
+                <div className="px-5 py-4 bg-cream-50 border-b border-cream-200">
+                  <p className="text-sm font-bold text-navy-900">Enable inbox view <span className="text-xs font-normal text-navy-400 ml-1">— see replies from brands inside Collabi</span></p>
+                </div>
+                <div className="px-5 py-4 space-y-4 text-xs text-navy-600 leading-relaxed">
+                  <div className="p-3 bg-blue-50 border border-blue-100 rounded-lg text-blue-800">
+                    <strong>This is safe and built into Gmail.</strong> The same technology Outlook, Apple Mail, and every other email app uses to access Gmail. It only gives Collabi read access to your outreach inbox — it cannot delete emails, access your personal Gmail, or make any changes.
+                  </div>
+                  <p className="text-navy-500">To enable it, you just need to flip one toggle inside Gmail settings:</p>
+                  <ol className="space-y-3">
+                    {[
+                      <>Open <strong>Gmail</strong> (your outreach account) in a new tab</>,
+                      <>Click the <strong>gear icon</strong> (top right) → <strong>See all settings</strong></>,
+                      <>Click the <strong>&quot;Forwarding and POP/IMAP&quot;</strong> tab</>,
+                      <>Under <strong>&quot;IMAP access&quot;</strong>, select <strong>Enable IMAP</strong></>,
+                      <>Click <strong>Save Changes</strong> — that&apos;s it</>,
+                    ].map((step, i) => (
+                      <li key={i} className="flex gap-3">
+                        <span className="flex-shrink-0 w-5 h-5 bg-coral-100 text-coral-600 text-[10px] font-bold rounded-full flex items-center justify-center mt-0.5">{i + 1}</span>
+                        <span>{step}</span>
+                      </li>
+                    ))}
+                  </ol>
+                  <a
+                    href="https://mail.google.com/mail/u/0/#settings/fwdandpop"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-coral-500 hover:bg-coral-600 text-white text-xs font-semibold rounded-xl transition-colors"
+                  >
+                    Open Gmail Settings directly →
+                  </a>
+                  <p className="text-navy-400 text-[11px]">Once done, click Inbox in the sidebar — your replies will load automatically.</p>
+                </div>
+              </div>
             </div>
           ) : (
             <div className="space-y-4">

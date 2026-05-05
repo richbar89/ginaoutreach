@@ -31,35 +31,59 @@ function formatDate(iso: string): string {
 
 function IMapDisabledState() {
   return (
-    <div className="flex flex-col items-center justify-center h-full py-20 px-8 text-center max-w-md mx-auto">
-      <div className="w-14 h-14 bg-amber-50 border border-amber-200 rounded-2xl flex items-center justify-center mb-5">
-        <WifiOff size={24} className="text-amber-500" />
+    <div className="flex items-center justify-center h-full p-8">
+      <div className="w-full max-w-lg">
+        <div className="bg-white border border-cream-200 rounded-2xl shadow-sm overflow-hidden">
+          <div className="px-8 py-6 border-b border-cream-200">
+            <div className="flex items-center gap-3 mb-1">
+              <div className="w-8 h-8 bg-coral-50 border border-coral-100 rounded-xl flex items-center justify-center">
+                <WifiOff size={15} className="text-coral-500" />
+              </div>
+              <h2 className="font-serif text-xl font-bold text-navy-900">One more quick step</h2>
+            </div>
+            <p className="text-navy-500 text-sm leading-relaxed mt-3">
+              To show your replies here, Collabi needs read access to your outreach inbox. You enable this with a single toggle inside Gmail — it takes about 30 seconds.
+            </p>
+          </div>
+
+          <div className="px-8 py-5 bg-blue-50 border-b border-blue-100">
+            <p className="text-xs text-blue-800 leading-relaxed">
+              <strong>Is this safe?</strong> Yes — completely. This is called IMAP, and it&apos;s the same technology that Outlook, Apple Mail, and every other email app uses to access Gmail. Collabi gets <strong>read-only</strong> access to your outreach inbox only. It cannot delete emails, send on your behalf (that&apos;s handled separately via your App Password), or touch your personal Gmail account.
+            </p>
+          </div>
+
+          <div className="px-8 py-6 space-y-4">
+            <p className="text-xs font-semibold text-navy-500 uppercase tracking-widest">How to enable it</p>
+            <ol className="space-y-3">
+              {[
+                <>Open <strong>Gmail</strong> (your outreach account) in a new tab — not your personal one</>,
+                <>Click the <strong>gear icon</strong> (top right corner) → <strong>See all settings</strong></>,
+                <>Click the <strong>&ldquo;Forwarding and POP/IMAP&rdquo;</strong> tab at the top</>,
+                <>Under <strong>&ldquo;IMAP access&rdquo;</strong>, select <strong>Enable IMAP</strong></>,
+                <>Click <strong>Save Changes</strong>, then come back here and click Refresh</>,
+              ].map((step, i) => (
+                <li key={i} className="flex gap-3 text-xs text-navy-700">
+                  <span className="flex-shrink-0 w-5 h-5 bg-coral-100 text-coral-600 text-[10px] font-bold rounded-full flex items-center justify-center mt-0.5">{i + 1}</span>
+                  <span className="leading-relaxed">{step}</span>
+                </li>
+              ))}
+            </ol>
+            <div className="flex items-center gap-3 pt-2">
+              <a
+                href="https://mail.google.com/mail/u/0/#settings/fwdandpop"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold rounded-xl transition-colors"
+              >
+                Open Gmail Settings <ExternalLink size={13} />
+              </a>
+              <Link href="/settings" className="text-xs text-navy-400 hover:text-navy-700 transition-colors">
+                Back to Settings
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
-      <h2 className="font-serif text-2xl font-bold text-navy-900 mb-2">Enable IMAP in Gmail</h2>
-      <p className="text-navy-500 text-sm leading-relaxed mb-6">
-        Your Gmail account needs IMAP access enabled before Collabi can read your inbox. It&apos;s one toggle — takes about 30 seconds.
-      </p>
-      <ol className="text-left space-y-3 w-full mb-6">
-        {[
-          <>Open your outreach Gmail inbox and click the <strong>gear icon</strong> → <strong>See all settings</strong></>,
-          <>Go to the <strong>Forwarding and POP/IMAP</strong> tab</>,
-          <>Under IMAP access, select <strong>Enable IMAP</strong></>,
-          <>Click <strong>Save Changes</strong> then come back here and refresh</>,
-        ].map((step, i) => (
-          <li key={i} className="flex gap-3 text-xs text-navy-700">
-            <span className="flex-shrink-0 w-5 h-5 bg-coral-100 text-coral-600 text-[10px] font-bold rounded-full flex items-center justify-center mt-0.5">{i + 1}</span>
-            <span className="leading-relaxed">{step}</span>
-          </li>
-        ))}
-      </ol>
-      <a
-        href="https://mail.google.com/mail/u/0/#settings/fwdandpop"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold rounded-xl transition-colors"
-      >
-        Open Gmail Settings <ExternalLink size={13} />
-      </a>
     </div>
   );
 }
