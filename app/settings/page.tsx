@@ -14,7 +14,9 @@ import {
   FileText,
   X,
   Check,
+  ArrowRight,
 } from "lucide-react";
+import Link from "next/link";
 import {
   getGoogleUser,
   setGmailCredentials,
@@ -290,27 +292,35 @@ export default function SettingsPage() {
               </div>
             </div>
           ) : (
-            <div className="space-y-4">
-              <div className="p-5 bg-cream-50 border border-cream-200 rounded-xl text-sm text-navy-700 leading-relaxed space-y-3">
-                <p className="font-semibold text-navy-900">Before you connect — use a dedicated Gmail.</p>
-                <p>Cold emailing brands is legal and normal, but high volumes can trigger spam filters. If your main Gmail gets flagged, it affects <em>every</em> email you send.</p>
-                <p>A dedicated outreach account (e.g. <span className="font-mono bg-cream-200 px-1 rounded text-xs">yourname.brands@gmail.com</span>) takes 2 minutes to create and completely separates the risk. Think of it like having a business phone — if it gets spam calls, your personal number is untouched.</p>
-                <a
-                  href="https://accounts.google.com/signup"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs text-coral-600 hover:text-coral-700 font-semibold"
-                >
-                  Create a new Gmail account →
-                </a>
+            <div className="space-y-5">
+              {/* Guided setup CTA */}
+              <Link
+                href="/inbox"
+                className="flex items-start gap-4 p-5 bg-coral-50 border-2 border-coral-200 hover:border-coral-300 rounded-xl transition-all group"
+              >
+                <div className="w-9 h-9 bg-coral-100 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <span className="text-xl">👋</span>
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-bold text-coral-800 mb-0.5">First time? Use our step-by-step guide</p>
+                  <p className="text-xs text-coral-700 leading-relaxed">We&apos;ll walk you through creating a dedicated outreach Gmail and connecting it — takes about 3 minutes.</p>
+                </div>
+                <ArrowRight size={15} className="text-coral-400 flex-shrink-0 mt-1 group-hover:translate-x-0.5 transition-transform" />
+              </Link>
+
+              <div className="flex items-center gap-3">
+                <div className="flex-1 h-px bg-cream-200" />
+                <span className="text-xs text-navy-400">or connect manually</span>
+                <div className="flex-1 h-px bg-cream-200" />
               </div>
+
               <div>
                 <label className="block text-xs font-semibold text-navy-400 mb-1.5 uppercase tracking-widest">Gmail Address</label>
                 <input
                   type="email"
                   value={gmailForm.email}
                   onChange={e => setGmailForm(f => ({ ...f, email: e.target.value }))}
-                  placeholder="yourname.outreach@gmail.com"
+                  placeholder="yourname.brands@gmail.com"
                   className="input-base"
                 />
               </div>
@@ -324,7 +334,11 @@ export default function SettingsPage() {
                   className="input-base font-mono tracking-widest"
                 />
                 <p className="mt-1.5 text-xs text-navy-400">
-                  Not your regular Gmail password — see the instructions below.
+                  Not your regular Gmail password.{" "}
+                  <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener noreferrer" className="text-coral-500 hover:underline">
+                    Generate one here
+                  </a>{" "}
+                  (requires 2-Step Verification).
                 </p>
               </div>
               {gmailError && (
@@ -339,7 +353,6 @@ export default function SettingsPage() {
                 {signing === "google" ? "Verifying…" : "Connect Gmail"}
               </button>
 
-              {/* Step-by-step instructions */}
               <button
                 onClick={() => setShowGmailInstructions(v => !v)}
                 className="w-full flex items-center justify-between text-xs font-semibold text-navy-500 hover:text-navy-800 transition-colors pt-1"
@@ -351,9 +364,8 @@ export default function SettingsPage() {
               {showGmailInstructions && (
                 <ol className="space-y-3 text-xs text-navy-700 bg-cream-50 border border-cream-200 rounded-xl p-4">
                   {[
-                    <>Create a dedicated Gmail account at <a href="https://accounts.google.com/signup" target="_blank" rel="noopener noreferrer" className="text-coral-500 hover:underline">gmail.com</a> — e.g. <span className="font-mono bg-cream-200 px-1 rounded">yourname.outreach@gmail.com</span>. <strong>Do not use your main Gmail.</strong> If this account gets flagged for spam, your outreach stops — but your personal email is completely unaffected.</>,
-                    <>Sign into that account, go to <a href="https://myaccount.google.com/security" target="_blank" rel="noopener noreferrer" className="text-coral-500 hover:underline">myaccount.google.com/security</a>, and enable <strong>2-Step Verification</strong> (required for App Passwords).</>,
-                    <>Once 2-Step Verification is on, go to <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener noreferrer" className="text-coral-500 hover:underline">myaccount.google.com/apppasswords</a>.</>,
+                    <>Sign into your outreach Gmail, go to <a href="https://myaccount.google.com/security" target="_blank" rel="noopener noreferrer" className="text-coral-500 hover:underline">myaccount.google.com/security</a> and enable <strong>2-Step Verification</strong>.</>,
+                    <>Go to <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener noreferrer" className="text-coral-500 hover:underline">myaccount.google.com/apppasswords</a>.</>,
                     <>In the <strong>App name</strong> field type <span className="font-mono bg-cream-200 px-1 rounded">Collabi</span> and click <strong>Create</strong>.</>,
                     <>Google shows a <strong>16-character password</strong>. Copy it (spaces are fine).</>,
                     <>Paste the Gmail address and that password above, then click <strong>Connect Gmail</strong>.</>,
