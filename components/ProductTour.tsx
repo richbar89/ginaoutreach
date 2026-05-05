@@ -5,16 +5,19 @@ import Joyride, { CallBackProps, STATUS, EVENTS, Step } from "react-joyride";
 
 const TOUR_KEY = "collabi_tour_done";
 
+const heading: React.CSSProperties = { fontSize: 15, fontWeight: 700, color: "#FFFFFF", marginBottom: 4, letterSpacing: "-0.02em" };
+const body: React.CSSProperties = { fontSize: 13, color: "rgba(255,255,255,0.7)", lineHeight: 1.6 };
+
 const STEPS: Step[] = [
   {
     target: "body",
     placement: "center",
     disableBeacon: true,
     content: (
-      <div className="text-center py-2">
-        <div className="text-4xl mb-3">👋</div>
-        <h3 className="font-serif text-xl font-bold text-navy-900 mb-2">Welcome to Collabi!</h3>
-        <p className="text-sm text-navy-500 leading-relaxed">
+      <div style={{ textAlign: "center", padding: "8px 0" }}>
+        <div style={{ fontSize: 36, marginBottom: 12 }}>👋</div>
+        <p style={{ ...heading, fontSize: 18, marginBottom: 8 }}>Welcome to Collabi!</p>
+        <p style={body}>
           Let us give you a quick 30-second tour so you know where everything is.
         </p>
       </div>
@@ -26,10 +29,8 @@ const STEPS: Step[] = [
     disableBeacon: true,
     content: (
       <div>
-        <p className="font-bold text-navy-900 mb-1">Dashboard</p>
-        <p className="text-sm text-navy-500 leading-relaxed">
-          Your home base. See an overview of your outreach activity, brand monitor, and recent emails at a glance.
-        </p>
+        <p style={heading}>Dashboard</p>
+        <p style={body}>Your home base. See an overview of your outreach activity, brand monitor, and recent emails at a glance.</p>
       </div>
     ),
   },
@@ -39,10 +40,8 @@ const STEPS: Step[] = [
     disableBeacon: true,
     content: (
       <div>
-        <p className="font-bold text-navy-900 mb-1">Contacts</p>
-        <p className="text-sm text-navy-500 leading-relaxed">
-          Add the brand contacts you want to reach out to. Import from a spreadsheet or add them one by one.
-        </p>
+        <p style={heading}>Contacts</p>
+        <p style={body}>Browse our database of brand contacts. Search by niche, category, or name — then pick who you want to reach out to and add them to a campaign.</p>
       </div>
     ),
   },
@@ -52,10 +51,8 @@ const STEPS: Step[] = [
     disableBeacon: true,
     content: (
       <div>
-        <p className="font-bold text-navy-900 mb-1">Campaigns</p>
-        <p className="text-sm text-navy-500 leading-relaxed">
-          Create outreach campaigns and send personalised emails to multiple brands at once — directly from your own Gmail.
-        </p>
+        <p style={heading}>Campaigns</p>
+        <p style={body}>Create outreach campaigns and send personalised emails to multiple brands at once — directly from your own Gmail.</p>
       </div>
     ),
   },
@@ -65,10 +62,8 @@ const STEPS: Step[] = [
     disableBeacon: true,
     content: (
       <div>
-        <p className="font-bold text-navy-900 mb-1">Inbox</p>
-        <p className="text-sm text-navy-500 leading-relaxed">
-          When brands reply to your outreach, their messages appear here. You can read and reply without leaving Collabi.
-        </p>
+        <p style={heading}>Inbox</p>
+        <p style={body}>When brands reply to your outreach, their messages appear here. You can read and reply without leaving Collabi.</p>
       </div>
     ),
   },
@@ -78,10 +73,8 @@ const STEPS: Step[] = [
     disableBeacon: true,
     content: (
       <div>
-        <p className="font-bold text-navy-900 mb-1">Pipeline</p>
-        <p className="text-sm text-navy-500 leading-relaxed">
-          Track every deal as it moves from pitched → replied → negotiating → closed. Never lose track of a brand conversation.
-        </p>
+        <p style={heading}>Pipeline</p>
+        <p style={body}>Track every deal as it moves from pitched → replied → negotiating → closed. Never lose track of a brand conversation.</p>
       </div>
     ),
   },
@@ -91,10 +84,8 @@ const STEPS: Step[] = [
     disableBeacon: true,
     content: (
       <div>
-        <p className="font-bold text-navy-900 mb-1">Media Kit</p>
-        <p className="text-sm text-navy-500 leading-relaxed">
-          Build and share a professional media kit with your stats, niche, and rates — the thing brands ask for before saying yes.
-        </p>
+        <p style={heading}>Media Kit</p>
+        <p style={body}>Build and share a professional media kit with your stats, niche, and rates — the thing brands ask for before saying yes.</p>
       </div>
     ),
   },
@@ -103,11 +94,11 @@ const STEPS: Step[] = [
     placement: "center",
     disableBeacon: true,
     content: (
-      <div className="text-center py-2">
-        <div className="text-4xl mb-3">🚀</div>
-        <h3 className="font-serif text-xl font-bold text-navy-900 mb-2">You&apos;re ready to go!</h3>
-        <p className="text-sm text-navy-500 leading-relaxed">
-          Start by adding some contacts, then create your first campaign. Good luck — go land some deals!
+      <div style={{ textAlign: "center", padding: "8px 0" }}>
+        <div style={{ fontSize: 36, marginBottom: 12 }}>🚀</div>
+        <p style={{ ...heading, fontSize: 18, marginBottom: 8 }}>You&apos;re ready to go!</p>
+        <p style={body}>
+          Start by browsing the contacts database, then create your first campaign. Good luck — go land some deals!
         </p>
       </div>
     ),
@@ -116,40 +107,48 @@ const STEPS: Step[] = [
 
 const joyrideStyles = {
   options: {
-    primaryColor: "#D4795C",
+    primaryColor: "#E8622A",
     zIndex: 10000,
-    arrowColor: "#ffffff",
-    backgroundColor: "#ffffff",
-    overlayColor: "rgba(15, 15, 25, 0.55)",
-    spotlightShadow: "0 0 0 9999px rgba(15, 15, 25, 0.55)",
-    width: 320,
+    arrowColor: "rgba(22, 22, 35, 0.82)",
+    backgroundColor: "rgba(22, 22, 35, 0.82)",
+    overlayColor: "rgba(8, 8, 16, 0.72)",
+    spotlightShadow: "0 0 0 9999px rgba(8, 8, 16, 0.72)",
+    width: 300,
   },
   tooltip: {
-    borderRadius: 16,
-    padding: "20px 24px",
-    boxShadow: "0 20px 60px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.1)",
+    borderRadius: 20,
+    padding: "22px 24px",
+    background: "rgba(22, 22, 35, 0.82)",
+    backdropFilter: "blur(28px)",
+    WebkitBackdropFilter: "blur(28px)",
+    border: "1px solid rgba(255,255,255,0.10)",
+    boxShadow: "0 24px 64px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.08)",
   },
   tooltipTitle: { display: "none" },
+  tooltipFooter: {
+    marginTop: 16,
+  },
   buttonNext: {
-    backgroundColor: "#D4795C",
-    borderRadius: 12,
+    backgroundColor: "#E8622A",
+    borderRadius: 10,
     fontSize: 13,
     fontWeight: 700,
-    padding: "8px 20px",
+    padding: "8px 18px",
     outline: "none",
+    letterSpacing: "-0.01em",
   },
   buttonBack: {
-    color: "#9CA3AF",
+    color: "rgba(255,255,255,0.4)",
     fontSize: 13,
     fontWeight: 500,
     marginRight: 8,
   },
   buttonSkip: {
-    color: "#9CA3AF",
+    color: "rgba(255,255,255,0.35)",
     fontSize: 12,
   },
   spotlight: {
-    borderRadius: 12,
+    borderRadius: 14,
   },
 };
 
@@ -161,7 +160,6 @@ export default function ProductTour() {
     if (typeof window === "undefined") return;
     const done = localStorage.getItem(TOUR_KEY);
     if (!done) {
-      // Small delay so the page is fully rendered before the tour starts
       const t = setTimeout(() => setRun(true), 800);
       return () => clearTimeout(t);
     }
