@@ -151,20 +151,39 @@ export function EmailSetupWizard({ initialStep = "intro", initialEmail = "", onI
           {step === "email" && (
             <div className="animate-fade-slide-up">
               <p className="text-xs font-bold uppercase tracking-widest text-coral-500 mb-5">Step 1 of 3</p>
-              <h2 className="font-serif text-2xl font-bold text-navy-900 mb-3">
-                What&apos;s your outreach Gmail address?
+              <h2 className="font-serif text-2xl font-bold text-navy-900 mb-6">
+                First, let&apos;s set up a dedicated Gmail
               </h2>
-              <p className="text-sm text-navy-500 mb-8 leading-relaxed">
-                Use a <strong>dedicated account</strong> — not your personal Gmail. Cold emailing at volume can trigger spam filters. A separate account keeps your real inbox completely safe.{" "}
+
+              {/* Create Gmail CTA — prominent */}
+              <div className="bg-white border-2 border-navy-900 rounded-2xl p-5 mb-5 shadow-sm">
+                <p className="text-sm font-bold text-navy-900 mb-2">
+                  We strongly recommend a brand new Gmail — not your personal one.
+                </p>
+                <p className="text-sm text-navy-500 leading-relaxed mb-4">
+                  High-volume cold email can get accounts flagged as spam. If that ever happens to your main Gmail, it affects every email you send — personal messages, work emails, everything. A separate outreach account (takes 2 minutes to create) keeps the risk completely isolated.
+                </p>
                 <a
                   href="https://accounts.google.com/signup"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-coral-500 hover:underline font-medium"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-navy-900 hover:bg-navy-800 text-white text-sm font-bold rounded-xl transition-colors"
                 >
-                  Create one here →
+                  Create a new Gmail account
+                  <ExternalLink size={14} />
                 </a>
-              </p>
+                <p className="text-[11px] text-navy-400 mt-2.5">
+                  Something like <span className="font-mono bg-cream-100 px-1 rounded">yourname.brands@gmail.com</span> works great.
+                </p>
+              </div>
+
+              {/* Divider */}
+              <div className="flex items-center gap-3 mb-5">
+                <div className="flex-1 h-px bg-cream-200" />
+                <span className="text-xs text-navy-400">Done? Enter it below</span>
+                <div className="flex-1 h-px bg-cream-200" />
+              </div>
+
               <input
                 type="email"
                 value={email}
@@ -172,7 +191,7 @@ export function EmailSetupWizard({ initialStep = "intro", initialEmail = "", onI
                 onKeyDown={e => e.key === "Enter" && email.includes("@") && setStep("app-pass-intro")}
                 placeholder="yourname.brands@gmail.com"
                 autoFocus
-                className="w-full text-xl border-0 border-b-2 border-cream-300 focus:border-coral-400 bg-transparent outline-none py-3 placeholder-cream-300 text-navy-900 transition-colors mb-10"
+                className="w-full text-xl border-0 border-b-2 border-cream-300 focus:border-coral-400 bg-transparent outline-none py-3 placeholder-cream-300 text-navy-900 transition-colors mb-8"
               />
               <button
                 onClick={() => setStep("app-pass-intro")}
