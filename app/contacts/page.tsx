@@ -1,12 +1,22 @@
 "use client";
 
-import { useState, useMemo, useEffect, Suspense } from "react";
+import { useState, useMemo, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Search, X, Plus, Linkedin, Send, UtensilsCrossed, Sun, Sparkles, Dumbbell } from "lucide-react";
+import { Search, X, Plus, Linkedin, Send, UtensilsCrossed, Sun, Sparkles, Dumbbell, BookmarkPlus, List, Trash2, Check } from "lucide-react";
 import { getAllCachedStatuses } from "@/lib/metaAds";
 import type { AdStatus } from "@/lib/metaAds";
 import InitialsAvatar from "@/components/InitialsAvatar";
+
+type ContactList = {
+  id: string;
+  name: string;
+  vertical: string | null;
+  subcategory: string | null;
+  country: string | null;
+  query: string | null;
+  created_at: string;
+};
 
 type ContactRow = {
   id: string;
@@ -242,6 +252,63 @@ function ContactsPage() {
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [page, setPage] = useState(1);
 
+  // Saved lists
+  const [lists, setLists] = useState<ContactList[]>([]);
+  const [showSaveModal, setShowSaveModal] = useState(false);
+  const [showListsDropdown, setShowListsDropdown] = useState(false);
+  const [listName, setListName] = useState("");
+  const [savingList, setSavingList] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const listsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    fetch("/api/lists").then(r => r.json()).then(data => {
+      if (Array.isArray(data)) setLists(data);
+    }).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (listsRef.current && !listsRef.current.contains(e.target as Node)) {
+        setShowListsDropdown(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  const saveList = async () => {
+    if (!listName.trim()) return;
+    setSavingList(true);
+    const res = await fetch("/api/lists", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: listName,
+        vertical: activeVertical,
+        subcategory: activeSubcategory,
+        country: activeCountry,
+        query,
+      }),
+    });
+    if (res.ok) {
+      const newList = await res.json();
+      setLists(prev => [newList, ...prev]);
+      setSaveSuccess(true);
+      setTimeout(() => {
+        setShowSaveModal(false);
+        setSaveSuccess(false);
+        setListName("");
+      }, 1200);
+    }
+    setSavingList(false);
+  };
+
+  const deleteList = async (id: string) => {
+    await fetch(`/api/lists/${id}`, { method: "DELETE" });
+    setLists(prev => prev.filter(l => l.id !== id));
+  };
+
   useEffect(() => {
     fetch("/api/contacts")
       .then(r => r.json())
@@ -338,6 +405,55 @@ function ContactsPage() {
     <div className="p-8 max-w-7xl mx-auto">
       {showRequestModal && <RequestContactModal onClose={() => setShowRequestModal(false)} />}
 
+      {/* Save list modal */}
+      {showSaveModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(0,0,0,0.4)" }}>
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6">
+            {saveSuccess ? (
+              <div className="text-center py-4">
+                <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-3">
+                  <Check size={18} className="text-emerald-600" />
+                </div>
+                <p className="font-bold text-navy-900">List saved!</p>
+              </div>
+            ) : (
+              <>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-base font-black text-navy-900">Save as list</h2>
+                  <button onClick={() => setShowSaveModal(false)} className="text-navy-300 hover:text-navy-600"><X size={16} /></button>
+                </div>
+                <p className="text-xs text-navy-400 mb-4">
+                  Saves your current filters
+                  {activeVertical ? ` (${activeVertical}${activeSubcategory ? ` › ${activeSubcategory}` : ""}${activeCountry !== "All" ? ` · ${activeCountry}` : ""}${query.trim() ? ` · "${query}"` : ""})` : ""}
+                  {" "}as a named list you can use when creating campaigns.
+                </p>
+                <input
+                  autoFocus
+                  type="text"
+                  value={listName}
+                  onChange={e => setListName(e.target.value)}
+                  onKeyDown={e => e.key === "Enter" && saveList()}
+                  placeholder="e.g. UK Drinks Brands"
+                  className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2.5 outline-none focus:border-coral-300 mb-4"
+                />
+                <div className="flex gap-2">
+                  <button
+                    onClick={saveList}
+                    disabled={savingList || !listName.trim()}
+                    className="flex-1 py-2.5 bg-coral-500 text-white text-sm font-bold rounded-xl hover:bg-coral-600 disabled:opacity-50"
+                  >
+                    {savingList ? "Saving…" : "Save list"}
+                  </button>
+                  <button onClick={() => setShowSaveModal(false)} className="px-4 py-2.5 bg-gray-100 text-navy-600 text-sm font-bold rounded-xl hover:bg-gray-200">
+                    Cancel
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex items-start justify-between mb-7">
         <div>
@@ -346,12 +462,65 @@ function ContactsPage() {
             {loading ? "Loading…" : `${contacts.length.toLocaleString()} verified marketing contacts`}
           </p>
         </div>
-        <button
-          onClick={() => setShowRequestModal(true)}
-          className="flex items-center gap-2 px-4 py-2.5 bg-coral-500 text-white text-sm font-bold rounded-xl hover:bg-coral-600 transition-colors shadow-sm"
-        >
-          <Plus size={14} /> Request Contact
-        </button>
+        <div className="flex items-center gap-2">
+          {/* My Lists dropdown */}
+          <div className="relative" ref={listsRef}>
+            <button
+              onClick={() => setShowListsDropdown(v => !v)}
+              className="flex items-center gap-2 px-4 py-2.5 bg-white border border-cream-200 text-navy-700 text-sm font-bold rounded-xl hover:border-navy-300 transition-colors shadow-sm"
+            >
+              <List size={14} />
+              My Lists
+              {lists.length > 0 && (
+                <span className="w-5 h-5 rounded-full bg-coral-500 text-white text-[10px] font-black flex items-center justify-center">
+                  {lists.length}
+                </span>
+              )}
+            </button>
+            {showListsDropdown && (
+              <div className="absolute right-0 top-full mt-2 z-30 bg-white border border-cream-200 rounded-2xl shadow-xl w-72 overflow-hidden">
+                <p className="px-4 py-3 text-[11px] font-bold uppercase tracking-widest text-navy-400 border-b border-cream-100">
+                  Saved Lists
+                </p>
+                {lists.length === 0 ? (
+                  <p className="px-4 py-5 text-xs text-navy-400 text-center">No lists saved yet. Filter the contacts and click &ldquo;Save as list&rdquo;.</p>
+                ) : (
+                  <div className="max-h-72 overflow-y-auto divide-y divide-cream-50">
+                    {lists.map(l => (
+                      <div key={l.id} className="flex items-center gap-3 px-4 py-3 hover:bg-cream-50 transition-colors">
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-navy-900 truncate">{l.name}</p>
+                          <p className="text-[11px] text-navy-400 truncate mt-0.5">
+                            {[l.vertical, l.subcategory, l.country, l.query ? `"${l.query}"` : null].filter(Boolean).join(" · ") || "All contacts"}
+                          </p>
+                        </div>
+                        <Link
+                          href={`/campaigns/new?listId=${l.id}`}
+                          className="text-[11px] font-bold text-coral-600 hover:text-coral-700 whitespace-nowrap"
+                          onClick={() => setShowListsDropdown(false)}
+                        >
+                          Use →
+                        </Link>
+                        <button
+                          onClick={() => deleteList(l.id)}
+                          className="text-navy-300 hover:text-red-500 transition-colors flex-shrink-0"
+                        >
+                          <Trash2 size={13} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+          <button
+            onClick={() => setShowRequestModal(true)}
+            className="flex items-center gap-2 px-4 py-2.5 bg-coral-500 text-white text-sm font-bold rounded-xl hover:bg-coral-600 transition-colors shadow-sm"
+          >
+            <Plus size={14} /> Request Contact
+          </button>
+        </div>
       </div>
 
       {/* Vertical selector */}
@@ -469,14 +638,22 @@ function ContactsPage() {
         )}
       </div>
 
-      {/* Results count */}
+      {/* Results count + Save as list */}
       {isFiltering && !loading && (
-        <p className="text-sm text-navy-400 mb-4">
-          {filtered.length.toLocaleString()} result{filtered.length !== 1 ? "s" : ""}
-          {activeVertical && !activeSubcategory && <> in <span className="font-semibold text-navy-700">{activeVerticalDef?.label}</span></>}
-          {activeSubcategory && <> in <span className="font-semibold text-navy-700">{activeSubcategory}</span></>}
-          {query.trim() && <> matching <span className="font-semibold text-navy-700">&ldquo;{query}&rdquo;</span></>}
-        </p>
+        <div className="flex items-center justify-between mb-4">
+          <p className="text-sm text-navy-400">
+            {filtered.length.toLocaleString()} result{filtered.length !== 1 ? "s" : ""}
+            {activeVertical && !activeSubcategory && <> in <span className="font-semibold text-navy-700">{activeVerticalDef?.label}</span></>}
+            {activeSubcategory && <> in <span className="font-semibold text-navy-700">{activeSubcategory}</span></>}
+            {query.trim() && <> matching <span className="font-semibold text-navy-700">&ldquo;{query}&rdquo;</span></>}
+          </p>
+          <button
+            onClick={() => { setListName(""); setShowSaveModal(true); }}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-coral-600 border border-coral-200 rounded-lg hover:bg-coral-50 transition-colors"
+          >
+            <BookmarkPlus size={13} /> Save as list
+          </button>
+        </div>
       )}
 
       {/* Table */}

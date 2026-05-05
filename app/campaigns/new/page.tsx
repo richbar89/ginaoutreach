@@ -1,20 +1,29 @@
 "use client";
 
-import { useState, useCallback, useMemo, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useCallback, useMemo, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Papa from "papaparse";
 import {
   Upload, Plus, X, Check, ArrowRight, ArrowLeft,
-  Users, Search, FileText, ChevronDown,
+  Users, Search, FileText, ChevronDown, List,
 } from "lucide-react";
 import InitialsAvatar from "@/components/InitialsAvatar";
 import { useDb } from "@/lib/useDb";
 import { dbSaveCampaign, dbGetTemplates } from "@/lib/db";
 import type { Contact, EmailTemplate } from "@/lib/types";
 
-type ContactRow = Contact & { id: string; industry: string | null; category: string | null };
+type ContactRow = Contact & { id: string; industry: string | null; category: string | null; subcategory: string | null; subcategories: string[] | null; country: string | null };
 type Step = 1 | 2 | 3;
-type ContactTab = "contacts" | "csv" | "manual";
+type ContactTab = "contacts" | "csv" | "manual" | "list";
+
+type ContactList = {
+  id: string;
+  name: string;
+  vertical: string | null;
+  subcategory: string | null;
+  country: string | null;
+  query: string | null;
+};
 
 const MERGE_TAGS = [
   { tag: "{{name}}", label: "Name" },
@@ -71,8 +80,9 @@ function TemplatePicker({ templates, onSelect }: { templates: EmailTemplate[]; o
   );
 }
 
-export default function NewCampaignPage() {
+function NewCampaignPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const getDb = useDb();
   const [step, setStep] = useState<Step>(1);
   const [tab, setTab] = useState<ContactTab>("contacts");
@@ -88,6 +98,10 @@ export default function NewCampaignPage() {
   const [industryFilter, setIndustryFilter] = useState("All");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
+  // Saved lists
+  const [lists, setLists] = useState<ContactList[]>([]);
+  const [listLoading, setListLoading] = useState(false);
+
   // Compose
   const [campaignName, setCampaignName] = useState("");
   const [subject, setSubject] = useState("");
@@ -100,7 +114,50 @@ export default function NewCampaignPage() {
       .then(data => setAllLeads(Array.isArray(data) ? data : []))
       .catch(() => {});
     getDb().then(db => dbGetTemplates(db).then(setTemplates)).catch(() => {});
+    fetch("/api/lists")
+      .then(r => r.json())
+      .then(data => { if (Array.isArray(data)) setLists(data); })
+      .catch(() => {});
   }, [getDb]);
+
+  // Pre-select list from URL param (e.g. coming from "Use →" on contacts page)
+  useEffect(() => {
+    const listId = searchParams.get("listId");
+    if (listId && lists.length > 0) {
+      setTab("list");
+    }
+  }, [searchParams, lists]);
+
+  const applyList = (list: ContactList) => {
+    let result = allLeads;
+    if (list.vertical) {
+      const v = list.vertical.toLowerCase();
+      result = result.filter(c => (c.category ?? "").toLowerCase().includes(v) || (c.industry ?? "").toLowerCase().includes(v));
+    }
+    if (list.subcategory) {
+      const sub = list.subcategory;
+      result = result.filter(c =>
+        c.subcategory === sub ||
+        c.category === sub ||
+        (c.subcategories ?? []).includes(sub)
+      );
+    }
+    if (list.country) result = result.filter(c => c.country === list.country);
+    if (list.query?.trim()) {
+      const q = list.query.toLowerCase();
+      result = result.filter(c =>
+        (c.name ?? "").toLowerCase().includes(q) ||
+        c.email.toLowerCase().includes(q) ||
+        (c.company ?? "").toLowerCase().includes(q)
+      );
+    }
+    addContacts(result.map(c => ({
+      name: c.name ?? "",
+      email: c.email,
+      position: c.position ?? "",
+      company: c.company ?? "",
+    })));
+  };
 
   const industries = useMemo(() => {
     const set = new Set(allLeads.map(l => l.industry).filter((i): i is string => Boolean(i)));
@@ -261,6 +318,7 @@ export default function NewCampaignPage() {
         <div className="space-y-4">
           <div className="bg-cream-100 rounded-xl p-1 flex gap-1">
             {tabBtn("contacts", "From Contacts", allLeads.length)}
+            {tabBtn("list", "From a List", lists.length || undefined)}
             {tabBtn("csv", "Upload CSV")}
             {tabBtn("manual", "Add manually")}
           </div>
@@ -327,6 +385,46 @@ export default function NewCampaignPage() {
                   >
                     <Plus size={12} />Add to campaign
                   </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* From a List */}
+          {tab === "list" && (
+            <div className="bg-white border border-cream-200 rounded-2xl shadow-sm overflow-hidden">
+              {lists.length === 0 ? (
+                <div className="px-6 py-12 text-center">
+                  <div className="w-10 h-10 rounded-xl bg-cream-100 flex items-center justify-center mx-auto mb-3">
+                    <List size={18} className="text-navy-400" />
+                  </div>
+                  <p className="text-sm font-semibold text-navy-600 mb-1">No saved lists yet</p>
+                  <p className="text-xs text-navy-400 mb-4">Go to the Contacts page, filter by category or country, then click &ldquo;Save as list&rdquo;.</p>
+                  <a href="/contacts" className="text-xs font-bold text-coral-600 hover:text-coral-700">Go to Contacts →</a>
+                </div>
+              ) : (
+                <div className="divide-y divide-cream-100">
+                  {lists.map(l => {
+                    const desc = [l.vertical, l.subcategory, l.country, l.query ? `"${l.query}"` : null].filter(Boolean).join(" · ") || "All contacts";
+                    return (
+                      <div key={l.id} className="flex items-center gap-4 px-5 py-4 hover:bg-cream-50 transition-colors">
+                        <div className="w-9 h-9 rounded-xl bg-coral-50 border border-coral-100 flex items-center justify-center flex-shrink-0">
+                          <List size={15} className="text-coral-500" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-navy-900">{l.name}</p>
+                          <p className="text-xs text-navy-400 mt-0.5">{desc}</p>
+                        </div>
+                        <button
+                          onClick={() => applyList(l)}
+                          disabled={listLoading}
+                          className="px-4 py-2 bg-coral-500 hover:bg-coral-600 text-white text-xs font-bold rounded-lg transition-colors disabled:opacity-50"
+                        >
+                          {listLoading ? "Loading…" : "Add all →"}
+                        </button>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -549,5 +647,13 @@ export default function NewCampaignPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function NewCampaignPageWrapper() {
+  return (
+    <Suspense>
+      <NewCampaignPage />
+    </Suspense>
   );
 }
