@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { RefreshCw, Loader2, MailOpen, Reply, Trash2, Send, CheckCircle } from "lucide-react";
+import { RefreshCw, Loader2, MailOpen, Reply, Trash2, Send, CheckCircle, CheckSquare, Square } from "lucide-react";
 import { getGmailCredentials } from "@/lib/googleClient";
 import { EmailSetupWizard } from "@/components/EmailSetupWizard";
 
@@ -36,7 +36,7 @@ function ImapPendingCard({ onRetry }: { onRetry: () => void }) {
         <div className="text-4xl mb-5">⏳</div>
         <h3 className="font-serif text-xl font-bold text-navy-900 mb-2">Almost there!</h3>
         <p className="text-sm text-navy-500 leading-relaxed mb-6">
-          Gmail can take up to a minute to activate IMAP after you save the setting. Hit the button below to try loading your inbox.
+          Gmail can take up to a minute to activate IMAP after you save the setting.
         </p>
         <button
           onClick={onRetry}
@@ -67,6 +67,10 @@ export default function InboxPage() {
   // Delete state
   const [deleting, setDeleting] = useState(false);
 
+  // Multi-select state
+  const [selectedUids, setSelectedUids] = useState<Set<number>>(new Set());
+  const [bulkDeleting, setBulkDeleting] = useState(false);
+
   const imapAttempted = useRef(false);
 
   const fetchInbox = useCallback(async (c: { email: string; appPassword: string }, isRefresh = false) => {
@@ -79,11 +83,8 @@ export default function InboxPage() {
         body: JSON.stringify({ gmailEmail: c.email, appPassword: c.appPassword }),
       });
       const data = await res.json();
-      if (!res.ok) {
-        setError(data.error || "Failed to load inbox.");
-      } else {
-        setMessages(data.messages);
-      }
+      if (!res.ok) setError(data.error || "Failed to load inbox.");
+      else setMessages(data.messages);
     } catch {
       setError("Network error. Please try again.");
     } finally {
@@ -102,11 +103,7 @@ export default function InboxPage() {
   const handleInboxReady = useCallback(() => {
     imapAttempted.current = true;
     const c = getGmailCredentials();
-    if (c) {
-      setCreds(c);
-      setError(null);
-      fetchInbox(c);
-    }
+    if (c) { setCreds(c); setError(null); fetchInbox(c); }
   }, [fetchInbox]);
 
   const openMessage = async (msg: InboxMsg) => {
@@ -142,13 +139,7 @@ export default function InboxPage() {
       const res = await fetch("/api/email/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          gmailEmail: creds.email,
-          appPassword: creds.appPassword,
-          to: selected.from.address,
-          subject,
-          body: replyBody,
-        }),
+        body: JSON.stringify({ gmailEmail: creds.email, appPassword: creds.appPassword, to: selected.from.address, subject, body: replyBody }),
       });
       if (res.ok) {
         setReplySent(true);
@@ -161,22 +152,47 @@ export default function InboxPage() {
     }
   };
 
+  const deleteUids = async (uids: number[]) => {
+    if (!creds || uids.length === 0) return;
+    await fetch("/api/email/inbox/delete", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ gmailEmail: creds.email, appPassword: creds.appPassword, uids }),
+    });
+    setMessages(prev => prev.filter(m => !uids.includes(m.uid)));
+    if (selected && uids.includes(selected.uid)) { setSelected(null); setReplying(false); }
+  };
+
   const handleDelete = async () => {
-    if (!creds || !selected) return;
+    if (!selected) return;
     setDeleting(true);
+    try { await deleteUids([selected.uid]); }
+    finally { setDeleting(false); }
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedUids.size === 0) return;
+    setBulkDeleting(true);
     try {
-      await fetch("/api/email/inbox/delete", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ gmailEmail: creds.email, appPassword: creds.appPassword, uid: selected.uid }),
-      });
-      setMessages(prev => prev.filter(m => m.uid !== selected.uid));
-      setSelected(null);
-      setReplying(false);
+      await deleteUids(Array.from(selectedUids));
+      setSelectedUids(new Set());
     } finally {
-      setDeleting(false);
+      setBulkDeleting(false);
     }
   };
+
+  const toggleSelect = (uid: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSelectedUids(prev => {
+      const next = new Set(prev);
+      next.has(uid) ? next.delete(uid) : next.add(uid);
+      return next;
+    });
+  };
+
+  const allSelected = messages.length > 0 && selectedUids.size === messages.length;
+  const toggleSelectAll = () =>
+    allSelected ? setSelectedUids(new Set()) : setSelectedUids(new Set(messages.map(m => m.uid)));
 
   // ── States ───────────────────────────────────────────────────
   if (loading) {
@@ -186,23 +202,13 @@ export default function InboxPage() {
       </div>
     );
   }
-
-  if (!creds) {
-    return <EmailSetupWizard onInboxReady={handleInboxReady} />;
-  }
-
+  if (!creds) return <EmailSetupWizard onInboxReady={handleInboxReady} />;
   if (error === "IMAP_DISABLED") {
-    if (imapAttempted.current) {
-      return <ImapPendingCard onRetry={() => creds && fetchInbox(creds, true)} />;
-    }
-    return (
-      <EmailSetupWizard
-        initialStep="imap-steps"
-        initialEmail={creds.email}
-        onInboxReady={handleInboxReady}
-      />
-    );
+    if (imapAttempted.current) return <ImapPendingCard onRetry={() => creds && fetchInbox(creds, true)} />;
+    return <EmailSetupWizard initialStep="imap-steps" initialEmail={creds.email} onInboxReady={handleInboxReady} />;
   }
+
+  const hasSelection = selectedUids.size > 0;
 
   // ── Inbox layout ─────────────────────────────────────────────
   return (
@@ -230,43 +236,90 @@ export default function InboxPage() {
       <div className="flex flex-1 min-h-0">
 
         {/* Message list */}
-        <div className="w-80 flex-shrink-0 border-r border-cream-200 overflow-y-auto">
-          {error ? (
-            <div className="p-6 text-center">
-              <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3">{error}</p>
-            </div>
-          ) : messages.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-20 text-center px-6">
-              <MailOpen size={28} className="text-cream-300 mb-3" />
-              <p className="text-sm font-semibold text-navy-600 mb-1">No messages yet</p>
-              <p className="text-xs text-navy-400">Replies from brands will appear here.</p>
-            </div>
-          ) : (
-            <div>
-              {messages.map(msg => (
+        <div className="w-80 flex-shrink-0 border-r border-cream-200 flex flex-col min-h-0">
+
+          {/* Bulk action bar */}
+          {messages.length > 0 && (
+            <div className="flex items-center gap-3 px-4 py-2.5 border-b border-cream-100 flex-shrink-0">
+              <button
+                onClick={toggleSelectAll}
+                className="flex items-center gap-2 text-xs text-navy-500 hover:text-navy-800 transition-colors"
+                title={allSelected ? "Deselect all" : "Select all"}
+              >
+                {allSelected
+                  ? <CheckSquare size={15} className="text-coral-500" />
+                  : <Square size={15} className="text-navy-300" />}
+                <span className="font-medium">{allSelected ? "Deselect all" : "Select all"}</span>
+              </button>
+
+              {hasSelection && (
                 <button
-                  key={msg.uid}
-                  onClick={() => openMessage(msg)}
-                  className={`w-full text-left px-5 py-4 border-b border-cream-100 hover:bg-cream-50 transition-colors ${
-                    selected?.uid === msg.uid ? "bg-coral-50 border-l-2 border-l-coral-400" : ""
-                  }`}
+                  onClick={handleBulkDelete}
+                  disabled={bulkDeleting}
+                  className="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 text-xs font-semibold rounded-lg transition-colors disabled:opacity-50"
                 >
-                  <div className="flex items-start justify-between gap-2 mb-0.5">
-                    <p className={`text-sm truncate ${msg.isRead ? "text-navy-600 font-normal" : "text-navy-900 font-bold"}`}>
-                      {msg.from.name || msg.from.address}
-                    </p>
-                    <span className="text-[11px] text-navy-400 flex-shrink-0">{formatDate(msg.date)}</span>
-                  </div>
-                  <p className={`text-xs truncate ${msg.isRead ? "text-navy-400" : "text-navy-700 font-medium"}`}>
-                    {msg.subject}
-                  </p>
-                  {!msg.isRead && (
-                    <span className="mt-1.5 inline-block w-1.5 h-1.5 rounded-full bg-coral-500" />
-                  )}
+                  {bulkDeleting
+                    ? <Loader2 size={12} className="animate-spin" />
+                    : <Trash2 size={12} />}
+                  Delete {selectedUids.size}
                 </button>
-              ))}
+              )}
             </div>
           )}
+
+          {/* Message rows */}
+          <div className="flex-1 overflow-y-auto">
+            {error ? (
+              <div className="p-6 text-center">
+                <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3">{error}</p>
+              </div>
+            ) : messages.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-20 text-center px-6">
+                <MailOpen size={28} className="text-cream-300 mb-3" />
+                <p className="text-sm font-semibold text-navy-600 mb-1">No messages yet</p>
+                <p className="text-xs text-navy-400">Replies from brands will appear here.</p>
+              </div>
+            ) : (
+              messages.map(msg => {
+                const isSelected = selectedUids.has(msg.uid);
+                return (
+                  <div
+                    key={msg.uid}
+                    className={`group flex items-start border-b border-cream-100 transition-colors cursor-pointer ${
+                      selected?.uid === msg.uid ? "bg-coral-50 border-l-2 border-l-coral-400" : isSelected ? "bg-coral-50/50" : "hover:bg-cream-50"
+                    }`}
+                    onClick={() => openMessage(msg)}
+                  >
+                    {/* Checkbox */}
+                    <div
+                      className="flex-shrink-0 flex items-center justify-center w-10 pl-3 pt-4 pb-4"
+                      onClick={e => toggleSelect(msg.uid, e)}
+                    >
+                      {isSelected
+                        ? <CheckSquare size={15} className="text-coral-500" />
+                        : <Square size={15} className="text-cream-300 group-hover:text-navy-300 transition-colors" />}
+                    </div>
+
+                    {/* Content */}
+                    <div className="flex-1 min-w-0 px-3 py-4">
+                      <div className="flex items-start justify-between gap-2 mb-0.5">
+                        <p className={`text-sm truncate ${msg.isRead ? "text-navy-600 font-normal" : "text-navy-900 font-bold"}`}>
+                          {msg.from.name || msg.from.address}
+                        </p>
+                        <span className="text-[11px] text-navy-400 flex-shrink-0">{formatDate(msg.date)}</span>
+                      </div>
+                      <p className={`text-xs truncate ${msg.isRead ? "text-navy-400" : "text-navy-700 font-medium"}`}>
+                        {msg.subject}
+                      </p>
+                      {!msg.isRead && (
+                        <span className="mt-1.5 inline-block w-1.5 h-1.5 rounded-full bg-coral-500" />
+                      )}
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
         </div>
 
         {/* Message detail */}
@@ -278,14 +331,12 @@ export default function InboxPage() {
             </div>
           ) : (
             <>
-              {/* Scrollable message body */}
+              {/* Scrollable body */}
               <div className="flex-1 overflow-y-auto p-8">
                 <div className="max-w-2xl">
                   {/* Subject + actions */}
                   <div className="flex items-start justify-between gap-4 mb-4">
-                    <h2 className="font-serif text-xl font-bold text-navy-900 leading-snug">
-                      {selected.subject}
-                    </h2>
+                    <h2 className="font-serif text-xl font-bold text-navy-900 leading-snug">{selected.subject}</h2>
                     <div className="flex items-center gap-1.5 flex-shrink-0">
                       <button
                         onClick={() => { setReplying(v => !v); setReplySent(false); }}
@@ -295,8 +346,7 @@ export default function InboxPage() {
                             : "bg-white text-navy-600 border-cream-200 hover:border-coral-300 hover:text-coral-600"
                         }`}
                       >
-                        <Reply size={13} />
-                        Reply
+                        <Reply size={13} /> Reply
                       </button>
                       <button
                         onClick={handleDelete}
@@ -346,7 +396,7 @@ export default function InboxPage() {
                 </div>
               )}
 
-              {/* Reply compose area */}
+              {/* Reply compose */}
               {replying && (
                 <div className="flex-shrink-0 border-t border-cream-200 bg-cream-50 p-5">
                   <p className="text-xs font-bold text-navy-400 uppercase tracking-widest mb-3">
@@ -379,15 +429,14 @@ export default function InboxPage() {
                 </div>
               )}
 
-              {/* Collapsed reply bar (when not replying) */}
+              {/* Click-to-reply hint */}
               {!replying && !replySent && (
                 <div className="flex-shrink-0 border-t border-cream-100 px-8 py-3">
                   <button
                     onClick={() => setReplying(true)}
                     className="inline-flex items-center gap-2 text-xs text-navy-400 hover:text-coral-500 transition-colors"
                   >
-                    <Reply size={13} />
-                    Click to reply
+                    <Reply size={13} /> Click to reply
                   </button>
                 </div>
               )}

@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 import AnnouncementBanner from "@/components/AnnouncementBanner";
+import ProductTour from "@/components/ProductTour";
 import { Monitor } from "lucide-react";
 
 const APP_ROUTES = [
@@ -72,6 +73,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           </a>
         </div>
       </div>
+
+      <ProductTour />
 
       {/* Sidebar */}
       <div style={{ display: "flex", alignItems: "center", flexShrink: 0 }}>

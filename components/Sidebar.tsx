@@ -19,13 +19,13 @@ import { useUser, SignOutButton } from "@clerk/nextjs";
 const ADMIN_USER_ID = process.env.NEXT_PUBLIC_ADMIN_USER_ID;
 
 const NAV_ITEMS = [
-  { href: "/dashboard",  label: "Dashboard",    icon: LayoutDashboard, exact: true },
-  { href: "/contacts",   label: "Contacts",     icon: Users,           exact: false },
-  { href: "/inbox",      label: "Inbox",        icon: Inbox,           exact: false },
-  { href: "/campaigns",  label: "Campaigns",    icon: Megaphone,       exact: false },
-  { href: "/pipeline",   label: "Pipeline",     icon: TrendingUp,      exact: false },
-  { href: "/media-kit",  label: "Media Kit",    icon: BookOpen,        exact: false },
-  { href: "/ads",        label: "Meta Ads",     icon: BarChart3,       exact: false },
+  { href: "/dashboard",  label: "Dashboard",    icon: LayoutDashboard, exact: true,  tourId: "tour-dashboard"  },
+  { href: "/contacts",   label: "Contacts",     icon: Users,           exact: false, tourId: "tour-contacts"   },
+  { href: "/inbox",      label: "Inbox",        icon: Inbox,           exact: false, tourId: "tour-inbox"      },
+  { href: "/campaigns",  label: "Campaigns",    icon: Megaphone,       exact: false, tourId: "tour-campaigns"  },
+  { href: "/pipeline",   label: "Pipeline",     icon: TrendingUp,      exact: false, tourId: "tour-pipeline"   },
+  { href: "/media-kit",  label: "Media Kit",    icon: BookOpen,        exact: false, tourId: "tour-media-kit"  },
+  { href: "/ads",        label: "Meta Ads",     icon: BarChart3,       exact: false, tourId: "tour-ads"        },
 ];
 
 export default function Sidebar() {
@@ -68,12 +68,13 @@ export default function Sidebar() {
       </div>
 
       {/* Nav items */}
-      {NAV_ITEMS.map(({ href, label, icon: Icon, exact }) => {
+      {NAV_ITEMS.map(({ href, label, icon: Icon, exact, tourId }) => {
         const active = exact ? pathname === href : pathname.startsWith(href);
         return (
           <Link
             key={href}
             href={href}
+            id={tourId}
             style={{
               display: "flex",
               alignItems: "center",
