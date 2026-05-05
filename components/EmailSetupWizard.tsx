@@ -241,30 +241,41 @@ export function EmailSetupWizard({ initialStep = "intro", initialEmail = "", onI
                 Step 2 of 3 — Getting your App Password
               </p>
               <h2 className="font-serif text-2xl font-bold text-navy-900 mb-2">
-                Here&apos;s what to do in Gmail:
+                Here&apos;s what to do:
               </h2>
               <p className="text-sm text-navy-500 mb-5">Open a new tab and work through these — tick each one as you go.</p>
+
+              {/* Quick-start tip */}
+              <div className="flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl mb-4 text-xs text-amber-800 leading-relaxed">
+                <span className="text-base flex-shrink-0">💡</span>
+                <span>
+                  <strong>Quickest way:</strong> once you&apos;re signed into your outreach Gmail, just type{" "}
+                  <span className="font-mono bg-amber-100 border border-amber-200 px-1.5 py-0.5 rounded">App Passwords</span>{" "}
+                  in the <strong>Google search bar</strong> and it&apos;ll take you straight there — no menu-diving needed.
+                </span>
+              </div>
+
               <div className="space-y-2 mb-7">
                 <CheckItem
                   checked={appPassDone.has(0)}
                   onToggle={() => toggle(setAppPassDone, 0)}
                   link={{ href: "https://gmail.com", label: "Open Gmail" }}
                 >
-                  Sign into <strong>{email || "your outreach Gmail"}</strong>
+                  Sign into <strong>{email || "your outreach Gmail"}</strong> in a new tab
                 </CheckItem>
                 <CheckItem
                   checked={appPassDone.has(1)}
                   onToggle={() => toggle(setAppPassDone, 1)}
                   link={{ href: "https://myaccount.google.com/security", label: "Open Security settings" }}
                 >
-                  Go to <strong>Google Account → Security</strong> and turn on <strong>2-Step Verification</strong>
+                  Enable <strong>2-Step Verification</strong> — go to Google Account → Security, scroll to &ldquo;How you sign in to Google&rdquo;
                 </CheckItem>
                 <CheckItem
                   checked={appPassDone.has(2)}
                   onToggle={() => toggle(setAppPassDone, 2)}
-                  link={{ href: "https://myaccount.google.com/apppasswords", label: "Open App Passwords" }}
+                  link={{ href: "https://myaccount.google.com/apppasswords", label: "Open App Passwords directly" }}
                 >
-                  Still in Security, scroll down and open <strong>App Passwords</strong>
+                  Type <span className="font-mono bg-cream-200 px-1 py-0.5 rounded text-xs">App Passwords</span> in the Google search bar — or use the link →
                 </CheckItem>
                 <CheckItem
                   checked={appPassDone.has(3)}
