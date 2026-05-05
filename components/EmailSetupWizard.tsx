@@ -412,48 +412,44 @@ export function EmailSetupWizard({ initialStep = "intro", initialEmail = "", onI
               <h2 className="font-serif text-2xl font-bold text-navy-900 mb-3">
                 Enable your inbox
               </h2>
-              <p className="text-sm text-navy-500 mb-2 leading-relaxed">
-                We need to flip one toggle inside Gmail called IMAP. It&apos;s the same technology Outlook and Apple Mail use to access Gmail — completely safe, and it only takes 30 seconds.
+              <p className="text-sm text-navy-500 mb-4 leading-relaxed">
+                We need to switch on IMAP inside Gmail settings — it&apos;s one radio button. Same technology Outlook and Apple Mail use. Takes 30 seconds.
               </p>
+
+              {/* Direct link first */}
               <a
                 href="https://mail.google.com/mail/u/0/#settings/fwdandpop"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-coral-500 hover:text-coral-700 transition-colors mb-6"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-navy-900 hover:bg-navy-800 text-white text-sm font-bold rounded-xl transition-colors mb-5"
               >
-                Jump straight to the right settings page <ExternalLink size={11} />
+                Open the right Gmail settings page <ExternalLink size={13} />
               </a>
+
               <div className="space-y-2 mb-7">
                 <CheckItem
                   checked={imapDone.has(0)}
                   onToggle={() => toggle(setImapDone, 0)}
-                  link={{ href: "https://mail.google.com", label: "Open Gmail" }}
                 >
-                  Open your outreach Gmail in a new tab
+                  The link above opens Gmail → Settings → <strong>&ldquo;Forwarding and POP/IMAP&rdquo;</strong> tab. Make sure you&apos;re signed into your outreach Gmail first.
                 </CheckItem>
                 <CheckItem
                   checked={imapDone.has(1)}
                   onToggle={() => toggle(setImapDone, 1)}
                 >
-                  Click the <strong>gear icon</strong> (top right) → <strong>&ldquo;See all settings&rdquo;</strong>
+                  Scroll down to the <strong>&ldquo;IMAP access&rdquo;</strong> section (it&apos;s near the bottom, below POP)
                 </CheckItem>
                 <CheckItem
                   checked={imapDone.has(2)}
                   onToggle={() => toggle(setImapDone, 2)}
                 >
-                  Click the <strong>&ldquo;Forwarding and POP/IMAP&rdquo;</strong> tab at the top
+                  Select <strong>&ldquo;Enable IMAP&rdquo;</strong> — it&apos;s the first radio button in that section
                 </CheckItem>
                 <CheckItem
                   checked={imapDone.has(3)}
                   onToggle={() => toggle(setImapDone, 3)}
                 >
-                  Under <strong>&ldquo;IMAP access&rdquo;</strong>, select <strong>Enable IMAP</strong>
-                </CheckItem>
-                <CheckItem
-                  checked={imapDone.has(4)}
-                  onToggle={() => toggle(setImapDone, 4)}
-                >
-                  Click <strong>Save Changes</strong> — that&apos;s it!
+                  Scroll to the bottom of the page and click <strong>Save Changes</strong>
                 </CheckItem>
               </div>
               <button
@@ -463,7 +459,7 @@ export function EmailSetupWizard({ initialStep = "intro", initialEmail = "", onI
                 Done! Take me to my inbox <ArrowRight size={16} />
               </button>
               <p className="text-xs text-navy-400 mt-3">
-                IMAP can take up to a minute to activate in Gmail — if it doesn&apos;t load straight away, just hit refresh.
+                IMAP can take up to a minute to activate — if the inbox doesn&apos;t load right away, just hit refresh.
               </p>
             </div>
           )}
