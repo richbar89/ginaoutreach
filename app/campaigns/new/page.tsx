@@ -100,7 +100,9 @@ function NewCampaignPage() {
 
   // Saved lists
   const [lists, setLists] = useState<ContactList[]>([]);
-  const [listLoading, setListLoading] = useState(false);
+  const [activeList, setActiveList] = useState<ContactList | null>(null);
+  const [listContacts, setListContacts] = useState<ContactRow[]>([]);
+  const [listSelectedIds, setListSelectedIds] = useState<Set<string>>(new Set());
 
   // Compose
   const [campaignName, setCampaignName] = useState("");
@@ -128,19 +130,15 @@ function NewCampaignPage() {
     }
   }, [searchParams, lists]);
 
-  const applyList = (list: ContactList) => {
-    let result = allLeads;
+  const filterByList = (list: ContactList, leads: ContactRow[]) => {
+    let result = leads;
     if (list.vertical) {
       const v = list.vertical.toLowerCase();
       result = result.filter(c => (c.category ?? "").toLowerCase().includes(v) || (c.industry ?? "").toLowerCase().includes(v));
     }
     if (list.subcategory) {
       const sub = list.subcategory;
-      result = result.filter(c =>
-        c.subcategory === sub ||
-        c.category === sub ||
-        (c.subcategories ?? []).includes(sub)
-      );
+      result = result.filter(c => c.subcategory === sub || c.category === sub || (c.subcategories ?? []).includes(sub));
     }
     if (list.country) result = result.filter(c => c.country === list.country);
     if (list.query?.trim()) {
@@ -151,12 +149,32 @@ function NewCampaignPage() {
         (c.company ?? "").toLowerCase().includes(q)
       );
     }
-    addContacts(result.map(c => ({
-      name: c.name ?? "",
-      email: c.email,
-      position: c.position ?? "",
-      company: c.company ?? "",
-    })));
+    return result;
+  };
+
+  const openList = (list: ContactList) => {
+    const filtered = filterByList(list, allLeads);
+    setActiveList(list);
+    setListContacts(filtered);
+    setListSelectedIds(new Set(filtered.map(c => c.email)));
+  };
+
+  const addFromList = () => {
+    const toAdd = listContacts
+      .filter(c => listSelectedIds.has(c.email))
+      .map(c => ({ name: c.name ?? "", email: c.email, position: c.position ?? "", company: c.company ?? "" }));
+    addContacts(toAdd);
+    setActiveList(null);
+    setListContacts([]);
+    setListSelectedIds(new Set());
+  };
+
+  const toggleListContact = (email: string) => {
+    setListSelectedIds(prev => {
+      const next = new Set(prev);
+      next.has(email) ? next.delete(email) : next.add(email);
+      return next;
+    });
   };
 
   const industries = useMemo(() => {
@@ -402,12 +420,84 @@ function NewCampaignPage() {
                   <p className="text-xs text-navy-400 mb-4">Go to the Contacts page, filter by category or country, then click &ldquo;Save as list&rdquo;.</p>
                   <a href="/contacts" className="text-xs font-bold text-coral-600 hover:text-coral-700">Go to Contacts →</a>
                 </div>
+              ) : activeList ? (
+                <>
+                  {/* Header */}
+                  <div className="px-4 py-3 border-b border-cream-100 flex items-center gap-3">
+                    <button onClick={() => setActiveList(null)} className="text-navy-400 hover:text-navy-700 text-xs font-semibold flex items-center gap-1">
+                      ← Lists
+                    </button>
+                    <span className="text-xs text-navy-300">/</span>
+                    <span className="text-xs font-semibold text-navy-700 truncate">{activeList.name}</span>
+                    <span className="ml-auto text-xs text-navy-400">{listSelectedIds.size} selected</span>
+                  </div>
+                  {/* Select all / none */}
+                  <div className="px-4 py-2 border-b border-cream-50 flex items-center gap-3">
+                    <button
+                      onClick={() => setListSelectedIds(new Set(listContacts.map(c => c.email)))}
+                      className="text-xs font-semibold text-coral-600 hover:text-coral-700"
+                    >
+                      Select all
+                    </button>
+                    <span className="text-navy-200 text-xs">·</span>
+                    <button
+                      onClick={() => setListSelectedIds(new Set())}
+                      className="text-xs font-semibold text-navy-400 hover:text-navy-600"
+                    >
+                      Clear
+                    </button>
+                  </div>
+                  {/* Contact rows */}
+                  <div className="max-h-72 overflow-y-auto divide-y divide-cream-50">
+                    {listContacts.length === 0 ? (
+                      <p className="text-xs text-navy-400 text-center py-8">No contacts match this list&apos;s filters.</p>
+                    ) : listContacts.map(c => {
+                      const checked = listSelectedIds.has(c.email);
+                      const alreadyAdded = contacts.some(x => x.email.toLowerCase() === c.email.toLowerCase());
+                      return (
+                        <label
+                          key={c.email}
+                          className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors ${checked ? "bg-coral-50/50" : "hover:bg-cream-50"} ${alreadyAdded ? "opacity-40" : ""}`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={checked}
+                            disabled={alreadyAdded}
+                            onChange={() => !alreadyAdded && toggleListContact(c.email)}
+                            className="accent-coral-500 w-4 h-4 flex-shrink-0"
+                          />
+                          <InitialsAvatar name={c.name || c.email} email={c.email} size="sm" />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-semibold text-navy-900 truncate">{c.name || c.email}</p>
+                            <p className="text-xs text-navy-400 truncate">{c.company || c.email}</p>
+                          </div>
+                          {alreadyAdded && <span className="text-[10px] text-emerald-600 font-bold">Added</span>}
+                        </label>
+                      );
+                    })}
+                  </div>
+                  {/* Add button */}
+                  <div className="px-4 py-3 border-t border-cream-100 flex justify-end">
+                    <button
+                      onClick={addFromList}
+                      disabled={listSelectedIds.size === 0}
+                      className="px-5 py-2 bg-coral-500 hover:bg-coral-600 text-white text-xs font-bold rounded-lg disabled:opacity-40 transition-colors"
+                    >
+                      Add {listSelectedIds.size} contact{listSelectedIds.size !== 1 ? "s" : ""} →
+                    </button>
+                  </div>
+                </>
               ) : (
                 <div className="divide-y divide-cream-100">
                   {lists.map(l => {
                     const desc = [l.vertical, l.subcategory, l.country, l.query ? `"${l.query}"` : null].filter(Boolean).join(" · ") || "All contacts";
+                    const count = filterByList(l, allLeads).length;
                     return (
-                      <div key={l.id} className="flex items-center gap-4 px-5 py-4 hover:bg-cream-50 transition-colors">
+                      <button
+                        key={l.id}
+                        onClick={() => openList(l)}
+                        className="w-full flex items-center gap-4 px-5 py-4 hover:bg-cream-50 transition-colors text-left"
+                      >
                         <div className="w-9 h-9 rounded-xl bg-coral-50 border border-coral-100 flex items-center justify-center flex-shrink-0">
                           <List size={15} className="text-coral-500" />
                         </div>
@@ -415,14 +505,8 @@ function NewCampaignPage() {
                           <p className="text-sm font-semibold text-navy-900">{l.name}</p>
                           <p className="text-xs text-navy-400 mt-0.5">{desc}</p>
                         </div>
-                        <button
-                          onClick={() => applyList(l)}
-                          disabled={listLoading}
-                          className="px-4 py-2 bg-coral-500 hover:bg-coral-600 text-white text-xs font-bold rounded-lg transition-colors disabled:opacity-50"
-                        >
-                          {listLoading ? "Loading…" : "Add all →"}
-                        </button>
-                      </div>
+                        <span className="text-xs text-navy-400 flex-shrink-0">{count} contacts →</span>
+                      </button>
                     );
                   })}
                 </div>
