@@ -3,18 +3,24 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Papa from "papaparse";
-import { Upload, Plus, X, Check, ArrowRight, ArrowLeft, Users, Mail, Search } from "lucide-react";
+import {
+  Upload, Plus, X, Check, ArrowRight, ArrowLeft,
+  Users, Search, FileText, ChevronDown,
+} from "lucide-react";
 import InitialsAvatar from "@/components/InitialsAvatar";
 import { useDb } from "@/lib/useDb";
-import { dbGetCampaigns, dbSaveCampaign } from "@/lib/db";
-import type { Contact } from "@/lib/types";
+import { dbSaveCampaign, dbGetTemplates } from "@/lib/db";
+import type { Contact, EmailTemplate } from "@/lib/types";
 
 type ContactRow = Contact & { id: string; industry: string | null; category: string | null };
-
 type Step = 1 | 2 | 3;
-type ContactTab = "csv" | "manual" | "contacts";
+type ContactTab = "contacts" | "csv" | "manual";
 
-const MERGE_TAGS = ["{{name}}", "{{email}}", "{{position}}", "{{company}}"];
+const MERGE_TAGS = [
+  { tag: "{{name}}", label: "Name" },
+  { tag: "{{company}}", label: "Company" },
+  { tag: "{{position}}", label: "Position" },
+];
 
 function applyMerge(template: string, contact: Contact) {
   return template
@@ -24,14 +30,56 @@ function applyMerge(template: string, contact: Contact) {
     .replace(/\{\{company\}\}/g, contact.company || "");
 }
 
+function TemplatePicker({ templates, onSelect }: { templates: EmailTemplate[]; onSelect: (t: EmailTemplate) => void }) {
+  const [open, setOpen] = useState(false);
+  if (!templates.length) return null;
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen(v => !v)}
+        className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold text-navy-600 bg-cream-100 hover:bg-cream-200 border border-cream-200 rounded-xl transition-colors"
+      >
+        <FileText size={12} />
+        Load template
+        <ChevronDown size={11} className={`transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open && (
+        <>
+          <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
+          <div className="absolute right-0 top-full mt-2 z-20 bg-white border border-cream-200 rounded-2xl shadow-xl w-72 overflow-hidden">
+            <p className="px-4 py-3 text-[11px] font-bold uppercase tracking-widest text-navy-400 border-b border-cream-100">
+              Saved templates
+            </p>
+            <div className="max-h-64 overflow-y-auto">
+              {templates.map(t => (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => { onSelect(t); setOpen(false); }}
+                  className="w-full text-left px-4 py-3 hover:bg-cream-50 border-b border-cream-50 transition-colors"
+                >
+                  <p className="text-sm font-semibold text-navy-900 truncate">{t.name}</p>
+                  <p className="text-xs text-navy-400 truncate mt-0.5">{t.subject}</p>
+                </button>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 export default function NewCampaignPage() {
   const router = useRouter();
   const getDb = useDb();
   const [step, setStep] = useState<Step>(1);
-  const [tab, setTab] = useState<ContactTab>("csv");
+  const [tab, setTab] = useState<ContactTab>("contacts");
   const [dragging, setDragging] = useState(false);
+  const [saving, setSaving] = useState(false);
 
-  // Step 1
+  // Contacts
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [allLeads, setAllLeads] = useState<ContactRow[]>([]);
   const [csvError, setCsvError] = useState("");
@@ -40,44 +88,43 @@ export default function NewCampaignPage() {
   const [industryFilter, setIndustryFilter] = useState("All");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
-  useEffect(() => {
-    fetch("/api/contacts")
-      .then((r) => r.json())
-      .then((data) => setAllLeads(Array.isArray(data) ? data : []))
-      .catch(() => {});
-  }, []);
-
-  const industries = useMemo(() => {
-    const set = new Set(allLeads.map((l) => l.industry).filter((i): i is string => Boolean(i)));
-    return ["All", ...Array.from(set).sort()];
-  }, [allLeads]);
-
-  // Step 2
+  // Compose
   const [campaignName, setCampaignName] = useState("");
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
+  const [templates, setTemplates] = useState<EmailTemplate[]>([]);
 
-  const filteredStored = useMemo(() => {
-    let result = allLeads;
-    if (industryFilter !== "All") {
-      result = result.filter((c) => c.industry === industryFilter);
-    }
+  useEffect(() => {
+    fetch("/api/contacts")
+      .then(r => r.json())
+      .then(data => setAllLeads(Array.isArray(data) ? data : []))
+      .catch(() => {});
+    getDb().then(db => dbGetTemplates(db).then(setTemplates)).catch(() => {});
+  }, [getDb]);
+
+  const industries = useMemo(() => {
+    const set = new Set(allLeads.map(l => l.industry).filter((i): i is string => Boolean(i)));
+    return ["All", ...Array.from(set).sort()];
+  }, [allLeads]);
+
+  const filteredLeads = useMemo(() => {
+    let r = allLeads;
+    if (industryFilter !== "All") r = r.filter(c => c.industry === industryFilter);
     if (contactSearch.trim()) {
       const q = contactSearch.toLowerCase();
-      result = result.filter(
-        (c) =>
-          (c.name ?? "").toLowerCase().includes(q) ||
-          c.email.toLowerCase().includes(q) ||
-          (c.company ?? "").toLowerCase().includes(q)
+      r = r.filter(c =>
+        (c.name ?? "").toLowerCase().includes(q) ||
+        c.email.toLowerCase().includes(q) ||
+        (c.company ?? "").toLowerCase().includes(q)
       );
     }
-    return result;
+    return r;
   }, [allLeads, contactSearch, industryFilter]);
 
   const addContacts = (newOnes: Contact[]) => {
-    setContacts((prev) => {
-      const existing = new Set(prev.map((c) => c.email.toLowerCase()));
-      return [...prev, ...newOnes.filter((c) => !existing.has(c.email.toLowerCase()))];
+    setContacts(prev => {
+      const existing = new Set(prev.map(c => c.email.toLowerCase()));
+      return [...prev, ...newOnes.filter(c => !existing.has(c.email.toLowerCase()))];
     });
   };
 
@@ -89,8 +136,8 @@ export default function NewCampaignPage() {
       complete: (results) => {
         const rows = results.data as Record<string, string>[];
         const parsed: Contact[] = rows
-          .map((row) => {
-            const find = (keys: string[]) => keys.map((k) => row[k]).find(Boolean) || "";
+          .map(row => {
+            const find = (keys: string[]) => keys.map(k => row[k]).find(Boolean) || "";
             return {
               email: find(["email", "Email", "EMAIL"]),
               name: find(["name", "Name", "full_name", "Full Name"]),
@@ -98,11 +145,12 @@ export default function NewCampaignPage() {
               company: find(["company", "Company", "organisation", "organization"]),
             };
           })
-          .filter((c) => c.email);
+          .filter(c => c.email);
         if (!parsed.length) { setCsvError("No valid email addresses found."); return; }
         addContacts(parsed);
+        setTab("contacts");
       },
-      error: (err) => setCsvError(err.message),
+      error: err => setCsvError(err.message),
     });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -112,55 +160,77 @@ export default function NewCampaignPage() {
     setManual({ name: "", email: "", position: "", company: "" });
   };
 
-  const addFromContacts = () => {
+  const addFromSelected = () => {
     const toAdd = allLeads
-      .filter((c) => selectedIds.has(c.email))
+      .filter(c => selectedIds.has(c.email))
       .map(({ name, email, position, company }) => ({ name: name ?? "", email, position: position ?? "", company: company ?? "" }));
     addContacts(toAdd);
     setSelectedIds(new Set());
   };
 
-  const insertTag = (tag: string) => setBody((prev) => prev + tag);
-
-  const saveCampaign = async () => {
-    const campaign = {
-      id: crypto.randomUUID(),
-      name: campaignName,
-      subject,
-      body,
-      contacts,
-      createdAt: new Date().toISOString(),
-    };
-    const db = await getDb();
-    const existing = await dbGetCampaigns(db);
-    await dbSaveCampaign(db, campaign);
-    void existing; // existing fetched to maintain order parity; new campaign saved directly
-    router.push(`/campaigns/${campaign.id}`);
+  const loadTemplate = (t: EmailTemplate) => {
+    setSubject(t.subject);
+    setBody(t.body);
   };
 
-  const steps = [
-    { n: 1 as Step, label: "Contacts" },
-    { n: 2 as Step, label: "Compose" },
-    { n: 3 as Step, label: "Preview" },
-  ];
+  const insertTag = (tag: string) => setBody(prev => prev + tag);
 
-  const tabClass = (t: ContactTab) =>
-    `px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-      tab === t
-        ? "bg-white text-slate-900 shadow-sm"
-        : "text-slate-500 hover:text-slate-700"
-    }`;
+  const saveCampaign = async () => {
+    setSaving(true);
+    try {
+      const campaign = {
+        id: crypto.randomUUID(),
+        name: campaignName,
+        subject,
+        body,
+        contacts,
+        createdAt: new Date().toISOString(),
+      };
+      const db = await getDb();
+      await dbSaveCampaign(db, campaign);
+      router.push(`/campaigns/${campaign.id}`);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const tabBtn = (t: ContactTab, label: string, count?: number) => (
+    <button
+      onClick={() => setTab(t)}
+      className={`px-4 py-2 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 ${
+        tab === t
+          ? "bg-white text-navy-900 shadow-sm"
+          : "text-navy-500 hover:text-navy-700"
+      }`}
+    >
+      {label}
+      {count !== undefined && (
+        <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${tab === t ? "bg-coral-100 text-coral-600" : "bg-cream-200 text-navy-400"}`}>
+          {count}
+        </span>
+      )}
+    </button>
+  );
 
   return (
     <div className="p-8 max-w-3xl mx-auto">
+      {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">New Campaign</h1>
-        <p className="text-slate-500 text-sm mt-1">Build a personalised bulk email campaign.</p>
+        <div className="flex items-center gap-3 mb-2">
+          <div className="h-px w-8 bg-coral-400" />
+          <span className="text-[11px] font-bold uppercase tracking-widest text-coral-500">Campaigns</span>
+        </div>
+        <h1 className="font-serif text-3xl font-bold text-navy-900">New Campaign</h1>
+        <p className="text-navy-500 text-sm mt-1">Build a personalised bulk email campaign in 3 steps.</p>
       </div>
 
       {/* Step indicator */}
       <div className="flex items-center gap-2 mb-8">
-        {steps.map(({ n, label }, i) => {
+        {([
+          { n: 1 as Step, label: "Contacts" },
+          { n: 2 as Step, label: "Compose" },
+          { n: 3 as Step, label: "Preview" },
+        ]).map(({ n, label }, i) => {
           const done = step > n;
           const active = step === n;
           return (
@@ -169,20 +239,18 @@ export default function NewCampaignPage() {
                 onClick={() => done && setStep(n)}
                 className={`flex items-center gap-2 ${done ? "cursor-pointer" : "cursor-default"}`}
               >
-                <div
-                  className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
-                    done ? "bg-green-500 text-white" : active ? "bg-blue-600 text-white" : "bg-slate-200 text-slate-400"
-                  }`}
-                >
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
+                  done ? "bg-emerald-500 text-white" : active ? "bg-coral-500 text-white" : "bg-cream-200 text-navy-400"
+                }`}>
                   {done ? <Check size={12} strokeWidth={3} /> : n}
                 </div>
-                <span className={`text-sm font-medium transition-colors ${active ? "text-slate-900" : done ? "text-green-600" : "text-slate-400"}`}>
+                <span className={`text-sm font-semibold transition-colors ${
+                  active ? "text-navy-900" : done ? "text-emerald-600" : "text-navy-400"
+                }`}>
                   {label}
                 </span>
               </button>
-              {i < steps.length - 1 && (
-                <div className={`w-12 h-px mx-1 ${step > n ? "bg-green-300" : "bg-slate-200"}`} />
-              )}
+              {i < 2 && <div className={`w-10 h-px mx-1 ${step > n ? "bg-emerald-300" : "bg-cream-200"}`} />}
             </div>
           );
         })}
@@ -191,141 +259,71 @@ export default function NewCampaignPage() {
       {/* ── Step 1: Contacts ── */}
       {step === 1 && (
         <div className="space-y-4">
-          {/* Tab switcher */}
-          <div className="bg-slate-100 rounded-xl p-1 flex gap-1">
-            <button className={tabClass("csv")} onClick={() => setTab("csv")}>
-              <Upload size={13} className="inline mr-1.5" />CSV Upload
-            </button>
-            <button className={tabClass("manual")} onClick={() => setTab("manual")}>
-              <Plus size={13} className="inline mr-1.5" />Add Manually
-            </button>
-            <button className={tabClass("contacts")} onClick={() => setTab("contacts")}>
-              <Users size={13} className="inline mr-1.5" />
-              From Contacts
-              <span className="ml-1.5 px-1.5 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full font-medium">
-                {allLeads.length}
-              </span>
-            </button>
+          <div className="bg-cream-100 rounded-xl p-1 flex gap-1">
+            {tabBtn("contacts", "From Contacts", allLeads.length)}
+            {tabBtn("csv", "Upload CSV")}
+            {tabBtn("manual", "Add manually")}
           </div>
 
-          {/* CSV tab */}
-          {tab === "csv" && (
-            <div
-              onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
-              onDragLeave={() => setDragging(false)}
-              onDrop={(e) => { e.preventDefault(); setDragging(false); const f = e.dataTransfer.files[0]; if (f) parseCSV(f); }}
-              className={`bg-white border-2 border-dashed rounded-2xl p-8 text-center transition-colors ${
-                dragging ? "border-blue-400 bg-blue-50" : "border-slate-200 hover:border-slate-300"
-              }`}
-            >
-              <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center mx-auto mb-3">
-                <Upload size={18} className="text-slate-500" />
-              </div>
-              <p className="text-sm font-medium text-slate-700 mb-1">Drop a CSV here</p>
-              <p className="text-xs text-slate-400 mb-4">
-                Columns: <code className="bg-slate-100 px-1 rounded">email</code>,{" "}
-                <code className="bg-slate-100 px-1 rounded">name</code>,{" "}
-                <code className="bg-slate-100 px-1 rounded">position</code>,{" "}
-                <code className="bg-slate-100 px-1 rounded">company</code>
-              </p>
-              <label className="inline-flex items-center gap-2 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium rounded-lg cursor-pointer transition-colors">
-                <Upload size={14} />Choose file
-                <input type="file" accept=".csv" className="sr-only" onChange={(e) => { if (e.target.files?.[0]) parseCSV(e.target.files[0]); }} />
-              </label>
-              {csvError && <p className="mt-3 text-sm text-red-600">{csvError}</p>}
-            </div>
-          )}
-
-          {/* Manual tab */}
-          {tab === "manual" && (
-            <div className="bg-white border border-slate-200 rounded-2xl p-5">
-              <div className="grid grid-cols-2 gap-3 mb-3">
-                {(["email", "name", "position", "company"] as const).map((field) => (
-                  <input
-                    key={field}
-                    type={field === "email" ? "email" : "text"}
-                    placeholder={field === "email" ? "Email *" : field.charAt(0).toUpperCase() + field.slice(1)}
-                    value={manual[field]}
-                    onChange={(e) => setManual((m) => ({ ...m, [field]: e.target.value }))}
-                    onKeyDown={(e) => e.key === "Enter" && addManual()}
-                    className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                ))}
-              </div>
-              <button
-                onClick={addManual}
-                disabled={!manual.email}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-slate-100 hover:bg-slate-200 disabled:opacity-40 text-slate-700 text-sm font-medium rounded-lg transition-colors"
-              >
-                <Plus size={14} />Add contact
-              </button>
-            </div>
-          )}
-
-          {/* From contacts tab */}
+          {/* From Contacts */}
           {tab === "contacts" && (
-            <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
-              <div className="px-4 py-3 border-b border-slate-100 flex gap-2">
+            <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm">
+              <div className="px-4 py-3 border-b border-cream-100 flex gap-2">
                 <div className="relative flex-1">
-                  <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-navy-400" />
                   <input
                     type="text"
-                    placeholder="Search contacts..."
+                    placeholder="Search contacts…"
                     value={contactSearch}
-                    onChange={(e) => setContactSearch(e.target.value)}
-                    className="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    onChange={e => setContactSearch(e.target.value)}
+                    className="w-full pl-8 pr-3 py-2 bg-cream-50 border border-cream-200 rounded-lg text-sm placeholder:text-navy-300 focus:outline-none focus:border-coral-300 focus:ring-2 focus:ring-coral-100"
                   />
                 </div>
                 <select
                   value={industryFilter}
-                  onChange={(e) => setIndustryFilter(e.target.value)}
-                  className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  onChange={e => setIndustryFilter(e.target.value)}
+                  className="px-3 py-2 bg-cream-50 border border-cream-200 rounded-lg text-xs text-navy-700 focus:outline-none focus:border-coral-300"
                 >
-                  {industries.map((ind) => (
-                    <option key={ind} value={ind}>{ind}</option>
-                  ))}
+                  {industries.map(ind => <option key={ind} value={ind}>{ind}</option>)}
                 </select>
               </div>
-              <div className="max-h-60 overflow-y-auto divide-y divide-slate-50">
-                {filteredStored.map((c) => {
-                  const isAdded = contacts.some((x) => x.email.toLowerCase() === c.email.toLowerCase());
+              <div className="max-h-64 overflow-y-auto divide-y divide-cream-50">
+                {filteredLeads.length === 0 ? (
+                  <div className="py-10 text-center text-sm text-navy-400">No contacts found</div>
+                ) : filteredLeads.map(c => {
+                  const isAdded = contacts.some(x => x.email.toLowerCase() === c.email.toLowerCase());
                   const isSelected = selectedIds.has(c.email);
                   return (
-                    <label
-                      key={c.email}
-                      className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors ${
-                        isAdded ? "opacity-50 cursor-not-allowed" : "hover:bg-slate-50"
-                      }`}
-                    >
+                    <label key={c.email} className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors ${isAdded ? "opacity-40 cursor-not-allowed" : "hover:bg-cream-50"}`}>
                       <input
                         type="checkbox"
                         disabled={isAdded}
                         checked={isSelected || isAdded}
-                        onChange={(e) => {
-                          setSelectedIds((prev) => {
+                        onChange={e => {
+                          setSelectedIds(prev => {
                             const next = new Set(prev);
                             if (e.target.checked) next.add(c.email); else next.delete(c.email);
                             return next;
                           });
                         }}
-                        className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                        className="rounded border-cream-300 text-coral-500 focus:ring-coral-300"
                       />
                       <InitialsAvatar name={c.name} email={c.email} size="sm" />
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-slate-800 truncate">{c.name || c.email}</p>
-                        <p className="text-xs text-slate-400 truncate">{c.company} {c.position ? "· " + c.position : ""}</p>
+                        <p className="text-sm font-medium text-navy-900 truncate">{c.name || c.email}</p>
+                        <p className="text-xs text-navy-400 truncate">{[c.company, c.position].filter(Boolean).join(" · ")}</p>
                       </div>
-                      {isAdded && <span className="text-xs text-slate-400">Added</span>}
+                      {isAdded && <span className="text-xs text-navy-300">Added</span>}
                     </label>
                   );
                 })}
               </div>
               {selectedIds.size > 0 && (
-                <div className="px-4 py-3 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
-                  <span className="text-xs text-slate-500">{selectedIds.size} selected</span>
+                <div className="px-4 py-3 border-t border-cream-100 bg-cream-50 flex items-center justify-between">
+                  <span className="text-xs text-navy-500">{selectedIds.size} selected</span>
                   <button
-                    onClick={addFromContacts}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors"
+                    onClick={addFromSelected}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-coral-500 hover:bg-coral-600 text-white text-xs font-semibold rounded-lg transition-colors"
                   >
                     <Plus size={12} />Add to campaign
                   </button>
@@ -334,27 +332,74 @@ export default function NewCampaignPage() {
             </div>
           )}
 
-          {/* Added contacts list */}
+          {/* CSV Upload */}
+          {tab === "csv" && (
+            <div
+              onDragOver={e => { e.preventDefault(); setDragging(true); }}
+              onDragLeave={() => setDragging(false)}
+              onDrop={e => { e.preventDefault(); setDragging(false); const f = e.dataTransfer.files[0]; if (f) parseCSV(f); }}
+              className={`bg-white border-2 border-dashed rounded-2xl p-10 text-center transition-colors ${dragging ? "border-coral-400 bg-coral-50" : "border-cream-300 hover:border-cream-400"}`}
+            >
+              <div className="w-10 h-10 bg-cream-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <Upload size={18} className="text-navy-400" />
+              </div>
+              <p className="text-sm font-semibold text-navy-700 mb-1">Drop a CSV here</p>
+              <p className="text-xs text-navy-400 mb-4">
+                Columns: <code className="bg-cream-100 px-1 rounded">email</code>, <code className="bg-cream-100 px-1 rounded">name</code>, <code className="bg-cream-100 px-1 rounded">company</code>, <code className="bg-cream-100 px-1 rounded">position</code>
+              </p>
+              <label className="inline-flex items-center gap-2 px-4 py-2 bg-navy-800 hover:bg-navy-900 text-white text-sm font-semibold rounded-xl cursor-pointer transition-colors">
+                <Upload size={14} />Choose file
+                <input type="file" accept=".csv" className="sr-only" onChange={e => { if (e.target.files?.[0]) parseCSV(e.target.files[0]); }} />
+              </label>
+              {csvError && <p className="mt-3 text-sm text-red-500">{csvError}</p>}
+            </div>
+          )}
+
+          {/* Manual */}
+          {tab === "manual" && (
+            <div className="bg-white border border-cream-200 rounded-2xl p-5 shadow-sm">
+              <div className="grid grid-cols-2 gap-3 mb-3">
+                {(["email", "name", "company", "position"] as const).map(field => (
+                  <input
+                    key={field}
+                    type={field === "email" ? "email" : "text"}
+                    placeholder={field === "email" ? "Email *" : field.charAt(0).toUpperCase() + field.slice(1)}
+                    value={manual[field]}
+                    onChange={e => setManual(m => ({ ...m, [field]: e.target.value }))}
+                    onKeyDown={e => e.key === "Enter" && addManual()}
+                    className="input-base text-sm"
+                  />
+                ))}
+              </div>
+              <button
+                onClick={addManual}
+                disabled={!manual.email}
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-coral-500 hover:bg-coral-600 disabled:opacity-40 text-white text-sm font-semibold rounded-xl transition-colors"
+              >
+                <Plus size={14} />Add contact
+              </button>
+            </div>
+          )}
+
+          {/* Added contacts */}
           {contacts.length > 0 && (
-            <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
-              <div className="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between">
-                <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
-                  <Users size={14} className="text-slate-400" />
+            <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm">
+              <div className="px-5 py-3.5 border-b border-cream-100 flex items-center justify-between">
+                <div className="flex items-center gap-2 text-sm font-semibold text-navy-700">
+                  <Users size={14} className="text-navy-400" />
                   {contacts.length} contact{contacts.length !== 1 ? "s" : ""} added
                 </div>
-                <button onClick={() => setContacts([])} className="text-xs text-slate-400 hover:text-red-500 transition-colors">
-                  Clear all
-                </button>
+                <button onClick={() => setContacts([])} className="text-xs text-navy-400 hover:text-red-500 transition-colors">Clear all</button>
               </div>
-              <div className="max-h-52 overflow-y-auto divide-y divide-slate-50">
+              <div className="max-h-48 overflow-y-auto divide-y divide-cream-50">
                 {contacts.map((c, i) => (
-                  <div key={i} className="flex items-center gap-3 px-5 py-3 hover:bg-slate-50">
+                  <div key={i} className="flex items-center gap-3 px-5 py-3 hover:bg-cream-50">
                     <InitialsAvatar name={c.name} email={c.email} size="sm" />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm text-slate-800 font-medium truncate">{c.name || c.email}</p>
-                      {c.name && <p className="text-xs text-slate-400 truncate">{c.email}</p>}
+                      <p className="text-sm font-medium text-navy-900 truncate">{c.name || c.email}</p>
+                      {c.name && <p className="text-xs text-navy-400 truncate">{c.email}</p>}
                     </div>
-                    <button onClick={() => setContacts((prev) => prev.filter((_, j) => j !== i))} className="text-slate-300 hover:text-red-400 transition-colors">
+                    <button onClick={() => setContacts(prev => prev.filter((_, j) => j !== i))} className="text-navy-300 hover:text-red-400 transition-colors">
                       <X size={14} />
                     </button>
                   </div>
@@ -367,7 +412,7 @@ export default function NewCampaignPage() {
             <button
               onClick={() => setStep(2)}
               disabled={contacts.length === 0}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 text-white text-sm font-medium rounded-xl transition-colors"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition-colors"
             >
               Continue <ArrowRight size={15} />
             </button>
@@ -378,71 +423,74 @@ export default function NewCampaignPage() {
       {/* ── Step 2: Compose ── */}
       {step === 2 && (
         <div className="space-y-4">
-          <div className="bg-white border border-slate-200 rounded-2xl divide-y divide-slate-100">
-            <div className="px-6 py-4">
-              <label className="block text-xs font-medium text-slate-400 uppercase tracking-widest mb-1.5">
-                Campaign Name <span className="text-red-400">*</span>
-              </label>
+          <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm">
+            {/* Campaign name */}
+            <div className="px-6 py-4 border-b border-cream-100">
+              <label className="block text-xs font-bold text-navy-400 uppercase tracking-widest mb-2">Campaign name</label>
               <input
                 type="text"
                 value={campaignName}
-                onChange={(e) => setCampaignName(e.target.value)}
-                placeholder="e.g. March Outreach"
-                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onChange={e => setCampaignName(e.target.value)}
+                placeholder="e.g. May Outreach — Snack Brands"
+                className="input-base"
               />
             </div>
-            <div className="px-6 py-4">
-              <label className="block text-xs font-medium text-slate-400 uppercase tracking-widest mb-1.5">
-                Subject <span className="text-red-400">*</span>
-              </label>
+
+            {/* Subject */}
+            <div className="px-6 py-4 border-b border-cream-100">
+              <label className="block text-xs font-bold text-navy-400 uppercase tracking-widest mb-2">Subject line</label>
               <input
                 type="text"
                 value={subject}
-                onChange={(e) => setSubject(e.target.value)}
-                placeholder="Hi {{name}}, quick note from us"
-                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onChange={e => setSubject(e.target.value)}
+                placeholder="Partnership opportunity — {{company}} × your name"
+                className="input-base"
               />
             </div>
+
+            {/* Body */}
             <div className="px-6 py-4">
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs font-medium text-slate-400 uppercase tracking-widest">
-                  Message <span className="text-red-400">*</span>
-                </label>
-                <div className="flex items-center gap-1">
-                  <span className="text-xs text-slate-400 mr-1">Insert:</span>
-                  {MERGE_TAGS.map((tag) => (
-                    <button
-                      key={tag}
-                      type="button"
-                      onClick={() => insertTag(tag)}
-                      className="px-2 py-0.5 text-xs bg-violet-50 text-violet-700 rounded font-mono hover:bg-violet-100 transition-colors"
-                    >
-                      {tag}
-                    </button>
-                  ))}
+              <div className="flex items-center justify-between mb-2">
+                <label className="text-xs font-bold text-navy-400 uppercase tracking-widest">Message</label>
+                <div className="flex items-center gap-2">
+                  <TemplatePicker templates={templates} onSelect={loadTemplate} />
+                  <div className="flex items-center gap-1">
+                    {MERGE_TAGS.map(({ tag, label }) => (
+                      <button
+                        key={tag}
+                        type="button"
+                        onClick={() => insertTag(tag)}
+                        title={label}
+                        className="px-2 py-1 text-[11px] bg-coral-50 hover:bg-coral-100 border border-coral-200 text-coral-700 rounded-lg font-mono transition-colors"
+                      >
+                        {tag}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
               <textarea
                 rows={14}
                 value={body}
-                onChange={(e) => setBody(e.target.value)}
-                placeholder={`Hi {{name}},\n\nI hope this finds you well...\n\nBest regards,\n[Your name]`}
-                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono leading-relaxed resize-y"
+                onChange={e => setBody(e.target.value)}
+                placeholder={`Hi {{name}},\n\nI came across {{company}} and love what you're building…\n\nBest,\n[Your name]`}
+                className="input-base resize-y font-mono text-sm leading-relaxed"
               />
             </div>
-            <div className="px-6 py-3.5 bg-slate-50 rounded-b-2xl">
-              <p className="text-xs text-slate-400">Merge tags are replaced with each contact&apos;s data when you open the email.</p>
+
+            <div className="px-6 py-3 bg-cream-50 border-t border-cream-100">
+              <p className="text-xs text-navy-400">Merge tags are replaced with each contact&apos;s details when the email is sent.</p>
             </div>
           </div>
 
           <div className="flex items-center justify-between pt-2">
-            <button onClick={() => setStep(1)} className="inline-flex items-center gap-2 px-4 py-2.5 text-slate-600 hover:text-slate-900 text-sm font-medium transition-colors">
+            <button onClick={() => setStep(1)} className="inline-flex items-center gap-2 px-4 py-2.5 text-navy-500 hover:text-navy-900 text-sm font-medium transition-colors">
               <ArrowLeft size={15} />Back
             </button>
             <button
               onClick={() => setStep(3)}
-              disabled={!campaignName || !subject || !body}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 text-white text-sm font-medium rounded-xl transition-colors"
+              disabled={!campaignName.trim() || !subject.trim() || !body.trim()}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition-colors"
             >
               Preview <ArrowRight size={15} />
             </button>
@@ -453,50 +501,49 @@ export default function NewCampaignPage() {
       {/* ── Step 3: Preview ── */}
       {step === 3 && (
         <div className="space-y-4">
-          <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
-            <div className="px-6 py-5 border-b border-slate-100">
-              <h2 className="text-sm font-semibold text-slate-800">Preview — first recipient</h2>
-              <p className="text-xs text-slate-400 mt-0.5">
+          <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm">
+            <div className="px-6 py-4 border-b border-cream-100">
+              <p className="text-sm font-semibold text-navy-800">Preview — first recipient</p>
+              <p className="text-xs text-navy-400 mt-0.5">
                 Personalised for <strong>{contacts[0]?.name || contacts[0]?.email}</strong>
               </p>
             </div>
             <div className="px-6 py-5 space-y-4">
               <div>
-                <span className="text-xs font-medium text-slate-400 uppercase tracking-wide">Subject</span>
-                <p className="text-sm font-medium text-slate-800 mt-1">{applyMerge(subject, contacts[0])}</p>
+                <span className="text-xs font-bold text-navy-400 uppercase tracking-widest">Subject</span>
+                <p className="text-sm font-semibold text-navy-900 mt-1.5">{applyMerge(subject, contacts[0])}</p>
               </div>
               <div>
-                <span className="text-xs font-medium text-slate-400 uppercase tracking-wide">Body</span>
-                <pre className="text-sm text-slate-700 mt-1 whitespace-pre-wrap font-sans leading-relaxed bg-slate-50 rounded-xl p-4">
+                <span className="text-xs font-bold text-navy-400 uppercase tracking-widest">Body</span>
+                <pre className="text-sm text-navy-700 mt-1.5 whitespace-pre-wrap font-sans leading-relaxed bg-cream-50 rounded-xl p-4 border border-cream-200">
                   {applyMerge(body, contacts[0])}
                 </pre>
               </div>
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-2xl px-6 py-5">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-green-50 rounded-xl flex items-center justify-center flex-shrink-0">
-                <Mail size={16} className="text-green-600" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-slate-800">Ready to send</p>
-                <p className="text-xs text-slate-400">
-                  {contacts.length} personalised email{contacts.length !== 1 ? "s" : ""} — you&apos;ll open each one from your mail app on the next screen.
-                </p>
-              </div>
+          {/* Summary */}
+          <div className="bg-white border border-cream-200 rounded-2xl px-6 py-4 shadow-sm flex items-center gap-4">
+            <div className="w-10 h-10 bg-coral-50 rounded-xl flex items-center justify-center flex-shrink-0">
+              <Users size={16} className="text-coral-500" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-navy-900">{contacts.length} personalised email{contacts.length !== 1 ? "s" : ""} ready</p>
+              <p className="text-xs text-navy-400 mt-0.5">You&apos;ll be able to send all at once or one by one on the next screen.</p>
             </div>
           </div>
 
           <div className="flex items-center justify-between pt-2">
-            <button onClick={() => setStep(2)} className="inline-flex items-center gap-2 px-4 py-2.5 text-slate-600 hover:text-slate-900 text-sm font-medium transition-colors">
+            <button onClick={() => setStep(2)} className="inline-flex items-center gap-2 px-4 py-2.5 text-navy-500 hover:text-navy-900 text-sm font-medium transition-colors">
               <ArrowLeft size={15} />Back
             </button>
             <button
               onClick={saveCampaign}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-xl transition-colors"
+              disabled={saving}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 disabled:opacity-60 text-white text-sm font-semibold rounded-xl transition-colors"
             >
-              <Check size={15} />Save &amp; Go to Send
+              {saving ? null : <Check size={15} />}
+              {saving ? "Saving…" : "Save & go to send"}
             </button>
           </div>
         </div>

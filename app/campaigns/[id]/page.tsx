@@ -19,7 +19,6 @@ import InitialsAvatar from "@/components/InitialsAvatar";
 import { useDb } from "@/lib/useDb";
 import { dbGetCampaigns, dbAppendEmailRecord } from "@/lib/db";
 import { applyMerge } from "@/lib/storage";
-import { getMicrosoftUser, sendEmailViaGraph } from "@/lib/graphClient";
 import { getGoogleUser, sendEmailViaGmail } from "@/lib/googleClient";
 import type { Campaign, Contact } from "@/lib/types";
 
@@ -40,7 +39,6 @@ export default function CampaignDetailPage() {
   const { userId } = useAuth();
   const [campaign, setCampaign] = useState<Campaign | null>(null);
   const [sent, setSent] = useState<Set<string>>(new Set());
-  const [msUser, setMsUser] = useState<{ name: string; email: string } | null>(null);
   const [gmailUser, setGmailUser] = useState<{ name: string; email: string } | null>(null);
   const [contactState, setContactState] = useState<Record<string, "sending" | "error">>({});
   const [sendingAll, setSendingAll] = useState(false);
@@ -53,15 +51,14 @@ export default function CampaignDetailPage() {
       const found = campaigns.find((c) => c.id === id);
       if (!found) { router.push("/campaigns"); return; }
       setCampaign(found);
-      setMsUser(getMicrosoftUser());
       setGmailUser(getGoogleUser());
     })();
   }, [id, router, getDb]);
 
   if (!campaign) return null;
 
-  const provider = msUser ? "microsoft" : gmailUser ? "gmail" : null;
-  const connectedEmail = msUser?.email || gmailUser?.email;
+  const provider = gmailUser ? "gmail" : null;
+  const connectedEmail = gmailUser?.email;
 
   const markSent = async (contact: Contact) => {
     setSent((prev) => new Set([...prev, contact.email.toLowerCase()]));
@@ -80,9 +77,7 @@ export default function CampaignDetailPage() {
     try {
       const body = applyMerge(campaign.body, contact);
       const subject = applyMerge(campaign.subject, contact);
-      if (msUser) {
-        await sendEmailViaGraph({ to: contact.email, subject, body });
-      } else if (gmailUser) {
+      if (gmailUser) {
         await sendEmailViaGmail({ to: contact.email, subject, body });
       }
       await markSent(contact);
@@ -148,7 +143,7 @@ export default function CampaignDetailPage() {
             {provider ? (
               <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 border border-emerald-100 px-2.5 py-1.5 rounded-full">
                 <Wifi size={11} />
-                {provider === "gmail" ? "Gmail" : "Outlook"} connected
+                Gmail connected
                 <span className="opacity-60 ml-0.5">({connectedEmail})</span>
               </span>
             ) : (
@@ -224,8 +219,6 @@ export default function CampaignDetailPage() {
           <span className="ml-auto text-xs text-navy-400">
             {provider === "gmail"
               ? "Sends directly via your Gmail"
-              : provider === "microsoft"
-              ? "Sends directly via your Outlook"
               : "Connect email in Settings to send directly"}
           </span>
         </div>
