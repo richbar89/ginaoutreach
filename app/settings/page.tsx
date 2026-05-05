@@ -291,10 +291,18 @@ export default function SettingsPage() {
             </div>
           ) : (
             <div className="space-y-4">
-              <div className="p-4 bg-amber-50 border border-amber-100 rounded-xl text-xs text-amber-800 leading-relaxed space-y-2">
-                <p><strong>Use a dedicated Gmail account for outreach — not your main one.</strong></p>
-                <p>High-volume cold email can trigger spam filters. If your account gets flagged, it affects <em>every</em> email you send — to clients, collaborators, everyone. A dedicated outreach account (e.g. <span className="font-mono bg-amber-100 px-1 rounded">yourname.outreach@gmail.com</span>) takes 2 minutes to create and completely separates the risk. Think of it as a business phone vs. your personal number.</p>
-                <p>It also keeps things tidy — replies from brands land in one place, separate from your personal inbox.</p>
+              <div className="p-5 bg-cream-50 border border-cream-200 rounded-xl text-sm text-navy-700 leading-relaxed space-y-3">
+                <p className="font-semibold text-navy-900">Before you connect — use a dedicated Gmail.</p>
+                <p>Cold emailing brands is legal and normal, but high volumes can trigger spam filters. If your main Gmail gets flagged, it affects <em>every</em> email you send.</p>
+                <p>A dedicated outreach account (e.g. <span className="font-mono bg-cream-200 px-1 rounded text-xs">yourname.brands@gmail.com</span>) takes 2 minutes to create and completely separates the risk. Think of it like having a business phone — if it gets spam calls, your personal number is untouched.</p>
+                <a
+                  href="https://accounts.google.com/signup"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-xs text-coral-600 hover:text-coral-700 font-semibold"
+                >
+                  Create a new Gmail account →
+                </a>
               </div>
               <div>
                 <label className="block text-xs font-semibold text-navy-400 mb-1.5 uppercase tracking-widest">Gmail Address</label>

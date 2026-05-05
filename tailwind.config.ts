@@ -13,6 +13,15 @@ const config: Config = {
         display: ["Comfortaa", "system-ui", "sans-serif"],
         serif:   ["Comfortaa", "system-ui", "sans-serif"],
       },
+      keyframes: {
+        fadeSlideUp: {
+          "0%":   { opacity: "0", transform: "translateY(18px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+      },
+      animation: {
+        "fade-slide-up": "fadeSlideUp 0.4s ease-out forwards",
+      },
       colors: {
         // Warm terracotta — primary accent
         coral: {
