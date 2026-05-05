@@ -426,31 +426,33 @@ export function EmailSetupWizard({ initialStep = "intro", initialEmail = "", onI
                 Open the right Gmail settings page <ExternalLink size={13} />
               </a>
 
-              <div className="space-y-2 mb-7">
+              <div className="space-y-2 mb-5">
                 <CheckItem
                   checked={imapDone.has(0)}
                   onToggle={() => toggle(setImapDone, 0)}
                 >
-                  The link above opens Gmail → Settings → <strong>&ldquo;Forwarding and POP/IMAP&rdquo;</strong> tab. Make sure you&apos;re signed into your outreach Gmail first.
+                  Click the link above — make sure you&apos;re signed into your <strong>outreach Gmail</strong> first, not your personal one
                 </CheckItem>
                 <CheckItem
                   checked={imapDone.has(1)}
                   onToggle={() => toggle(setImapDone, 1)}
                 >
-                  Scroll down to the <strong>&ldquo;IMAP access&rdquo;</strong> section (it&apos;s near the bottom, below POP)
+                  Scroll down to the <strong>&ldquo;IMAP access&rdquo;</strong> section
                 </CheckItem>
                 <CheckItem
                   checked={imapDone.has(2)}
                   onToggle={() => toggle(setImapDone, 2)}
                 >
-                  Select <strong>&ldquo;Enable IMAP&rdquo;</strong> — it&apos;s the first radio button in that section
+                  If you see <strong>&ldquo;Enable IMAP&rdquo;</strong> as an option, select it and click <strong>Save Changes</strong>
                 </CheckItem>
-                <CheckItem
-                  checked={imapDone.has(3)}
-                  onToggle={() => toggle(setImapDone, 3)}
-                >
-                  Scroll to the bottom of the page and click <strong>Save Changes</strong>
-                </CheckItem>
+              </div>
+
+              {/* Already enabled note */}
+              <div className="flex items-start gap-3 p-4 bg-emerald-50 border border-emerald-200 rounded-xl mb-7 text-xs text-emerald-800 leading-relaxed">
+                <span className="text-base flex-shrink-0">✅</span>
+                <span>
+                  <strong>If you see settings like &ldquo;Auto-Expunge&rdquo; and folder size limits, IMAP is already on</strong> — you don&apos;t need to do anything. Just click the button below.
+                </span>
               </div>
               <button
                 onClick={onInboxReady}
