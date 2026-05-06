@@ -23,6 +23,7 @@ type ContactList = {
   subcategory: string | null;
   country: string | null;
   query: string | null;
+  contact_ids: string[] | null;
 };
 
 const MERGE_TAGS = [
@@ -131,6 +132,10 @@ function NewCampaignPage() {
   }, [searchParams, lists]);
 
   const filterByList = (list: ContactList, leads: ContactRow[]) => {
+    if (list.contact_ids && list.contact_ids.length > 0) {
+      const ids = new Set(list.contact_ids.map(e => e.toLowerCase()));
+      return leads.filter(c => ids.has(c.email.toLowerCase()));
+    }
     let result = leads;
     if (list.vertical) {
       const v = list.vertical.toLowerCase();
@@ -490,7 +495,9 @@ function NewCampaignPage() {
               ) : (
                 <div className="divide-y divide-cream-100">
                   {lists.map(l => {
-                    const desc = [l.vertical, l.subcategory, l.country, l.query ? `"${l.query}"` : null].filter(Boolean).join(" · ") || "All contacts";
+                    const desc = l.contact_ids
+                      ? `${l.contact_ids.length} contact${l.contact_ids.length !== 1 ? "s" : ""} · Curated`
+                      : [l.vertical, l.subcategory, l.country, l.query ? `"${l.query}"` : null].filter(Boolean).join(" · ") || "All contacts";
                     const count = filterByList(l, allLeads).length;
                     return (
                       <button

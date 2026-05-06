@@ -15,6 +15,7 @@ type ContactList = {
   subcategory: string | null;
   country: string | null;
   query: string | null;
+  contact_ids: string[] | null;
   created_at: string;
 };
 
@@ -255,11 +256,15 @@ function ContactsPage() {
   // Saved lists
   const [lists, setLists] = useState<ContactList[]>([]);
   const [showSaveModal, setShowSaveModal] = useState(false);
+  const [saveModalMode, setSaveModalMode] = useState<"filter" | "curated">("filter");
   const [showListsDropdown, setShowListsDropdown] = useState(false);
   const [listName, setListName] = useState("");
   const [savingList, setSavingList] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const listsRef = useRef<HTMLDivElement>(null);
+
+  // Contact selection
+  const [selectedEmails, setSelectedEmails] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     fetch("/api/lists").then(r => r.json()).then(data => {
@@ -280,16 +285,13 @@ function ContactsPage() {
   const saveList = async () => {
     if (!listName.trim()) return;
     setSavingList(true);
+    const body = saveModalMode === "curated"
+      ? { name: listName, contact_ids: Array.from(selectedEmails) }
+      : { name: listName, vertical: activeVertical, subcategory: activeSubcategory, country: activeCountry, query };
     const res = await fetch("/api/lists", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: listName,
-        vertical: activeVertical,
-        subcategory: activeSubcategory,
-        country: activeCountry,
-        query,
-      }),
+      body: JSON.stringify(body),
     });
     if (res.ok) {
       const newList = await res.json();
@@ -299,9 +301,18 @@ function ContactsPage() {
         setShowSaveModal(false);
         setSaveSuccess(false);
         setListName("");
+        if (saveModalMode === "curated") setSelectedEmails(new Set());
       }, 1200);
     }
     setSavingList(false);
+  };
+
+  const toggleEmail = (email: string) => {
+    setSelectedEmails(prev => {
+      const next = new Set(prev);
+      next.has(email) ? next.delete(email) : next.add(email);
+      return next;
+    });
   };
 
   const deleteList = async (id: string) => {
@@ -378,6 +389,17 @@ function ContactsPage() {
   const visible = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
   const isFiltering = !!(activeVertical || activeSubcategory || query.trim() || activeCountry !== "All");
 
+  const allVisibleSelected = visible.length > 0 && visible.every(c => selectedEmails.has(c.email));
+  const someVisibleSelected = visible.some(c => selectedEmails.has(c.email));
+  const toggleAllVisible = () => {
+    setSelectedEmails(prev => {
+      const next = new Set(prev);
+      if (allVisibleSelected) visible.forEach(c => next.delete(c.email));
+      else visible.forEach(c => next.add(c.email));
+      return next;
+    });
+  };
+
   const activeVerticalDef = VERTICALS.find(v => v.key === activeVertical);
 
   const handleVerticalClick = (key: VerticalKey) => {
@@ -423,9 +445,14 @@ function ContactsPage() {
                   <button onClick={() => setShowSaveModal(false)} className="text-navy-300 hover:text-navy-600"><X size={16} /></button>
                 </div>
                 <p className="text-xs text-navy-400 mb-4">
-                  Saves your current filters
-                  {activeVertical ? ` (${activeVertical}${activeSubcategory ? ` › ${activeSubcategory}` : ""}${activeCountry !== "All" ? ` · ${activeCountry}` : ""}${query.trim() ? ` · "${query}"` : ""})` : ""}
-                  {" "}as a named list you can use when creating campaigns.
+                  {saveModalMode === "curated"
+                    ? `Saves ${selectedEmails.size} selected contact${selectedEmails.size !== 1 ? "s" : ""} as a named list you can use when creating campaigns.`
+                    : <>
+                        Saves your current filters
+                        {activeVertical ? ` (${activeVertical}${activeSubcategory ? ` › ${activeSubcategory}` : ""}${activeCountry !== "All" ? ` · ${activeCountry}` : ""}${query.trim() ? ` · "${query}"` : ""})` : ""}
+                        {" "}as a named list you can use when creating campaigns.
+                      </>
+                  }
                 </p>
                 <input
                   autoFocus
@@ -491,7 +518,9 @@ function ContactsPage() {
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-semibold text-navy-900 truncate">{l.name}</p>
                           <p className="text-[11px] text-navy-400 truncate mt-0.5">
-                            {[l.vertical, l.subcategory, l.country, l.query ? `"${l.query}"` : null].filter(Boolean).join(" · ") || "All contacts"}
+                            {l.contact_ids
+                              ? `${l.contact_ids.length} contact${l.contact_ids.length !== 1 ? "s" : ""} · Curated`
+                              : [l.vertical, l.subcategory, l.country, l.query ? `"${l.query}"` : null].filter(Boolean).join(" · ") || "All contacts"}
                           </p>
                         </div>
                         <Link
@@ -648,7 +677,7 @@ function ContactsPage() {
             {query.trim() && <> matching <span className="font-semibold text-navy-700">&ldquo;{query}&rdquo;</span></>}
           </p>
           <button
-            onClick={() => { setListName(""); setShowSaveModal(true); }}
+            onClick={() => { setListName(""); setSaveModalMode("filter"); setShowSaveModal(true); }}
             className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-coral-600 border border-coral-200 rounded-lg hover:bg-coral-50 transition-colors"
           >
             <BookmarkPlus size={13} /> Save as list
@@ -662,6 +691,15 @@ function ContactsPage() {
           <table className="w-full text-sm">
             <thead className="border-b border-cream-200 bg-cream-50/60">
               <tr>
+                <th className="px-4 py-3 w-10">
+                  <input
+                    type="checkbox"
+                    checked={allVisibleSelected}
+                    ref={el => { if (el) el.indeterminate = someVisibleSelected && !allVisibleSelected; }}
+                    onChange={toggleAllVisible}
+                    className="w-4 h-4 rounded border-gray-300 accent-coral-500 cursor-pointer"
+                  />
+                </th>
                 <th className="text-left px-5 py-3 text-xs font-semibold text-navy-400 uppercase tracking-widest">Name</th>
                 <th className="text-left px-5 py-3 text-xs font-semibold text-navy-400 uppercase tracking-widest">Company</th>
                 <th className="text-left px-5 py-3 text-xs font-semibold text-navy-400 uppercase tracking-widest">Category</th>
@@ -671,6 +709,7 @@ function ContactsPage() {
             <tbody className="divide-y divide-cream-100 animate-pulse">
               {Array.from({ length: 8 }).map((_, i) => (
                 <tr key={i}>
+                  <td className="px-4 py-3.5"><div className="w-4 h-4 rounded bg-cream-200" /></td>
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-cream-200 flex-shrink-0" />
@@ -717,6 +756,15 @@ function ContactsPage() {
           <table className="w-full text-sm">
             <thead className="border-b border-cream-200 bg-cream-50/60">
               <tr>
+                <th className="px-4 py-3 w-10">
+                  <input
+                    type="checkbox"
+                    checked={allVisibleSelected}
+                    ref={el => { if (el) el.indeterminate = someVisibleSelected && !allVisibleSelected; }}
+                    onChange={toggleAllVisible}
+                    className="w-4 h-4 rounded border-gray-300 accent-coral-500 cursor-pointer"
+                  />
+                </th>
                 <th className="text-left px-5 py-3 text-xs font-semibold text-navy-400 uppercase tracking-widest">Name</th>
                 <th className="text-left px-5 py-3 text-xs font-semibold text-navy-400 uppercase tracking-widest">Company</th>
                 <th className="text-left px-5 py-3 text-xs font-semibold text-navy-400 uppercase tracking-widest">Category</th>
@@ -725,7 +773,19 @@ function ContactsPage() {
             </thead>
             <tbody className="divide-y divide-cream-100">
               {visible.map(l => (
-                <tr key={l.id} className="hover:bg-cream-50 transition-colors group">
+                <tr
+                  key={l.id}
+                  onClick={() => toggleEmail(l.email)}
+                  className={`hover:bg-cream-50 transition-colors group cursor-pointer ${selectedEmails.has(l.email) ? "bg-coral-50/40" : ""}`}
+                >
+                  <td className="px-4 py-3.5" onClick={e => e.stopPropagation()}>
+                    <input
+                      type="checkbox"
+                      checked={selectedEmails.has(l.email)}
+                      onChange={() => toggleEmail(l.email)}
+                      className="w-4 h-4 rounded border-gray-300 accent-coral-500 cursor-pointer"
+                    />
+                  </td>
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
                       <InitialsAvatar name={l.name || l.email} email={l.email} size="sm" />
@@ -751,7 +811,7 @@ function ContactsPage() {
                       <AdBadge status={adStatuses[l.company?.toLowerCase() ?? ""]} />
                     </div>
                   </td>
-                  <td className="px-5 py-3.5">
+                  <td className="px-5 py-3.5" onClick={e => e.stopPropagation()}>
                     <div className="flex items-center gap-2 justify-end">
                       {l.linkedin ? (
                         <a
@@ -807,6 +867,26 @@ function ContactsPage() {
               Next →
             </button>
           </div>
+        </div>
+      )}
+
+      {/* Selection bottom bar */}
+      {selectedEmails.size > 0 && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-3 px-5 py-3 rounded-2xl shadow-2xl" style={{ background: "rgba(18,18,28,0.95)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.10)" }}>
+          <span className="text-sm font-semibold text-white">{selectedEmails.size} selected</span>
+          <div className="w-px h-4 bg-white/20" />
+          <button
+            onClick={() => { setListName(""); setSaveModalMode("curated"); setShowSaveModal(true); }}
+            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-coral-500 hover:bg-coral-600 text-white text-sm font-bold rounded-xl transition-colors"
+          >
+            <BookmarkPlus size={13} /> Save as list
+          </button>
+          <button
+            onClick={() => setSelectedEmails(new Set())}
+            className="text-sm text-white/50 hover:text-white/90 transition-colors"
+          >
+            Clear
+          </button>
         </div>
       )}
     </div>

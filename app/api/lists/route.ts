@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
   const { userId } = await auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { name, vertical, subcategory, country, query } = await req.json();
+  const { name, vertical, subcategory, country, query, contact_ids } = await req.json();
   if (!name?.trim()) return NextResponse.json({ error: "Name required" }, { status: 400 });
 
   const db = getSupabaseAdmin();
@@ -34,6 +34,7 @@ export async function POST(req: NextRequest) {
       subcategory: subcategory || null,
       country: country && country !== "All" ? country : null,
       query: query?.trim() || null,
+      contact_ids: Array.isArray(contact_ids) && contact_ids.length > 0 ? contact_ids : null,
     })
     .select()
     .single();
