@@ -23,6 +23,7 @@ import {
   clearGmailCredentials,
 } from "@/lib/googleClient";
 import { useDb } from "@/lib/useDb";
+import { useAuth } from "@clerk/nextjs";
 import {
   dbGetSignature,
   dbSaveSignature,
@@ -111,6 +112,7 @@ type ConnectedUser = { name: string; email: string } | null;
 
 export default function SettingsPage() {
   const getDb = useDb();
+  const { userId } = useAuth();
   const [gUser, setGUser] = useState<ConnectedUser>(null);
   const [loading, setLoading] = useState(true);
   const [signing, setSigning] = useState<"google" | null>(null);
@@ -130,7 +132,7 @@ export default function SettingsPage() {
       const db = await getDb();
       const sig = await dbGetSignature(db);
       setSignature(sig);
-      const storedBrands = await dbGetBrands(db);
+      const storedBrands = userId ? await dbGetBrands(db, userId) : [];
       setBrands(Array.from({ length: 10 }, (_, i) => storedBrands[i] ?? { name: "", runningAds: false }));
       const storedTemplates = await dbGetTemplates(db);
       setTemplates(storedTemplates);
@@ -146,8 +148,9 @@ export default function SettingsPage() {
   };
 
   const handleSaveBrands = async () => {
+    if (!userId) return;
     const db = await getDb();
-    await dbSaveBrands(db, brands.filter(b => b.name.trim()));
+    await dbSaveBrands(db, brands.filter(b => b.name.trim()), userId);
     setBrandsSaved(true);
     setTimeout(() => setBrandsSaved(false), 2500);
   };

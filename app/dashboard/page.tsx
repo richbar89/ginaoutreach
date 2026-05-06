@@ -180,7 +180,7 @@ export default function DashboardPage() {
       const dealsData = await dbGetDeals(db);
       setDeals(dealsData);
 
-      const brandsData = await dbGetBrands(db);
+      const brandsData = user?.id ? await dbGetBrands(db, user.id) : [];
       setBrands(brandsData);
 
       // Push known domains into the localStorage cache immediately
@@ -204,7 +204,7 @@ export default function DashboardPage() {
             const res = await fetch(`/api/resolve-domain?name=${encodeURIComponent(b.name)}`);
             const { domain } = await res.json() as { domain: string };
             if (domain) {
-              await dbUpdateBrandDomain(db, b.name, domain);
+              if (user?.id) await dbUpdateBrandDomain(db, b.name, domain, user.id);
               setBrands(prev => prev.map(p => p.name === b.name ? { ...p, domain } : p));
               setExtraDomains(prev => {
                 const next = { ...prev, [b.name]: domain };

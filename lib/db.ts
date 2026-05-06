@@ -215,8 +215,8 @@ function rowToPost(r: Record<string, unknown>): ScheduledPost {
 
 // ── Brands ──────────────────────────────────────────────────
 
-export async function dbGetBrands(db: DB): Promise<Brand[]> {
-  const { data } = await db.from("brands").select("*");
+export async function dbGetBrands(db: DB, userId: string): Promise<Brand[]> {
+  const { data } = await db.from("brands").select("*").eq("user_id", userId);
   return (data || []).map((r) => ({
     name: r.name as string,
     runningAds: r.running_ads as boolean,
@@ -224,14 +224,15 @@ export async function dbGetBrands(db: DB): Promise<Brand[]> {
   }));
 }
 
-export async function dbSaveBrands(db: DB, brands: Brand[]): Promise<void> {
+export async function dbSaveBrands(db: DB, brands: Brand[], userId: string): Promise<void> {
   // Preserve existing domains when replacing the brand list
-  const { data: existing } = await db.from("brands").select("name, domain");
+  const { data: existing } = await db.from("brands").select("name, domain").eq("user_id", userId);
   const domainMap = new Map((existing || []).map((r) => [r.name as string, r.domain as string | null]));
 
-  await db.from("brands").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+  await db.from("brands").delete().eq("user_id", userId);
   if (brands.length > 0) {
     await db.from("brands").insert(brands.map((b) => ({
+      user_id: userId,
       name: b.name,
       running_ads: b.runningAds,
       domain: b.domain ?? domainMap.get(b.name) ?? null,
@@ -239,8 +240,8 @@ export async function dbSaveBrands(db: DB, brands: Brand[]): Promise<void> {
   }
 }
 
-export async function dbUpdateBrandDomain(db: DB, name: string, domain: string): Promise<void> {
-  await db.from("brands").update({ domain }).eq("name", name);
+export async function dbUpdateBrandDomain(db: DB, name: string, domain: string, userId: string): Promise<void> {
+  await db.from("brands").update({ domain }).eq("name", name).eq("user_id", userId);
 }
 
 // ── User settings (signature + media kit) ───────────────────

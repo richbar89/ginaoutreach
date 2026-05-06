@@ -113,7 +113,7 @@ export default function OnboardingPage() {
       if (userId) {
         const [existingDeals, existingBrands] = await Promise.all([
           dbGetDeals(db),
-          dbGetBrands(db),
+          dbGetBrands(db, userId),
         ]);
         if (existingDeals.length === 0) {
           const now = new Date().toISOString();
@@ -130,7 +130,7 @@ export default function OnboardingPage() {
             { name: "Oatly",           runningAds: false, domain: "oatly.com" },
             { name: "Innocent Drinks", runningAds: true,  domain: "innocentdrinks.co.uk" },
             { name: "Pip & Nut",       runningAds: false, domain: "pipandnut.com" },
-          ]);
+          ], userId);
         }
       }
     } catch {
