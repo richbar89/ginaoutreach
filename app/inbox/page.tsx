@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { RefreshCw, Loader2, MailOpen, Reply, Trash2, Send, CheckCircle, CheckSquare, Square } from "lucide-react";
-import { getGmailCredentials } from "@/lib/googleClient";
+import { getGmailCredentials, setGmailCredentials } from "@/lib/googleClient";
 import { EmailSetupWizard } from "@/components/EmailSetupWizard";
 
 type InboxMsg = {
@@ -94,10 +94,24 @@ export default function InboxPage() {
   }, []);
 
   useEffect(() => {
-    const c = getGmailCredentials();
-    setCreds(c);
-    if (c) fetchInbox(c);
-    else setLoading(false);
+    const local = getGmailCredentials();
+    if (local) {
+      setCreds(local);
+      fetchInbox(local);
+      return;
+    }
+    fetch("/api/email-account")
+      .then(r => r.json())
+      .then(data => {
+        if (data?.email && data?.appPassword) {
+          setGmailCredentials(data.email, data.appPassword);
+          setCreds(data);
+          fetchInbox(data);
+        } else {
+          setLoading(false);
+        }
+      })
+      .catch(() => setLoading(false));
   }, [fetchInbox]);
 
   const handleInboxReady = useCallback(() => {

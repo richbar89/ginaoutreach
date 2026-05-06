@@ -106,6 +106,11 @@ export function EmailSetupWizard({ initialStep = "intro", initialEmail = "", onI
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Verification failed.");
       setGmailCredentials(email.trim(), password.trim());
+      fetch("/api/email-account", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim(), appPassword: password.trim() }),
+      }).catch(() => {});
       setConnectError("");
       setStep("mode-choice");
     } catch (e: unknown) {
