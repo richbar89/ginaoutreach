@@ -543,11 +543,14 @@ export default function DashboardPage() {
               <div className="scrollbar-thin" style={{ flex: 1, overflowY: "auto", padding: "12px 16px", display: "flex", flexDirection: "column", gap: 7 }}>
                 {recentDeals.map((deal) => {
                   const accent = DEAL_STAGE_ACCENT[deal.status] || "#6B7280";
+                  const companyName = deal.company || deal.contactName;
+                  const domain = brands.find(b => b.name === companyName)?.domain ?? extraDomains[companyName];
                   return (
                     <div key={deal.id} style={{ borderRadius: 14, padding: "12px 16px", display: "flex", alignItems: "center", gap: 12, background: "rgba(255,255,255,0.6)", border: "1px solid rgba(0,0,0,0.04)", borderLeft: `3px solid ${accent}` }}>
+                      <BrandLogo name={companyName} domain={domain} size={36} />
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <p style={{ fontSize: 14, fontWeight: 700, color: "#111827", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                          {deal.company || deal.contactName}
+                          {companyName}
                         </p>
                         {deal.company && <p style={{ fontSize: 12, color: "#9CA3AF", marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{deal.contactName}</p>}
                       </div>
