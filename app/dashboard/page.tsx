@@ -126,6 +126,7 @@ export default function DashboardPage() {
     try { return JSON.parse(localStorage.getItem(DOMAINS_KEY) ?? "{}"); } catch { return {}; }
   });
   const [resolvingDomains, setResolvingDomains] = useState(false);
+  const [loadingData, setLoadingData] = useState(true);
   const [companyCategories, setCompanyCategories] = useState<Record<string, string>>({});
   const [emailDomainMap, setEmailDomainMap] = useState<Record<string, string>>({});
 
@@ -195,6 +196,7 @@ export default function DashboardPage() {
 
       const brandsData = user?.id ? await dbGetBrands(db, user.id) : [];
       setBrands(brandsData);
+      setLoadingData(false);
 
       // Push known domains into the localStorage cache immediately
       const domainsFromDb = brandsData.reduce<Record<string, string>>((acc, b) => {
@@ -548,7 +550,11 @@ export default function DashboardPage() {
               </Link>
             </div>
 
-            {deals.length === 0 ? (
+            {loadingData ? (
+              <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <RefreshCw size={18} className="animate-spin" style={{ color: "#E5E7EB" }} />
+              </div>
+            ) : deals.length === 0 ? (
               <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: 32 }}>
                 <TrendingUp size={24} style={{ color: "#E5E7EB", marginBottom: 12 }} />
                 <p style={{ fontSize: 14, fontWeight: 600, color: "#374151", marginBottom: 4 }}>No deals yet.</p>
@@ -602,7 +608,11 @@ export default function DashboardPage() {
               </Link>
             </div>
 
-            {followUps.length === 0 ? (
+            {loadingData ? (
+              <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <RefreshCw size={18} className="animate-spin" style={{ color: "#E5E7EB" }} />
+              </div>
+            ) : followUps.length === 0 ? (
               <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: 32 }}>
                 <Clock size={20} style={{ color: "#E5E7EB", marginBottom: 12 }} />
                 <p style={{ fontSize: 14, fontWeight: 600, color: "#374151", marginBottom: 4 }}>All up to date.</p>
