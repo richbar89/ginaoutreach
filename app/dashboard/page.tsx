@@ -136,8 +136,21 @@ export default function DashboardPage() {
     else if (mUser) setEmailConnected("microsoft");
     else setEmailConnected(null);
     const stored = localStorage.getItem(FAV_KEY);
-    if (stored) setFavBrands(JSON.parse(stored));
+    if (stored) {
+      setFavBrands(JSON.parse(stored));
+    } else {
+      // Fall back to Supabase for cross-browser persistence
+      getDb().then(db =>
+        db.from("user_settings").select("fav_brands").maybeSingle()
+      ).then(({ data }) => {
+        if (data?.fav_brands?.length) {
+          setFavBrands(data.fav_brands);
+          localStorage.setItem(FAV_KEY, JSON.stringify(data.fav_brands));
+        }
+      }).catch(() => {});
+    }
     getAllCachedStatuses().then(setAdStatuses);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -221,6 +234,7 @@ export default function DashboardPage() {
         const initial = brandsData.slice(0, 10).map(b => b.name);
         setFavBrands(initial);
         localStorage.setItem(FAV_KEY, JSON.stringify(initial));
+        db.from("user_settings").upsert({ fav_brands: initial });
       }
 
       // Resolve domains for fav brands not already in the brands table
@@ -254,6 +268,7 @@ export default function DashboardPage() {
         ? prev.filter(n => n !== name)
         : prev.length < 10 ? [...prev, name] : prev;
       localStorage.setItem(FAV_KEY, JSON.stringify(next));
+      getDb().then(db => db.from("user_settings").upsert({ fav_brands: next })).catch(() => {});
       return next;
     });
   }

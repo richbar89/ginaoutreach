@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Joyride, { CallBackProps, STATUS, EVENTS, Step } from "react-joyride";
+import { useDb } from "@/lib/useDb";
 
 const TOUR_KEY = "collabi_tour_done";
 
@@ -155,14 +156,27 @@ const joyrideStyles = {
 export default function ProductTour() {
   const [run, setRun] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
+  const getDb = useDb();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const done = localStorage.getItem(TOUR_KEY);
-    if (!done) {
+    const local = localStorage.getItem(TOUR_KEY);
+    if (local) return;
+    // Check Supabase in case user is on a new browser
+    getDb().then(db =>
+      db.from("user_settings").select("tour_done").maybeSingle()
+    ).then(({ data }) => {
+      if (data?.tour_done) {
+        localStorage.setItem(TOUR_KEY, "1");
+      } else {
+        const t = setTimeout(() => setRun(true), 800);
+        return () => clearTimeout(t);
+      }
+    }).catch(() => {
       const t = setTimeout(() => setRun(true), 800);
       return () => clearTimeout(t);
-    }
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleCallback = (data: CallBackProps) => {
@@ -175,6 +189,9 @@ export default function ProductTour() {
     if (status === STATUS.FINISHED || status === STATUS.SKIPPED) {
       setRun(false);
       localStorage.setItem(TOUR_KEY, "1");
+      getDb().then(db =>
+        db.from("user_settings").upsert({ tour_done: true })
+      ).catch(() => {});
     }
   };
 
