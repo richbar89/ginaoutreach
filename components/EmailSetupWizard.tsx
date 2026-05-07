@@ -106,11 +106,15 @@ export function EmailSetupWizard({ initialStep = "intro", initialEmail = "", onI
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Verification failed.");
       setGmailCredentials(email.trim(), password.trim());
-      fetch("/api/email-account", {
+      const saveRes = await fetch("/api/email-account", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email.trim(), appPassword: password.trim() }),
-      }).catch(() => {});
+      });
+      if (!saveRes.ok) {
+        const saveErr = await saveRes.json().catch(() => ({}));
+        throw new Error(saveErr.error || "Connected but failed to save credentials. Please try again.");
+      }
       setConnectError("");
       setStep("mode-choice");
     } catch (e: unknown) {
