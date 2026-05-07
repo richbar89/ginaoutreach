@@ -1,12 +1,49 @@
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import nodemailer from "nodemailer";
+import { ImapFlow } from "imapflow";
 import { applyMerge } from "@/lib/storage";
 import type { CampaignStep, Contact } from "@/lib/types";
 
 export const runtime = "nodejs";
 
 const DAILY_LIMIT = 25;
+
+const AUTO_REPLY_SUBJECTS = [
+  "out of office", "automatic reply", "auto-reply", "autoreply",
+  "on vacation", "away from", "on annual leave", "on leave",
+  "i am away", "i'm away", "i am out", "i'm out", "be back",
+];
+
+async function hasReplied(gmailEmail: string, appPassword: string, fromAddress: string, since: Date): Promise<boolean> {
+  const client = new ImapFlow({
+    host: "imap.gmail.com", port: 993, secure: true,
+    auth: { user: gmailEmail, pass: appPassword },
+    logger: false,
+  });
+  try {
+    await client.connect();
+    const lock = await client.getMailboxLock("INBOX");
+    try {
+      const uids = await client.search({ from: fromAddress, since });
+      if (!Array.isArray(uids) || uids.length === 0) return false;
+
+      // Fetch subjects to filter out OOF / auto-replies
+      for await (const msg of client.fetch(uids, { envelope: true })) {
+        const subject = (msg.envelope?.subject ?? "").toLowerCase();
+        const isAutoReply = AUTO_REPLY_SUBJECTS.some(s => subject.includes(s));
+        if (!isAutoReply) return true; // At least one genuine reply
+      }
+      return false;
+    } finally {
+      lock.release();
+    }
+  } catch {
+    return false;
+  } finally {
+    await client.logout().catch(() => {});
+  }
+}
 
 export async function GET(req: Request) {
   const authHeader = req.headers.get("authorization");
@@ -73,6 +110,14 @@ export async function GET(req: Request) {
 
       if (!emailAccount) {
         await db.from("sequence_contacts").update({ status: "error" }).eq("id", row.id);
+        continue;
+      }
+
+      // Check for a reply — if they've replied, stop the sequence
+      const enrolledAt = new Date(row.created_at);
+      const replied = await hasReplied(emailAccount.gmail_email, emailAccount.app_password, row.contact_email, enrolledAt);
+      if (replied) {
+        await db.from("sequence_contacts").update({ status: "replied" }).eq("id", row.id);
         continue;
       }
 
