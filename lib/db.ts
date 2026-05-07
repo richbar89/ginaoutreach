@@ -26,6 +26,7 @@ export async function dbSaveCampaign(db: DB, campaign: Campaign): Promise<void> 
     subject: campaign.subject,
     body: campaign.body,
     contacts: campaign.contacts,
+    steps: campaign.steps ?? [],
     created_at: campaign.createdAt,
   });
 }
@@ -42,6 +43,7 @@ function rowToCampaign(r: Record<string, unknown>): Campaign {
     body: r.body as string,
     contacts: (r.contacts as Campaign["contacts"]) || [],
     createdAt: r.created_at as string,
+    steps: (r.steps as Campaign["steps"]) || [],
   };
 }
 

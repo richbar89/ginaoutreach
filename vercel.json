@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/meta-scan",
       "schedule": "0 */6 * * *"
+    },
+    {
+      "path": "/api/cron/sequences",
+      "schedule": "0 8 * * *"
     }
   ]
 }

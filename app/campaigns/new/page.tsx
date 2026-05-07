@@ -5,12 +5,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Papa from "papaparse";
 import {
   Upload, Plus, X, Check, ArrowRight, ArrowLeft,
-  Users, Search, FileText, ChevronDown, List,
+  Users, Search, FileText, ChevronDown, List, Trash2,
 } from "lucide-react";
 import InitialsAvatar from "@/components/InitialsAvatar";
 import { useDb } from "@/lib/useDb";
 import { dbSaveCampaign, dbGetTemplates } from "@/lib/db";
-import type { Contact, EmailTemplate } from "@/lib/types";
+import type { Contact, EmailTemplate, CampaignStep } from "@/lib/types";
 
 type ContactRow = Contact & { id: string; industry: string | null; category: string | null; subcategory: string | null; subcategories: string[] | null; country: string | null };
 type Step = 1 | 2 | 3;
@@ -110,6 +110,12 @@ function NewCampaignPage() {
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
   const [templates, setTemplates] = useState<EmailTemplate[]>([]);
+  const [steps, setSteps] = useState<CampaignStep[]>([]);
+
+  const addStep = () => setSteps(prev => [...prev, { delay_days: 3, subject: "", body: "" }]);
+  const removeStep = (i: number) => setSteps(prev => prev.filter((_, j) => j !== i));
+  const updateStep = (i: number, patch: Partial<CampaignStep>) =>
+    setSteps(prev => prev.map((s, j) => j === i ? { ...s, ...patch } : s));
 
   useEffect(() => {
     fetch("/api/contacts")
@@ -264,6 +270,7 @@ function NewCampaignPage() {
         subject,
         body,
         contacts,
+        steps: steps.filter(s => s.body.trim()),
         createdAt: new Date().toISOString(),
       };
       const db = await getDb();
@@ -670,6 +677,61 @@ function NewCampaignPage() {
             <div className="px-6 py-3 bg-cream-50 border-t border-cream-100">
               <p className="text-xs text-navy-400">Merge tags are replaced with each contact&apos;s details when the email is sent.</p>
             </div>
+          </div>
+
+          {/* Follow-up steps */}
+          <div className="space-y-3">
+            {steps.map((s, i) => (
+              <div key={i} className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm">
+                <div className="px-6 py-3 bg-cream-50 border-b border-cream-100 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs font-bold text-navy-500 uppercase tracking-widest">Follow-up {i + 1}</span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs text-navy-400">Send</span>
+                      <input
+                        type="number"
+                        min={1}
+                        max={60}
+                        value={s.delay_days}
+                        onChange={e => updateStep(i, { delay_days: Math.max(1, parseInt(e.target.value) || 1) })}
+                        className="w-12 text-xs text-center border border-cream-300 rounded-lg px-1.5 py-1 focus:outline-none focus:border-coral-400"
+                      />
+                      <span className="text-xs text-navy-400">days after {i === 0 ? "initial email" : `follow-up ${i}`}</span>
+                    </div>
+                  </div>
+                  <button onClick={() => removeStep(i)} className="text-navy-300 hover:text-red-400 transition-colors">
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+                <div className="px-6 py-4 border-b border-cream-100">
+                  <label className="block text-xs font-bold text-navy-400 uppercase tracking-widest mb-2">Subject</label>
+                  <input
+                    type="text"
+                    value={s.subject}
+                    onChange={e => updateStep(i, { subject: e.target.value })}
+                    placeholder={`Re: ${subject || "your original subject"}`}
+                    className="input-base"
+                  />
+                </div>
+                <div className="px-6 py-4">
+                  <label className="block text-xs font-bold text-navy-400 uppercase tracking-widest mb-2">Message</label>
+                  <textarea
+                    rows={6}
+                    value={s.body}
+                    onChange={e => updateStep(i, { body: e.target.value })}
+                    placeholder={`Hi {{name}},\n\nJust following up on my previous email…`}
+                    className="input-base resize-y font-mono text-sm leading-relaxed"
+                  />
+                </div>
+              </div>
+            ))}
+
+            <button
+              onClick={addStep}
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-cream-300 hover:border-coral-300 text-navy-400 hover:text-coral-500 text-sm font-semibold rounded-2xl transition-colors"
+            >
+              <Plus size={15} /> Add follow-up step
+            </button>
           </div>
 
           <div className="flex items-center justify-between pt-2">

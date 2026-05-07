@@ -1,0 +1,106 @@
+import { NextResponse } from "next/server";
+import { getSupabaseAdmin } from "@/lib/supabase";
+import nodemailer from "nodemailer";
+import { applyMerge } from "@/lib/storage";
+import type { CampaignStep, Contact } from "@/lib/types";
+
+export const runtime = "nodejs";
+
+export async function GET(req: Request) {
+  const authHeader = req.headers.get("authorization");
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const db = getSupabaseAdmin();
+
+  // Find all sequence contacts due to receive their next step
+  const { data: due, error } = await db
+    .from("sequence_contacts")
+    .select("*")
+    .eq("status", "active")
+    .lte("next_send_at", new Date().toISOString());
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (!due || due.length === 0) return NextResponse.json({ sent: 0 });
+
+  let sent = 0;
+  let failed = 0;
+
+  for (const row of due) {
+    try {
+      // Get campaign to find the step content
+      const { data: campaignRow } = await db
+        .from("campaigns")
+        .select("steps, subject")
+        .eq("id", row.campaign_id)
+        .single();
+
+      const steps: CampaignStep[] = campaignRow?.steps ?? [];
+      const stepIndex = row.current_step - 2; // current_step=2 means steps[0]
+
+      if (stepIndex < 0 || stepIndex >= steps.length) {
+        // No more steps — mark complete
+        await db.from("sequence_contacts").update({ status: "completed" }).eq("id", row.id);
+        continue;
+      }
+
+      const step = steps[stepIndex];
+
+      // Get Gmail credentials for this user
+      const { data: emailAccount } = await db
+        .from("user_email_accounts")
+        .select("gmail_email, app_password")
+        .eq("user_id", row.user_id)
+        .single();
+
+      if (!emailAccount) {
+        await db.from("sequence_contacts").update({ status: "error" }).eq("id", row.id);
+        continue;
+      }
+
+      const contact: Contact = {
+        name: row.contact_name ?? "",
+        email: row.contact_email,
+        position: row.contact_position ?? "",
+        company: row.contact_company ?? "",
+      };
+
+      const subject = applyMerge(
+        step.subject || `Re: ${campaignRow?.subject ?? ""}`,
+        contact
+      );
+      const body = applyMerge(step.body, contact);
+
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: { user: emailAccount.gmail_email, pass: emailAccount.app_password },
+      });
+
+      await transporter.sendMail({
+        from: emailAccount.gmail_email,
+        to: row.contact_email,
+        subject,
+        text: body,
+      });
+
+      // Advance to next step or complete
+      const nextStepIndex = stepIndex + 1;
+      if (nextStepIndex >= steps.length) {
+        await db.from("sequence_contacts").update({ status: "completed", current_step: row.current_step + 1 }).eq("id", row.id);
+      } else {
+        const nextSendAt = new Date(Date.now() + steps[nextStepIndex].delay_days * 86400000).toISOString();
+        await db.from("sequence_contacts").update({
+          current_step: row.current_step + 1,
+          next_send_at: nextSendAt,
+        }).eq("id", row.id);
+      }
+
+      sent++;
+    } catch {
+      failed++;
+    }
+  }
+
+  return NextResponse.json({ sent, failed });
+}

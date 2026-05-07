@@ -5,6 +5,12 @@ export type Contact = {
     company: string;
 };
 
+export type CampaignStep = {
+  delay_days: number;
+  subject: string;
+  body: string;
+};
+
 export type Campaign = {
     id: string;
     name: string;
@@ -12,6 +18,7 @@ export type Campaign = {
     body: string;
     contacts: Contact[];
     createdAt: string;
+    steps?: CampaignStep[];
 };
 
 export type BrandCategory =

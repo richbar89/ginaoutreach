@@ -70,6 +70,22 @@ export default function CampaignDetailPage() {
       campaignId: campaign.id,
       campaignName: campaign.name,
     }, userId ?? undefined);
+
+    // Enroll in follow-up sequence if steps exist
+    if (campaign.steps && campaign.steps.length > 0 && userId) {
+      const nextSendAt = new Date(Date.now() + campaign.steps[0].delay_days * 86400000).toISOString();
+      await db.from("sequence_contacts").insert({
+        campaign_id: campaign.id,
+        user_id: userId,
+        contact_email: contact.email,
+        contact_name: contact.name,
+        contact_company: contact.company,
+        contact_position: contact.position,
+        current_step: 2,
+        next_send_at: nextSendAt,
+        status: "active",
+      });
+    }
   };
 
   const sendOne = async (contact: Contact) => {
@@ -251,10 +267,18 @@ export default function CampaignDetailPage() {
                 </div>
 
                 {isSent ? (
-                  <span className="inline-flex items-center gap-1.5 text-xs text-emerald-600 font-medium">
-                    <CheckCircle size={13} />
-                    Sent
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center gap-1.5 text-xs text-emerald-600 font-medium">
+                      <CheckCircle size={13} />
+                      Sent
+                    </span>
+                    {campaign.steps && campaign.steps.length > 0 && (
+                      <span className="inline-flex items-center gap-1 text-[10px] text-indigo-500 font-semibold bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-full">
+                        <Clock size={9} />
+                        {campaign.steps.length} follow-up{campaign.steps.length !== 1 ? "s" : ""} queued
+                      </span>
+                    )}
+                  </div>
                 ) : state === "error" ? (
                   <span className="text-xs text-red-500 font-medium">Failed — retry</span>
                 ) : provider ? (
