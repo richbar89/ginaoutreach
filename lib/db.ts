@@ -72,6 +72,18 @@ export async function dbAppendEmailRecord(
   });
 }
 
+export const DAILY_EMAIL_LIMIT = 25;
+
+export async function dbGetTodaySentCount(db: DB): Promise<number> {
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+  const { count } = await db
+    .from("email_log")
+    .select("*", { count: "exact", head: true })
+    .gte("sent_at", startOfDay.toISOString());
+  return count ?? 0;
+}
+
 export async function dbGetContactEmailLog(db: DB, email: string): Promise<EmailRecord[]> {
   const { data } = await db
     .from("email_log")

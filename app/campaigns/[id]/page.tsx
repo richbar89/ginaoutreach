@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import InitialsAvatar from "@/components/InitialsAvatar";
 import { useDb } from "@/lib/useDb";
-import { dbGetCampaigns, dbAppendEmailRecord } from "@/lib/db";
+import { dbGetCampaigns, dbAppendEmailRecord, dbGetTodaySentCount, DAILY_EMAIL_LIMIT } from "@/lib/db";
 import { applyMerge } from "@/lib/storage";
 import { getGoogleUser, sendEmailViaGmail } from "@/lib/googleClient";
 import type { Campaign, Contact } from "@/lib/types";
@@ -43,6 +43,7 @@ export default function CampaignDetailPage() {
   const [contactState, setContactState] = useState<Record<string, "sending" | "error">>({});
   const [sendingAll, setSendingAll] = useState(false);
   const [sendingIndex, setSendingIndex] = useState(0);
+  const [todaySent, setTodaySent] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -52,6 +53,7 @@ export default function CampaignDetailPage() {
       if (!found) { router.push("/campaigns"); return; }
       setCampaign(found);
       setGmailUser(getGoogleUser());
+      setTodaySent(await dbGetTodaySentCount(db));
     })();
   }, [id, router, getDb]);
 
@@ -88,7 +90,8 @@ export default function CampaignDetailPage() {
     }
   };
 
-  const sendOne = async (contact: Contact) => {
+  const sendOne = async (contact: Contact, skipLimitCheck = false): Promise<boolean> => {
+    if (!skipLimitCheck && todaySent >= DAILY_EMAIL_LIMIT) return false;
     setContactState((s) => ({ ...s, [contact.email]: "sending" }));
     try {
       const body = applyMerge(campaign.body, contact);
@@ -97,12 +100,15 @@ export default function CampaignDetailPage() {
         await sendEmailViaGmail({ to: contact.email, subject, body });
       }
       await markSent(contact);
+      setTodaySent(n => n + 1);
       setContactState((s) => { const n = { ...s }; delete n[contact.email]; return n; });
+      return true;
     } catch {
       setContactState((s) => ({ ...s, [contact.email]: "error" }));
       setTimeout(() => {
         setContactState((s) => { const n = { ...s }; delete n[contact.email]; return n; });
       }, 4000);
+      return false;
     }
   };
 
@@ -110,10 +116,12 @@ export default function CampaignDetailPage() {
     if (!campaign) return;
     setSendingAll(true);
     const remaining = campaign.contacts.filter((c) => !sent.has(c.email.toLowerCase()));
-    for (let i = 0; i < remaining.length; i++) {
+    const canSend = Math.max(0, DAILY_EMAIL_LIMIT - todaySent);
+    const toSend = remaining.slice(0, canSend);
+    for (let i = 0; i < toSend.length; i++) {
       setSendingIndex(i + 1);
-      await sendOne(remaining[i]);
-      if (i < remaining.length - 1) {
+      await sendOne(toSend[i], true);
+      if (i < toSend.length - 1) {
         await new Promise((r) => setTimeout(r, SEND_DELAY_MS));
       }
     }
@@ -198,6 +206,25 @@ export default function CampaignDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Daily limit notice */}
+      {provider && (
+        <div className={`mb-3 flex items-center gap-2.5 px-4 py-3 rounded-xl text-xs border ${
+          todaySent >= DAILY_EMAIL_LIMIT
+            ? "bg-red-50 border-red-200 text-red-700"
+            : todaySent >= DAILY_EMAIL_LIMIT * 0.8
+            ? "bg-amber-50 border-amber-200 text-amber-700"
+            : "bg-cream-50 border-cream-200 text-navy-400"
+        }`}>
+          <Send size={12} className="flex-shrink-0" />
+          <span>
+            {todaySent >= DAILY_EMAIL_LIMIT
+              ? <><strong>Daily limit reached.</strong> {DAILY_EMAIL_LIMIT}/{DAILY_EMAIL_LIMIT} emails sent today. Resets at midnight.</>
+              : <>{todaySent} of {DAILY_EMAIL_LIMIT} emails sent today — <strong>{DAILY_EMAIL_LIMIT - todaySent} remaining</strong></>
+            }
+          </span>
+        </div>
+      )}
 
       {/* Rate limiting notice */}
       {provider && !allSent && remaining.length > 1 && !sendingAll && (

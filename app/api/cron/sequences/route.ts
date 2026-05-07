@@ -6,6 +6,8 @@ import type { CampaignStep, Contact } from "@/lib/types";
 
 export const runtime = "nodejs";
 
+const DAILY_LIMIT = 25;
+
 export async function GET(req: Request) {
   const authHeader = req.headers.get("authorization");
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
@@ -27,8 +29,23 @@ export async function GET(req: Request) {
   let sent = 0;
   let failed = 0;
 
+  // Track how many emails each user has sent today (manual + sequence)
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+  const userSentToday: Record<string, number> = {};
+
   for (const row of due) {
     try {
+      // Check daily limit for this user
+      if (!(row.user_id in userSentToday)) {
+        const { count } = await db
+          .from("email_log")
+          .select("*", { count: "exact", head: true })
+          .eq("user_id", row.user_id)
+          .gte("sent_at", startOfDay.toISOString());
+        userSentToday[row.user_id] = count ?? 0;
+      }
+      if (userSentToday[row.user_id] >= DAILY_LIMIT) continue;
       // Get campaign to find the step content
       const { data: campaignRow } = await db
         .from("campaigns")
@@ -96,6 +113,7 @@ export async function GET(req: Request) {
         }).eq("id", row.id);
       }
 
+      userSentToday[row.user_id] = (userSentToday[row.user_id] ?? 0) + 1;
       sent++;
     } catch {
       failed++;
