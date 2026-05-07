@@ -22,7 +22,7 @@ import { applyMerge } from "@/lib/storage";
 import { getGoogleUser, sendEmailViaGmail } from "@/lib/googleClient";
 import type { Campaign, Contact } from "@/lib/types";
 
-const SEND_DELAY_MS = 4000; // 4 seconds between emails
+const SEND_DELAY_MS = 120000; // 2 minutes between emails
 
 function buildMailto(subject: string, body: string, contact: Contact) {
   return (
