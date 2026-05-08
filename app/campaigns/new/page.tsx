@@ -489,92 +489,103 @@ function NewCampaignPage() {
 
       {/* ── Step 2: Sequence — two-column editor ── */}
       {step === 2 && (
-        <div className="space-y-4">
+        <div className="space-y-5">
           {/* Campaign name */}
-          <div className="bg-white border border-cream-200 rounded-2xl px-6 py-4 shadow-sm flex items-center gap-4">
-            <label className="text-xs font-medium text-navy-400 flex-shrink-0">Campaign name</label>
-            <input type="text" value={campaignName} onChange={e => setCampaignName(e.target.value)} placeholder="e.g. May Outreach — Snack Brands" className="flex-1 bg-transparent text-sm font-semibold text-navy-900 placeholder:text-navy-300 focus:outline-none" />
+          <div className="bg-white border border-cream-200 rounded-2xl px-6 py-4 shadow-sm flex items-center gap-5">
+            <label className="text-sm font-medium text-navy-400 flex-shrink-0">Campaign name</label>
+            <input type="text" value={campaignName} onChange={e => setCampaignName(e.target.value)} placeholder="e.g. May Outreach — Snack Brands" className="flex-1 bg-transparent text-base font-semibold text-navy-900 placeholder:text-navy-300 focus:outline-none" />
           </div>
 
           {/* Two-column editor */}
-          <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm flex" style={{ minHeight: 560 }}>
+          <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm flex" style={{ height: "calc(100vh - 310px)", minHeight: 580 }}>
 
-            {/* Left: step list */}
-            <div className="w-52 border-r border-cream-100 flex flex-col flex-shrink-0">
-              <div className="px-4 py-3 border-b border-cream-100">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-navy-300">Sequence</p>
+            {/* Left: timeline step list */}
+            <div className="w-64 border-r border-cream-100 flex flex-col flex-shrink-0 bg-cream-50/30">
+              <div className="px-5 py-4 border-b border-cream-100">
+                <p className="text-xs font-bold uppercase tracking-widest text-navy-400">Sequence steps</p>
               </div>
 
-              {/* Initial email */}
-              <button
-                onClick={() => { setSelectedStep(-1); setPreviewMode(false); }}
-                className={`w-full text-left px-4 py-3.5 border-b border-cream-50 transition-all relative ${selectedStep === -1 ? "bg-coral-50/40" : "hover:bg-cream-50/60"}`}
-              >
-                {selectedStep === -1 && <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-coral-500 rounded-r" />}
-                <p className="text-[10px] font-semibold text-navy-400 mb-1">Initial email</p>
-                <p className="text-xs font-medium text-navy-700 truncate">{subject || <span className="text-navy-300 italic font-normal">No subject yet</span>}</p>
-              </button>
-
-              {/* Follow-ups */}
-              {steps.map((s, i) => (
-                <button
-                  key={i}
-                  onClick={() => { setSelectedStep(i); setPreviewMode(false); }}
-                  className={`w-full text-left px-4 py-3.5 border-b border-cream-50 transition-all relative ${selectedStep === i ? "bg-blue-50/20" : "hover:bg-cream-50/60"}`}
-                >
-                  {selectedStep === i && <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-navy-700 rounded-r" />}
-                  <div className="flex items-center justify-between mb-1">
-                    <p className="text-[10px] font-semibold text-navy-400">Follow-up {i + 1}</p>
-                    <span className="text-[10px] text-navy-400 bg-cream-100 rounded px-1.5 py-0.5">+{s.delay_days}d</span>
+              <div className="flex-1 overflow-y-auto px-4 py-4 space-y-0">
+                {/* Initial email — timeline item */}
+                <div className="flex gap-3">
+                  <div className="flex flex-col items-center w-8 flex-shrink-0">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 transition-colors ${selectedStep === -1 ? "bg-coral-500 text-white shadow-sm" : "bg-cream-200 text-navy-500"}`}>1</div>
+                    {steps.length > 0 && <div className="w-px flex-1 bg-cream-200 mt-1 mb-1" style={{ minHeight: 20 }} />}
                   </div>
-                  <p className="text-xs font-medium text-navy-700 truncate">{s.subject || s.body.slice(0, 35) || <span className="text-navy-300 italic font-normal">Empty</span>}</p>
-                </button>
-              ))}
+                  <button
+                    onClick={() => { setSelectedStep(-1); setPreviewMode(false); }}
+                    className="flex-1 pb-3 text-left group"
+                  >
+                    <div className={`rounded-xl border px-3 py-3 transition-all ${selectedStep === -1 ? "border-coral-200 bg-white shadow-sm" : "border-cream-200 hover:border-cream-300 hover:bg-white/60"}`}>
+                      <p className={`text-xs font-semibold mb-1 ${selectedStep === -1 ? "text-coral-500" : "text-navy-400"}`}>Day 1 · Initial email</p>
+                      <p className="text-sm font-medium text-navy-800 truncate leading-tight">{subject || <span className="text-navy-300 italic font-normal">No subject yet</span>}</p>
+                    </div>
+                  </button>
+                </div>
 
-              <div className="p-3 mt-auto">
+                {/* Follow-up steps */}
+                {steps.map((s, i) => (
+                  <div key={i} className="flex gap-3">
+                    <div className="flex flex-col items-center w-8 flex-shrink-0">
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 transition-colors ${selectedStep === i ? "bg-navy-800 text-white shadow-sm" : "bg-cream-200 text-navy-500"}`}>{i + 2}</div>
+                      {i < steps.length - 1 && <div className="w-px flex-1 bg-cream-200 mt-1 mb-1" style={{ minHeight: 20 }} />}
+                    </div>
+                    <button
+                      onClick={() => { setSelectedStep(i); setPreviewMode(false); }}
+                      className="flex-1 pb-3 text-left"
+                    >
+                      <div className={`rounded-xl border px-3 py-3 transition-all ${selectedStep === i ? "border-navy-200 bg-white shadow-sm" : "border-cream-200 hover:border-cream-300 hover:bg-white/60"}`}>
+                        <p className={`text-xs font-semibold mb-1 ${selectedStep === i ? "text-navy-600" : "text-navy-400"}`}>Day +{s.delay_days} · Follow-up {i + 1}</p>
+                        <p className="text-sm font-medium text-navy-800 truncate leading-tight">{s.subject || s.body.slice(0, 40) || <span className="text-navy-300 italic font-normal">Empty</span>}</p>
+                      </div>
+                    </button>
+                  </div>
+                ))}
+
+                {/* Add follow-up */}
                 <button
                   onClick={() => { addStep(); setSelectedStep(steps.length); setPreviewMode(false); }}
-                  className="w-full flex items-center justify-center gap-1.5 px-3 py-2.5 border border-dashed border-cream-300 hover:border-coral-200 text-navy-400 hover:text-coral-500 text-xs font-semibold rounded-xl transition-colors"
+                  className="flex items-center gap-2 text-sm text-navy-400 hover:text-coral-500 transition-colors pt-1 pl-11"
                 >
-                  <Plus size={12} /> Add follow-up
+                  <Plus size={14} /> Add follow-up
                 </button>
               </div>
             </div>
 
             {/* Right: editor / preview */}
-            <div className="flex-1 flex flex-col min-w-0">
+            <div className="flex-1 flex flex-col min-w-0 bg-white">
               {/* Toolbar */}
-              <div className="px-4 py-2.5 border-b border-cream-100 flex items-center gap-3">
+              <div className="px-5 py-3 border-b border-cream-100 flex items-center gap-4">
                 {selectedStep >= 0 && (
-                  <div className="flex items-center gap-2 text-xs text-navy-500">
+                  <div className="flex items-center gap-2 text-sm text-navy-500">
                     <span>Send after</span>
                     <input
                       type="number" min={1} max={60}
                       value={steps[selectedStep]?.delay_days ?? 3}
                       onChange={e => updateStep(selectedStep, { delay_days: Math.max(1, parseInt(e.target.value) || 1) })}
-                      className="w-11 text-center border border-cream-200 rounded-lg px-1 py-1 text-xs focus:outline-none focus:border-coral-300"
+                      className="w-14 text-center border border-cream-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:border-coral-300"
                     />
                     <span>days</span>
                   </div>
                 )}
-                <div className="ml-auto flex items-center gap-2">
-                  <div className="flex items-center rounded-lg border border-cream-200 overflow-hidden text-xs font-semibold">
+                <div className="ml-auto flex items-center gap-3">
+                  <div className="flex items-center rounded-lg border border-cream-200 overflow-hidden text-sm font-medium">
                     <button
                       onClick={() => setPreviewMode(false)}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 transition-colors ${!previewMode ? "bg-cream-50 text-navy-800" : "text-navy-400 hover:bg-cream-50/50"}`}
+                      className={`flex items-center gap-1.5 px-4 py-2 transition-colors ${!previewMode ? "bg-cream-100 text-navy-800" : "text-navy-400 hover:bg-cream-50"}`}
                     >
-                      <Pencil size={11} /> Edit
+                      <Pencil size={13} /> Edit
                     </button>
                     <button
                       onClick={() => setPreviewMode(true)}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 border-l border-cream-200 transition-colors ${previewMode ? "bg-cream-50 text-navy-800" : "text-navy-400 hover:bg-cream-50/50"}`}
+                      className={`flex items-center gap-1.5 px-4 py-2 border-l border-cream-200 transition-colors ${previewMode ? "bg-cream-100 text-navy-800" : "text-navy-400 hover:bg-cream-50"}`}
                     >
-                      <Eye size={11} /> Preview
+                      <Eye size={13} /> Preview
                     </button>
                   </div>
                   {selectedStep >= 0 && (
-                    <button onClick={() => removeStep(selectedStep)} className="p-1.5 text-navy-300 hover:text-red-400 hover:bg-red-50 rounded-lg transition-colors">
-                      <Trash2 size={13} />
+                    <button onClick={() => removeStep(selectedStep)} className="p-2 text-navy-300 hover:text-red-400 hover:bg-red-50 rounded-lg transition-colors">
+                      <Trash2 size={15} />
                     </button>
                   )}
                 </div>
@@ -583,22 +594,22 @@ function NewCampaignPage() {
               {/* Edit mode */}
               {!previewMode && (
                 <div className="flex-1 flex flex-col overflow-hidden">
-                  {/* Subject — inline, no box */}
-                  <div className="flex items-center gap-3 px-5 py-3 border-b border-cream-100">
-                    <span className="text-xs text-navy-400 font-medium w-16 flex-shrink-0">Subject</span>
+                  {/* Subject row */}
+                  <div className="flex items-center gap-4 px-6 py-4 border-b border-cream-100">
+                    <span className="text-sm font-medium text-navy-400 w-18 flex-shrink-0">Subject</span>
                     <input
                       type="text"
                       value={selectedStep === -1 ? subject : (steps[selectedStep]?.subject || "")}
                       onChange={e => selectedStep === -1 ? setSubject(e.target.value) : updateStep(selectedStep, { subject: e.target.value })}
-                      placeholder={selectedStep === -1 ? "Partnership opportunity — {{company}} × your brand" : `Re: ${subject || "your original subject"}`}
-                      className="flex-1 text-sm text-navy-900 placeholder:text-navy-300 focus:outline-none bg-transparent"
+                      placeholder={selectedStep === -1 ? "Partnership opportunity — {{company}}" : `Re: ${subject || "your original subject"}`}
+                      className="flex-1 text-base text-navy-900 placeholder:text-navy-300 focus:outline-none bg-transparent"
                     />
                   </div>
 
-                  {/* Body — fills remaining height */}
+                  {/* Body */}
                   <div className="flex-1 overflow-hidden">
                     <textarea
-                      className="w-full h-full resize-none px-5 py-4 text-sm text-navy-800 placeholder:text-navy-300 focus:outline-none bg-transparent leading-relaxed"
+                      className="w-full h-full resize-none px-6 py-5 text-base text-navy-800 placeholder:text-navy-300 focus:outline-none bg-transparent leading-relaxed"
                       value={selectedStep === -1 ? body : (steps[selectedStep]?.body || "")}
                       onChange={e => selectedStep === -1 ? setBody(e.target.value) : updateStep(selectedStep, { body: e.target.value })}
                       placeholder={selectedStep === -1
@@ -608,16 +619,16 @@ function NewCampaignPage() {
                     />
                   </div>
 
-                  {/* Bottom toolbar — merge tags + template */}
-                  <div className="px-4 py-2.5 border-t border-cream-100 flex items-center gap-2 bg-cream-50/40">
-                    <span className="text-[10px] text-navy-300 font-semibold uppercase tracking-wide">Insert</span>
-                    <div className="flex items-center gap-1">
+                  {/* Bottom bar — merge tags + template */}
+                  <div className="px-5 py-3 border-t border-cream-100 flex items-center gap-3 bg-cream-50/40">
+                    <span className="text-xs text-navy-400 font-medium">Insert</span>
+                    <div className="flex items-center gap-1.5">
                       {MERGE_TAGS.map(({ tag, label }) => (
                         <button
                           key={tag}
                           type="button"
                           onClick={() => insertMergeTag(tag)}
-                          className="px-2 py-1 text-[10px] bg-white hover:bg-coral-50 border border-cream-200 hover:border-coral-200 text-navy-500 hover:text-coral-600 rounded-md font-mono transition-colors"
+                          className="px-2.5 py-1 text-xs bg-white hover:bg-coral-50 border border-cream-200 hover:border-coral-200 text-navy-500 hover:text-coral-600 rounded-lg font-mono transition-colors"
                         >
                           {label}
                         </button>
@@ -632,35 +643,35 @@ function NewCampaignPage() {
 
               {/* Preview mode */}
               {previewMode && (
-                <div className="flex-1 overflow-y-auto bg-cream-50/20">
-                  <div className="m-5 rounded-xl border border-cream-200 overflow-hidden bg-white shadow-sm">
-                    <div className="px-6 py-3 border-b border-cream-100 space-y-2">
-                      <div className="flex items-baseline gap-3">
-                        <span className="text-xs text-navy-400 w-16 flex-shrink-0">To</span>
+                <div className="flex-1 overflow-y-auto bg-cream-50/20 p-6">
+                  <div className="rounded-xl border border-cream-200 overflow-hidden bg-white shadow-sm">
+                    <div className="px-6 py-4 border-b border-cream-100 space-y-3">
+                      <div className="flex items-baseline gap-4">
+                        <span className="text-sm font-medium text-navy-400 w-16 flex-shrink-0">To</span>
                         <span className="text-sm text-navy-800">
                           {contacts.length > 0
                             ? (contacts[0].name ? `${contacts[0].name} <${contacts[0].email}>` : contacts[0].email)
                             : "jane@example.com (example)"}
                         </span>
                       </div>
-                      <div className="flex items-baseline gap-3">
-                        <span className="text-xs text-navy-400 w-16 flex-shrink-0">Subject</span>
-                        <span className="text-sm font-semibold text-navy-900">{previewSubject || <span className="text-navy-300 font-normal italic">No subject</span>}</span>
+                      <div className="flex items-baseline gap-4">
+                        <span className="text-sm font-medium text-navy-400 w-16 flex-shrink-0">Subject</span>
+                        <span className="text-base font-semibold text-navy-900">{previewSubject || <span className="text-navy-300 font-normal italic">No subject</span>}</span>
                       </div>
                     </div>
-                    <div className="px-6 py-5">
-                      <pre className="text-sm text-navy-700 whitespace-pre-wrap font-sans leading-relaxed">
+                    <div className="px-6 py-6">
+                      <pre className="text-base text-navy-700 whitespace-pre-wrap font-sans leading-relaxed">
                         {previewBody || <span className="text-navy-300 italic">Empty — write your message in Edit mode.</span>}
                       </pre>
                     </div>
                     {contacts.length > 1 && (
                       <div className="px-6 py-3 border-t border-cream-100 bg-cream-50">
-                        <p className="text-[11px] text-navy-400">Previewing for <strong>{contacts[0].name || contacts[0].email}</strong> · personalised for each of your {contacts.length} contacts</p>
+                        <p className="text-xs text-navy-400">Previewing for <strong>{contacts[0].name || contacts[0].email}</strong> · personalised for each of your {contacts.length} contacts</p>
                       </div>
                     )}
                     {contacts.length === 0 && (
                       <div className="px-6 py-3 border-t border-cream-100 bg-amber-50">
-                        <p className="text-[11px] text-amber-700">Using example contact — add real contacts in step 1 to preview your personalisation.</p>
+                        <p className="text-xs text-amber-700">Using example contact — add real contacts in step 1 to preview your personalisation.</p>
                       </div>
                     )}
                   </div>
@@ -669,14 +680,14 @@ function NewCampaignPage() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-2">
+          <div className="flex items-center justify-between pt-1">
             <button onClick={() => setStep(1)} className="inline-flex items-center gap-2 px-4 py-2.5 text-navy-500 hover:text-navy-900 text-sm font-medium transition-colors">
               <ArrowLeft size={15} />Back
             </button>
             <button
               onClick={() => setStep(3)}
               disabled={!campaignName.trim() || !subject.trim() || !body.trim()}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-coral-500 hover:bg-coral-600 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition-colors"
             >
               Schedule <ArrowRight size={15} />
             </button>
