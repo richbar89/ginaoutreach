@@ -19,6 +19,14 @@ export type Campaign = {
     contacts: Contact[];
     createdAt: string;
     steps?: CampaignStep[];
+    // Server-side sending cadence
+    status?: "draft" | "active" | "paused" | "completed";
+    emailsPerDay?: number;
+    delayMinMins?: number;
+    delayMaxMins?: number;
+    sendWindowStart?: number;
+    sendWindowEnd?: number;
+    sendDays?: string[];
 };
 
 export type BrandCategory =

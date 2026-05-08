@@ -28,11 +28,22 @@ export async function dbSaveCampaign(db: DB, campaign: Campaign): Promise<void> 
     contacts: campaign.contacts,
     steps: campaign.steps ?? [],
     created_at: campaign.createdAt,
+    status: campaign.status ?? "draft",
+    emails_per_day: campaign.emailsPerDay ?? 25,
+    delay_min_mins: campaign.delayMinMins ?? 3,
+    delay_max_mins: campaign.delayMaxMins ?? 10,
+    send_window_start: campaign.sendWindowStart ?? 8,
+    send_window_end: campaign.sendWindowEnd ?? 18,
+    send_days: campaign.sendDays ?? ["Mon", "Tue", "Wed", "Thu", "Fri"],
   });
 }
 
 export async function dbDeleteCampaign(db: DB, id: string): Promise<void> {
   await db.from("campaigns").delete().eq("id", id);
+}
+
+export async function dbUpdateCampaignStatus(db: DB, id: string, status: Campaign["status"]): Promise<void> {
+  await db.from("campaigns").update({ status }).eq("id", id);
 }
 
 function rowToCampaign(r: Record<string, unknown>): Campaign {
@@ -44,6 +55,13 @@ function rowToCampaign(r: Record<string, unknown>): Campaign {
     contacts: (r.contacts as Campaign["contacts"]) || [],
     createdAt: r.created_at as string,
     steps: (r.steps as Campaign["steps"]) || [],
+    status: (r.status as Campaign["status"]) || "draft",
+    emailsPerDay: (r.emails_per_day as number) || 25,
+    delayMinMins: (r.delay_min_mins as number) || 3,
+    delayMaxMins: (r.delay_max_mins as number) || 10,
+    sendWindowStart: (r.send_window_start as number) ?? 8,
+    sendWindowEnd: (r.send_window_end as number) ?? 18,
+    sendDays: (r.send_days as string[]) || ["Mon", "Tue", "Wed", "Thu", "Fri"],
   };
 }
 
