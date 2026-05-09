@@ -262,22 +262,37 @@ function MiniPhone({ step }: { step: number }) {
       </div>
     ),
     2: (
-      <div style={{ padding: "28px 10px 10px" }}>
+      <div style={{ padding: "28px 10px 10px", position: "relative", overflow: "hidden", height: "100%" }}>
         <p style={{ fontSize: 8, fontWeight: 700, color: "#C4603A", letterSpacing: "-0.03em", marginBottom: 6 }}>collabi</p>
-        {[["Graze", "graze.com", false], ["Huel", "huel.com", true], ["Innocent", "innocentdrinks.co.uk", false]].map(([n, d, active]) => (
+        {[["Graze", "graze.com"], ["Huel", "huel.com"], ["Perello", "perelloolives.com"]].map(([n, d]) => (
           <div key={n as string} style={{ display: "flex", alignItems: "center", gap: 5, background: "white", borderRadius: 7, padding: "5px 7px", marginBottom: 4, boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>
             <img src={`https://www.google.com/s2/favicons?domain=${d}&sz=16`} width={12} height={12} style={{ borderRadius: 3, objectFit: "contain" }} alt={n as string} />
             <div style={{ flex: 1, height: 4, background: "#D1CBC3", borderRadius: 2 }} />
-            <div style={{ width: 6, height: 6, borderRadius: "50%", background: active ? "#22c55e" : "#E5E0DA", flexShrink: 0 }} />
+            <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#E5E0DA", flexShrink: 0 }} />
           </div>
         ))}
-        <div style={{ background: "white", borderRadius: 10, padding: "8px 8px", marginTop: 6, border: "1px solid rgba(232,98,42,0.2)", boxShadow: "0 3px 12px rgba(0,0,0,0.12)" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 3 }}>
-            <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#E8622A" }} />
-            <span style={{ fontSize: 7, fontWeight: 800, color: "#E8622A" }}>ALERT</span>
+        {/* Animated Perello alert — loops like the hero phone */}
+        <div style={{
+          position: "absolute", top: 28, left: 6, right: 6,
+          background: "white", borderRadius: 12,
+          padding: "8px 9px",
+          boxShadow: "0 4px 16px rgba(0,0,0,0.16)",
+          border: "1px solid rgba(232,98,42,0.18)",
+          display: "flex", gap: 7, alignItems: "flex-start",
+          animation: "alertLoop 7s ease-in-out infinite",
+          animationDelay: "1.8s",
+        }}>
+          <div style={{ width: 22, height: 22, borderRadius: 6, background: "#fff8f5", border: "1px solid rgba(232,98,42,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, overflow: "hidden" }}>
+            <img src="https://www.google.com/s2/favicons?domain=perelloolives.com&sz=32" width={16} height={16} style={{ objectFit: "contain" }} alt="Perello" />
           </div>
-          <p style={{ fontSize: 8, fontWeight: 700, color: "#1A1110", lineHeight: 1.3 }}>Huel are running ads!</p>
-          <p style={{ fontSize: 7, color: "#9E9790" }}>Meta · Active now 🟢</p>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 3, marginBottom: 2 }}>
+              <div style={{ width: 4, height: 4, borderRadius: "50%", background: "#E8622A", animation: "pulseDot 1.3s ease-in-out infinite", flexShrink: 0 }} />
+              <span style={{ fontSize: 6.5, fontWeight: 800, color: "#E8622A", letterSpacing: "0.04em", textTransform: "uppercase" }}>Alert</span>
+            </div>
+            <p style={{ fontSize: 7.5, fontWeight: 700, color: "#1A1110", lineHeight: 1.3 }}>Perello are running ads!</p>
+            <p style={{ fontSize: 6, color: "#9E9790" }}>Meta · Active now 🟢</p>
+          </div>
         </div>
       </div>
     ),
@@ -433,15 +448,15 @@ export default function WaitlistPage() {
 
         .lp-blur-center {
           position: absolute; inset: 0; pointer-events: none; z-index: 1;
-          backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-          mask-image: radial-gradient(ellipse 80% 80% at 38% 50%, black 0%, black 20%, rgba(0,0,0,0.5) 50%, transparent 72%);
-          -webkit-mask-image: radial-gradient(ellipse 80% 80% at 38% 50%, black 0%, black 20%, rgba(0,0,0,0.5) 50%, transparent 72%);
+          backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+          mask-image: radial-gradient(ellipse 68% 78% at 50% 50%, black 0%, black 22%, rgba(0,0,0,0.55) 52%, transparent 74%);
+          -webkit-mask-image: radial-gradient(ellipse 68% 78% at 50% 50%, black 0%, black 22%, rgba(0,0,0,0.55) 52%, transparent 74%);
         }
         .lp-vignette {
           position: absolute; inset: 0; pointer-events: none; z-index: 2;
-          background: radial-gradient(ellipse 70% 80% at 38% 50%,
-            rgba(245,240,234,0.96) 0%, rgba(245,240,234,0.78) 28%,
-            rgba(245,240,234,0.32) 56%, transparent 76%);
+          background: radial-gradient(ellipse 58% 68% at 50% 50%,
+            rgba(245,240,234,0.94) 0%, rgba(245,240,234,0.72) 25%,
+            rgba(245,240,234,0.30) 54%, transparent 74%);
         }
         .lp-glow {
           position: fixed; width: 320px; height: 320px; border-radius: 50%;
@@ -450,29 +465,20 @@ export default function WaitlistPage() {
           pointer-events: none; z-index: 5; will-change: left, top; left: 50%; top: 50%;
         }
 
-        /* Hero two-column grid */
-        .lp-hero-grid {
+        /* Hero centred content */
+        .lp-center {
           position: relative; z-index: 10;
-          max-width: 1160px; width: 100%; margin: 0 auto;
-          display: grid; grid-template-columns: 1fr 1fr;
-          gap: 60px; align-items: center;
-          padding: 60px 48px;
-          min-height: 100vh;
-        }
-        .lp-hero-left {
-          display: flex; flex-direction: column; align-items: flex-start;
-        }
-        .lp-hero-right {
-          display: flex; justify-content: center; align-items: center;
+          display: flex; flex-direction: column; align-items: center; text-align: center;
+          padding: 56px 24px 64px; max-width: 680px; width: 100%;
         }
 
         .lp-logo {
           font-family: system-ui, -apple-system, sans-serif;
-          font-size: 52px; font-weight: 700; letter-spacing: -0.04em; line-height: 1;
+          font-size: clamp(52px, 8vw, 80px); font-weight: 700; letter-spacing: -0.04em; line-height: 1;
           background: linear-gradient(135deg, #FF8C42 0%, #C4603A 100%);
           -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-          background-clip: text; margin-bottom: 18px;
-          filter: drop-shadow(0 2px 20px rgba(196,96,58,0.45));
+          background-clip: text; margin-bottom: 20px;
+          filter: drop-shadow(0 2px 28px rgba(196,96,58,0.55));
         }
         .lp-badge {
           display: inline-flex; align-items: center; gap: 7px;
@@ -483,9 +489,9 @@ export default function WaitlistPage() {
         }
         .lp-dot-o { width: 7px; height: 7px; border-radius: 50%; background: #E8622A; flex-shrink: 0; }
         .lp-hl {
-          font-size: clamp(32px, 4vw, 52px); font-weight: 900;
-          color: #1A1110; line-height: 1.08; letter-spacing: -0.025em;
-          margin-bottom: 16px;
+          font-size: clamp(36px, 5.5vw, 64px); font-weight: 900;
+          color: #1A1110; line-height: 1.08; letter-spacing: -0.02em;
+          margin-bottom: 18px;
         }
         .lp-hl em { font-style: italic; font-weight: 400; color: #C4603A; }
         .lp-sub {
@@ -579,15 +585,13 @@ export default function WaitlistPage() {
           background-clip: text;
         }
 
-        @media (max-width: 768px) {
-          .lp-hero-grid { grid-template-columns: 1fr; gap: 48px; padding: 40px 24px; min-height: auto; padding-top: 80px; }
-          .lp-hero-left { align-items: center; text-align: center; }
-          .lp-hl { font-size: clamp(30px, 8vw, 44px); }
-          .lp-logo { font-size: 44px; }
-          .lp-sub { text-align: center; }
+        @media (max-width: 600px) {
+          .lp-hl { font-size: clamp(32px, 9vw, 48px); }
+          .lp-logo { font-size: clamp(72px, 20vw, 96px); }
+          .lp-center { padding: 24px 20px 28px; }
+          .lp-row2 { grid-template-columns: 1fr; }
           .lp-how-grid { grid-template-columns: 1fr; }
           .lp-feat-grid { grid-template-columns: 1fr; }
-          .lp-row2 { grid-template-columns: 1fr; }
           .lp-footer { padding: 18px 20px; }
         }
       `}</style>
@@ -605,71 +609,63 @@ export default function WaitlistPage() {
           <div className="lp-blur-center" />
           <div className="lp-vignette" />
 
-          <div className="lp-hero-grid">
-            {/* Left: copy + form */}
-            <div className="lp-hero-left">
-              <div className="lp-logo">collabi</div>
+          <div className="lp-center">
+            <div className="lp-logo">collabi</div>
 
-              <div className="lp-badge">
-                <span className="lp-dot-o" />
-                Invite-only beta · Coming June 2026
+            <div className="lp-badge">
+              <span className="lp-dot-o" />
+              Invite-only beta · Coming June 2026
+            </div>
+
+            <h1 className="lp-hl">
+              Find the <em>humans</em><br />
+              behind your<br />
+              favourite brands.
+            </h1>
+
+            <p className="lp-sub hidden sm:block">
+              Collabi is an outreach tool for creators. Search thousands of brands,
+              see who&apos;s actively spending on marketing, and reach the right
+              person in their inbox — all from one place.
+            </p>
+
+            {status === "done" ? (
+              <div style={{ textAlign: "center", marginBottom: 16 }}>
+                <div style={{ width: 52, height: 52, borderRadius: "50%", background: "rgba(232,98,42,0.10)", border: "2px solid rgba(232,98,42,0.28)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px" }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E8622A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                </div>
+                <p style={{ fontSize: 22, fontWeight: 700, color: "#1A1110", marginBottom: 8 }}>You&apos;re on the list!</p>
+                <p style={{ fontSize: 14, color: "#7A736B" }}>We&apos;ll be in touch when Collabi launches.</p>
               </div>
-
-              <h1 className="lp-hl">
-                Find the <em>humans</em><br />
-                behind your<br />
-                favourite brands.
-              </h1>
-
-              <p className="lp-sub">
-                Collabi is an outreach tool for creators. Search thousands of brands,
-                see who&apos;s actively spending on marketing, and reach the right
-                person in their inbox — all from one place.
-              </p>
-
-              {status === "done" ? (
-                <div style={{ textAlign: "left" }}>
-                  <div style={{ width: 52, height: 52, borderRadius: "50%", background: "rgba(232,98,42,0.10)", border: "2px solid rgba(232,98,42,0.28)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E8622A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+            ) : (
+              <div className="lp-card" ref={formRef}>
+                <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  <div className="lp-row2">
+                    <input className="lp-field" type="text" placeholder="First name" value={form.first_name} onChange={set("first_name")} required disabled={status === "loading"} />
+                    <input className="lp-field" type="text" placeholder="Last name" value={form.last_name} onChange={set("last_name")} required disabled={status === "loading"} />
                   </div>
-                  <p style={{ fontSize: 22, fontWeight: 700, color: "#1A1110", marginBottom: 8 }}>You&apos;re on the list!</p>
-                  <p style={{ fontSize: 14, color: "#7A736B" }}>We&apos;ll be in touch when Collabi launches.</p>
-                </div>
-              ) : (
-                <div className="lp-card" ref={formRef}>
-                  <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                    <div className="lp-row2">
-                      <input className="lp-field" type="text" placeholder="First name" value={form.first_name} onChange={set("first_name")} required disabled={status === "loading"} />
-                      <input className="lp-field" type="text" placeholder="Last name" value={form.last_name} onChange={set("last_name")} required disabled={status === "loading"} />
-                    </div>
-                    <input className="lp-field" type="email" placeholder="your@email.com" value={form.email} onChange={set("email")} required disabled={status === "loading"} />
-                    <select className="lp-field lp-sel" value={form.niche} onChange={set("niche")} required disabled={status === "loading"}>
-                      <option value="" disabled>What do you create?</option>
-                      <option value="food">Food & Drink</option>
-                      <option value="lifestyle">Lifestyle</option>
-                      <option value="beauty">Beauty & Skincare</option>
-                      <option value="fitness">Fitness & Wellness</option>
-                      <option value="fashion">Fashion</option>
-                      <option value="parenting">Parenting & Family</option>
-                      <option value="tech">Tech & Gaming</option>
-                      <option value="travel">Travel</option>
-                      <option value="finance">Finance & Business</option>
-                      <option value="other">Other</option>
-                    </select>
-                    <button className="lp-btn" type="submit" disabled={status === "loading"}>
-                      {status === "loading" ? "Joining…" : "Join the waitlist →"}
-                    </button>
-                    {status === "error" && <p style={{ fontSize: 12, color: "#e05252", textAlign: "center" }}>Something went wrong — please try again.</p>}
-                    <p style={{ fontSize: 11, color: "#B5AFA8", textAlign: "center" }}>No spam, ever. Unsubscribe anytime.</p>
-                  </form>
-                </div>
-              )}
-            </div>
-
-            {/* Right: animated phone */}
-            <div className="lp-hero-right">
-              <HeroPhone />
-            </div>
+                  <input className="lp-field" type="email" placeholder="your@email.com" value={form.email} onChange={set("email")} required disabled={status === "loading"} />
+                  <select className="lp-field lp-sel" value={form.niche} onChange={set("niche")} required disabled={status === "loading"}>
+                    <option value="" disabled>What do you create?</option>
+                    <option value="food">Food & Drink</option>
+                    <option value="lifestyle">Lifestyle</option>
+                    <option value="beauty">Beauty & Skincare</option>
+                    <option value="fitness">Fitness & Wellness</option>
+                    <option value="fashion">Fashion</option>
+                    <option value="parenting">Parenting & Family</option>
+                    <option value="tech">Tech & Gaming</option>
+                    <option value="travel">Travel</option>
+                    <option value="finance">Finance & Business</option>
+                    <option value="other">Other</option>
+                  </select>
+                  <button className="lp-btn" type="submit" disabled={status === "loading"}>
+                    {status === "loading" ? "Joining…" : "Join the waitlist →"}
+                  </button>
+                  {status === "error" && <p style={{ fontSize: 12, color: "#e05252", textAlign: "center" }}>Something went wrong — please try again.</p>}
+                  <p style={{ fontSize: 11, color: "#B5AFA8", textAlign: "center" }}>No spam, ever. Unsubscribe anytime.</p>
+                </form>
+              </div>
+            )}
           </div>
         </div>
 
