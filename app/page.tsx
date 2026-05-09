@@ -249,14 +249,28 @@ function MiniPhone({ step }: { step: number }) {
     1: (
       <div style={{ padding: "28px 10px 10px" }}>
         <p style={{ fontSize: 8, fontWeight: 700, color: "#C4603A", letterSpacing: "-0.03em", marginBottom: 6 }}>collabi</p>
-        <div style={{ background: "#F7F3EE", borderRadius: 8, padding: "6px 8px", marginBottom: 6, display: "flex", alignItems: "center", gap: 6 }}>
-          <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#D1CBC3", flexShrink: 0 }} />
-          <div style={{ height: 5, background: "#E5E0DA", borderRadius: 3, flex: 1 }} />
+        {/* Search bar with blinking cursor */}
+        <div style={{ background: "#F7F3EE", borderRadius: 8, padding: "5px 8px", marginBottom: 7, display: "flex", alignItems: "center", gap: 5 }}>
+          <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#D1CBC3", flexShrink: 0 }} />
+          <div style={{ height: 4, background: "#C4603A", borderRadius: 2, width: "38%", opacity: 0.7 }} />
+          <div style={{ width: 1, height: 9, background: "#C4603A", animation: "pulseDot 1s ease-in-out infinite", borderRadius: 1 }} />
         </div>
-        {[["Graze", "graze.com"], ["Huel", "huel.com"], ["Wild", "wearewild.com"], ["Papier", "papier.com"]].map(([n, d]) => (
-          <div key={n} style={{ display: "flex", alignItems: "center", gap: 5, background: "white", borderRadius: 7, padding: "5px 7px", marginBottom: 4, boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>
-            <img src={`https://www.google.com/s2/favicons?domain=${d}&sz=16`} width={12} height={12} style={{ borderRadius: 3, objectFit: "contain" }} alt={n} />
+        {[
+          ["Graze", "graze.com", 0],
+          ["Huel", "huel.com", 0.15],
+          ["Wild", "wearewild.com", 0.30],
+          ["Papier", "papier.com", 0.45],
+        ].map(([n, d, delay]) => (
+          <div key={n as string} style={{
+            display: "flex", alignItems: "center", gap: 5,
+            background: "white", borderRadius: 7, padding: "5px 7px", marginBottom: 4,
+            boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
+            animation: `cardSlideIn 0.4s ease-out both`,
+            animationDelay: `${delay}s`,
+          }}>
+            <img src={`https://www.google.com/s2/favicons?domain=${d}&sz=16`} width={12} height={12} style={{ borderRadius: 3, objectFit: "contain" }} alt={n as string} />
             <div style={{ height: 4, background: "#1A1110", borderRadius: 2, width: "45%", opacity: 0.7 }} />
+            <div style={{ height: 4, background: "#E5E0DA", borderRadius: 2, flex: 1 }} />
           </div>
         ))}
       </div>
@@ -297,17 +311,41 @@ function MiniPhone({ step }: { step: number }) {
       </div>
     ),
     3: (
-      <div style={{ padding: "28px 10px 10px" }}>
+      <div style={{ padding: "28px 10px 10px", position: "relative" }}>
         <p style={{ fontSize: 8, fontWeight: 700, color: "#C4603A", letterSpacing: "-0.03em", marginBottom: 6 }}>collabi</p>
-        <div style={{ background: "white", borderRadius: 8, padding: "7px 8px", boxShadow: "0 1px 4px rgba(0,0,0,0.08)" }}>
-          <div style={{ fontSize: 7, color: "#9E9790", marginBottom: 3 }}>To: marketing@huel.com</div>
-          <div style={{ height: 4, background: "#1A1110", borderRadius: 2, width: "80%", marginBottom: 6, opacity: 0.8 }} />
-          {[1, 0.6, 0.8, 0.5, 0.7].map((w, i) => (
-            <div key={i} style={{ height: 3, background: "#D1CBC3", borderRadius: 2, width: `${w * 100}%`, marginBottom: 4 }} />
+        {/* Compose card — fades out when "sent" */}
+        <div style={{
+          background: "white", borderRadius: 8, padding: "7px 8px",
+          boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
+          animation: "composeHide 4s ease-in-out infinite",
+        }}>
+          <div style={{ fontSize: 6.5, color: "#9E9790", marginBottom: 3 }}>To: marketing@huel.com</div>
+          <div style={{ height: 4, background: "#1A1110", borderRadius: 2, width: "80%", marginBottom: 5, opacity: 0.8 }} />
+          {[1, 0.65, 0.85, 0.5].map((w, i) => (
+            <div key={i} style={{ height: 3, background: "#D1CBC3", borderRadius: 2, width: `${w * 100}%`, marginBottom: 3 }} />
           ))}
-          <div style={{ marginTop: 8, background: "#E8622A", borderRadius: 6, padding: "4px 8px", display: "inline-block" }}>
+          <div style={{
+            marginTop: 7, background: "#E8622A", borderRadius: 5,
+            padding: "4px 8px", display: "inline-block",
+            animation: "btnPulse 4s ease-in-out infinite",
+          }}>
             <span style={{ fontSize: 7, color: "white", fontWeight: 700 }}>Send →</span>
           </div>
+        </div>
+        {/* Sent confirmation — appears after button press */}
+        <div style={{
+          position: "absolute", top: 44, left: 10, right: 10,
+          background: "white", borderRadius: 8, padding: "10px 8px",
+          boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
+          display: "flex", flexDirection: "column", alignItems: "center",
+          animation: "sentFlash 4s ease-in-out infinite",
+          pointerEvents: "none",
+        }}>
+          <div style={{ width: 20, height: 20, borderRadius: "50%", background: "rgba(34,197,94,0.12)", border: "1.5px solid rgba(34,197,94,0.35)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 5 }}>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+          </div>
+          <p style={{ fontSize: 8, fontWeight: 700, color: "#1A1110", marginBottom: 1 }}>Email sent!</p>
+          <p style={{ fontSize: 6.5, color: "#9E9790" }}>Huel · marketing@huel.com</p>
         </div>
       </div>
     ),
@@ -546,6 +584,25 @@ export default function WaitlistPage() {
         @keyframes pulseDot {
           0%, 100% { transform: scale(1); opacity: 1; }
           50%       { transform: scale(1.5); opacity: 0.65; }
+        }
+        /* Step 1 — brand cards slide in staggered */
+        @keyframes cardSlideIn {
+          0%   { transform: translateX(40px); opacity: 0; }
+          100% { transform: translateX(0);    opacity: 1; }
+        }
+        /* Step 3 — send button pulse then sent flash */
+        @keyframes btnPulse {
+          0%,  60%, 100% { transform: scale(1);    box-shadow: 0 2px 6px rgba(232,98,42,0.35); }
+          70%            { transform: scale(0.93); box-shadow: 0 1px 3px rgba(232,98,42,0.2);  }
+          80%            { transform: scale(1.05); box-shadow: 0 4px 12px rgba(232,98,42,0.55); }
+        }
+        @keyframes sentFlash {
+          0%,  58%, 100% { opacity: 0; transform: translateY(6px);  }
+          65%, 90%       { opacity: 1; transform: translateY(0);     }
+        }
+        @keyframes composeHide {
+          0%,  55% { opacity: 1; }
+          65%, 100% { opacity: 0; }
         }
 
         /* How it works */
