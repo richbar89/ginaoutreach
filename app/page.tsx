@@ -388,30 +388,34 @@ const HOW_STEPS = [
 const FEATURES = [
   {
     emoji: "📋",
+    step: "01",
     tag: "Brand Contacts",
-    title: "10,000+ verified contacts",
-    body: "Every contact is a real, verified marketing decision-maker at a brand you'd love to work with. Filtered by category, contactable in one click.",
+    title: "The right person, not a contact form.",
+    body: "10,000+ real names and inboxes — no more firing into PR@ voids. Filter by brand category, find who handles creator partnerships, pitch them directly in one click.",
     bullets: ["Brand managers & marketing leads", "Filtered by category & industry", "Request any missing contact"],
   },
   {
     emoji: "📊",
+    step: "02",
     tag: "Meta Ad Intelligence",
-    title: "Pitch brands when their budget is open",
-    body: "A brand actively spending on Meta ads has a live marketing budget. We scan thousands of brands daily and flag who's running ads right now.",
-    bullets: ["Live ad status for all contacts", "Daily automatic rescans"],
+    title: "Pitch when the money is moving.",
+    body: "Brands running Meta ads have live budgets. We scan thousands of brands daily and flag who's actively spending — so your pitch lands when it's welcome, not when the freeze hits.",
+    bullets: ["Live ad status for every brand", "Daily automatic rescans"],
   },
   {
     emoji: "✉️",
+    step: "03",
     tag: "Email Outreach",
-    title: "Personal at scale. Powerful by default.",
-    body: "Send campaigns from your own Gmail or Outlook. Use merge tags to personalise every line. Every reply tracked.",
-    bullets: ["Sends from your own inbox", "Mass campaigns with personalisation", "Auto follow-up reminders"],
+    title: "Lands in inboxes. Sounds like you.",
+    body: "Campaigns send from your own Gmail or Outlook — real deliverability, not a spam folder. Personalise every line with merge tags. Follow-ups fire automatically.",
+    bullets: ["Sends from your own inbox", "Personalised at scale", "Automatic follow-up reminders"],
   },
   {
     emoji: "💼",
+    step: "04",
     tag: "Deal Pipeline",
-    title: "First pitch to paid. Nothing gets lost.",
-    body: "A visual deal board that shows exactly where every brand conversation stands. Move deals forward, log notes, track deal values.",
+    title: "Know exactly where every brand stands.",
+    body: "A Kanban board built for creator deals — not enterprise sales reps. Who's been pitched, who's ghosted, who's close to a yes. Nothing slips through.",
     bullets: ["Visual Kanban board", "Deal value & stage tracking", "Notes on every conversation"],
   },
 ];
@@ -777,20 +781,24 @@ export default function WaitlistPage() {
         {/* ── FEATURES ── */}
         <div className="lp-features" id="features">
           <div style={{ maxWidth: 960, margin: "0 auto", textAlign: "center" }}>
-            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#9E9790", marginBottom: 10 }}>Everything you need</p>
+            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#C4603A", marginBottom: 10 }}>The platform</p>
             <h2 style={{ fontSize: "clamp(28px, 3.5vw, 44px)", fontWeight: 900, color: "#1A1110", letterSpacing: "-0.025em", lineHeight: 1.1 }}>
-              One platform. Every tool.
+              Four tools. One mission.
             </h2>
+            <p style={{ fontSize: 16, color: "#7A736B", marginTop: 14, maxWidth: 420, margin: "14px auto 0", lineHeight: 1.65 }}>
+              Everything a creator needs to land brand deals — built into one place.
+            </p>
           </div>
           <div className="lp-feat-grid">
             {FEATURES.map(f => (
               <div key={f.tag} className="lp-feat-card">
-                <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(196,96,58,0.08)", border: "1px solid rgba(196,96,58,0.18)", borderRadius: 100, padding: "4px 12px", marginBottom: 18 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18 }}>
+                  <span style={{ fontSize: 11, fontWeight: 800, color: "#C4603A", background: "rgba(196,96,58,0.08)", padding: "2px 9px", borderRadius: 100, letterSpacing: "0.06em" }}>{f.step}</span>
                   <span style={{ fontSize: 13 }} suppressHydrationWarning>{f.emoji}</span>
-                  <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: "#C4603A" }}>{f.tag}</span>
+                  <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: "#9E9790" }}>{f.tag}</span>
                 </div>
-                <h3 style={{ fontSize: 21, fontWeight: 700, color: "#1A1110", letterSpacing: "-0.02em", lineHeight: 1.2, marginBottom: 12 }}>{f.title}</h3>
-                <p style={{ fontSize: 14, color: "#7A736B", lineHeight: 1.7, marginBottom: 20 }}>{f.body}</p>
+                <h3 style={{ fontSize: 20, fontWeight: 700, color: "#1A1110", letterSpacing: "-0.02em", lineHeight: 1.25, marginBottom: 12 }}>{f.title}</h3>
+                <p style={{ fontSize: 14, color: "#7A736B", lineHeight: 1.75, marginBottom: 20 }}>{f.body}</p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   {f.bullets.map(b => (
                     <div key={b} style={{ display: "flex", alignItems: "center", gap: 8 }}>
