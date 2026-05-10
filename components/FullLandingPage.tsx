@@ -269,29 +269,33 @@ function AdsMockup() {
 const FEATURES = [
   {
     tag: "Brand Contacts",
-    title: "10,000+ contacts.",
-    body: "Every contact is a real and verified marketing decision-maker at a brand you love. Food, drink, lifestyle, wellness, beauty — filtered by category, and contactable in one click. We did the work so you don't have to.",
+    step: "01",
+    title: "The right person,\nnot a contact form.",
+    body: "10,000+ real names and inboxes — no more firing into PR@ voids or cold LinkedIn DMs. Filter by brand category, find who handles creator partnerships, and pitch them directly in one click.",
     bullets: ["Brand managers & marketing leads", "Filtered by category & industry", "Request any missing contact"],
     mockup: <ContactsMockup />,
   },
   {
     tag: "Meta Ad Intelligence",
-    title: "Pitch brands when\ntheir budget is open.",
-    body: "A brand actively spending on Meta ads is a brand with a live marketing budget. We scan thousands of brands daily and flag who's running ads right now — so you pitch at exactly the right moment.",
-    bullets: ["Live ad status for all contacts", "Daily automatic rescans"],
+    step: "02",
+    title: "Pitch when the\nmoney is moving.",
+    body: "Brands running Meta ads have live budgets. We scan thousands of brands daily and flag who's actively spending — so your pitch lands when it's welcome, not when the budget freeze hits.",
+    bullets: ["Live ad status for every brand", "Daily automatic rescans"],
     mockup: <AdsMockup />,
   },
   {
     tag: "Email Outreach",
-    title: "Personal at scale.\nPowerful by default.",
-    body: "Send campaigns from your own Gmail or Outlook account — not a bulk sender with a strange domain. Use merge tags to personalise every line. Get automatic follow-up reminders. Every reply tracked.",
-    bullets: ["Sends from your own inbox", "Send mass campaigns with personalisation", "Auto follow-up reminders"],
+    step: "03",
+    title: "Lands in inboxes.\nSounds like you.",
+    body: "Campaigns send from your own Gmail or Outlook — real deliverability, not a bulk-sender spam folder. Personalise every line with merge tags. Follow-ups fire automatically. Every reply comes back to you.",
+    bullets: ["Sends from your own inbox", "Personalised at scale", "Automatic follow-up reminders"],
     mockup: <EmailMockup />,
   },
   {
     tag: "Deal Pipeline",
-    title: "First pitch to paid.\nNothing gets lost.",
-    body: "A visual deal board that shows exactly where every brand conversation stands. Move deals forward, log notes, track deal values. When a brand goes quiet, you'll know — and you'll know when to nudge.",
+    step: "04",
+    title: "Know exactly where\nevery brand stands.",
+    body: "A Kanban board built for creator deals — not enterprise sales reps. See who's been pitched, who's ghosted, who's close to a yes. Move deals forward, log notes, track values. Nothing slips through.",
     bullets: ["Visual Kanban board", "Deal value & stage tracking", "Notes on every conversation"],
     mockup: <PipelineMockup />,
   },
@@ -466,32 +470,47 @@ export default function LandingPage() {
 
         {/* ── FEATURES (desktop only) ── */}
         <div className="cl-desktop-only">
+          {/* Section intro */}
+          <div style={{ textAlign: "center", padding: "90px 28px 0" }}>
+            <div className="cl-tag">The platform</div>
+            <h2 className="cl-h" style={{ fontSize: "clamp(32px, 4vw, 52px)", fontWeight: 800, letterSpacing: "-0.04em", color: "#0D1B2A", marginTop: 4 }}>
+              Four tools. One mission.
+            </h2>
+            <p style={{ fontSize: 17, color: "#6b7280", marginTop: 14, maxWidth: 460, marginLeft: "auto", marginRight: "auto" }}>
+              Everything a creator needs to land brand deals — built into one place.
+            </p>
+          </div>
+
           {FEATURES.map((f, i) => {
             const fr = fRefs[i];
             const reverse = i % 2 !== 0;
             return (
-              <section key={f.tag} className="cl-section" style={{ background: i % 2 === 0 ? "rgba(255,255,255,0.18)" : "rgba(255,255,255,0.08)", padding: "100px 28px" }}>
+              <section key={f.tag} className="cl-section" style={{ background: i % 2 === 0 ? "rgba(255,255,255,0.22)" : "rgba(255,255,255,0.04)", padding: "100px 28px" }}>
                 <div className="cl-inner">
                   <div
                     ref={fr.ref}
                     className={`cl-feat-row cl-fade${fr.vis ? " vis" : ""}${reverse ? " cl-feat-row-rev" : ""}`}
                     style={{ direction: reverse ? "rtl" : "ltr" } as React.CSSProperties}
                   >
-                    <div style={{ direction: "ltr" }}>
-                      <div className="cl-tag">{f.tag}</div>
-                      <h2 className="cl-h" style={{ fontSize: "clamp(30px, 3.5vw, 44px)", fontWeight: 800, letterSpacing: "-0.035em", lineHeight: 1.1, color: "#0D1B2A", marginBottom: 20, whiteSpace: "pre-line" }}>
-                        {f.title}
-                      </h2>
-                      <p style={{ fontSize: 17, color: "#6b7280", lineHeight: 1.8, marginBottom: 28 }}>{f.body}</p>
-                      <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
-                        {f.bullets.map(b => (
-                          <div key={b} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                            <div style={{ width: 20, height: 20, borderRadius: "50%", background: "rgba(232,98,42,0.1)", border: "1px solid rgba(232,98,42,0.25)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#E8622A" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    <div style={{ direction: "ltr", position: "relative" }}>
+                      {/* Ghost step number */}
+                      <span style={{ position: "absolute", top: -48, left: -8, fontSize: 180, fontWeight: 900, color: "rgba(232,98,42,0.05)", lineHeight: 1, letterSpacing: "-0.06em", pointerEvents: "none", userSelect: "none" }}>{f.step}</span>
+                      <div style={{ position: "relative" }}>
+                        <div className="cl-tag">{f.tag}</div>
+                        <h2 className="cl-h" style={{ fontSize: "clamp(30px, 3.5vw, 44px)", fontWeight: 800, letterSpacing: "-0.035em", lineHeight: 1.1, color: "#0D1B2A", marginBottom: 20, whiteSpace: "pre-line" }}>
+                          {f.title}
+                        </h2>
+                        <p style={{ fontSize: 17, color: "#6b7280", lineHeight: 1.85, marginBottom: 32 }}>{f.body}</p>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 13 }}>
+                          {f.bullets.map(b => (
+                            <div key={b} style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                              <div style={{ width: 22, height: 22, borderRadius: "50%", background: "rgba(232,98,42,0.1)", border: "1px solid rgba(232,98,42,0.25)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#E8622A" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                              </div>
+                              <span style={{ fontSize: 15, color: "#4b5563", fontWeight: 500 }}>{b}</span>
                             </div>
-                            <span style={{ fontSize: 14, color: "#4b5563", fontWeight: 500 }}>{b}</span>
-                          </div>
-                        ))}
+                          ))}
+                        </div>
                       </div>
                     </div>
                     <div style={{ direction: "ltr" }}>{f.mockup}</div>
@@ -503,22 +522,28 @@ export default function LandingPage() {
         </div>
 
         {/* ── MOBILE FEATURES (mobile only) ── */}
-        <div className="cl-mobile-only" style={{ background: "rgba(255,255,255,0.18)", padding: "56px 24px" }}>
-          <p style={{ textAlign: "center", fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#E8622A", marginBottom: 10 }}>Everything you need</p>
-          <h2 className="cl-h" style={{ textAlign: "center", fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em", color: "#0D1B2A", marginBottom: 32, lineHeight: 1.2 }}>
-            One platform.<br />Every tool.
+        <div className="cl-mobile-only" style={{ background: "rgba(255,255,255,0.18)", padding: "60px 20px" }}>
+          <div className="cl-tag" style={{ display: "block", textAlign: "center", marginBottom: 10 }}>The platform</div>
+          <h2 className="cl-h" style={{ textAlign: "center", fontSize: 28, fontWeight: 800, letterSpacing: "-0.035em", color: "#0D1B2A", marginBottom: 8, lineHeight: 1.15 }}>
+            Four tools.<br />One mission.
           </h2>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+          <p style={{ textAlign: "center", fontSize: 15, color: "#6b7280", marginBottom: 36, lineHeight: 1.6 }}>
+            Everything a creator needs to land brand deals.
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {[
-              { emoji: "📋", title: "10k+ contacts", body: "Real brand managers, ready to pitch" },
-              { emoji: "📊", title: "Ad intelligence", body: "See which brands have live budgets" },
-              { emoji: "✉️", title: "Email campaigns", body: "Send from your own Gmail or Outlook" },
-              { emoji: "💼", title: "Deal pipeline", body: "Track every conversation to paid" },
-            ].map(({ emoji, title, body }) => (
-              <div key={title} style={{ background: "rgba(251,247,242,0.7)", borderRadius: 16, padding: "20px 18px", border: "1px solid #F0F0F2" }}>
-                <div style={{ fontSize: 24, marginBottom: 10 }}>{emoji}</div>
-                <p style={{ fontSize: 14, fontWeight: 700, color: "#0D1B2A", marginBottom: 5, letterSpacing: "-0.02em" }}>{title}</p>
-                <p style={{ fontSize: 12, color: "#9CA3AF", lineHeight: 1.5 }}>{body}</p>
+              { step: "01", tag: "Brand Contacts", title: "The right person, not a contact form", body: "10,000+ real names and inboxes. Filter by category, find who handles partnerships, pitch in one click." },
+              { step: "02", tag: "Meta Ad Intelligence", title: "Pitch when the money is moving", body: "We flag which brands are actively spending on Meta ads — so you pitch when the budget is live." },
+              { step: "03", tag: "Email Outreach", title: "Lands in inboxes. Sounds like you.", body: "Campaigns send from your own Gmail or Outlook. Personalised at scale. Follow-ups automatic." },
+              { step: "04", tag: "Deal Pipeline", title: "Know exactly where every brand stands", body: "A Kanban board built for creator deals. Who's pitched, who's ghosted, who's close to a yes." },
+            ].map(({ step, tag, title, body }) => (
+              <div key={step} style={{ background: "rgba(251,247,242,0.8)", borderRadius: 18, padding: "22px 20px", border: "1px solid rgba(232,98,42,0.1)", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+                  <span style={{ fontSize: 11, fontWeight: 800, color: "#E8622A", background: "rgba(232,98,42,0.08)", padding: "2px 8px", borderRadius: 100, letterSpacing: "0.06em" }}>{step}</span>
+                  <span style={{ fontSize: 10, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.1em" }}>{tag}</span>
+                </div>
+                <p style={{ fontSize: 16, fontWeight: 700, color: "#0D1B2A", marginBottom: 8, letterSpacing: "-0.02em", lineHeight: 1.3 }}>{title}</p>
+                <p style={{ fontSize: 13, color: "#6b7280", lineHeight: 1.6 }}>{body}</p>
               </div>
             ))}
           </div>
