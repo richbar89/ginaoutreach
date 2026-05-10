@@ -292,12 +292,18 @@ function NewCampaignPage() {
     <div className={`p-8 mx-auto transition-all ${step === 2 ? "max-w-5xl" : "max-w-3xl"}`}>
       {/* Header */}
       <div className="mb-8">
-        <div className="flex items-center gap-3 mb-2">
+        <div className="flex items-center gap-3 mb-3">
           <div className="h-px w-8 bg-coral-400" />
           <span className="text-[11px] font-bold uppercase tracking-widest text-coral-500">Campaigns</span>
         </div>
-        <h1 className="font-serif text-3xl font-bold text-navy-900">New Campaign</h1>
-        <p className="text-navy-500 text-sm mt-1">Set up contacts, write your sequence, configure sending.</p>
+        <input
+          type="text"
+          value={campaignName}
+          onChange={e => setCampaignName(e.target.value)}
+          placeholder="Name your campaign…"
+          className="font-serif text-3xl font-bold text-navy-900 bg-transparent focus:outline-none placeholder:text-navy-300 w-full mb-1"
+        />
+        <p className="text-navy-500 text-sm">Set up contacts, write your sequence, configure sending.</p>
       </div>
 
       {/* Step indicator */}
@@ -490,12 +496,6 @@ function NewCampaignPage() {
       {/* ── Step 2: Sequence — two-column editor ── */}
       {step === 2 && (
         <div className="space-y-5">
-          {/* Campaign name */}
-          <div className="bg-white border border-cream-200 rounded-2xl px-6 py-4 shadow-sm flex items-center gap-5">
-            <label className="text-sm font-medium text-navy-400 flex-shrink-0">Campaign name</label>
-            <input type="text" value={campaignName} onChange={e => setCampaignName(e.target.value)} placeholder="e.g. May Outreach — Snack Brands" className="flex-1 bg-transparent text-base font-semibold text-navy-900 placeholder:text-navy-300 focus:outline-none" />
-          </div>
-
           {/* Two-column editor */}
           <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm flex" style={{ height: "calc(100vh - 310px)", minHeight: 580 }}>
 
@@ -509,7 +509,11 @@ function NewCampaignPage() {
                 {/* Initial email — timeline item */}
                 <div className="flex gap-3">
                   <div className="flex flex-col items-center w-8 flex-shrink-0">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 transition-colors ${selectedStep === -1 ? "bg-coral-500 text-white shadow-sm" : "bg-cream-200 text-navy-500"}`}>1</div>
+                    {(() => { const done = Boolean(subject.trim() && body.trim()); return (
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 transition-colors ${selectedStep === -1 ? "bg-coral-500 text-white shadow-sm" : done ? "bg-emerald-500 text-white" : "bg-cream-200 text-navy-500"}`}>
+                        {selectedStep !== -1 && done ? <Check size={12} strokeWidth={3} /> : "1"}
+                      </div>
+                    ); })()}
                     {steps.length > 0 && <div className="w-px flex-1 bg-cream-200 mt-1 mb-1" style={{ minHeight: 20 }} />}
                   </div>
                   <button
@@ -527,7 +531,11 @@ function NewCampaignPage() {
                 {steps.map((s, i) => (
                   <div key={i} className="flex gap-3">
                     <div className="flex flex-col items-center w-8 flex-shrink-0">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 transition-colors ${selectedStep === i ? "bg-navy-800 text-white shadow-sm" : "bg-cream-200 text-navy-500"}`}>{i + 2}</div>
+                      {(() => { const done = Boolean(s.body.trim()); return (
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 transition-colors ${selectedStep === i ? "bg-navy-800 text-white shadow-sm" : done ? "bg-emerald-500 text-white" : "bg-cream-200 text-navy-500"}`}>
+                          {selectedStep !== i && done ? <Check size={12} strokeWidth={3} /> : i + 2}
+                        </div>
+                      ); })()}
                       {i < steps.length - 1 && <div className="w-px flex-1 bg-cream-200 mt-1 mb-1" style={{ minHeight: 20 }} />}
                     </div>
                     <button
@@ -557,15 +565,25 @@ function NewCampaignPage() {
               {/* Toolbar */}
               <div className="px-5 py-3 border-b border-cream-100 flex items-center gap-4">
                 {selectedStep >= 0 && (
-                  <div className="flex items-center gap-2 text-sm text-navy-500">
-                    <span>Send after</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs font-medium text-navy-400 mr-1">Send after</span>
+                    {[3, 5, 7, 14].map(d => (
+                      <button
+                        key={d}
+                        type="button"
+                        onClick={() => updateStep(selectedStep, { delay_days: d })}
+                        className={`px-2.5 py-1 text-xs font-bold rounded-lg transition-colors ${steps[selectedStep]?.delay_days === d ? "bg-navy-800 text-white" : "bg-cream-100 text-navy-500 hover:bg-cream-200"}`}
+                      >
+                        {d}d
+                      </button>
+                    ))}
                     <input
                       type="number" min={1} max={60}
                       value={steps[selectedStep]?.delay_days ?? 3}
                       onChange={e => updateStep(selectedStep, { delay_days: Math.max(1, parseInt(e.target.value) || 1) })}
-                      className="w-14 text-center border border-cream-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:border-coral-300"
+                      className="w-12 text-center border border-cream-200 rounded-lg px-1 py-1 text-xs focus:outline-none focus:border-coral-300"
                     />
-                    <span>days</span>
+                    <span className="text-xs text-navy-400">days</span>
                   </div>
                 )}
                 <div className="ml-auto flex items-center gap-3">
@@ -773,6 +791,15 @@ function NewCampaignPage() {
             </div>
           </div>
 
+          {contacts.length > 0 && (() => { const days = Math.ceil(contacts.length / emailsPerDay); return (
+            <div className="flex items-center gap-3 bg-coral-50 border border-coral-100 rounded-2xl px-6 py-4">
+              <Calendar size={16} className="text-coral-500 flex-shrink-0" />
+              <p className="text-sm text-coral-800">
+                At <strong>{emailsPerDay} emails/day</strong>, you&apos;ll reach all <strong>{contacts.length} contact{contacts.length !== 1 ? "s" : ""}</strong> in approximately <strong>~{days} day{days !== 1 ? "s" : ""}</strong>.
+              </p>
+            </div>
+          ); })()}
+
           <div className="flex items-center justify-between pt-2">
             <button onClick={() => setStep(2)} className="inline-flex items-center gap-2 px-4 py-2.5 text-navy-500 hover:text-navy-900 text-sm font-medium transition-colors">
               <ArrowLeft size={15} />Back
@@ -780,10 +807,10 @@ function NewCampaignPage() {
             <button
               onClick={saveCampaign}
               disabled={saving || sendDays.length === 0}
-              className="inline-flex items-center gap-2 px-6 py-2.5 bg-coral-500 hover:bg-coral-600 disabled:opacity-60 text-white text-sm font-semibold rounded-xl transition-colors"
+              className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-coral-500 hover:bg-coral-600 disabled:opacity-60 text-white text-base font-bold rounded-xl transition-colors shadow-lg shadow-coral-200"
             >
-              {saving ? null : <Calendar size={15} />}
-              {saving ? "Saving…" : "Save campaign →"}
+              {saving ? null : <Calendar size={16} />}
+              {saving ? "Saving…" : "Launch campaign →"}
             </button>
           </div>
         </div>
