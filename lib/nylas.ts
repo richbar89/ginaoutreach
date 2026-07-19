@@ -172,20 +172,39 @@ export async function listInboxMessages(grantId: string, limit = 50): Promise<In
 
 /** Rough plain-text rendering of an HTML email body for the reading pane. */
 function htmlToText(html: string): string {
+  // Already plain text — leave its line breaks alone
+  if (!/<[a-z!][^>]*>/i.test(html)) return html.trim();
+
   return html
     .replace(/<style[\s\S]*?<\/style>/gi, "")
     .replace(/<script[\s\S]*?<\/script>/gi, "")
     .replace(/<head[\s\S]*?<\/head>/gi, "")
+    // Source-formatting whitespace in HTML is insignificant
+    .replace(/[\r\n\t]+/g, " ")
+    // Gmail wraps each line as <div>text<br></div> — the br is redundant
+    .replace(/<br\s*\/?>\s*(<\/(?:div|p|li|td)>)/gi, "$1")
     .replace(/<br\s*\/?>/gi, "\n")
-    .replace(/<\/(p|div|tr|li|h[1-6]|blockquote)>/gi, "\n")
+    // Real paragraph boundaries get a blank line…
+    .replace(/<\/(p|h[1-6]|blockquote|ul|ol|table)>/gi, "\n\n")
+    // …block containers just a line break
+    .replace(/<\/(div|tr|li)>/gi, "\n")
     .replace(/<[^>]+>/g, "")
     .replace(/&nbsp;/g, " ")
     .replace(/&amp;/g, "&")
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">")
     .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
+    .replace(/&#0?39;/g, "'")
+    .replace(/&apos;/g, "'")
+    .replace(/&(?:rsquo|lsquo);/g, "'")
+    .replace(/&(?:rdquo|ldquo);/g, '"')
+    .replace(/&mdash;/g, "—")
+    .replace(/&ndash;/g, "–")
+    .replace(/&hellip;/g, "…")
+    // Tidy: strip spaces hugging line breaks, cap blank runs, collapse doubles
+    .replace(/[  ]*\n[  ]*/g, "\n")
     .replace(/\n{3,}/g, "\n\n")
+    .replace(/ {2,}/g, " ")
     .trim();
 }
 
