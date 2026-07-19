@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Papa from "papaparse";
 import {
   Upload, Plus, X, Check, ArrowRight, ArrowLeft,
-  Users, Search, FileText, ChevronDown, List, Trash2,
+  Search, FileText, ChevronDown, List, Trash2,
   Calendar, Eye, Pencil,
 } from "lucide-react";
 import InitialsAvatar from "@/components/InitialsAvatar";
@@ -301,25 +301,31 @@ function NewCampaignPage() {
           value={campaignName}
           onChange={e => setCampaignName(e.target.value)}
           placeholder="Name your campaign…"
-          className="font-serif text-3xl font-bold text-navy-900 bg-transparent focus:outline-none placeholder:text-navy-300 w-full mb-1"
+          className="font-display text-[32px] font-bold tracking-tight text-navy-900 bg-transparent focus:outline-none placeholder:text-navy-300 w-full mb-1"
         />
         <p className="text-navy-500 text-sm">Set up contacts, write your sequence, configure sending.</p>
       </div>
 
       {/* Step indicator */}
-      <div className="flex items-center gap-2 mb-8">
+      <div className="flex items-center gap-3 mb-10">
         {WIZARD_STEPS.map(({ n, label }, i) => {
           const done = step > n;
           const active = step === n;
           return (
-            <div key={n} className="flex items-center gap-2">
-              <button onClick={() => done && setStep(n)} className={`flex items-center gap-2 ${done ? "cursor-pointer" : "cursor-default"}`}>
-                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${done ? "bg-emerald-500 text-white" : active ? "bg-coral-500 text-white" : "bg-cream-200 text-navy-400"}`}>
-                  {done ? <Check size={12} strokeWidth={3} /> : n}
+            <div key={n} className="flex items-center gap-3">
+              <button onClick={() => done && setStep(n)} className={`flex items-center gap-2.5 ${done ? "cursor-pointer" : "cursor-default"}`}>
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold transition-all duration-200 ${
+                  active
+                    ? "bg-coral-500 text-white shadow-[0_2px_10px_rgba(232,98,42,0.35)]"
+                    : done
+                    ? "bg-coral-50 text-coral-600 border border-coral-200"
+                    : "bg-white text-navy-400 border border-black/[0.08]"
+                }`}>
+                  {done ? <Check size={12} strokeWidth={2.5} /> : n}
                 </div>
-                <span className={`text-sm font-semibold transition-colors ${active ? "text-navy-900" : done ? "text-emerald-600" : "text-navy-400"}`}>{label}</span>
+                <span className={`text-xs font-medium transition-colors duration-200 ${active ? "text-navy-900" : done ? "text-coral-600" : "text-navy-400"}`}>{label}</span>
               </button>
-              {i < WIZARD_STEPS.length - 1 && <div className={`w-10 h-px mx-1 ${step > n ? "bg-emerald-300" : "bg-cream-200"}`} />}
+              {i < WIZARD_STEPS.length - 1 && <div className={`w-12 h-px transition-colors duration-200 ${step > n ? "bg-coral-200" : "bg-black/[0.08]"}`} />}
             </div>
           );
         })}
@@ -336,7 +342,7 @@ function NewCampaignPage() {
           </div>
 
           {tab === "contacts" && (
-            <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm">
+            <div className="card overflow-hidden">
               <div className="px-4 py-3 border-b border-cream-100 flex gap-2">
                 <div className="relative flex-1">
                   <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-navy-400" />
@@ -368,14 +374,14 @@ function NewCampaignPage() {
               {selectedIds.size > 0 && (
                 <div className="px-4 py-3 border-t border-cream-100 bg-cream-50 flex items-center justify-between">
                   <span className="text-xs text-navy-500">{selectedIds.size} selected</span>
-                  <button onClick={addFromSelected} className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-coral-500 hover:bg-coral-600 text-white text-xs font-semibold rounded-lg transition-colors"><Plus size={12} />Add to campaign</button>
+                  <button onClick={addFromSelected} className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-coral-500 hover:bg-coral-600 text-white text-xs font-semibold rounded-full transition-all duration-200"><Plus size={12} />Add to campaign</button>
                 </div>
               )}
             </div>
           )}
 
           {tab === "list" && (
-            <div className="bg-white border border-cream-200 rounded-2xl shadow-sm overflow-hidden">
+            <div className="card overflow-hidden">
               {lists.length === 0 ? (
                 <div className="px-6 py-12 text-center">
                   <div className="w-10 h-10 rounded-xl bg-cream-100 flex items-center justify-center mx-auto mb-3"><List size={18} className="text-navy-400" /></div>
@@ -414,7 +420,7 @@ function NewCampaignPage() {
                     })}
                   </div>
                   <div className="px-4 py-3 border-t border-cream-100 flex justify-end">
-                    <button onClick={addFromList} disabled={listSelectedIds.size === 0} className="px-5 py-2 bg-coral-500 hover:bg-coral-600 text-white text-xs font-bold rounded-lg disabled:opacity-40 transition-colors">
+                    <button onClick={addFromList} disabled={listSelectedIds.size === 0} className="px-5 py-2 bg-coral-500 hover:bg-coral-600 text-white text-xs font-semibold rounded-full disabled:opacity-40 transition-all duration-200">
                       Add {listSelectedIds.size} contact{listSelectedIds.size !== 1 ? "s" : ""} →
                     </button>
                   </div>
@@ -441,11 +447,11 @@ function NewCampaignPage() {
           )}
 
           {tab === "csv" && (
-            <div onDragOver={e => { e.preventDefault(); setDragging(true); }} onDragLeave={() => setDragging(false)} onDrop={e => { e.preventDefault(); setDragging(false); const f = e.dataTransfer.files[0]; if (f) parseCSV(f); }} className={`bg-white border-2 border-dashed rounded-2xl p-10 text-center transition-colors ${dragging ? "border-coral-400 bg-coral-50" : "border-cream-300 hover:border-cream-400"}`}>
+            <div onDragOver={e => { e.preventDefault(); setDragging(true); }} onDragLeave={() => setDragging(false)} onDrop={e => { e.preventDefault(); setDragging(false); const f = e.dataTransfer.files[0]; if (f) parseCSV(f); }} className={`bg-white border-2 border-dashed rounded-[20px] p-10 text-center transition-all duration-200 ${dragging ? "border-coral-400 bg-coral-50" : "border-cream-300 hover:border-cream-400"}`}>
               <div className="w-10 h-10 bg-cream-100 rounded-xl flex items-center justify-center mx-auto mb-3"><Upload size={18} className="text-navy-400" /></div>
               <p className="text-sm font-semibold text-navy-700 mb-1">Drop a CSV here</p>
               <p className="text-xs text-navy-400 mb-4">Columns: <code className="bg-cream-100 px-1 rounded">email</code>, <code className="bg-cream-100 px-1 rounded">name</code>, <code className="bg-cream-100 px-1 rounded">company</code>, <code className="bg-cream-100 px-1 rounded">position</code></p>
-              <label className="inline-flex items-center gap-2 px-4 py-2 bg-navy-800 hover:bg-navy-900 text-white text-sm font-semibold rounded-xl cursor-pointer transition-colors">
+              <label className="inline-flex items-center gap-2 px-5 py-2 bg-white border border-black/[0.08] hover:border-coral-300 text-navy-700 hover:text-coral-600 text-sm font-semibold rounded-full cursor-pointer transition-all duration-200 shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
                 <Upload size={14} />Choose file
                 <input type="file" accept=".csv" className="sr-only" onChange={e => { if (e.target.files?.[0]) parseCSV(e.target.files[0]); }} />
               </label>
@@ -454,25 +460,25 @@ function NewCampaignPage() {
           )}
 
           {tab === "manual" && (
-            <div className="bg-white border border-cream-200 rounded-2xl p-5 shadow-sm">
+            <div className="card p-5">
               <div className="grid grid-cols-2 gap-3 mb-3">
                 {(["email", "name", "company", "position"] as const).map(field => (
                   <input key={field} type={field === "email" ? "email" : "text"} placeholder={field === "email" ? "Email *" : field.charAt(0).toUpperCase() + field.slice(1)} value={manual[field]} onChange={e => setManual(m => ({ ...m, [field]: e.target.value }))} onKeyDown={e => e.key === "Enter" && addManual()} className="input-base text-sm" />
                 ))}
               </div>
-              <button onClick={addManual} disabled={!manual.email} className="inline-flex items-center gap-1.5 px-4 py-2 bg-coral-500 hover:bg-coral-600 disabled:opacity-40 text-white text-sm font-semibold rounded-xl transition-colors"><Plus size={14} />Add contact</button>
+              <button onClick={addManual} disabled={!manual.email} className="inline-flex items-center gap-1.5 px-4 py-2 bg-coral-500 hover:bg-coral-600 disabled:opacity-40 text-white text-sm font-semibold rounded-full transition-all duration-200"><Plus size={14} />Add contact</button>
             </div>
           )}
 
           {contacts.length > 0 && (
-            <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm">
+            <div className="card overflow-hidden">
               <div className="px-5 py-3.5 border-b border-cream-100 flex items-center justify-between">
-                <div className="flex items-center gap-2 text-sm font-semibold text-navy-700"><Users size={14} className="text-navy-400" />{contacts.length} contact{contacts.length !== 1 ? "s" : ""} added</div>
+                <div className="text-[15px] font-semibold tracking-[-0.01em] text-navy-900">{contacts.length} contact{contacts.length !== 1 ? "s" : ""} added</div>
                 <button onClick={() => setContacts([])} className="text-xs text-navy-400 hover:text-red-500 transition-colors">Clear all</button>
               </div>
               <div className="max-h-48 overflow-y-auto divide-y divide-cream-50">
                 {contacts.map((c, i) => (
-                  <div key={i} className="flex items-center gap-3 px-5 py-3 hover:bg-cream-50">
+                  <div key={i} className="flex items-center gap-3 px-5 py-3 hover:bg-cream-50 transition-colors duration-200">
                     <InitialsAvatar name={c.name} email={c.email} size="sm" />
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-navy-900 truncate">{c.name || c.email}</p>
@@ -486,7 +492,7 @@ function NewCampaignPage() {
           )}
 
           <div className="flex justify-end pt-2">
-            <button onClick={() => setStep(2)} disabled={contacts.length === 0} className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition-colors">
+            <button onClick={() => setStep(2)} disabled={contacts.length === 0} className="btn-primary disabled:cursor-not-allowed">
               Continue <ArrowRight size={15} />
             </button>
           </div>
@@ -497,7 +503,7 @@ function NewCampaignPage() {
       {step === 2 && (
         <div className="space-y-5">
           {/* Two-column editor */}
-          <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm flex" style={{ height: "calc(100vh - 310px)", minHeight: 580 }}>
+          <div className="card overflow-hidden flex" style={{ height: "calc(100vh - 310px)", minHeight: 580 }}>
 
             {/* Left: timeline step list */}
             <div className="w-64 border-r border-cream-100 flex flex-col flex-shrink-0 bg-cream-50/30">
@@ -510,17 +516,17 @@ function NewCampaignPage() {
                 <div className="flex gap-3">
                   <div className="flex flex-col items-center w-8 flex-shrink-0">
                     {(() => { const done = Boolean(subject.trim() && body.trim()); return (
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 transition-colors ${selectedStep === -1 ? "bg-coral-500 text-white shadow-sm" : done ? "bg-emerald-500 text-white" : "bg-cream-200 text-navy-500"}`}>
-                        {selectedStep !== -1 && done ? <Check size={12} strokeWidth={3} /> : "1"}
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0 transition-all duration-200 ${selectedStep === -1 ? "bg-coral-500 text-white shadow-[0_2px_10px_rgba(232,98,42,0.35)]" : done ? "bg-coral-50 text-coral-600 border border-coral-200" : "bg-white text-navy-400 border border-black/[0.08]"}`}>
+                        {selectedStep !== -1 && done ? <Check size={12} strokeWidth={2.5} /> : "1"}
                       </div>
                     ); })()}
-                    {steps.length > 0 && <div className="w-px flex-1 bg-cream-200 mt-1 mb-1" style={{ minHeight: 20 }} />}
+                    {steps.length > 0 && <div className="w-px flex-1 bg-black/[0.08] mt-1 mb-1" style={{ minHeight: 20 }} />}
                   </div>
                   <button
                     onClick={() => { setSelectedStep(-1); setPreviewMode(false); }}
                     className="flex-1 pb-3 text-left group"
                   >
-                    <div className={`rounded-xl border px-3 py-3 transition-all ${selectedStep === -1 ? "border-coral-200 bg-white shadow-sm" : "border-cream-200 hover:border-cream-300 hover:bg-white/60"}`}>
+                    <div className={`rounded-xl border bg-white px-3 py-3 transition-all duration-200 ${selectedStep === -1 ? "border-coral-300 ring-2 ring-coral-500/30 shadow-sm" : "border-black/[0.06] hover:bg-cream-50"}`}>
                       <p className={`text-xs font-semibold mb-1 ${selectedStep === -1 ? "text-coral-500" : "text-navy-400"}`}>Day 1 · Initial email</p>
                       <p className="text-sm font-medium text-navy-800 truncate leading-tight">{subject || <span className="text-navy-300 italic font-normal">No subject yet</span>}</p>
                     </div>
@@ -532,18 +538,18 @@ function NewCampaignPage() {
                   <div key={i} className="flex gap-3">
                     <div className="flex flex-col items-center w-8 flex-shrink-0">
                       {(() => { const done = Boolean(s.body.trim()); return (
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 transition-colors ${selectedStep === i ? "bg-navy-800 text-white shadow-sm" : done ? "bg-emerald-500 text-white" : "bg-cream-200 text-navy-500"}`}>
-                          {selectedStep !== i && done ? <Check size={12} strokeWidth={3} /> : i + 2}
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0 transition-all duration-200 ${selectedStep === i ? "bg-coral-500 text-white shadow-[0_2px_10px_rgba(232,98,42,0.35)]" : done ? "bg-coral-50 text-coral-600 border border-coral-200" : "bg-white text-navy-400 border border-black/[0.08]"}`}>
+                          {selectedStep !== i && done ? <Check size={12} strokeWidth={2.5} /> : i + 2}
                         </div>
                       ); })()}
-                      {i < steps.length - 1 && <div className="w-px flex-1 bg-cream-200 mt-1 mb-1" style={{ minHeight: 20 }} />}
+                      {i < steps.length - 1 && <div className="w-px flex-1 bg-black/[0.08] mt-1 mb-1" style={{ minHeight: 20 }} />}
                     </div>
                     <button
                       onClick={() => { setSelectedStep(i); setPreviewMode(false); }}
                       className="flex-1 pb-3 text-left"
                     >
-                      <div className={`rounded-xl border px-3 py-3 transition-all ${selectedStep === i ? "border-navy-200 bg-white shadow-sm" : "border-cream-200 hover:border-cream-300 hover:bg-white/60"}`}>
-                        <p className={`text-xs font-semibold mb-1 ${selectedStep === i ? "text-navy-600" : "text-navy-400"}`}>Day +{s.delay_days} · Follow-up {i + 1}</p>
+                      <div className={`rounded-xl border bg-white px-3 py-3 transition-all duration-200 ${selectedStep === i ? "border-coral-300 ring-2 ring-coral-500/30 shadow-sm" : "border-black/[0.06] hover:bg-cream-50"}`}>
+                        <p className={`text-xs font-semibold mb-1 ${selectedStep === i ? "text-coral-500" : "text-navy-400"}`}>Day +{s.delay_days} · Follow-up {i + 1}</p>
                         <p className="text-sm font-medium text-navy-800 truncate leading-tight">{s.subject || s.body.slice(0, 40) || <span className="text-navy-300 italic font-normal">Empty</span>}</p>
                       </div>
                     </button>
@@ -572,7 +578,7 @@ function NewCampaignPage() {
                         key={d}
                         type="button"
                         onClick={() => updateStep(selectedStep, { delay_days: d })}
-                        className={`px-2.5 py-1 text-xs font-bold rounded-lg transition-colors ${steps[selectedStep]?.delay_days === d ? "bg-navy-800 text-white" : "bg-cream-100 text-navy-500 hover:bg-cream-200"}`}
+                        className={`px-2.5 py-1 text-xs font-semibold rounded-full transition-all duration-200 ${steps[selectedStep]?.delay_days === d ? "bg-coral-500 text-white" : "bg-cream-100 text-navy-500 hover:bg-cream-200"}`}
                       >
                         {d}d
                       </button>
@@ -587,16 +593,16 @@ function NewCampaignPage() {
                   </div>
                 )}
                 <div className="ml-auto flex items-center gap-3">
-                  <div className="flex items-center rounded-lg border border-cream-200 overflow-hidden text-sm font-medium">
+                  <div className="flex items-center gap-0.5 rounded-full bg-cream-100 p-0.5 text-sm font-medium">
                     <button
                       onClick={() => setPreviewMode(false)}
-                      className={`flex items-center gap-1.5 px-4 py-2 transition-colors ${!previewMode ? "bg-cream-100 text-navy-800" : "text-navy-400 hover:bg-cream-50"}`}
+                      className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full transition-all duration-200 ${!previewMode ? "bg-white text-navy-900 shadow-sm" : "text-navy-400 hover:text-navy-700"}`}
                     >
                       <Pencil size={13} /> Edit
                     </button>
                     <button
                       onClick={() => setPreviewMode(true)}
-                      className={`flex items-center gap-1.5 px-4 py-2 border-l border-cream-200 transition-colors ${previewMode ? "bg-cream-100 text-navy-800" : "text-navy-400 hover:bg-cream-50"}`}
+                      className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full transition-all duration-200 ${previewMode ? "bg-white text-navy-900 shadow-sm" : "text-navy-400 hover:text-navy-700"}`}
                     >
                       <Eye size={13} /> Preview
                     </button>
@@ -614,7 +620,7 @@ function NewCampaignPage() {
                 <div className="flex-1 flex flex-col overflow-hidden">
                   {/* Subject row */}
                   <div className="flex items-center gap-4 px-6 py-4 border-b border-cream-100">
-                    <span className="text-sm font-medium text-navy-400 w-18 flex-shrink-0">Subject</span>
+                    <span className="text-sm font-medium text-navy-400 w-16 flex-shrink-0">Subject</span>
                     <input
                       type="text"
                       value={selectedStep === -1 ? subject : (steps[selectedStep]?.subject || "")}
@@ -705,7 +711,7 @@ function NewCampaignPage() {
             <button
               onClick={() => setStep(3)}
               disabled={!campaignName.trim() || !subject.trim() || !body.trim()}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-coral-500 hover:bg-coral-600 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition-colors"
+              className="btn-primary disabled:cursor-not-allowed"
             >
               Schedule <ArrowRight size={15} />
             </button>
@@ -716,9 +722,9 @@ function NewCampaignPage() {
       {/* ── Step 3: Schedule ── */}
       {step === 3 && (
         <div className="space-y-4">
-          <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm">
+          <div className="card overflow-hidden">
             <div className="px-6 py-4 border-b border-cream-100">
-              <h3 className="text-sm font-bold text-navy-800">Sending limits</h3>
+              <h3 className="text-[15px] font-semibold tracking-[-0.01em] text-navy-900">Sending limits</h3>
               <p className="text-xs text-navy-400 mt-0.5">How many emails go out each day.</p>
             </div>
             <div className="px-6 py-5">
@@ -731,9 +737,9 @@ function NewCampaignPage() {
             </div>
           </div>
 
-          <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm">
+          <div className="card overflow-hidden">
             <div className="px-6 py-4 border-b border-cream-100">
-              <h3 className="text-sm font-bold text-navy-800">Sending speed</h3>
+              <h3 className="text-[15px] font-semibold tracking-[-0.01em] text-navy-900">Sending speed</h3>
               <p className="text-xs text-navy-400 mt-0.5">Randomised gap between each email — looks more human.</p>
             </div>
             <div className="px-6 py-5 flex items-center gap-4">
@@ -749,9 +755,9 @@ function NewCampaignPage() {
             </div>
           </div>
 
-          <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm">
+          <div className="card overflow-hidden">
             <div className="px-6 py-4 border-b border-cream-100">
-              <h3 className="text-sm font-bold text-navy-800">Sending window</h3>
+              <h3 className="text-[15px] font-semibold tracking-[-0.01em] text-navy-900">Sending window</h3>
               <p className="text-xs text-navy-400 mt-0.5">Emails only send during these hours.</p>
             </div>
             <div className="px-6 py-5 space-y-4">
@@ -774,14 +780,14 @@ function NewCampaignPage() {
                 <label className="block text-xs font-bold text-navy-400 uppercase tracking-widest mb-2">Send days</label>
                 <div className="flex gap-2 flex-wrap">
                   {ALL_DAYS.map(day => (
-                    <button key={day} type="button" onClick={() => toggleDay(day)} className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${sendDays.includes(day) ? "bg-coral-500 text-white" : "bg-cream-100 text-navy-400 hover:bg-cream-200"}`}>{day}</button>
+                    <button key={day} type="button" onClick={() => toggleDay(day)} className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${sendDays.includes(day) ? "bg-coral-500 text-white shadow-[0_2px_8px_rgba(232,98,42,0.28)]" : "bg-cream-100 text-navy-400 hover:bg-cream-200"}`}>{day}</button>
                   ))}
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="bg-cream-50 border border-cream-200 rounded-2xl px-6 py-4">
+          <div className="bg-cream-50 hairline rounded-[20px] px-6 py-4">
             <p className="text-xs font-bold text-navy-400 uppercase tracking-widest mb-3">Campaign summary</p>
             <div className="space-y-1.5 text-sm text-navy-700">
               <div className="flex items-center justify-between"><span className="text-navy-500">Contacts</span><span className="font-semibold">{contacts.length}</span></div>
@@ -792,7 +798,7 @@ function NewCampaignPage() {
           </div>
 
           {contacts.length > 0 && (() => { const days = Math.ceil(contacts.length / emailsPerDay); return (
-            <div className="flex items-center gap-3 bg-coral-50 border border-coral-100 rounded-2xl px-6 py-4">
+            <div className="flex items-center gap-3 bg-coral-50 border border-coral-100 rounded-[20px] px-6 py-4">
               <Calendar size={16} className="text-coral-500 flex-shrink-0" />
               <p className="text-sm text-coral-800">
                 At <strong>{emailsPerDay} emails/day</strong>, you&apos;ll reach all <strong>{contacts.length} contact{contacts.length !== 1 ? "s" : ""}</strong> in approximately <strong>~{days} day{days !== 1 ? "s" : ""}</strong>.
@@ -807,7 +813,7 @@ function NewCampaignPage() {
             <button
               onClick={saveCampaign}
               disabled={saving || sendDays.length === 0}
-              className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-coral-500 hover:bg-coral-600 disabled:opacity-60 text-white text-base font-bold rounded-xl transition-colors shadow-lg shadow-coral-200"
+              className="btn-primary !px-8 !py-3 !text-[15px]"
             >
               {saving ? null : <Calendar size={16} />}
               {saving ? "Saving…" : "Launch campaign →"}

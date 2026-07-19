@@ -11,9 +11,25 @@ type InboxMsg = {
   from: { name: string; address: string };
   date: string;
   isRead: boolean;
+  snippet?: string;
 };
 
 type InboxMsgDetail = InboxMsg & { body: string };
+
+const AVATAR_TINTS = [
+  { bg: "#FDE7D9", fg: "#B03F14" },
+  { bg: "#DCE8FF", fg: "#3A6BC4" },
+  { bg: "#DCF0EE", fg: "#2A8F80" },
+  { bg: "#F0DCF0", fg: "#8A3AC4" },
+  { bg: "#E4F0DC", fg: "#4A8A30" },
+  { bg: "#FFE8F0", fg: "#C43A6B" },
+];
+
+function senderTint(key: string) {
+  let h = 0;
+  for (const c of key) h = (h * 31 + c.charCodeAt(0)) & 0xffff;
+  return AVATAR_TINTS[h % AVATAR_TINTS.length];
+}
 
 function formatDate(iso: string): string {
   if (!iso) return "";
@@ -27,6 +43,19 @@ function formatDate(iso: string): string {
     return d.toLocaleDateString([], { weekday: "short" });
   }
   return d.toLocaleDateString([], { day: "numeric", month: "short" });
+}
+
+function SenderAvatar({ name, address, size = 34 }: { name: string; address: string; size?: number }) {
+  const tint = senderTint(address || name);
+  const letter = (name || address || "?")[0].toUpperCase();
+  return (
+    <div
+      className="rounded-full flex items-center justify-center flex-shrink-0"
+      style={{ width: size, height: size, background: tint.bg }}
+    >
+      <span style={{ color: tint.fg, fontSize: size * 0.4, fontWeight: 700 }}>{letter}</span>
+    </div>
+  );
 }
 
 export default function InboxPage() {
@@ -166,6 +195,8 @@ export default function InboxPage() {
   const toggleSelectAll = () =>
     allSelected ? setSelectedIds(new Set()) : setSelectedIds(new Set(messages.map(m => m.id)));
 
+  const unreadCount = messages.filter(m => !m.isRead).length;
+
   // ── States ───────────────────────────────────────────────────
   if (loading) {
     return (
@@ -180,43 +211,50 @@ export default function InboxPage() {
 
   // ── Inbox layout ─────────────────────────────────────────────
   return (
-    <div className="flex flex-col h-full">
-      {/* Header */}
-      <div className="px-8 py-5 border-b border-cream-200 flex items-center justify-between flex-shrink-0">
+    <div className="h-full flex flex-col gap-4 p-6 pt-5">
+
+      {/* Header on canvas */}
+      <div className="flex items-end justify-between flex-shrink-0">
         <div>
-          <div className="flex items-center gap-3 mb-1">
-            <div className="h-px w-8 bg-coral-400" />
-            <span className="text-[11px] font-bold uppercase tracking-widest text-coral-500">Inbox</span>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-navy-300 mb-1.5">
+            {account.email}
+          </p>
+          <div className="flex items-baseline gap-3">
+            <h1 className="text-[28px] font-bold tracking-[-0.03em] text-navy-900 leading-none">Inbox</h1>
+            {unreadCount > 0 && (
+              <span className="text-xs font-semibold text-coral-600 bg-coral-50 px-2.5 py-0.5 rounded-full">
+                {unreadCount} unread
+              </span>
+            )}
           </div>
-          <h1 className="font-serif text-2xl font-bold text-navy-900">{account.email}</h1>
         </div>
         <button
           onClick={() => fetchInbox(true)}
           disabled={refreshing}
-          className="p-2.5 hover:bg-cream-100 rounded-xl transition-colors disabled:opacity-40"
-          title="Refresh"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-black/[0.08] rounded-full text-[13px] font-semibold text-navy-600 hover:text-navy-900 hover:border-black/[0.14] transition-all duration-200 disabled:opacity-40"
         >
-          <RefreshCw size={15} className={`text-navy-400 ${refreshing ? "animate-spin" : ""}`} />
+          <RefreshCw size={13} className={refreshing ? "animate-spin" : ""} />
+          {refreshing ? "Refreshing…" : "Refresh"}
         </button>
       </div>
 
-      {/* Body */}
-      <div className="flex flex-1 min-h-0">
+      {/* Mail surface */}
+      <div className="card flex-1 min-h-0 flex overflow-hidden">
 
         {/* Message list */}
-        <div className="w-80 flex-shrink-0 border-r border-cream-200 flex flex-col min-h-0">
+        <div className="w-[340px] flex-shrink-0 border-r border-black/[0.05] flex flex-col min-h-0 bg-[#FBFBFD]">
 
           {/* Bulk action bar */}
           {messages.length > 0 && (
-            <div className="flex items-center gap-3 px-4 py-2.5 border-b border-cream-100 flex-shrink-0">
+            <div className="flex items-center gap-3 px-4 py-2.5 border-b border-black/[0.04] flex-shrink-0">
               <button
                 onClick={toggleSelectAll}
                 className="flex items-center gap-2 text-xs text-navy-500 hover:text-navy-800 transition-colors"
                 title={allSelected ? "Deselect all" : "Select all"}
               >
                 {allSelected
-                  ? <CheckSquare size={15} className="text-coral-500" />
-                  : <Square size={15} className="text-navy-300" />}
+                  ? <CheckSquare size={14} className="text-coral-500" />
+                  : <Square size={14} className="text-navy-300" />}
                 <span className="font-medium">{allSelected ? "Deselect all" : "Select all"}</span>
               </button>
 
@@ -224,7 +262,7 @@ export default function InboxPage() {
                 <button
                   onClick={handleBulkDelete}
                   disabled={bulkDeleting}
-                  className="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 text-xs font-semibold rounded-lg transition-colors disabled:opacity-50"
+                  className="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 text-xs font-semibold rounded-full transition-colors disabled:opacity-50"
                 >
                   {bulkDeleting
                     ? <Loader2 size={12} className="animate-spin" />
@@ -236,53 +274,62 @@ export default function InboxPage() {
           )}
 
           {/* Message rows */}
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto scrollbar-thin">
             {error ? (
               <div className="p-6 text-center">
-                <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3">{error}</p>
+                <p className="text-sm text-red-600 bg-red-50 rounded-xl px-4 py-3">{error}</p>
               </div>
             ) : messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-20 text-center px-6">
-                <MailOpen size={28} className="text-cream-300 mb-3" />
-                <p className="text-sm font-semibold text-navy-600 mb-1">No messages yet</p>
+                <MailOpen size={26} className="text-navy-200 mb-3" />
+                <p className="text-sm font-semibold text-navy-700 mb-1">No messages yet</p>
                 <p className="text-xs text-navy-400">Replies from brands will appear here.</p>
               </div>
             ) : (
               messages.map(msg => {
                 const isSelected = selectedIds.has(msg.id);
+                const isOpen = selected?.id === msg.id;
                 return (
                   <div
                     key={msg.id}
-                    className={`group flex items-start border-b border-cream-100 transition-colors cursor-pointer ${
-                      selected?.id === msg.id ? "bg-coral-50 border-l-2 border-l-coral-400" : isSelected ? "bg-coral-50/50" : "hover:bg-cream-50"
+                    className={`group relative flex items-start gap-3 pl-4 pr-4 py-3 border-b border-black/[0.04] cursor-pointer transition-colors duration-150 ${
+                      isOpen ? "bg-white" : isSelected ? "bg-coral-50/40" : "hover:bg-white/70"
                     }`}
                     onClick={() => openMessage(msg)}
                   >
-                    {/* Checkbox */}
-                    <div
-                      className="flex-shrink-0 flex items-center justify-center w-10 pl-3 pt-4 pb-4"
-                      onClick={e => toggleSelect(msg.id, e)}
-                    >
-                      {isSelected
-                        ? <CheckSquare size={15} className="text-coral-500" />
-                        : <Square size={15} className="text-cream-300 group-hover:text-navy-300 transition-colors" />}
+                    {isOpen && <div className="absolute left-0 top-2 bottom-2 w-[3px] rounded-full bg-coral-500" />}
+
+                    {/* Avatar doubles as select checkbox on hover */}
+                    <div className="relative flex-shrink-0 mt-0.5" onClick={e => toggleSelect(msg.id, e)}>
+                      <div className={`transition-opacity duration-150 ${isSelected ? "opacity-0" : "group-hover:opacity-0"}`}>
+                        <SenderAvatar name={msg.from.name} address={msg.from.address} />
+                      </div>
+                      <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-150 ${isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}>
+                        {isSelected
+                          ? <CheckSquare size={18} className="text-coral-500" />
+                          : <Square size={18} className="text-navy-300" />}
+                      </div>
                     </div>
 
                     {/* Content */}
-                    <div className="flex-1 min-w-0 px-3 py-4">
-                      <div className="flex items-start justify-between gap-2 mb-0.5">
-                        <p className={`text-sm truncate ${msg.isRead ? "text-navy-600 font-normal" : "text-navy-900 font-bold"}`}>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-baseline justify-between gap-2">
+                        <p className={`text-[13px] truncate ${msg.isRead ? "text-navy-600 font-medium" : "text-navy-900 font-semibold"}`}>
                           {msg.from.name || msg.from.address}
                         </p>
                         <span className="text-[11px] text-navy-400 flex-shrink-0">{formatDate(msg.date)}</span>
                       </div>
-                      <p className={`text-xs truncate ${msg.isRead ? "text-navy-400" : "text-navy-700 font-medium"}`}>
+                      <p className={`text-[12.5px] truncate mt-0.5 ${msg.isRead ? "text-navy-500" : "text-navy-800 font-medium"}`}>
                         {msg.subject}
                       </p>
-                      {!msg.isRead && (
-                        <span className="mt-1.5 inline-block w-1.5 h-1.5 rounded-full bg-coral-500" />
+                      {msg.snippet && (
+                        <p className="text-[11.5px] text-navy-400 truncate mt-0.5">{msg.snippet}</p>
                       )}
                     </div>
+
+                    {!msg.isRead && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-coral-500 flex-shrink-0 mt-2" />
+                    )}
                   </div>
                 );
               })
@@ -291,27 +338,27 @@ export default function InboxPage() {
         </div>
 
         {/* Message detail */}
-        <div className="flex-1 flex flex-col min-h-0">
+        <div className="flex-1 flex flex-col min-h-0 bg-white">
           {!selected ? (
             <div className="flex flex-col items-center justify-center h-full text-center text-navy-400">
-              <MailOpen size={32} className="mb-3 text-cream-300" />
-              <p className="text-sm">Select a message to read it</p>
+              <MailOpen size={30} className="mb-3 text-navy-200" />
+              <p className="text-sm font-medium text-navy-500">Select a message to read it</p>
             </div>
           ) : (
             <>
               {/* Scrollable body */}
-              <div className="flex-1 overflow-y-auto p-8">
-                <div className="max-w-2xl">
+              <div className="flex-1 overflow-y-auto scrollbar-thin px-10 py-8">
+                <div className="max-w-[640px]">
                   {/* Subject + actions */}
-                  <div className="flex items-start justify-between gap-4 mb-4">
-                    <h2 className="font-serif text-xl font-bold text-navy-900 leading-snug">{selected.subject}</h2>
+                  <div className="flex items-start justify-between gap-4 mb-5">
+                    <h2 className="text-[22px] font-bold tracking-[-0.02em] text-navy-900 leading-snug">{selected.subject}</h2>
                     <div className="flex items-center gap-1.5 flex-shrink-0">
                       <button
                         onClick={() => { setReplying(v => !v); setReplySent(false); }}
-                        className={`inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl border transition-all ${
+                        className={`inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-full border transition-all duration-200 ${
                           replying
                             ? "bg-coral-500 text-white border-coral-500"
-                            : "bg-white text-navy-600 border-cream-200 hover:border-coral-300 hover:text-coral-600"
+                            : "bg-white text-navy-600 border-black/[0.08] hover:border-coral-300 hover:text-coral-600"
                         }`}
                       >
                         <Reply size={13} /> Reply
@@ -319,7 +366,7 @@ export default function InboxPage() {
                       <button
                         onClick={handleDelete}
                         disabled={deleting}
-                        className="p-2 text-navy-400 hover:text-red-500 hover:bg-red-50 border border-transparent hover:border-red-100 rounded-xl transition-all disabled:opacity-40"
+                        className="p-2 text-navy-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-all duration-200 disabled:opacity-40"
                         title="Move to trash"
                       >
                         {deleting ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
@@ -328,18 +375,14 @@ export default function InboxPage() {
                   </div>
 
                   {/* From / date */}
-                  <div className="flex items-center gap-4 pb-4 mb-6 border-b border-cream-200">
-                    <div className="w-9 h-9 rounded-full bg-coral-100 flex items-center justify-center flex-shrink-0">
-                      <span className="text-coral-600 text-sm font-bold">
-                        {(selected.from.name || selected.from.address || "?")[0].toUpperCase()}
-                      </span>
-                    </div>
+                  <div className="flex items-center gap-3 pb-5 mb-6 border-b border-black/[0.05]">
+                    <SenderAvatar name={selected.from.name} address={selected.from.address} size={38} />
                     <div className="min-w-0">
                       <p className="text-sm font-semibold text-navy-900">{selected.from.name || selected.from.address}</p>
-                      {selected.from.name && <p className="text-xs text-navy-400">{selected.from.address}</p>}
+                      {selected.from.name && <p className="text-xs text-navy-400 mt-0.5">{selected.from.address}</p>}
                     </div>
                     <p className="ml-auto text-xs text-navy-400 flex-shrink-0">
-                      {selected.date ? new Date(selected.date).toLocaleString() : ""}
+                      {selected.date ? new Date(selected.date).toLocaleString([], { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : ""}
                     </p>
                   </div>
 
@@ -349,7 +392,7 @@ export default function InboxPage() {
                       <Loader2 size={14} className="animate-spin" /> Loading message…
                     </div>
                   ) : (
-                    <pre className="text-sm text-navy-700 whitespace-pre-wrap font-sans leading-relaxed">
+                    <pre className="text-[15px] text-navy-800 whitespace-pre-wrap font-sans leading-[1.75]">
                       {selected.body || "(No text content)"}
                     </pre>
                   )}
@@ -358,7 +401,7 @@ export default function InboxPage() {
 
               {/* Reply sent confirmation */}
               {replySent && (
-                <div className="flex-shrink-0 px-8 py-3 bg-emerald-50 border-t border-emerald-100 flex items-center gap-2 text-sm text-emerald-700 font-medium">
+                <div className="flex-shrink-0 px-10 py-3 bg-emerald-50 border-t border-emerald-100 flex items-center gap-2 text-sm text-emerald-700 font-medium">
                   <CheckCircle size={15} />
                   Reply sent to {selected.from.name || selected.from.address}
                 </div>
@@ -366,8 +409,8 @@ export default function InboxPage() {
 
               {/* Reply compose */}
               {replying && (
-                <div className="flex-shrink-0 border-t border-cream-200 bg-cream-50 p-5">
-                  <p className="text-xs font-bold text-navy-400 uppercase tracking-widest mb-3">
+                <div className="flex-shrink-0 border-t border-black/[0.05] bg-[#FBFBFD] px-10 py-5">
+                  <p className="text-[11px] font-semibold text-navy-400 uppercase tracking-[0.08em] mb-3">
                     Replying to {selected.from.name || selected.from.address}
                   </p>
                   <textarea
@@ -376,13 +419,13 @@ export default function InboxPage() {
                     placeholder="Write your reply…"
                     rows={5}
                     autoFocus
-                    className="w-full text-sm border border-cream-200 bg-white rounded-xl px-4 py-3 outline-none focus:border-coral-300 focus:ring-2 focus:ring-coral-100 resize-none leading-relaxed"
+                    className="input-base resize-none leading-relaxed !rounded-2xl"
                   />
                   <div className="flex items-center gap-3 mt-3">
                     <button
                       onClick={handleSendReply}
                       disabled={sendingReply || !replyBody.trim()}
-                      className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition-colors"
+                      className="btn-primary !px-5 !py-2.5 disabled:cursor-not-allowed"
                     >
                       {sendingReply ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
                       {sendingReply ? "Sending…" : "Send Reply"}
@@ -399,10 +442,10 @@ export default function InboxPage() {
 
               {/* Click-to-reply hint */}
               {!replying && !replySent && (
-                <div className="flex-shrink-0 border-t border-cream-100 px-8 py-3">
+                <div className="flex-shrink-0 border-t border-black/[0.04] px-10 py-3">
                   <button
                     onClick={() => setReplying(true)}
-                    className="inline-flex items-center gap-2 text-xs text-navy-400 hover:text-coral-500 transition-colors"
+                    className="inline-flex items-center gap-2 text-xs font-medium text-navy-400 hover:text-coral-500 transition-colors"
                   >
                     <Reply size={13} /> Click to reply
                   </button>

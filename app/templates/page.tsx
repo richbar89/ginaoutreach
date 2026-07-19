@@ -120,7 +120,7 @@ function TemplateModal({
           <button
             onClick={handleSave}
             disabled={!form.name.trim() || !form.subject.trim() || !form.body.trim()}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-50"
+            className="btn-primary"
           >
             <Check size={14} />
             {initial ? "Save Changes" : "Create Template"}
@@ -186,7 +186,7 @@ export default function TemplatesPage() {
           </div>
           <button
             onClick={() => setEditing("new")}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold rounded-xl transition-all hover:shadow-lg hover:shadow-coral-200 flex-shrink-0"
+            className="btn-primary flex-shrink-0"
           >
             <Plus size={15} />
             New Template
@@ -195,7 +195,7 @@ export default function TemplatesPage() {
       </div>
 
       {/* Merge tag reference */}
-      <div className="mb-8 bg-white border border-cream-200 rounded-2xl p-6 shadow-sm">
+      <div className="mb-8 card p-6">
         <p className="text-xs font-bold uppercase tracking-widest text-navy-400 mb-4">Merge Tags Reference</p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {MERGE_TAGS.map(({ tag, desc }) => (
@@ -216,7 +216,7 @@ export default function TemplatesPage() {
       {loading ? (
         <div className="space-y-3 animate-pulse">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-white border border-cream-200 rounded-2xl px-6 py-5 flex items-start gap-5">
+            <div key={i} className="card px-6 py-5 flex items-start gap-5">
               <div className="w-10 h-10 bg-cream-200 rounded-xl flex-shrink-0" />
               <div className="flex-1 space-y-2">
                 <div className="h-4 bg-cream-200 rounded w-1/3" />
@@ -227,13 +227,13 @@ export default function TemplatesPage() {
           ))}
         </div>
       ) : templates.length === 0 ? (
-        <div className="text-center py-20 bg-white border border-cream-200 rounded-2xl">
+        <div className="text-center py-20 card">
           <FileText size={36} className="text-cream-300 mx-auto mb-4" />
           <p className="font-serif text-xl font-bold text-navy-900 mb-2">No templates yet</p>
           <p className="text-navy-400 text-sm mb-6">Create your first template to speed up outreach.</p>
           <button
             onClick={() => setEditing("new")}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold rounded-xl transition-colors"
+            className="btn-primary"
           >
             <Plus size={14} /> Create Template
           </button>
@@ -243,7 +243,7 @@ export default function TemplatesPage() {
           {templates.map((t) => (
             <div
               key={t.id}
-              className="bg-white border border-cream-200 hover:border-cream-300 rounded-2xl px-6 py-5 shadow-sm hover:shadow-md transition-all flex items-start gap-5"
+              className="card card-hover px-6 py-5 flex items-start gap-5"
             >
               <div className="w-10 h-10 bg-coral-50 border border-coral-100 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
                 <FileText size={16} className="text-coral-500" />

@@ -149,7 +149,7 @@ export default function CampaignDetailPage() {
                 {(campaign.status ?? "draft").charAt(0).toUpperCase() + (campaign.status ?? "draft").slice(1)}
               </span>
             </div>
-            <h1 className="font-serif text-3xl font-bold text-navy-900">{campaign.name}</h1>
+            <h1 className="font-serif text-3xl font-bold tracking-tight text-navy-900">{campaign.name}</h1>
             <p className="text-navy-400 text-sm mt-1">
               {campaign.contacts.length} recipient{campaign.contacts.length !== 1 ? "s" : ""} ·{" "}
               {1 + (campaign.steps?.filter(s => s.body?.trim()).length ?? 0)} email{(campaign.steps?.filter(s => s.body?.trim()).length ?? 0) > 0 ? "s in sequence" : ""}
@@ -158,7 +158,7 @@ export default function CampaignDetailPage() {
 
           <div className="flex items-center gap-2 flex-shrink-0 mt-1">
             {isDraft && (
-              <button onClick={launch} disabled={launching} className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 disabled:opacity-60 text-white text-sm font-semibold rounded-xl transition-colors">
+              <button onClick={launch} disabled={launching} className="btn-primary">
                 {launching ? <Loader2 size={15} className="animate-spin" /> : <Rocket size={15} />}
                 {launching ? "Launching…" : "Launch campaign"}
               </button>
@@ -166,7 +166,7 @@ export default function CampaignDetailPage() {
             {(isActive || isPaused) && (
               <>
                 <button onClick={loadData} className="p-2 text-navy-400 hover:text-navy-700 hover:bg-cream-100 rounded-lg transition-colors" title="Refresh"><RefreshCw size={15} /></button>
-                <button onClick={togglePause} disabled={togglingStatus} className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-xl border transition-colors ${isActive ? "bg-amber-50 hover:bg-amber-100 text-amber-700 border-amber-200" : "bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border-emerald-200"}`}>
+                <button onClick={togglePause} disabled={togglingStatus} className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-full border transition-all duration-200 ${isActive ? "bg-amber-50 hover:bg-amber-100 text-amber-700 border-amber-200" : "bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border-emerald-200"}`}>
                   {isActive ? <Pause size={14} /> : <Play size={14} />}
                   {isActive ? "Pause" : "Resume"}
                 </button>
@@ -197,7 +197,7 @@ export default function CampaignDetailPage() {
       {activeTab === "overview" && (
         <div className="space-y-5">
           {isDraft ? (
-            <div className="bg-white border border-cream-200 rounded-2xl p-10 text-center shadow-sm">
+            <div className="card p-10 text-center">
               <div className="w-12 h-12 rounded-2xl bg-coral-50 border border-coral-100 flex items-center justify-center mx-auto mb-4">
                 <Rocket size={22} className="text-coral-500" />
               </div>
@@ -206,7 +206,7 @@ export default function CampaignDetailPage() {
               <p className="text-xs text-navy-400">
                 <strong>{campaign.emailsPerDay ?? 25}/day</strong> · {campaign.delayMinMins ?? 3}–{campaign.delayMaxMins ?? 10} min gaps · {campaign.sendWindowStart ?? 8}:00–{campaign.sendWindowEnd ?? 18}:00 · {(campaign.sendDays ?? ["Mon","Tue","Wed","Thu","Fri"]).join(", ")}
               </p>
-              <button onClick={launch} disabled={launching} className="mt-5 inline-flex items-center gap-2 px-6 py-2.5 bg-coral-500 hover:bg-coral-600 disabled:opacity-60 text-white text-sm font-semibold rounded-xl transition-colors">
+              <button onClick={launch} disabled={launching} className="btn-primary mt-5">
                 {launching ? <Loader2 size={15} className="animate-spin" /> : <Rocket size={15} />}
                 {launching ? "Launching…" : "Launch campaign"}
               </button>
@@ -215,10 +215,10 @@ export default function CampaignDetailPage() {
             <>
               {/* Progress bar */}
               {total > 0 && (
-                <div className="bg-white border border-cream-200 rounded-2xl px-6 py-5 shadow-sm">
+                <div className="card px-6 py-5">
                   <div className="flex items-center justify-between mb-3">
                     <div>
-                      <p className="text-sm font-bold text-navy-800">Sequence progress</p>
+                      <p className="text-[15px] font-semibold tracking-[-0.01em] text-navy-900">Sequence progress</p>
                       <p className="text-xs text-navy-400 mt-0.5">{sent} of {total} contacts sent the initial email</p>
                     </div>
                     <span className="text-2xl font-bold text-navy-900">{pct}%</span>
@@ -242,7 +242,7 @@ export default function CampaignDetailPage() {
                   { label: "Replied", value: replied, icon: MessageSquare, color: "text-indigo-600", bg: "bg-indigo-50" },
                   { label: "Completed", value: completed, icon: CheckCircle, color: "text-emerald-600", bg: "bg-emerald-50" },
                 ].map(({ label, value, icon: Icon, color, bg }) => (
-                  <div key={label} className="bg-white border border-cream-200 rounded-2xl px-5 py-5 shadow-sm">
+                  <div key={label} className="card px-5 py-5">
                     <div className={`w-8 h-8 ${bg} rounded-xl flex items-center justify-center mb-3`}>
                       <Icon size={15} className={color} />
                     </div>
@@ -276,18 +276,15 @@ export default function CampaignDetailPage() {
       {activeTab === "contacts" && (
         <div className="space-y-4">
           {sequenceContacts.length === 0 ? (
-            <div className="bg-white border border-cream-200 rounded-2xl px-6 py-12 text-center shadow-sm">
+            <div className="card px-6 py-12 text-center">
               <Users size={24} className="text-navy-300 mx-auto mb-3" />
               <p className="text-sm font-semibold text-navy-600 mb-1">No contacts enrolled yet</p>
               <p className="text-xs text-navy-400">Launch the campaign to start enrolling contacts.</p>
             </div>
           ) : (
-            <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm">
+            <div className="card overflow-hidden">
               <div className="px-6 py-4 border-b border-cream-100 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Users size={15} className="text-navy-400" />
-                  <span className="text-sm font-semibold text-navy-700">{total} enrolled</span>
-                </div>
+                <span className="text-[15px] font-semibold tracking-[-0.01em] text-navy-900">{total} enrolled</span>
                 {isPaused && (
                   <span className="text-xs text-amber-600 font-medium bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full">Paused</span>
                 )}
@@ -296,7 +293,7 @@ export default function CampaignDetailPage() {
                 {sequenceContacts.map((sc) => {
                   const { label, color } = contactLabel(sc);
                   return (
-                    <div key={sc.id} className="flex items-center gap-4 px-6 py-3.5">
+                    <div key={sc.id} className="flex items-center gap-4 px-6 py-3.5 hover:bg-cream-50 transition-colors duration-200">
                       <InitialsAvatar name={sc.contact_name || sc.contact_email} email={sc.contact_email} size="sm" />
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-navy-900">{sc.contact_name || sc.contact_email}</p>
@@ -324,9 +321,9 @@ export default function CampaignDetailPage() {
       {/* ── Settings tab ── */}
       {activeTab === "settings" && (
         <div className="space-y-4">
-          <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm">
+          <div className="card overflow-hidden">
             <div className="px-6 py-4 border-b border-cream-100">
-              <h3 className="text-sm font-semibold text-navy-700">Email sequence</h3>
+              <h3 className="text-[15px] font-semibold tracking-[-0.01em] text-navy-900">Email sequence</h3>
             </div>
             <div className="divide-y divide-cream-100">
               <div className="px-6 py-4">
@@ -342,9 +339,9 @@ export default function CampaignDetailPage() {
             </div>
           </div>
 
-          <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm">
+          <div className="card overflow-hidden">
             <div className="px-6 py-4 border-b border-cream-100">
-              <h3 className="text-sm font-semibold text-navy-700">Cadence settings</h3>
+              <h3 className="text-[15px] font-semibold tracking-[-0.01em] text-navy-900">Cadence settings</h3>
             </div>
             <div className="px-6 py-5 grid grid-cols-2 gap-x-8 gap-y-3">
               {[

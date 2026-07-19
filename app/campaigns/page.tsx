@@ -40,30 +40,38 @@ export default function CampaignsPage() {
   return (
     <div className="p-10 max-w-4xl mx-auto">
       {/* Header */}
-      <div className="flex items-center justify-between mb-10">
-        <div>
-          <h1 className="font-serif text-4xl font-bold text-navy-900 tracking-tight">
-            Campaigns
-          </h1>
-          <p className="text-navy-500 text-base mt-2">
-            {campaigns.length > 0
-              ? `${campaigns.length} campaign${campaigns.length !== 1 ? "s" : ""} saved`
-              : "Bulk email campaigns with personalisation"}
-          </p>
+      <div className="mb-10">
+        <div className="flex items-center gap-3 mb-5">
+          <div className="h-px w-10 bg-coral-400" />
+          <span className="text-[11px] font-bold uppercase tracking-widest text-coral-500">
+            Outreach
+          </span>
         </div>
-        <Link
-          href="/campaigns/new"
-          className="btn-primary"
-        >
-          <Plus size={15} />
-          New Campaign
-        </Link>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="font-serif text-4xl font-bold text-navy-900 tracking-tight">
+              Campaigns
+            </h1>
+            <p className="text-navy-500 text-base mt-2">
+              {campaigns.length > 0
+                ? `${campaigns.length} campaign${campaigns.length !== 1 ? "s" : ""} saved`
+                : "Bulk email campaigns with personalisation"}
+            </p>
+          </div>
+          <Link
+            href="/campaigns/new"
+            className="btn-primary flex-shrink-0"
+          >
+            <Plus size={15} />
+            New Campaign
+          </Link>
+        </div>
       </div>
 
       {loading ? (
         <div className="space-y-3 animate-pulse">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="bg-white border border-cream-200 rounded-2xl px-7 py-5 flex items-center gap-4">
+            <div key={i} className="card px-7 py-5 flex items-center gap-4">
               <div className="w-10 h-10 bg-cream-200 rounded-xl flex-shrink-0" />
               <div className="flex-1 space-y-2">
                 <div className="h-3.5 bg-cream-200 rounded w-48" />
@@ -76,7 +84,7 @@ export default function CampaignsPage() {
           ))}
         </div>
       ) : campaigns.length === 0 ? (
-        <div className="bg-white border border-cream-200 rounded-2xl p-16 text-center shadow-sm shadow-cream-200">
+        <div className="card p-16 text-center">
           <div className="w-14 h-14 bg-coral-50 rounded-2xl flex items-center justify-center mx-auto mb-5">
             <MailOpen size={24} className="text-coral-400" />
           </div>
@@ -97,7 +105,7 @@ export default function CampaignsPage() {
           {campaigns.map((c) => (
             <div
               key={c.id}
-              className="group bg-white border border-cream-200 hover:border-coral-200 rounded-2xl px-7 py-5 flex items-center gap-4 transition-all hover:shadow-md hover:shadow-coral-50"
+              className="group card card-hover px-7 py-5 flex items-center gap-4"
             >
               <div className="w-10 h-10 bg-coral-50 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-coral-100 transition-colors">
                 <MailOpen size={18} className="text-coral-500" />

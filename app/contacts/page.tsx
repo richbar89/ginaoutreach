@@ -170,7 +170,7 @@ function SubcategoryBadge({ subcategory }: { subcategory: string | null }) {
 function AdBadge({ status }: { status: AdStatus | null | undefined }) {
   if (!status?.hasAds) return null;
   return (
-    <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-coral-50 border border-coral-200 text-coral-700 text-[11px] font-semibold rounded-full whitespace-nowrap">
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-coral-50 text-coral-600 text-[11px] font-semibold rounded-full whitespace-nowrap">
       <span className="w-1.5 h-1.5 rounded-full bg-coral-500 animate-pulse" />
       Ads running
     </span>
@@ -195,40 +195,40 @@ function RequestContactModal({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(0,0,0,0.4)" }}>
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-900/60 backdrop-blur-sm">
+      <div className="bg-white rounded-[20px] shadow-2xl w-full max-w-md p-7">
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-lg font-black text-navy-900">Request Brand Contact</h2>
-          <button onClick={onClose} className="text-navy-300 hover:text-navy-600"><X size={18} /></button>
+          <h2 className="text-lg font-bold text-navy-900 tracking-tight">Request Brand Contact</h2>
+          <button onClick={onClose} className="text-navy-300 hover:text-navy-600 transition-colors"><X size={18} /></button>
         </div>
         {status === "done" ? (
           <div className="text-center py-6">
-            <p className="text-emerald-600 font-bold text-sm mb-1">Request submitted!</p>
+            <p className="text-emerald-600 font-semibold text-sm mb-1">Request submitted!</p>
             <p className="text-navy-400 text-xs mb-4">We&apos;ll add the contact details as soon as possible.</p>
-            <button onClick={onClose} className="px-4 py-2 bg-coral-500 text-white text-sm font-bold rounded-xl hover:bg-coral-600">Done</button>
+            <button onClick={onClose} className="px-5 py-2 bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold rounded-full transition-colors">Done</button>
           </div>
         ) : (
           <>
             <div className="space-y-3 mb-5">
               <div>
-                <label className="text-xs font-bold text-navy-500 mb-1 block">Brand Name *</label>
-                <input type="text" value={brandName} onChange={e => setBrandName(e.target.value)} placeholder="e.g. Innocent Drinks" className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2.5 outline-none focus:border-coral-300" />
+                <label className="block text-xs font-semibold text-navy-400 mb-1.5 uppercase tracking-widest">Brand Name *</label>
+                <input type="text" value={brandName} onChange={e => setBrandName(e.target.value)} placeholder="e.g. Innocent Drinks" className="input-base" />
               </div>
               <div>
-                <label className="text-xs font-bold text-navy-500 mb-1 block">Brand Website *</label>
-                <input type="url" value={brandUrl} onChange={e => setBrandUrl(e.target.value)} placeholder="https://innocentdrinks.co.uk" className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2.5 outline-none focus:border-coral-300" />
+                <label className="block text-xs font-semibold text-navy-400 mb-1.5 uppercase tracking-widest">Brand Website *</label>
+                <input type="url" value={brandUrl} onChange={e => setBrandUrl(e.target.value)} placeholder="https://innocentdrinks.co.uk" className="input-base" />
               </div>
               <div>
-                <label className="text-xs font-bold text-navy-500 mb-1 block">Notes (optional)</label>
-                <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={2} placeholder="Any context about the brand or who you&apos;re trying to reach…" className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2.5 outline-none focus:border-coral-300 resize-none" />
+                <label className="block text-xs font-semibold text-navy-400 mb-1.5 uppercase tracking-widest">Notes (optional)</label>
+                <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={2} placeholder="Any context about the brand or who you&apos;re trying to reach…" className="input-base resize-none" />
               </div>
             </div>
             {status === "error" && <p className="text-red-500 text-xs mb-3">Something went wrong. Please try again.</p>}
             <div className="flex gap-2">
-              <button onClick={submit} disabled={status === "saving" || !brandName.trim() || !brandUrl.trim()} className="flex-1 py-2.5 bg-coral-500 text-white text-sm font-bold rounded-xl hover:bg-coral-600 disabled:opacity-50">
+              <button onClick={submit} disabled={status === "saving" || !brandName.trim() || !brandUrl.trim()} className="flex-1 py-2.5 bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold rounded-full transition-colors disabled:opacity-50">
                 {status === "saving" ? "Submitting…" : "Submit Request"}
               </button>
-              <button onClick={onClose} className="px-4 py-2.5 bg-gray-100 text-navy-600 text-sm font-bold rounded-xl hover:bg-gray-200">Cancel</button>
+              <button onClick={onClose} className="px-4 py-2.5 text-sm font-medium text-navy-500 hover:text-navy-800 transition-colors">Cancel</button>
             </div>
           </>
         )}
@@ -424,25 +424,25 @@ function ContactsPage() {
   };
 
   return (
-    <div className="p-8 max-w-7xl mx-auto">
+    <div className="p-10 max-w-7xl mx-auto">
       {showRequestModal && <RequestContactModal onClose={() => setShowRequestModal(false)} />}
 
       {/* Save list modal */}
       {showSaveModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(0,0,0,0.4)" }}>
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-900/60 backdrop-blur-sm">
+          <div className="bg-white rounded-[20px] shadow-2xl w-full max-w-sm p-7">
             {saveSuccess ? (
               <div className="text-center py-4">
                 <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-3">
                   <Check size={18} className="text-emerald-600" />
                 </div>
-                <p className="font-bold text-navy-900">List saved!</p>
+                <p className="font-semibold text-navy-900">List saved!</p>
               </div>
             ) : (
               <>
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-base font-black text-navy-900">Save as list</h2>
-                  <button onClick={() => setShowSaveModal(false)} className="text-navy-300 hover:text-navy-600"><X size={16} /></button>
+                  <h2 className="text-base font-bold text-navy-900 tracking-tight">Save as list</h2>
+                  <button onClick={() => setShowSaveModal(false)} className="text-navy-300 hover:text-navy-600 transition-colors"><X size={16} /></button>
                 </div>
                 <p className="text-xs text-navy-400 mb-4">
                   {saveModalMode === "curated"
@@ -461,17 +461,17 @@ function ContactsPage() {
                   onChange={e => setListName(e.target.value)}
                   onKeyDown={e => e.key === "Enter" && saveList()}
                   placeholder="e.g. UK Drinks Brands"
-                  className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2.5 outline-none focus:border-coral-300 mb-4"
+                  className="input-base mb-4"
                 />
                 <div className="flex gap-2">
                   <button
                     onClick={saveList}
                     disabled={savingList || !listName.trim()}
-                    className="flex-1 py-2.5 bg-coral-500 text-white text-sm font-bold rounded-xl hover:bg-coral-600 disabled:opacity-50"
+                    className="flex-1 py-2.5 bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold rounded-full transition-colors disabled:opacity-50"
                   >
                     {savingList ? "Saving…" : "Save list"}
                   </button>
-                  <button onClick={() => setShowSaveModal(false)} className="px-4 py-2.5 bg-gray-100 text-navy-600 text-sm font-bold rounded-xl hover:bg-gray-200">
+                  <button onClick={() => setShowSaveModal(false)} className="px-4 py-2.5 text-sm font-medium text-navy-500 hover:text-navy-800 transition-colors">
                     Cancel
                   </button>
                 </div>
@@ -482,10 +482,16 @@ function ContactsPage() {
       )}
 
       {/* Header */}
-      <div className="flex items-start justify-between mb-7">
+      <div className="flex items-end justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-black text-navy-900 tracking-tight">Brand Contacts</h1>
-          <p className="text-navy-400 text-sm mt-1">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="h-px w-10 bg-coral-400" />
+            <span className="text-[11px] font-bold uppercase tracking-widest text-coral-500">
+              Find
+            </span>
+          </div>
+          <h1 className="text-4xl font-bold text-navy-900 tracking-tight leading-tight">Brand Contacts</h1>
+          <p className="mt-2 text-navy-500 text-[15px]">
             {loading ? "Loading…" : `${contacts.length.toLocaleString()} verified marketing contacts`}
           </p>
         </div>
@@ -494,19 +500,19 @@ function ContactsPage() {
           <div className="relative" ref={listsRef}>
             <button
               onClick={() => setShowListsDropdown(v => !v)}
-              className="flex items-center gap-2 px-4 py-2.5 bg-white border border-cream-200 text-navy-700 text-sm font-bold rounded-xl hover:border-navy-300 transition-colors shadow-sm"
+              className="flex items-center gap-2 px-4 py-2.5 bg-white hairline text-navy-700 text-sm font-semibold rounded-full hover:bg-cream-50 transition-all duration-200 shadow-[0_1px_2px_rgba(0,0,0,0.03)]"
             >
               <List size={14} />
               My Lists
               {lists.length > 0 && (
-                <span className="w-5 h-5 rounded-full bg-coral-500 text-white text-[10px] font-black flex items-center justify-center">
+                <span className="min-w-[20px] h-5 px-1.5 rounded-full bg-coral-50 text-coral-600 text-[10px] font-bold flex items-center justify-center">
                   {lists.length}
                 </span>
               )}
             </button>
             {showListsDropdown && (
-              <div className="absolute right-0 top-full mt-2 z-30 bg-white border border-cream-200 rounded-2xl shadow-xl w-72 overflow-hidden">
-                <p className="px-4 py-3 text-[11px] font-bold uppercase tracking-widest text-navy-400 border-b border-cream-100">
+              <div className="absolute right-0 top-full mt-2 z-30 bg-white hairline rounded-2xl shadow-[0_12px_32px_rgba(0,0,0,0.12)] w-72 overflow-hidden">
+                <p className="px-4 py-3 text-[11px] font-semibold uppercase tracking-widest text-navy-400 border-b border-cream-100">
                   Saved Lists
                 </p>
                 {lists.length === 0 ? (
@@ -525,7 +531,7 @@ function ContactsPage() {
                         </div>
                         <Link
                           href={`/campaigns/new?listId=${l.id}`}
-                          className="text-[11px] font-bold text-coral-600 hover:text-coral-700 whitespace-nowrap"
+                          className="text-[11px] font-semibold text-coral-600 hover:text-coral-700 transition-colors whitespace-nowrap"
                           onClick={() => setShowListsDropdown(false)}
                         >
                           Use →
@@ -545,7 +551,7 @@ function ContactsPage() {
           </div>
           <button
             onClick={() => setShowRequestModal(true)}
-            className="flex items-center gap-2 px-4 py-2.5 bg-coral-500 text-white text-sm font-bold rounded-xl hover:bg-coral-600 transition-colors shadow-sm"
+            className="btn-primary !px-4 !py-2.5"
           >
             <Plus size={14} /> Request Contact
           </button>
@@ -562,9 +568,9 @@ function ContactsPage() {
             <button
               key={v.key}
               onClick={() => handleVerticalClick(v.key)}
-              className="relative flex flex-col items-start p-4 rounded-2xl border-2 transition-all text-left group"
+              className="relative flex flex-col items-start p-4 rounded-2xl border transition-all duration-200 text-left group shadow-[0_1px_8px_rgba(0,0,0,0.04)]"
               style={{
-                borderColor: isActive ? v.accent : "#E8E8ED",
+                borderColor: isActive ? v.accent : "rgba(0,0,0,0.06)",
                 background: isActive ? v.bg : "#FFFFFF",
               }}
             >
@@ -574,17 +580,17 @@ function ContactsPage() {
               >
                 <Icon size={16} style={{ color: isActive ? "#fff" : v.accent }} />
               </div>
-              <p className="text-sm font-black text-navy-900 leading-tight">{v.label}</p>
+              <p className="text-sm font-semibold tracking-[-0.01em] text-navy-900 leading-tight">{v.label}</p>
               <p className="text-xs text-navy-400 mt-0.5 leading-tight">{v.description}</p>
               <p
-                className="mt-2 text-xs font-bold"
+                className="mt-2 text-xs font-semibold"
                 style={{ color: count > 0 ? v.accent : "#86868B" }}
               >
                 {loading ? "—" : `${count.toLocaleString()} contacts`}
               </p>
               {isActive && (
                 <span
-                  className="absolute top-3 right-3 w-5 h-5 rounded-full flex items-center justify-center text-white text-[10px] font-black"
+                  className="absolute top-3 right-3 w-5 h-5 rounded-full flex items-center justify-center text-white text-[10px] font-bold"
                   style={{ background: v.accent }}
                 >
                   ✓
@@ -600,7 +606,7 @@ function ContactsPage() {
         <div className="flex flex-wrap gap-2 mb-5">
           <button
             onClick={() => setActiveSubcategory(null)}
-            className="px-3 py-1.5 rounded-full text-xs font-semibold transition-colors border"
+            className="px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 border"
             style={
               !activeSubcategory
                 ? { background: activeVerticalDef?.accent, color: "#fff", borderColor: activeVerticalDef?.accent }
@@ -619,7 +625,7 @@ function ContactsPage() {
               <button
                 key={sub}
                 onClick={() => handleSubcategoryClick(sub)}
-                className="px-3 py-1.5 rounded-full text-xs font-semibold transition-colors border"
+                className="px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 border"
                 style={
                   isActive
                     ? { background: activeVerticalDef?.accent, color: "#fff", borderColor: activeVerticalDef?.accent }
@@ -647,10 +653,10 @@ function ContactsPage() {
             placeholder="Search by name, company or position…"
             value={query}
             onChange={e => handleQueryChange(e.target.value)}
-            className="w-full pl-11 pr-10 py-3 bg-white border border-cream-200 rounded-xl text-sm text-navy-900 placeholder:text-navy-300 focus:outline-none focus:ring-2 focus:ring-coral-400 focus:border-transparent shadow-sm"
+            className="input-base !pl-11 !pr-10 !py-3"
           />
           {query && (
-            <button onClick={() => handleQueryChange("")} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-navy-300 hover:text-navy-600">
+            <button onClick={() => handleQueryChange("")} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-navy-300 hover:text-navy-600 transition-colors">
               <X size={14} />
             </button>
           )}
@@ -659,7 +665,7 @@ function ContactsPage() {
           <select
             value={activeCountry}
             onChange={e => setActiveCountry(e.target.value)}
-            className="px-4 py-3 bg-white border border-cream-200 rounded-xl text-sm text-navy-900 focus:outline-none focus:ring-2 focus:ring-coral-400 shadow-sm"
+            className="input-base !w-auto !py-3 cursor-pointer"
           >
             <option value="All">All countries</option>
             {countryOptions.map(c => <option key={c} value={c}>{c}</option>)}
@@ -678,7 +684,7 @@ function ContactsPage() {
           </p>
           <button
             onClick={() => { setListName(""); setSaveModalMode("filter"); setShowSaveModal(true); }}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-coral-600 border border-coral-200 rounded-lg hover:bg-coral-50 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-coral-600 hover:text-coral-700 hover:bg-coral-50 rounded-full transition-all duration-200"
           >
             <BookmarkPlus size={13} /> Save as list
           </button>
@@ -686,31 +692,31 @@ function ContactsPage() {
       )}
 
       {/* Table */}
-      <div className="bg-white border border-cream-200 rounded-2xl shadow-sm overflow-hidden">
+      <div className="card overflow-hidden">
         {loading ? (
           <table className="w-full text-sm">
             <thead className="border-b border-cream-200 bg-cream-50/60">
               <tr>
-                <th className="px-4 py-3 w-10">
+                <th className="px-4 py-3.5 w-10">
                   <input
                     type="checkbox"
                     checked={allVisibleSelected}
                     ref={el => { if (el) el.indeterminate = someVisibleSelected && !allVisibleSelected; }}
                     onChange={toggleAllVisible}
-                    className="w-4 h-4 rounded border-gray-300 accent-coral-500 cursor-pointer"
+                    className="w-4 h-4 rounded border-navy-200 accent-coral-500 cursor-pointer"
                   />
                 </th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-navy-400 uppercase tracking-widest">Name</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-navy-400 uppercase tracking-widest">Company</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-navy-400 uppercase tracking-widest">Category</th>
-                <th className="px-5 py-3" />
+                <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-navy-400 uppercase tracking-[0.08em]">Name</th>
+                <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-navy-400 uppercase tracking-[0.08em]">Company</th>
+                <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-navy-400 uppercase tracking-[0.08em]">Category</th>
+                <th className="px-5 py-3.5" />
               </tr>
             </thead>
             <tbody className="divide-y divide-cream-100 animate-pulse">
               {Array.from({ length: 8 }).map((_, i) => (
                 <tr key={i}>
-                  <td className="px-4 py-3.5"><div className="w-4 h-4 rounded bg-cream-200" /></td>
-                  <td className="px-5 py-3.5">
+                  <td className="px-4 py-4"><div className="w-4 h-4 rounded bg-cream-200" /></td>
+                  <td className="px-5 py-4">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-cream-200 flex-shrink-0" />
                       <div className="space-y-1.5">
@@ -719,12 +725,12 @@ function ContactsPage() {
                       </div>
                     </div>
                   </td>
-                  <td className="px-5 py-3.5"><div className="h-3 bg-cream-200 rounded w-24" /></td>
-                  <td className="px-5 py-3.5"><div className="h-5 bg-cream-100 rounded-full w-20" /></td>
-                  <td className="px-5 py-3.5">
+                  <td className="px-5 py-4"><div className="h-3 bg-cream-200 rounded w-24" /></td>
+                  <td className="px-5 py-4"><div className="h-5 bg-cream-100 rounded-full w-20" /></td>
+                  <td className="px-5 py-4">
                     <div className="flex gap-2 justify-end">
-                      <div className="h-6 bg-cream-100 rounded-lg w-16" />
-                      <div className="h-6 bg-cream-200 rounded-lg w-14" />
+                      <div className="h-6 bg-cream-100 rounded-full w-16" />
+                      <div className="h-6 bg-cream-200 rounded-full w-14" />
                     </div>
                   </td>
                 </tr>
@@ -737,7 +743,7 @@ function ContactsPage() {
               <>
                 <p className="text-sm font-semibold text-navy-500 mb-1">No contacts tagged as &ldquo;{activeSubcategory}&rdquo; yet.</p>
                 <p className="text-xs text-navy-300 mb-3">Subcategory tagging is added on import — all {activeVerticalDef?.label} contacts are available above.</p>
-                <button onClick={() => setActiveSubcategory(null)} className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-cream-200 text-navy-500 hover:border-coral-300 transition-colors">
+                <button onClick={() => setActiveSubcategory(null)} className="text-xs font-semibold px-3.5 py-1.5 rounded-full border border-cream-200 bg-white text-navy-500 hover:border-coral-300 hover:text-coral-600 transition-all duration-200">
                   Show all {activeVerticalDef?.label} →
                 </button>
               </>
@@ -756,19 +762,19 @@ function ContactsPage() {
           <table className="w-full text-sm">
             <thead className="border-b border-cream-200 bg-cream-50/60">
               <tr>
-                <th className="px-4 py-3 w-10">
+                <th className="px-4 py-3.5 w-10">
                   <input
                     type="checkbox"
                     checked={allVisibleSelected}
                     ref={el => { if (el) el.indeterminate = someVisibleSelected && !allVisibleSelected; }}
                     onChange={toggleAllVisible}
-                    className="w-4 h-4 rounded border-gray-300 accent-coral-500 cursor-pointer"
+                    className="w-4 h-4 rounded border-navy-200 accent-coral-500 cursor-pointer"
                   />
                 </th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-navy-400 uppercase tracking-widest">Name</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-navy-400 uppercase tracking-widest">Company</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-navy-400 uppercase tracking-widest">Category</th>
-                <th className="px-5 py-3" />
+                <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-navy-400 uppercase tracking-[0.08em]">Name</th>
+                <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-navy-400 uppercase tracking-[0.08em]">Company</th>
+                <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-navy-400 uppercase tracking-[0.08em]">Category</th>
+                <th className="px-5 py-3.5" />
               </tr>
             </thead>
             <tbody className="divide-y divide-cream-100">
@@ -778,15 +784,15 @@ function ContactsPage() {
                   onClick={() => toggleEmail(l.email)}
                   className={`hover:bg-cream-50 transition-colors group cursor-pointer ${selectedEmails.has(l.email) ? "bg-coral-50/40" : ""}`}
                 >
-                  <td className="px-4 py-3.5" onClick={e => e.stopPropagation()}>
+                  <td className="px-4 py-4" onClick={e => e.stopPropagation()}>
                     <input
                       type="checkbox"
                       checked={selectedEmails.has(l.email)}
                       onChange={() => toggleEmail(l.email)}
-                      className="w-4 h-4 rounded border-gray-300 accent-coral-500 cursor-pointer"
+                      className="w-4 h-4 rounded border-navy-200 accent-coral-500 cursor-pointer"
                     />
                   </td>
-                  <td className="px-5 py-3.5">
+                  <td className="px-5 py-4">
                     <div className="flex items-center gap-3">
                       <InitialsAvatar name={l.name || l.email} email={l.email} size="sm" />
                       <div>
@@ -800,10 +806,10 @@ function ContactsPage() {
                       </div>
                     </div>
                   </td>
-                  <td className="px-5 py-3.5 text-sm text-navy-700">
+                  <td className="px-5 py-4 text-sm text-navy-700">
                     {l.company || <span className="text-navy-200">—</span>}
                   </td>
-                  <td className="px-5 py-3.5">
+                  <td className="px-5 py-4">
                     <div className="flex flex-wrap items-center gap-1.5">
                       {allSubcategories(l).slice(0, 3).map(sub => (
                         <SubcategoryBadge key={sub} subcategory={sub} />
@@ -811,25 +817,25 @@ function ContactsPage() {
                       <AdBadge status={adStatuses[l.company?.toLowerCase() ?? ""]} />
                     </div>
                   </td>
-                  <td className="px-5 py-3.5" onClick={e => e.stopPropagation()}>
+                  <td className="px-5 py-4" onClick={e => e.stopPropagation()}>
                     <div className="flex items-center gap-2 justify-end">
                       {l.linkedin ? (
                         <a
                           href={l.linkedin.startsWith("http") ? l.linkedin : `https://${l.linkedin}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-cream-200 hover:border-navy-300 text-navy-500 hover:text-navy-800 text-xs font-semibold rounded-lg transition-colors"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-cream-200 hover:border-navy-300 text-navy-500 hover:text-navy-800 text-xs font-semibold rounded-full transition-colors"
                         >
                           <Linkedin size={11} /> LinkedIn
                         </a>
                       ) : (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-cream-100 text-navy-200 text-xs rounded-lg cursor-default">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-cream-100 text-navy-200 text-xs rounded-full cursor-default">
                           <Linkedin size={11} /> LinkedIn
                         </span>
                       )}
                       <Link
                         href={`/send?to=${encodeURIComponent(l.email)}&name=${encodeURIComponent(l.name || "")}`}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-coral-500 hover:bg-coral-600 text-white text-xs font-semibold rounded-lg transition-colors"
+                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-coral-500 hover:bg-coral-600 text-white text-xs font-semibold rounded-full transition-colors"
                       >
                         <Send size={11} /> Email
                       </Link>
@@ -852,7 +858,7 @@ function ContactsPage() {
             <button
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-cream-200 bg-white text-navy-600 hover:border-coral-300 disabled:opacity-30 disabled:cursor-default transition-colors"
+              className="px-3.5 py-1.5 text-xs font-semibold rounded-full border border-cream-200 bg-white text-navy-600 hover:border-coral-300 hover:text-coral-600 disabled:opacity-30 disabled:cursor-default transition-all duration-200"
             >
               ← Prev
             </button>
@@ -862,7 +868,7 @@ function ContactsPage() {
             <button
               onClick={() => setPage(p => Math.min(totalPages, p + 1))}
               disabled={page === totalPages}
-              className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-cream-200 bg-white text-navy-600 hover:border-coral-300 disabled:opacity-30 disabled:cursor-default transition-colors"
+              className="px-3.5 py-1.5 text-xs font-semibold rounded-full border border-cream-200 bg-white text-navy-600 hover:border-coral-300 hover:text-coral-600 disabled:opacity-30 disabled:cursor-default transition-all duration-200"
             >
               Next →
             </button>
@@ -872,12 +878,12 @@ function ContactsPage() {
 
       {/* Selection bottom bar */}
       {selectedEmails.size > 0 && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-3 px-5 py-3 rounded-2xl shadow-2xl" style={{ background: "rgba(18,18,28,0.95)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.10)" }}>
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-3 px-5 py-3 rounded-full shadow-2xl" style={{ background: "rgba(29,29,31,0.92)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.10)" }}>
           <span className="text-sm font-semibold text-white">{selectedEmails.size} selected</span>
           <div className="w-px h-4 bg-white/20" />
           <button
             onClick={() => { setListName(""); setSaveModalMode("curated"); setShowSaveModal(true); }}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-coral-500 hover:bg-coral-600 text-white text-sm font-bold rounded-xl transition-colors"
+            className="flex items-center gap-1.5 px-4 py-1.5 bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold rounded-full transition-colors"
           >
             <BookmarkPlus size={13} /> Save as list
           </button>

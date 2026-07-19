@@ -123,10 +123,10 @@ export default function AdsPage() {
           <button
             key={s.label}
             onClick={() => setFilter(s.f)}
-            className={`text-left bg-white border rounded-2xl p-5 shadow-sm hover:shadow-md transition-all ${
+            className={`text-left bg-white border rounded-[20px] p-5 shadow-sm hover:shadow-md transition-all duration-200 ${
               filter === s.f
-                ? "border-coral-300 ring-1 ring-coral-200"
-                : "border-cream-200 hover:border-cream-300"
+                ? "border-coral-300 ring-2 ring-coral-500/30"
+                : "border-black/[0.05] hover:border-black/[0.08]"
             }`}
           >
             <p className="text-[10px] font-bold uppercase tracking-widest text-navy-400 mb-2">{s.label}</p>
@@ -154,7 +154,7 @@ export default function AdsPage() {
       </div>
 
       {/* Company list */}
-      <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm">
+      <div className="card overflow-hidden">
         {loading ? (
           <div className="px-6 py-12 flex items-center justify-center gap-2 text-sm text-navy-400">
             <Loader2 size={14} className="animate-spin" /> Loading statuses…
@@ -183,7 +183,7 @@ export default function AdsPage() {
                 const status = statuses[company];
                 const isRechecking = rechecking === company;
                 return (
-                  <tr key={company} className={`hover:bg-cream-50 transition-colors ${status?.hasAds ? "bg-coral-50/30" : ""}`}>
+                  <tr key={company} className={`hover:bg-cream-50 transition-colors duration-200 ${status?.hasAds ? "bg-coral-50/30" : ""}`}>
                     <td className="px-6 py-4 font-medium text-navy-900">
                       <div className="flex items-center gap-2">
                         {status?.hasAds && <TrendingUp size={13} className="text-coral-500 flex-shrink-0" />}

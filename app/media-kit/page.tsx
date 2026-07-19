@@ -123,13 +123,13 @@ export default function MediaKitPage() {
           <div className="flex items-center gap-2 flex-shrink-0">
             <button
               onClick={() => setPreview(!preview)}
-              className="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-cream-200 hover:border-navy-200 text-navy-700 text-sm font-medium rounded-xl transition-all"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-black/[0.08] hover:border-coral-300 hover:text-coral-600 text-navy-700 text-sm font-medium rounded-full transition-all duration-200 shadow-[0_1px_2px_rgba(0,0,0,0.03)]"
             >
               <Eye size={14} /> {preview ? "Edit" : "Preview"}
             </button>
             <button
               onClick={handleSave}
-              className="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-cream-200 hover:border-navy-200 text-navy-700 text-sm font-medium rounded-xl transition-all"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-black/[0.08] hover:border-coral-300 hover:text-coral-600 text-navy-700 text-sm font-medium rounded-full transition-all duration-200 shadow-[0_1px_2px_rgba(0,0,0,0.03)]"
             >
               {saved ? <CheckCircle size={14} className="text-emerald-500" /> : null}
               {saved ? "Saved" : "Save"}
@@ -249,8 +249,8 @@ export default function MediaKitPage() {
       </div>
 
       {/* Share section */}
-      <div className="mt-10 bg-white border border-cream-200 rounded-2xl p-7 shadow-sm">
-        <h3 className="font-serif text-lg font-bold text-navy-900 mb-1">Share your Media Kit</h3>
+      <div className="mt-10 card p-7">
+        <h3 className="text-[15px] font-semibold tracking-[-0.01em] text-navy-900 mb-1">Share your Media Kit</h3>
         <p className="text-sm text-navy-500 mb-5">
           Generates a public link with a snapshot of your current kit. Safe to share with any brand.
         </p>
@@ -266,7 +266,7 @@ export default function MediaKitPage() {
           <button
             onClick={generateLink}
             disabled={generating}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-60"
+            className="btn-primary"
           >
             {generating ? <Loader2 size={14} className="animate-spin" /> : <Link2 size={14} />}
             {generating ? "Generating…" : shareUrl ? "Generate New Link" : "Generate Shareable Link"}
@@ -279,16 +279,16 @@ export default function MediaKitPage() {
               </div>
               <button
                 onClick={copyLink}
-                className="flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-2.5 bg-navy-800 hover:bg-navy-900 text-white text-xs font-semibold rounded-xl transition-colors"
+                className="flex-shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 bg-white border border-black/[0.08] hover:border-coral-300 hover:text-coral-600 text-navy-700 text-xs font-semibold rounded-full transition-all duration-200 shadow-[0_1px_2px_rgba(0,0,0,0.03)]"
               >
-                {copied ? <CheckCircle size={12} /> : <Copy size={12} />}
+                {copied ? <CheckCircle size={12} className="text-emerald-500" /> : <Copy size={12} />}
                 {copied ? "Copied!" : "Copy"}
               </button>
               <a
                 href={shareUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-shrink-0 p-2.5 bg-white border border-cream-200 hover:border-navy-200 rounded-xl transition-colors"
+                className="flex-shrink-0 p-2.5 bg-white border border-black/[0.08] hover:border-coral-300 rounded-full transition-all duration-200"
                 title="Open"
               >
                 <ExternalLink size={13} className="text-navy-400" />
@@ -303,9 +303,9 @@ export default function MediaKitPage() {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm">
+    <div className="card overflow-hidden">
       <div className="px-6 py-4 border-b border-cream-100">
-        <p className="text-sm font-semibold text-navy-800">{title}</p>
+        <p className="text-[15px] font-semibold tracking-[-0.01em] text-navy-900">{title}</p>
       </div>
       <div className="px-6 py-5 space-y-4">{children}</div>
     </div>

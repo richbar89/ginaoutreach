@@ -8,13 +8,14 @@ import { dbGetDeals, dbUpsertDeal, dbDeleteDeal } from "@/lib/db";
 import type { Deal, DealStatus } from "@/lib/types";
 import InitialsAvatar from "@/components/InitialsAvatar";
 
-const STAGES: { key: DealStatus; label: string; colour: string; bg: string; border: string; ring: string }[] = [
-  { key: "pitched",     label: "Pitched",     colour: "text-navy-500",   bg: "bg-navy-50",    border: "border-navy-200",   ring: "ring-navy-400" },
-  { key: "replied",     label: "Replied",      colour: "text-blue-600",   bg: "bg-blue-50",    border: "border-blue-200",   ring: "ring-blue-400" },
-  { key: "negotiating", label: "Negotiating",  colour: "text-amber-600",  bg: "bg-amber-50",   border: "border-amber-200",  ring: "ring-amber-400" },
-  { key: "contracted",  label: "Contracted",   colour: "text-violet-600", bg: "bg-violet-50",  border: "border-violet-200", ring: "ring-violet-400" },
-  { key: "delivered",   label: "Delivered",    colour: "text-teal-600",   bg: "bg-teal-50",    border: "border-teal-200",   ring: "ring-teal-400" },
-  { key: "paid",        label: "Paid",         colour: "text-emerald-600",bg: "bg-emerald-50", border: "border-emerald-200",ring: "ring-emerald-400" },
+// Functional stage accents — rendered quietly (header dot + tinted count pill)
+const STAGES: { key: DealStatus; label: string; accent: string }[] = [
+  { key: "pitched",     label: "Pitched",     accent: "#6E6E73" },
+  { key: "replied",     label: "Replied",     accent: "#3B82F6" },
+  { key: "negotiating", label: "Negotiating", accent: "#F59E0B" },
+  { key: "contracted",  label: "Contracted",  accent: "#8B5CF6" },
+  { key: "delivered",   label: "Delivered",   accent: "#06B6D4" },
+  { key: "paid",        label: "Paid",        accent: "#10B981" },
 ];
 
 function DealModal({
@@ -47,13 +48,13 @@ function DealModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-900/60 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg">
-        <div className="flex items-center justify-between px-7 py-5 border-b border-cream-200">
-          <h2 className="font-serif text-xl font-bold text-navy-900">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-900/40 backdrop-blur-sm animate-fade-in">
+      <div className="bg-white rounded-[20px] shadow-[0_24px_64px_rgba(0,0,0,0.18)] border border-black/[0.05] w-full max-w-lg animate-scale-in">
+        <div className="flex items-center justify-between px-7 py-5 border-b border-black/[0.06]">
+          <h2 className="text-xl font-bold tracking-tight text-navy-900">
             {initial ? "Edit Deal" : "Add Deal"}
           </h2>
-          <button onClick={onClose} className="p-1.5 hover:bg-cream-100 rounded-lg transition-colors">
+          <button onClick={onClose} className="p-1.5 hover:bg-black/[0.04] rounded-full transition-all duration-200">
             <X size={16} className="text-navy-400" />
           </button>
         </div>
@@ -89,12 +90,12 @@ function DealModal({
             <textarea rows={3} value={form.notes} onChange={(e) => setForm(f => ({ ...f, notes: e.target.value }))} placeholder="Any details about this deal…" className="input-base resize-none text-sm" />
           </div>
         </div>
-        <div className="flex items-center justify-end gap-3 px-7 py-5 border-t border-cream-200 bg-cream-50 rounded-b-2xl">
-          <button onClick={onClose} className="px-4 py-2 text-sm font-medium text-navy-500 hover:text-navy-800 transition-colors">Cancel</button>
+        <div className="flex items-center justify-end gap-3 px-7 py-5 border-t border-black/[0.06] bg-cream-50 rounded-b-[20px]">
+          <button onClick={onClose} className="px-4 py-2 text-sm font-medium text-navy-500 hover:text-navy-800 rounded-full transition-all duration-200">Cancel</button>
           <button
             onClick={handleSave}
             disabled={!form.contactName.trim() || !form.company.trim()}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-50"
+            className="btn-primary !px-5"
           >
             <Check size={14} />
             {initial ? "Save Changes" : "Add Deal"}
@@ -194,25 +195,25 @@ export default function PipelinePage() {
 
   return (
     <div className="h-full flex flex-col">
-      {/* Header */}
-      <div className="flex-shrink-0 px-8 pt-7 pb-5 border-b border-cream-200 bg-white">
-        <div className="flex items-center justify-between">
+      {/* Header — sits directly on the canvas */}
+      <div className="flex-shrink-0 px-8 pt-7 pb-4">
+        <div className="flex items-end justify-between">
           <div>
-            <div className="flex items-center gap-3 mb-1">
+            <div className="flex items-center gap-3 mb-1.5">
               <div className="h-px w-8 bg-coral-400" />
               <span className="text-[11px] font-bold uppercase tracking-widest text-coral-500">Pipeline</span>
             </div>
-            <h1 className="font-serif text-3xl font-bold text-navy-900 leading-tight">Deal Pipeline</h1>
+            <h1 className="text-3xl font-bold tracking-tight text-navy-900 leading-tight">Deal Pipeline</h1>
             {totalValue > 0 && (
-              <p className="mt-1 text-sm font-semibold text-emerald-600">
-                <TrendingUp size={13} className="inline mr-1 mb-0.5" />
-                Total pipeline value: <span className="font-bold">{currencySymbol}{totalValue.toLocaleString()}</span>
+              <p className="mt-1.5 text-sm text-navy-500">
+                Total pipeline value{" "}
+                <span className="font-semibold text-[#059669]">{currencySymbol}{totalValue.toLocaleString()}</span>
               </p>
             )}
           </div>
           <button
             onClick={() => setEditing("new")}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold rounded-xl transition-all hover:shadow-lg hover:shadow-coral-200 flex-shrink-0"
+            className="btn-primary flex-shrink-0"
           >
             <Plus size={15} /> Add Deal
           </button>
@@ -220,32 +221,33 @@ export default function PipelinePage() {
       </div>
 
       {saveError && (
-        <div className="flex-shrink-0 mx-8 mt-4 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700 font-medium">
+        <div className="flex-shrink-0 mx-8 mt-1 mb-2 px-4 py-3 bg-red-50 border border-red-100 rounded-2xl text-sm text-red-700 font-medium">
           Error: {saveError}
         </div>
       )}
 
-      {/* Kanban board */}
-      <div className="flex-1 min-h-0 overflow-x-auto overflow-y-hidden px-6 py-5">
+      {/* Kanban board — columns float directly on the canvas */}
+      <div className="flex-1 min-h-0 overflow-x-auto overflow-y-hidden px-[26px] pt-2 pb-5">
         {loading ? (
-          <div className="flex gap-4 h-full animate-pulse" style={{ minWidth: "max-content" }}>
+          <div className="flex gap-5 h-full animate-pulse" style={{ minWidth: "max-content" }}>
             {Array.from({ length: 6 }).map((_, col) => (
-              <div key={col} className="flex flex-col rounded-2xl border border-cream-200 bg-cream-50" style={{ width: 256, minWidth: 256 }}>
-                <div className="flex items-center justify-between px-4 py-3 border-b border-cream-200">
-                  <div className="h-3 bg-cream-200 rounded w-20" />
-                  <div className="h-3 bg-cream-100 rounded w-4" />
+              <div key={col} className="flex flex-col rounded-2xl" style={{ width: 256, minWidth: 256 }}>
+                <div className="flex items-center gap-2 px-1.5 py-2.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-cream-300 flex-shrink-0" />
+                  <div className="h-3 bg-cream-200 rounded-full w-20" />
+                  <div className="ml-auto h-4 bg-cream-200 rounded-full w-7" />
                 </div>
-                <div className="flex-1 p-3 space-y-2.5">
+                <div className="flex-1 px-1.5 pt-1 space-y-3">
                   {Array.from({ length: col === 0 ? 3 : col === 1 ? 2 : 1 }).map((_, i) => (
-                    <div key={i} className="bg-white rounded-xl p-3.5 border border-cream-200 space-y-2">
-                      <div className="flex items-center gap-2">
+                    <div key={i} className="bg-white rounded-2xl p-4 border border-black/[0.05] shadow-[0_1px_8px_rgba(0,0,0,0.04)] space-y-2.5">
+                      <div className="flex items-center gap-2.5">
                         <div className="w-7 h-7 rounded-full bg-cream-200 flex-shrink-0" />
                         <div className="space-y-1.5 flex-1">
-                          <div className="h-3 bg-cream-200 rounded w-3/4" />
-                          <div className="h-2.5 bg-cream-100 rounded w-1/2" />
+                          <div className="h-3 bg-cream-200 rounded-full w-3/4" />
+                          <div className="h-2.5 bg-cream-100 rounded-full w-1/2" />
                         </div>
                       </div>
-                      <div className="h-5 bg-cream-100 rounded-lg w-14" />
+                      <div className="h-3.5 bg-cream-100 rounded-full w-14" />
                     </div>
                   ))}
                 </div>
@@ -255,23 +257,23 @@ export default function PipelinePage() {
         ) : deals.length === 0 ? (
           <div className="flex items-center justify-center h-full">
             <div className="text-center max-w-sm">
-              <div className="w-16 h-16 bg-coral-50 rounded-2xl flex items-center justify-center mx-auto mb-5">
-                <TrendingUp size={28} className="text-coral-400" />
+              <div className="w-14 h-14 bg-coral-50 rounded-full flex items-center justify-center mx-auto mb-5">
+                <TrendingUp size={24} className="text-coral-500" />
               </div>
-              <h2 className="font-serif text-2xl font-bold text-navy-900 mb-2">No deals yet</h2>
-              <p className="text-navy-400 text-sm mb-2 leading-relaxed">
+              <h2 className="text-2xl font-bold tracking-tight text-navy-900 mb-2">No deals yet</h2>
+              <p className="text-navy-500 text-sm mb-2 leading-relaxed">
                 Add your first deal manually, or send some outreach — positive replies get flagged automatically in your inbox.
               </p>
               <button
                 onClick={() => setEditing("new")}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold rounded-xl transition-all hover:shadow-lg hover:shadow-coral-200 mt-3"
+                className="btn-primary mt-4"
               >
                 <Plus size={15} /> Add Deal
               </button>
             </div>
           </div>
         ) : (
-          <div className="flex gap-4 h-full" style={{ minWidth: "max-content" }}>
+          <div className="flex gap-5 h-full" style={{ minWidth: "max-content" }}>
             {STAGES.map(stage => {
               const stageDeals = deals.filter(d => d.status === stage.key);
               const isOver = dragOver === stage.key;
@@ -279,8 +281,12 @@ export default function PipelinePage() {
               return (
                 <div
                   key={stage.key}
-                  className={`flex flex-col rounded-2xl border transition-all duration-150 ${stage.bg} ${stage.border} ${isOver ? `ring-2 ${stage.ring} shadow-lg` : ""}`}
-                  style={{ width: 256, minWidth: 256 }}
+                  className={`flex flex-col rounded-2xl transition-all duration-200 ${isOver ? "bg-black/[0.03]" : "bg-transparent"}`}
+                  style={{
+                    width: 256,
+                    minWidth: 256,
+                    boxShadow: isOver ? `inset 0 0 0 1.5px ${stage.accent}55` : undefined,
+                  }}
                   onDragOver={(e) => { e.preventDefault(); }}
                   onDragEnter={(e) => {
                     e.preventDefault();
@@ -300,21 +306,28 @@ export default function PipelinePage() {
                     handleDrop(stage.key);
                   }}
                 >
-                  {/* Column header */}
-                  <div className={`flex items-center justify-between px-4 py-3 border-b ${stage.border} flex-shrink-0`}>
-                    <span className={`text-xs font-bold uppercase tracking-widest ${stage.colour}`}>
+                  {/* Column header — quiet dot + tinted count pill */}
+                  <div className="flex items-center gap-2 px-2.5 py-2.5 flex-shrink-0">
+                    <span
+                      className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                      style={{ background: stage.accent }}
+                    />
+                    <span className="text-[13px] font-semibold tracking-[-0.01em] text-navy-900">
                       {stage.label}
                     </span>
-                    <span className={`text-xs font-bold tabular-nums ${stage.colour} opacity-60`}>
+                    <span
+                      className="ml-auto text-[11px] font-semibold tabular-nums rounded-full px-2 py-0.5"
+                      style={{ background: `${stage.accent}14`, color: stage.accent }}
+                    >
                       {stageDeals.length}
                     </span>
                   </div>
 
                   {/* Cards */}
-                  <div className="flex-1 min-h-0 overflow-y-auto p-3 space-y-2.5 scrollbar-thin">
+                  <div className="flex-1 min-h-0 overflow-y-auto px-1.5 pt-1 pb-4 space-y-3 scrollbar-thin">
                     {stageDeals.length === 0 && (
-                      <div className={`border-2 border-dashed ${stage.border} rounded-xl h-16 flex items-center justify-center opacity-40`}>
-                        <p className={`text-[11px] font-semibold ${stage.colour}`}>Drop here</p>
+                      <div className="border border-dashed border-black/[0.08] rounded-2xl h-16 flex items-center justify-center">
+                        <p className="text-[11px] font-medium text-navy-300">Drop here</p>
                       </div>
                     )}
                     {stageDeals.map(deal => (
@@ -330,37 +343,37 @@ export default function PipelinePage() {
                           dragEnterCount.current = {};
                           setDragOver(null);
                         }}
-                        className="bg-white rounded-xl p-3.5 shadow-sm border border-cream-200 hover:border-cream-300 hover:shadow-md transition-all cursor-grab active:cursor-grabbing active:opacity-60 active:scale-95 select-none"
+                        className="card-hover bg-white rounded-2xl p-4 border border-black/[0.05] shadow-[0_2px_12px_rgba(0,0,0,0.05),0_1px_3px_rgba(0,0,0,0.03)] cursor-grab active:cursor-grabbing active:opacity-60 active:scale-[0.98] select-none"
                       >
-                        <div className="flex items-start gap-2.5 mb-2">
+                        <div className="flex items-start gap-2.5 mb-2.5">
                           <InitialsAvatar name={deal.contactName} email={deal.contactEmail} size="sm" />
                           <div className="flex-1 min-w-0">
-                            <p className="font-semibold text-navy-900 text-sm leading-tight truncate">{deal.contactName}</p>
-                            <p className="text-xs text-navy-500 truncate">{deal.company}</p>
+                            <p className="font-semibold text-navy-900 text-sm tracking-[-0.01em] leading-tight truncate">{deal.contactName}</p>
+                            <p className="text-xs text-navy-500 truncate mt-0.5">{deal.company}</p>
                           </div>
                         </div>
 
                         {deal.value && (
-                          <span className="inline-block px-2 py-0.5 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold rounded-lg mb-2">
+                          <p className="text-[13px] font-semibold text-[#059669] tabular-nums mb-2">
                             {deal.value}
-                          </span>
+                          </p>
                         )}
 
                         {deal.notes && (
-                          <p className="text-xs text-navy-400 line-clamp-2 mb-2">{deal.notes}</p>
+                          <p className="text-xs text-navy-400 leading-relaxed line-clamp-2 mb-2.5">{deal.notes}</p>
                         )}
 
-                        <div className="flex items-center justify-end gap-1 pt-1 border-t border-cream-100">
+                        <div className="flex items-center justify-end gap-1 pt-2 border-t border-black/[0.05]">
                           <button
                             onClick={() => setEditing(deal)}
-                            className="p-1.5 hover:bg-cream-100 rounded-lg transition-colors"
+                            className="p-1.5 hover:bg-black/[0.04] rounded-full transition-all duration-200"
                             title="Edit"
                           >
                             <Pencil size={12} className="text-navy-400" />
                           </button>
                           <button
                             onClick={() => handleDelete(deal.id)}
-                            className="p-1.5 hover:bg-red-50 rounded-lg transition-colors"
+                            className="p-1.5 hover:bg-red-50 rounded-full transition-all duration-200"
                             title="Remove"
                           >
                             <Trash2 size={12} className="text-navy-400 hover:text-red-500" />
