@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { getSupabaseAdmin } from "@/lib/supabase";
+import { getSuppressedSet } from "@/lib/suppression";
 
 export const runtime = "nodejs";
 
@@ -64,10 +65,18 @@ export async function POST(
     .eq("user_id", userId);
 
   const alreadyEnrolled = new Set((existing || []).map((r) => (r.contact_email as string).toLowerCase()));
-  const toEnroll = contacts.filter((c) => !alreadyEnrolled.has(c.email.toLowerCase()));
+  const suppressed = await getSuppressedSet(userId);
+  const toEnroll = contacts.filter(
+    (c) => !alreadyEnrolled.has(c.email.toLowerCase()) && !suppressed.has(c.email.toLowerCase())
+  );
+  const suppressedCount = contacts.filter((c) => suppressed.has(c.email.toLowerCase())).length;
 
   if (toEnroll.length === 0) {
-    return NextResponse.json({ enrolled: 0, message: "All contacts already enrolled" });
+    return NextResponse.json({
+      enrolled: 0,
+      suppressed: suppressedCount,
+      message: suppressedCount > 0 ? "All remaining contacts are on your do-not-contact list" : "All contacts already enrolled",
+    });
   }
 
   // Schedule with staggered send times, respecting window + daily limit
@@ -135,5 +144,5 @@ export async function POST(
 
   await db.from("campaigns").update({ status: "active" }).eq("id", id);
 
-  return NextResponse.json({ enrolled: rows.length });
+  return NextResponse.json({ enrolled: rows.length, suppressed: suppressedCount });
 }

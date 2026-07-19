@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { getAccountForUser, sendMessage, textToHtml } from "@/lib/nylas";
+import { isSuppressed } from "@/lib/suppression";
 
 export async function POST(request: Request) {
   const { userId } = await auth();
@@ -14,6 +15,13 @@ export async function POST(request: Request) {
   const account = await getAccountForUser(userId);
   if (!account) {
     return NextResponse.json({ error: "No email account connected. Connect one in Settings." }, { status: 401 });
+  }
+
+  if (await isSuppressed(userId, to)) {
+    return NextResponse.json(
+      { error: "This contact is on your do-not-contact list. Remove them from it first if this is intentional." },
+      { status: 403 }
+    );
   }
 
   try {

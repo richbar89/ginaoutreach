@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { hasGenuineReplyFrom, sendMessage, textToHtml } from "@/lib/nylas";
+import { getSuppressedSet } from "@/lib/suppression";
 import { applyMerge } from "@/lib/storage";
 import type { CampaignStep, Contact } from "@/lib/types";
 
@@ -32,12 +33,21 @@ export async function GET(req: Request) {
   let sent = 0;
   let failed = 0;
 
-  // Cache: campaign rows and user sent-today counts
+  // Cache: campaign rows, user sent-today counts, per-user suppression lists
   const campaignCache: Record<string, Record<string, unknown>> = {};
   const userSentToday: Record<string, number> = {};
+  const suppressedCache: Record<string, Set<string>> = {};
 
   for (const row of due) {
     try {
+      // Never email anyone on the user's do-not-contact list
+      if (!(row.user_id in suppressedCache)) {
+        suppressedCache[row.user_id] = await getSuppressedSet(row.user_id);
+      }
+      if (suppressedCache[row.user_id].has(row.contact_email.toLowerCase())) {
+        await db.from("sequence_contacts").update({ status: "suppressed" }).eq("id", row.id);
+        continue;
+      }
       // Fetch + cache campaign
       if (!campaignCache[row.campaign_id]) {
         const { data: c } = await db

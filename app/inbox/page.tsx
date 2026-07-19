@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import DOMPurify from "dompurify";
-import { RefreshCw, Loader2, MailOpen, Reply, Trash2, Send, CheckCircle, CheckSquare, Square } from "lucide-react";
+import { RefreshCw, Loader2, MailOpen, Reply, Trash2, Send, CheckCircle, CheckSquare, Square, Ban } from "lucide-react";
 import { getEmailAccount, sendEmail, type ConnectedEmailAccount } from "@/lib/emailClient";
 import { EmailSetupWizard } from "@/components/EmailSetupWizard";
 
@@ -82,6 +82,10 @@ export default function InboxPage() {
 
   // Delete state
   const [deleting, setDeleting] = useState(false);
+
+  // Suppression state
+  const [suppressing, setSuppressing] = useState(false);
+  const [suppressedAddr, setSuppressedAddr] = useState<string | null>(null);
 
   // Multi-select state
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -176,6 +180,26 @@ export default function InboxPage() {
     setDeleting(true);
     try { await deleteIds([selected.id]); }
     finally { setDeleting(false); }
+  };
+
+  const handleSuppress = async () => {
+    if (!selected) return;
+    const addr = selected.from.address;
+    if (!confirm(`Never contact ${addr} again?\n\nThey'll be removed from active sequences and blocked from all future campaigns.`)) return;
+    setSuppressing(true);
+    try {
+      const res = await fetch("/api/suppression", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: addr }),
+      });
+      if (res.ok) {
+        setSuppressedAddr(addr);
+        setTimeout(() => setSuppressedAddr(null), 4000);
+      }
+    } finally {
+      setSuppressing(false);
+    }
   };
 
   const handleBulkDelete = async () => {
@@ -371,6 +395,14 @@ export default function InboxPage() {
                         <Reply size={13} /> Reply
                       </button>
                       <button
+                        onClick={handleSuppress}
+                        disabled={suppressing}
+                        className="p-2 text-navy-400 hover:text-amber-600 hover:bg-amber-50 rounded-full transition-all duration-200 disabled:opacity-40"
+                        title="Never contact again"
+                      >
+                        {suppressing ? <Loader2 size={14} className="animate-spin" /> : <Ban size={14} />}
+                      </button>
+                      <button
                         onClick={handleDelete}
                         disabled={deleting}
                         className="p-2 text-navy-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-all duration-200 disabled:opacity-40"
@@ -410,6 +442,14 @@ export default function InboxPage() {
                   )}
                 </div>
               </div>
+
+              {/* Suppressed confirmation */}
+              {suppressedAddr && (
+                <div className="flex-shrink-0 px-10 py-3 bg-amber-50 border-t border-amber-100 flex items-center gap-2 text-sm text-amber-700 font-medium">
+                  <Ban size={14} />
+                  {suppressedAddr} will never be contacted again — removed from active sequences.
+                </div>
+              )}
 
               {/* Reply sent confirmation */}
               {replySent && (
