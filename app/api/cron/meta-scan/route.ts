@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase";
+import { sendMessage, textToHtml } from "@/lib/nylas";
 
 export const dynamic = "force-dynamic";
 
-const BATCH_LIMIT = 200;       // companies per run (keeps runtime under ~3 min)
-const STALE_HOURS = 48;        // re-scan companies older than this
+// Favourites-first scanning: every user's tracked brands (10 max each) are
+// kept fresh; everything else gets a small background trickle. This keeps
+// Meta API volume proportional to users, not to the 10k-contact database.
+const FAV_STALE_HOURS = 12;    // tracked brands re-scanned twice daily
+const TRICKLE_LIMIT = 25;      // non-favourite companies per run, oldest first
+const STALE_HOURS = 48;        // staleness threshold for the trickle
 const REQUEST_DELAY_MS = 300;  // pause between Meta API calls
 
 function normalize(s: string): string {
@@ -113,9 +118,23 @@ export async function GET(req: NextRequest) {
   }
 
   const supabase = getSupabaseAdmin();
+  const favStaleThreshold = new Date(Date.now() - FAV_STALE_HOURS * 3_600_000).toISOString();
   const staleThreshold = new Date(Date.now() - STALE_HOURS * 3_600_000).toISOString();
 
-  // Pull all distinct companies from contacts
+  // Every user's tracked brands — the priority scan set
+  const { data: settingsRows } = await supabase
+    .from("user_settings")
+    .select("user_id, fav_brands");
+
+  const favByUser = new Map<string, string[]>();
+  for (const row of settingsRows ?? []) {
+    const favs = (row.fav_brands as string[] | null) ?? [];
+    if (row.user_id && favs.length > 0) favByUser.set(row.user_id as string, favs);
+  }
+  const favSet = new Set<string>();
+  for (const favs of favByUser.values()) for (const f of favs) favSet.add(f);
+
+  // Background trickle candidates from the contacts DB
   const { data: contacts } = await supabase
     .from("uploaded_contacts")
     .select("company")
@@ -124,27 +143,36 @@ export async function GET(req: NextRequest) {
 
   const allCompanies = [...new Set((contacts ?? []).map((c: { company: string }) => c.company))];
 
-  if (!allCompanies.length) {
-    return NextResponse.json({ message: "No companies found", processed: 0 });
-  }
-
-  // Find stale / unchecked companies, oldest first
+  // Previous statuses — needed for staleness AND went-live transitions
   const { data: existing } = await supabase
     .from("meta_ad_statuses")
-    .select("company, checked_at");
+    .select("company, checked_at, has_ads");
 
-  const statusMap = new Map((existing ?? []).map((s: { company: string; checked_at: string }) => [s.company, s.checked_at]));
+  const statusMap = new Map(
+    (existing ?? []).map((s: { company: string; checked_at: string; has_ads: boolean }) =>
+      [s.company, { checkedAt: s.checked_at, hasAds: s.has_ads }] as const
+    )
+  );
 
-  const toScan = allCompanies
+  const favToScan = [...favSet].filter((c) => {
+    const s = statusMap.get(c);
+    return !s || s.checkedAt < favStaleThreshold;
+  });
+
+  const trickle = allCompanies
+    .filter((c) => !favSet.has(c))
     .filter((c) => {
-      const at = statusMap.get(c);
-      return !at || at < staleThreshold;
+      const s = statusMap.get(c);
+      return !s || s.checkedAt < staleThreshold;
     })
-    .sort((a, b) => (statusMap.get(a) ?? "").localeCompare(statusMap.get(b) ?? ""))
-    .slice(0, BATCH_LIMIT);
+    .sort((a, b) => (statusMap.get(a)?.checkedAt ?? "").localeCompare(statusMap.get(b)?.checkedAt ?? ""))
+    .slice(0, TRICKLE_LIMIT);
+
+  const toScan = [...favToScan, ...trickle];
 
   let processed = 0;
   let errors = 0;
+  const wentLive: string[] = [];
 
   for (const company of toScan) {
     try {
@@ -153,6 +181,12 @@ export async function GET(req: NextRequest) {
 
       const result = await checkAds(company, pageId, accessToken);
       await new Promise((r) => setTimeout(r, REQUEST_DELAY_MS));
+
+      // A brand flipping from "no ads" to "live" is the product's magic moment
+      const prev = statusMap.get(company);
+      if (prev?.hasAds === false && result.hasAds && favSet.has(company)) {
+        wentLive.push(company);
+      }
 
       await supabase.from("meta_ad_statuses").upsert({
         company,
@@ -167,11 +201,55 @@ export async function GET(req: NextRequest) {
     }
   }
 
+  // Alert each user whose tracked brands just went live — one digest email,
+  // sent to themselves through their own connected inbox.
+  let alertsSent = 0;
+  if (wentLive.length > 0) {
+    for (const [uid, favs] of favByUser.entries()) {
+      const hits = favs.filter((f) => wentLive.includes(f));
+      if (hits.length === 0) continue;
+      try {
+        const { data: account } = await supabase
+          .from("user_email_accounts")
+          .select("email, nylas_grant_id")
+          .eq("user_id", uid)
+          .single();
+        if (!account?.nylas_grant_id || !account?.email) continue;
+
+        const subject = hits.length === 1
+          ? `🔴 ${hits[0]} just went live on Meta ads`
+          : `🔴 ${hits.length} of your brands just went live on Meta ads`;
+        const lines = [
+          hits.length === 1
+            ? `${hits[0]} has started running Meta ads — their marketing budget is open right now.`
+            : `These brands you track have started running Meta ads:\n\n${hits.map(h => `• ${h}`).join("\n")}`,
+          ``,
+          `This is your window to pitch. Find the right contact:`,
+          `https://collabi.io/contacts?q=${encodeURIComponent(hits[0])}`,
+          ``,
+          `— Collabi Ad Signals`,
+        ].join("\n");
+
+        await sendMessage(account.nylas_grant_id as string, {
+          to: { email: account.email as string },
+          subject,
+          htmlBody: textToHtml(lines),
+        });
+        alertsSent++;
+      } catch {
+        // alerting is best-effort; never fail the scan
+      }
+    }
+  }
+
   return NextResponse.json({
     message: "Scan complete",
     processed,
     errors,
-    totalCompanies: allCompanies.length,
-    remainingStale: toScan.length - processed,
+    favourites: favSet.size,
+    favouritesScanned: favToScan.length,
+    trickleScanned: trickle.length,
+    wentLive,
+    alertsSent,
   });
 }
