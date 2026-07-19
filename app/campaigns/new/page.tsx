@@ -99,7 +99,8 @@ function NewCampaignPage() {
   const [contactSearch, setContactSearch] = useState("");
   const [industryFilter, setIndustryFilter] = useState("All");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-  const [contactedSet, setContactedSet] = useState<Set<string>>(new Set());
+  const [recentMap, setRecentMap] = useState<Map<string, number>>(new Map()); // email → days since last send (≤28)
+  const [inSequenceSet, setInSequenceSet] = useState<Set<string>>(new Set()); // currently in an active sequence
 
   // Saved lists
   const [lists, setLists] = useState<ContactList[]>([]);
@@ -134,10 +135,25 @@ function NewCampaignPage() {
     fetch("/api/contacts").then(r => r.json()).then(data => setAllLeads(Array.isArray(data) ? data : [])).catch(() => {});
     getDb().then(async db => {
       dbGetTemplates(db).then(setTemplates).catch(() => {});
-      // Emails already sent — used to flag "contacted before" in the picker
+      // Recent sends (any sequence step counts) — flag re-pitches within 4 weeks
       dbGetEmailLog(db)
-        .then(log => setContactedSet(new Set(log.map(r => r.contactEmail.toLowerCase()))))
+        .then(log => {
+          const latest = new Map<string, number>();
+          const now = Date.now();
+          for (const r of log) {
+            const email = r.contactEmail.toLowerCase();
+            const daysAgo = Math.floor((now - new Date(r.sentAt).getTime()) / 86400000);
+            const prev = latest.get(email);
+            if (prev === undefined || daysAgo < prev) latest.set(email, daysAgo);
+          }
+          setRecentMap(new Map([...latest].filter(([, d]) => d <= 28)));
+        })
         .catch(() => {});
+      // Contacts with follow-ups still queued — the sharper warning
+      db.from("sequence_contacts")
+        .select("contact_email")
+        .eq("status", "active")
+        .then(({ data }) => setInSequenceSet(new Set((data ?? []).map((r: { contact_email: string }) => r.contact_email.toLowerCase()))));
     }).catch(() => {});
     fetch("/api/lists").then(r => r.json()).then(data => { if (Array.isArray(data)) setLists(data); }).catch(() => {});
   }, [getDb]);
@@ -435,9 +451,13 @@ function NewCampaignPage() {
                         <p className="text-sm font-medium text-navy-900 truncate">{c.name || c.email}</p>
                         <p className="text-xs text-navy-400 truncate">{[c.company, c.position].filter(Boolean).join(" · ")}</p>
                       </div>
-                      {contactedSet.has(c.email.toLowerCase()) && !isAdded && (
-                        <span className="text-[10px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full flex-shrink-0">Contacted before</span>
-                      )}
+                      {!isAdded && inSequenceSet.has(c.email.toLowerCase()) ? (
+                        <span className="text-[10px] font-semibold text-red-600 bg-red-50 px-2 py-0.5 rounded-full flex-shrink-0">In active sequence</span>
+                      ) : !isAdded && recentMap.has(c.email.toLowerCase()) ? (
+                        <span className="text-[10px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full flex-shrink-0">
+                          Emailed {recentMap.get(c.email.toLowerCase())}d ago
+                        </span>
+                      ) : null}
                       {isAdded && <span className="text-xs text-navy-300">Added</span>}
                     </label>
                   );
@@ -486,9 +506,13 @@ function NewCampaignPage() {
                             <p className="text-sm font-semibold text-navy-900 truncate">{c.name || c.email}</p>
                             <p className="text-xs text-navy-400 truncate">{c.company || c.email}</p>
                           </div>
-                          {contactedSet.has(c.email.toLowerCase()) && !alreadyAdded && (
-                            <span className="text-[10px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full flex-shrink-0">Contacted before</span>
-                          )}
+                          {!alreadyAdded && inSequenceSet.has(c.email.toLowerCase()) ? (
+                            <span className="text-[10px] font-semibold text-red-600 bg-red-50 px-2 py-0.5 rounded-full flex-shrink-0">In active sequence</span>
+                          ) : !alreadyAdded && recentMap.has(c.email.toLowerCase()) ? (
+                            <span className="text-[10px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full flex-shrink-0">
+                              Emailed {recentMap.get(c.email.toLowerCase())}d ago
+                            </span>
+                          ) : null}
                           {alreadyAdded && <span className="text-[10px] text-emerald-600 font-bold">Added</span>}
                         </label>
                       );
