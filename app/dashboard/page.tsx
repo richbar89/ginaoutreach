@@ -9,8 +9,7 @@ import {
 import { useUser } from "@clerk/nextjs";
 import { useDb } from "@/lib/useDb";
 import { dbGetEmailLog, dbGetDeals, dbGetBrands, dbUpdateBrandDomain } from "@/lib/db";
-import { getGoogleUser } from "@/lib/googleClient";
-import { getMicrosoftUser } from "@/lib/graphClient";
+import { getEmailAccount } from "@/lib/emailClient";
 import { getAllCachedStatuses } from "@/lib/metaAds";
 import type { Deal, Brand } from "@/lib/types";
 import type { AdStatus } from "@/lib/metaAds";
@@ -116,7 +115,7 @@ export default function DashboardPage() {
   const [deals, setDeals] = useState<Deal[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [allCompanies, setAllCompanies] = useState<string[]>([]);
-  const [emailConnected, setEmailConnected] = useState<"gmail" | "microsoft" | "expired" | null>(null);
+  const [emailConnected, setEmailConnected] = useState<"connected" | "expired" | null>(null);
   const [adStatuses, setAdStatuses] = useState<Record<string, AdStatus>>({});
   const [favBrands, setFavBrands] = useState<string[]>([]);
   const [editingFavs, setEditingFavs] = useState(false);
@@ -131,11 +130,7 @@ export default function DashboardPage() {
   const [emailDomainMap, setEmailDomainMap] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    const gUser = getGoogleUser();
-    const mUser = getMicrosoftUser();
-    if (gUser) setEmailConnected("gmail");
-    else if (mUser) setEmailConnected("microsoft");
-    else setEmailConnected(null);
+    getEmailAccount().then(acc => setEmailConnected(acc ? "connected" : null));
     const stored = localStorage.getItem(FAV_KEY);
     if (stored) {
       setFavBrands(JSON.parse(stored));
@@ -287,7 +282,7 @@ export default function DashboardPage() {
     return { name, runningAds: cached?.hasAds ?? dbBrand?.runningAds ?? null, checkedAt: cached?.checkedAt ?? null, domain: dbBrand?.domain ?? extraDomains[name] };
   });
 
-  const emailReady = emailConnected === "gmail" || emailConnected === "microsoft";
+  const emailReady = emailConnected === "connected";
 
   return (
     <div style={{

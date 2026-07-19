@@ -1,24 +1,31 @@
+import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
+import { getAccountForUser, sendMessage, textToHtml } from "@/lib/nylas";
 
 export async function POST(request: Request) {
-  const { to, subject, body, gmailEmail, appPassword } = await request.json();
+  const { userId } = await auth();
+  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  if (!to || !subject || !body || !gmailEmail || !appPassword) {
+  const { to, subject, body, replyToMessageId } = await request.json();
+  if (!to || !subject || !body) {
     return NextResponse.json({ error: "Missing required fields." }, { status: 400 });
   }
 
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: { user: gmailEmail, pass: appPassword },
-  });
+  const account = await getAccountForUser(userId);
+  if (!account) {
+    return NextResponse.json({ error: "No email account connected. Connect one in Settings." }, { status: 401 });
+  }
 
   try {
-    await transporter.sendMail({ from: gmailEmail, to, subject, text: body });
+    await sendMessage(account.grantId, {
+      to: { email: to },
+      subject,
+      htmlBody: textToHtml(body),
+      replyToMessageId,
+    });
     return NextResponse.json({ ok: true });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Failed to send.";
-    const status = msg.includes("535") || msg.includes("Invalid login") || msg.includes("Username and Password not accepted") ? 401 : 500;
-    return NextResponse.json({ error: status === 401 ? "Invalid Gmail credentials. Check your App Password in Settings." : msg }, { status });
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

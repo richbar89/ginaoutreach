@@ -1,37 +1,27 @@
+import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { ImapFlow } from "imapflow";
+import { deleteMessage, getAccountForUser } from "@/lib/nylas";
 
 export async function POST(request: Request) {
-  const { gmailEmail, appPassword, uid, uids } = await request.json();
+  const { userId } = await auth();
+  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  // Accept either a single uid or an array of uids
-  const uidList: number[] = Array.isArray(uids) ? uids : uid ? [uid] : [];
-
-  if (!gmailEmail || !appPassword || uidList.length === 0) {
-    return NextResponse.json({ error: "Missing fields." }, { status: 400 });
+  const { id, ids } = await request.json();
+  const idList: string[] = Array.isArray(ids) ? ids : id ? [id] : [];
+  if (idList.length === 0) {
+    return NextResponse.json({ error: "Missing message ids." }, { status: 400 });
   }
 
-  const client = new ImapFlow({
-    host: "imap.gmail.com",
-    port: 993,
-    secure: true,
-    auth: { user: gmailEmail, pass: appPassword },
-    logger: false,
-  });
+  const account = await getAccountForUser(userId);
+  if (!account) return NextResponse.json({ error: "No email account connected." }, { status: 401 });
 
   try {
-    await client.connect();
-    const lock = await client.getMailboxLock("INBOX");
-    try {
-      await client.messageMove(uidList.join(","), "[Gmail]/Trash", { uid: true });
-    } finally {
-      lock.release();
+    for (const messageId of idList) {
+      await deleteMessage(account.grantId, messageId);
     }
-    return NextResponse.json({ success: true, deleted: uidList.length });
+    return NextResponse.json({ success: true, deleted: idList.length });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Failed to delete.";
     return NextResponse.json({ error: msg }, { status: 500 });
-  } finally {
-    await client.logout().catch(() => {});
   }
 }

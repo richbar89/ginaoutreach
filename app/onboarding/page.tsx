@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
-import { CheckCircle, Loader2, ArrowRight, User, ExternalLink, ChevronDown, ChevronUp } from "lucide-react";
-import { getGoogleUser, setGmailCredentials } from "@/lib/googleClient";
+import { CheckCircle, Loader2, ArrowRight, User, ExternalLink, Mail } from "lucide-react";
+import { getEmailAccount, connectEmailUrl } from "@/lib/emailClient";
 import { useAuth } from "@clerk/nextjs";
 import { useDb } from "@/lib/useDb";
 import { dbGetMediaKit, dbSaveMediaKit, dbGetDeals, dbUpsertDeal, dbGetBrands, dbSaveBrands } from "@/lib/db";
@@ -53,11 +53,8 @@ export default function OnboardingPage() {
   const [step, setStep] = useState<Step>("email");
   const [emailSubStep, setEmailSubStep] = useState<EmailSubStep>("intro");
   const [accountCreated, setAccountCreated] = useState(false);
-  const [connecting, setConnecting] = useState(false);
   const [connectedEmail, setConnectedEmail] = useState<string | null>(null);
-  const [gmailForm, setGmailForm] = useState({ email: "", password: "" });
-  const [gmailError, setGmailError] = useState("");
-  const [showInstructions, setShowInstructions] = useState(false);
+  const [emailError, setEmailError] = useState("");
 
   // Profile step
   const [name, setName] = useState("");
@@ -66,33 +63,24 @@ export default function OnboardingPage() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (getGoogleUser()) router.replace("/dashboard");
+    const params = new URLSearchParams(window.location.search);
+    const err = params.get("email_error");
+    const justConnected = params.get("connected") === "1";
+    if (err) {
+      setEmailError(err);
+      setEmailSubStep("connect");
+    }
+    getEmailAccount().then(acc => {
+      if (!acc) return;
+      if (justConnected) setConnectedEmail(acc.email);
+      else router.replace("/dashboard");
+    });
   }, [router]);
 
   useEffect(() => {
     if (user?.fullName) setName(user.fullName);
     else if (user?.firstName) setName(user.firstName);
   }, [user]);
-
-  const handleGmailConnect = async () => {
-    setGmailError("");
-    setConnecting(true);
-    try {
-      const res = await fetch("/api/email/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ gmailEmail: gmailForm.email.trim(), appPassword: gmailForm.password.trim() }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Verification failed.");
-      setGmailCredentials(gmailForm.email.trim(), gmailForm.password.trim());
-      setConnectedEmail(gmailForm.email.trim());
-    } catch (e: unknown) {
-      setGmailError(e instanceof Error ? e.message : "Connection failed.");
-    } finally {
-      setConnecting(false);
-    }
-  };
 
   const handleSaveProfile = async () => {
     setSaving(true);
@@ -155,13 +143,13 @@ export default function OnboardingPage() {
               </div>
               <h1 className="font-serif text-3xl font-bold text-navy-900">You&apos;re all set!</h1>
               <p className="mt-3 text-navy-500 text-sm leading-relaxed">
-                Your outreach Gmail is connected. Let&apos;s finish setting up your profile.
+                Your outreach email is connected. Let&apos;s finish setting up your profile.
               </p>
             </div>
             <div className="flex items-center gap-4 p-5 bg-white border-2 border-emerald-200 rounded-2xl mb-4 shadow-sm">
-              <GmailLogo size={24} />
+              <Mail size={22} className="text-coral-500" />
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-navy-900">Gmail connected</p>
+                <p className="text-sm font-bold text-navy-900">Email connected</p>
                 <p className="text-xs text-navy-400 mt-0.5 truncate">{connectedEmail}</p>
               </div>
               <CheckCircle size={18} className="text-emerald-500 flex-shrink-0" />
@@ -318,76 +306,29 @@ export default function OnboardingPage() {
                   Connect it to Collabi
                 </h1>
                 <p className="mt-3 text-navy-500 text-sm leading-relaxed">
-                  We use an &ldquo;App Password&rdquo; — a special key you generate inside Google in about 60 seconds. Not your regular Gmail password.
+                  One click — sign in with your provider and you&apos;re done. No passwords shared with Collabi.
                 </p>
               </div>
 
               <div className="bg-white rounded-2xl border border-cream-200 p-5 shadow-sm space-y-4 mb-4">
-                <div>
-                  <label className="block text-xs font-bold text-navy-400 mb-1.5 uppercase tracking-widest">
-                    Your outreach Gmail address
-                  </label>
-                  <input
-                    type="email"
-                    value={gmailForm.email}
-                    onChange={e => setGmailForm(f => ({ ...f, email: e.target.value }))}
-                    placeholder="yourname.brands@gmail.com"
-                    className="w-full text-sm border border-cream-200 rounded-xl px-4 py-3 outline-none focus:border-coral-300 focus:ring-2 focus:ring-coral-100"
-                  />
-                </div>
+                <p className="text-sm text-navy-600 leading-relaxed">
+                  Click below and sign in with your <strong>new outreach account</strong> — you&apos;ll be sent to your provider&apos;s own secure page and brought straight back here.
+                </p>
 
-                <div>
-                  <label className="block text-xs font-bold text-navy-400 mb-1.5 uppercase tracking-widest">
-                    App Password
-                  </label>
-                  <input
-                    type="password"
-                    value={gmailForm.password}
-                    onChange={e => setGmailForm(f => ({ ...f, password: e.target.value }))}
-                    placeholder="xxxx xxxx xxxx xxxx"
-                    className="w-full font-mono tracking-widest text-sm border border-cream-200 rounded-xl px-4 py-3 outline-none focus:border-coral-300 focus:ring-2 focus:ring-coral-100"
-                  />
-                </div>
-
-                {/* Instructions accordion */}
-                <button
-                  onClick={() => setShowInstructions(v => !v)}
-                  className="w-full flex items-center justify-between text-xs font-semibold text-navy-500 hover:text-coral-600 transition-colors py-1"
-                >
-                  <span>How do I get an App Password?</span>
-                  {showInstructions ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
-                </button>
-
-                {showInstructions && (
-                  <ol className="space-y-3 text-xs text-navy-700 bg-cream-50 border border-cream-200 rounded-xl p-4">
-                    {[
-                      <>Sign into your <strong>new outreach Gmail</strong> at <a href="https://gmail.com" target="_blank" rel="noopener noreferrer" className="text-coral-500 hover:underline">gmail.com</a></>,
-                      <>Go to <a href="https://myaccount.google.com/security" target="_blank" rel="noopener noreferrer" className="text-coral-500 hover:underline">myaccount.google.com/security</a> and turn on <strong>2-Step Verification</strong> (required)</>,
-                      <>Go to <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener noreferrer" className="text-coral-500 hover:underline">myaccount.google.com/apppasswords</a></>,
-                      <>Type <span className="font-mono bg-cream-200 px-1 rounded">Collabi</span> as the app name and click <strong>Create</strong></>,
-                      <>Copy the <strong>16-character password</strong> it shows you (spaces are fine)</>,
-                      <>Paste the Gmail address and that password above, then hit <strong>Connect Gmail</strong></>,
-                    ].map((s, i) => (
-                      <li key={i} className="flex gap-3">
-                        <span className="flex-shrink-0 w-5 h-5 bg-coral-100 text-coral-600 text-[10px] font-bold rounded-full flex items-center justify-center mt-0.5">{i + 1}</span>
-                        <span className="leading-relaxed">{s}</span>
-                      </li>
-                    ))}
-                  </ol>
+                {emailError && (
+                  <p className="text-xs text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3">{emailError}</p>
                 )}
 
-                {gmailError && (
-                  <p className="text-xs text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3">{gmailError}</p>
-                )}
-
-                <button
-                  onClick={handleGmailConnect}
-                  disabled={connecting || !gmailForm.email.trim() || !gmailForm.password.trim()}
-                  className="w-full flex items-center justify-center gap-2 py-3 bg-coral-500 hover:bg-coral-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-colors"
+                <a
+                  href={connectEmailUrl("/onboarding")}
+                  className="w-full flex items-center justify-center gap-2 py-3 bg-coral-500 hover:bg-coral-600 text-white font-bold rounded-xl transition-colors"
                 >
-                  {connecting && <Loader2 size={15} className="animate-spin" />}
-                  {connecting ? "Connecting…" : "Connect Gmail"}
-                </button>
+                  <Mail size={15} />
+                  Connect my outreach email
+                </a>
+                <p className="text-[11px] text-navy-400 text-center">
+                  Works with Gmail, Outlook and most providers. Collabi never sees your password.
+                </p>
               </div>
 
               <p className="text-center text-xs text-navy-400">

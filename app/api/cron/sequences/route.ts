@@ -1,52 +1,12 @@
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase";
-import nodemailer from "nodemailer";
-import { ImapFlow } from "imapflow";
+import { hasGenuineReplyFrom, sendMessage, textToHtml } from "@/lib/nylas";
 import { applyMerge } from "@/lib/storage";
 import type { CampaignStep, Contact } from "@/lib/types";
 
 export const runtime = "nodejs";
 
 const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-const AUTO_REPLY_SUBJECTS = [
-  "out of office", "automatic reply", "auto-reply", "autoreply",
-  "on vacation", "away from", "on annual leave", "on leave",
-  "i am away", "i'm away", "i am out", "i'm out", "be back",
-];
-
-async function hasReplied(
-  gmailEmail: string,
-  appPassword: string,
-  fromAddress: string,
-  since: Date
-): Promise<boolean> {
-  const client = new ImapFlow({
-    host: "imap.gmail.com", port: 993, secure: true,
-    auth: { user: gmailEmail, pass: appPassword },
-    logger: false,
-  });
-  try {
-    await client.connect();
-    const lock = await client.getMailboxLock("INBOX");
-    try {
-      const uids = await client.search({ from: fromAddress, since });
-      if (!Array.isArray(uids) || uids.length === 0) return false;
-      for await (const msg of client.fetch(uids, { envelope: true })) {
-        const subject = (msg.envelope?.subject ?? "").toLowerCase();
-        const isAutoReply = AUTO_REPLY_SUBJECTS.some((s) => subject.includes(s));
-        if (!isAutoReply) return true;
-      }
-      return false;
-    } finally {
-      lock.release();
-    }
-  } catch {
-    return false;
-  } finally {
-    await client.logout().catch(() => {});
-  }
-}
 
 export async function GET(req: Request) {
   const authHeader = req.headers.get("authorization");
@@ -116,17 +76,18 @@ export async function GET(req: Request) {
       }
       if (userSentToday[row.user_id] >= dailyLimit) continue;
 
-      // Get Gmail credentials
+      // Get the user's connected email account (Nylas grant)
       const { data: emailAccount } = await db
         .from("user_email_accounts")
-        .select("gmail_email, app_password")
+        .select("email, nylas_grant_id")
         .eq("user_id", row.user_id)
         .single();
 
-      if (!emailAccount) {
+      if (!emailAccount?.nylas_grant_id) {
         await db.from("sequence_contacts").update({ status: "error" }).eq("id", row.id);
         continue;
       }
+      const grantId = emailAccount.nylas_grant_id as string;
 
       // Resolve email subject + body based on which step we're on
       let subject: string;
@@ -156,11 +117,10 @@ export async function GET(req: Request) {
 
         // Check for a genuine reply before sending follow-up
         const enrolledAt = new Date(row.created_at);
-        const replied = await hasReplied(
-          emailAccount.gmail_email,
-          emailAccount.app_password,
+        const replied = await hasGenuineReplyFrom(
+          grantId,
           row.contact_email,
-          enrolledAt
+          Math.floor(enrolledAt.getTime() / 1000)
         );
         if (replied) {
           await db.from("sequence_contacts").update({ status: "replied" }).eq("id", row.id);
@@ -178,16 +138,12 @@ export async function GET(req: Request) {
         body = applyMerge(step.body, contact);
       }
 
-      const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: { user: emailAccount.gmail_email, pass: emailAccount.app_password },
-      });
-
-      await transporter.sendMail({
-        from: emailAccount.gmail_email,
-        to: row.contact_email,
+      // Follow-ups thread onto the initial email when we know its message id
+      const { messageId } = await sendMessage(grantId, {
+        to: { email: row.contact_email, name: row.contact_name ?? undefined },
         subject,
-        text: body,
+        htmlBody: textToHtml(body),
+        replyToMessageId: row.current_step > 1 ? row.last_message_id ?? undefined : undefined,
       });
 
       // Log to email_log
@@ -206,7 +162,7 @@ export async function GET(req: Request) {
       if (nextStepIndex >= steps.length) {
         await db
           .from("sequence_contacts")
-          .update({ status: "completed", current_step: nextStep })
+          .update({ status: "completed", current_step: nextStep, last_message_id: messageId })
           .eq("id", row.id);
       } else {
         const nextSendAt = new Date(
@@ -214,7 +170,7 @@ export async function GET(req: Request) {
         ).toISOString();
         await db
           .from("sequence_contacts")
-          .update({ current_step: nextStep, next_send_at: nextSendAt })
+          .update({ current_step: nextStep, next_send_at: nextSendAt, last_message_id: messageId })
           .eq("id", row.id);
       }
 

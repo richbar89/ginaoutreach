@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { RefreshCw, Loader2, MailOpen, Reply, Trash2, Send, CheckCircle, CheckSquare, Square } from "lucide-react";
-import { getGmailCredentials, setGmailCredentials } from "@/lib/googleClient";
+import { getEmailAccount, sendEmail, type ConnectedEmailAccount } from "@/lib/emailClient";
 import { EmailSetupWizard } from "@/components/EmailSetupWizard";
 
 type InboxMsg = {
-  uid: number;
+  id: string;
   subject: string;
   from: { name: string; address: string };
   date: string;
@@ -29,28 +29,8 @@ function formatDate(iso: string): string {
   return d.toLocaleDateString([], { day: "numeric", month: "short" });
 }
 
-function ImapPendingCard({ onRetry }: { onRetry: () => void }) {
-  return (
-    <div className="flex items-center justify-center h-full p-8">
-      <div className="text-center max-w-sm">
-        <div className="text-4xl mb-5">⏳</div>
-        <h3 className="font-serif text-xl font-bold text-navy-900 mb-2">Almost there!</h3>
-        <p className="text-sm text-navy-500 leading-relaxed mb-6">
-          Gmail can take up to a minute to activate IMAP after you save the setting.
-        </p>
-        <button
-          onClick={onRetry}
-          className="inline-flex items-center gap-2 px-6 py-3 bg-coral-500 hover:bg-coral-600 text-white font-bold rounded-xl transition-colors"
-        >
-          <RefreshCw size={14} /> Try loading inbox
-        </button>
-      </div>
-    </div>
-  );
-}
-
 export default function InboxPage() {
-  const [creds, setCreds] = useState<{ email: string; appPassword: string } | null>(null);
+  const [account, setAccount] = useState<ConnectedEmailAccount | null>(null);
   const [messages, setMessages] = useState<InboxMsg[]>([]);
   const [selected, setSelected] = useState<InboxMsgDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -68,20 +48,14 @@ export default function InboxPage() {
   const [deleting, setDeleting] = useState(false);
 
   // Multi-select state
-  const [selectedUids, setSelectedUids] = useState<Set<number>>(new Set());
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [bulkDeleting, setBulkDeleting] = useState(false);
 
-  const imapAttempted = useRef(false);
-
-  const fetchInbox = useCallback(async (c: { email: string; appPassword: string }, isRefresh = false) => {
+  const fetchInbox = useCallback(async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true); else setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/email/inbox", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ gmailEmail: c.email, appPassword: c.appPassword }),
-      });
+      const res = await fetch("/api/email/inbox");
       const data = await res.json();
       if (!res.ok) setError(data.error || "Failed to load inbox.");
       else setMessages(data.messages);
@@ -94,34 +68,17 @@ export default function InboxPage() {
   }, []);
 
   useEffect(() => {
-    const local = getGmailCredentials();
-    if (local) {
-      setCreds(local);
-      fetchInbox(local);
-      return;
-    }
-    fetch("/api/email-account")
-      .then(r => r.json())
-      .then(data => {
-        if (data?.email && data?.appPassword) {
-          setGmailCredentials(data.email, data.appPassword);
-          setCreds(data);
-          fetchInbox(data);
-        } else {
-          setLoading(false);
-        }
-      })
-      .catch(() => setLoading(false));
-  }, [fetchInbox]);
-
-  const handleInboxReady = useCallback(() => {
-    imapAttempted.current = true;
-    const c = getGmailCredentials();
-    if (c) { setCreds(c); setError(null); fetchInbox(c); }
+    getEmailAccount().then(acc => {
+      if (acc) {
+        setAccount(acc);
+        fetchInbox();
+      } else {
+        setLoading(false);
+      }
+    });
   }, [fetchInbox]);
 
   const openMessage = async (msg: InboxMsg) => {
-    if (!creds) return;
     setReplying(false);
     setReplyBody("");
     setReplySent(false);
@@ -131,12 +88,12 @@ export default function InboxPage() {
       const res = await fetch("/api/email/inbox/message", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ gmailEmail: creds.email, appPassword: creds.appPassword, uid: msg.uid }),
+        body: JSON.stringify({ id: msg.id }),
       });
       const data = await res.json();
       if (res.ok) {
         setSelected(data);
-        setMessages(prev => prev.map(m => m.uid === msg.uid ? { ...m, isRead: true } : m));
+        setMessages(prev => prev.map(m => m.id === msg.id ? { ...m, isRead: true } : m));
       }
     } finally {
       setLoadingDetail(false);
@@ -144,69 +101,70 @@ export default function InboxPage() {
   };
 
   const handleSendReply = async () => {
-    if (!creds || !selected || !replyBody.trim()) return;
+    if (!selected || !replyBody.trim()) return;
     setSendingReply(true);
     try {
       const subject = selected.subject.toLowerCase().startsWith("re:")
         ? selected.subject
         : `Re: ${selected.subject}`;
-      const res = await fetch("/api/email/send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ gmailEmail: creds.email, appPassword: creds.appPassword, to: selected.from.address, subject, body: replyBody }),
+      await sendEmail({
+        to: selected.from.address,
+        subject,
+        body: replyBody,
+        replyToMessageId: selected.id,
       });
-      if (res.ok) {
-        setReplySent(true);
-        setReplying(false);
-        setReplyBody("");
-        setTimeout(() => setReplySent(false), 4000);
-      }
+      setReplySent(true);
+      setReplying(false);
+      setReplyBody("");
+      setTimeout(() => setReplySent(false), 4000);
+    } catch {
+      // keep the compose box open so the reply isn't lost
     } finally {
       setSendingReply(false);
     }
   };
 
-  const deleteUids = async (uids: number[]) => {
-    if (!creds || uids.length === 0) return;
+  const deleteIds = async (ids: string[]) => {
+    if (ids.length === 0) return;
     await fetch("/api/email/inbox/delete", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ gmailEmail: creds.email, appPassword: creds.appPassword, uids }),
+      body: JSON.stringify({ ids }),
     });
-    setMessages(prev => prev.filter(m => !uids.includes(m.uid)));
-    if (selected && uids.includes(selected.uid)) { setSelected(null); setReplying(false); }
+    setMessages(prev => prev.filter(m => !ids.includes(m.id)));
+    if (selected && ids.includes(selected.id)) { setSelected(null); setReplying(false); }
   };
 
   const handleDelete = async () => {
     if (!selected) return;
     setDeleting(true);
-    try { await deleteUids([selected.uid]); }
+    try { await deleteIds([selected.id]); }
     finally { setDeleting(false); }
   };
 
   const handleBulkDelete = async () => {
-    if (selectedUids.size === 0) return;
+    if (selectedIds.size === 0) return;
     setBulkDeleting(true);
     try {
-      await deleteUids(Array.from(selectedUids));
-      setSelectedUids(new Set());
+      await deleteIds(Array.from(selectedIds));
+      setSelectedIds(new Set());
     } finally {
       setBulkDeleting(false);
     }
   };
 
-  const toggleSelect = (uid: number, e: React.MouseEvent) => {
+  const toggleSelect = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    setSelectedUids(prev => {
+    setSelectedIds(prev => {
       const next = new Set(prev);
-      next.has(uid) ? next.delete(uid) : next.add(uid);
+      next.has(id) ? next.delete(id) : next.add(id);
       return next;
     });
   };
 
-  const allSelected = messages.length > 0 && selectedUids.size === messages.length;
+  const allSelected = messages.length > 0 && selectedIds.size === messages.length;
   const toggleSelectAll = () =>
-    allSelected ? setSelectedUids(new Set()) : setSelectedUids(new Set(messages.map(m => m.uid)));
+    allSelected ? setSelectedIds(new Set()) : setSelectedIds(new Set(messages.map(m => m.id)));
 
   // ── States ───────────────────────────────────────────────────
   if (loading) {
@@ -216,13 +174,9 @@ export default function InboxPage() {
       </div>
     );
   }
-  if (!creds) return <EmailSetupWizard onInboxReady={handleInboxReady} />;
-  if (error === "IMAP_DISABLED") {
-    if (imapAttempted.current) return <ImapPendingCard onRetry={() => creds && fetchInbox(creds, true)} />;
-    return <EmailSetupWizard initialStep="imap-steps" initialEmail={creds.email} onInboxReady={handleInboxReady} />;
-  }
+  if (!account) return <EmailSetupWizard returnTo="/inbox" />;
 
-  const hasSelection = selectedUids.size > 0;
+  const hasSelection = selectedIds.size > 0;
 
   // ── Inbox layout ─────────────────────────────────────────────
   return (
@@ -234,10 +188,10 @@ export default function InboxPage() {
             <div className="h-px w-8 bg-coral-400" />
             <span className="text-[11px] font-bold uppercase tracking-widest text-coral-500">Inbox</span>
           </div>
-          <h1 className="font-serif text-2xl font-bold text-navy-900">{creds.email}</h1>
+          <h1 className="font-serif text-2xl font-bold text-navy-900">{account.email}</h1>
         </div>
         <button
-          onClick={() => fetchInbox(creds, true)}
+          onClick={() => fetchInbox(true)}
           disabled={refreshing}
           className="p-2.5 hover:bg-cream-100 rounded-xl transition-colors disabled:opacity-40"
           title="Refresh"
@@ -275,7 +229,7 @@ export default function InboxPage() {
                   {bulkDeleting
                     ? <Loader2 size={12} className="animate-spin" />
                     : <Trash2 size={12} />}
-                  Delete {selectedUids.size}
+                  Delete {selectedIds.size}
                 </button>
               )}
             </div>
@@ -295,19 +249,19 @@ export default function InboxPage() {
               </div>
             ) : (
               messages.map(msg => {
-                const isSelected = selectedUids.has(msg.uid);
+                const isSelected = selectedIds.has(msg.id);
                 return (
                   <div
-                    key={msg.uid}
+                    key={msg.id}
                     className={`group flex items-start border-b border-cream-100 transition-colors cursor-pointer ${
-                      selected?.uid === msg.uid ? "bg-coral-50 border-l-2 border-l-coral-400" : isSelected ? "bg-coral-50/50" : "hover:bg-cream-50"
+                      selected?.id === msg.id ? "bg-coral-50 border-l-2 border-l-coral-400" : isSelected ? "bg-coral-50/50" : "hover:bg-cream-50"
                     }`}
                     onClick={() => openMessage(msg)}
                   >
                     {/* Checkbox */}
                     <div
                       className="flex-shrink-0 flex items-center justify-center w-10 pl-3 pt-4 pb-4"
-                      onClick={e => toggleSelect(msg.uid, e)}
+                      onClick={e => toggleSelect(msg.id, e)}
                     >
                       {isSelected
                         ? <CheckSquare size={15} className="text-coral-500" />

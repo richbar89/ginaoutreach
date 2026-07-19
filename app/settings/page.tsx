@@ -3,10 +3,8 @@
 import { useState, useEffect } from "react";
 import {
   CheckCircle,
-  LogIn,
   LogOut,
-  ChevronDown,
-  ChevronUp,
+  Mail,
   Loader2,
   Plus,
   Pencil,
@@ -17,11 +15,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import Link from "next/link";
-import {
-  getGoogleUser,
-  setGmailCredentials,
-  clearGmailCredentials,
-} from "@/lib/googleClient";
+import { getEmailAccount, disconnectEmail, connectEmailUrl } from "@/lib/emailClient";
 import { useDb } from "@/lib/useDb";
 import { useAuth } from "@clerk/nextjs";
 import {
@@ -115,10 +109,8 @@ export default function SettingsPage() {
   const { userId } = useAuth();
   const [gUser, setGUser] = useState<ConnectedUser>(null);
   const [loading, setLoading] = useState(true);
-  const [signing, setSigning] = useState<"google" | null>(null);
-  const [gmailForm, setGmailForm] = useState({ email: "", password: "" });
-  const [gmailError, setGmailError] = useState("");
-  const [showGmailInstructions, setShowGmailInstructions] = useState(false);
+  const [emailError, setEmailError] = useState("");
+  const [disconnecting, setDisconnecting] = useState(false);
   const [signature, setSignature] = useState("");
   const [sigSaved, setSigSaved] = useState(false);
   const [brands, setBrands] = useState<Brand[]>(Array.from({ length: 10 }, () => ({ name: "", runningAds: false })));
@@ -127,7 +119,10 @@ export default function SettingsPage() {
   const [editingTemplate, setEditingTemplate] = useState<EmailTemplate | "new" | null>(null);
 
   useEffect(() => {
-    setGUser(getGoogleUser());
+    const params = new URLSearchParams(window.location.search);
+    const err = params.get("email_error");
+    if (err) setEmailError(err);
+    getEmailAccount().then(acc => setGUser(acc ? { name: acc.email, email: acc.email } : null));
     (async () => {
       const db = await getDb();
       const sig = await dbGetSignature(db);
@@ -173,30 +168,14 @@ export default function SettingsPage() {
     setTemplates(await dbGetTemplates(db));
   };
 
-  const handleConnectGoogle = async () => {
-    setGmailError("");
-    setSigning("google");
+  const handleDisconnectEmail = async () => {
+    setDisconnecting(true);
     try {
-      const res = await fetch("/api/email/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ gmailEmail: gmailForm.email.trim(), appPassword: gmailForm.password.trim() }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Verification failed.");
-      setGmailCredentials(gmailForm.email.trim(), gmailForm.password.trim());
-      setGUser({ email: gmailForm.email.trim(), name: gmailForm.email.trim() });
-      setGmailForm({ email: "", password: "" });
-    } catch (e: unknown) {
-      setGmailError(e instanceof Error ? e.message : "Connection failed.");
+      await disconnectEmail();
+      setGUser(null);
     } finally {
-      setSigning(null);
+      setDisconnecting(false);
     }
-  };
-
-  const handleDisconnectGoogle = () => {
-    clearGmailCredentials();
-    setGUser(null);
   };
 
   return (
@@ -220,14 +199,9 @@ export default function SettingsPage() {
       {/* Gmail Connection Card */}
       <div className="bg-white border border-cream-200 rounded-2xl overflow-hidden shadow-sm mb-6">
         <div className="px-7 py-5 border-b border-cream-100 flex items-center gap-3">
-          <svg width="20" height="20" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-          </svg>
-          <span className="text-sm font-semibold text-navy-800">Gmail</span>
-          <span className="text-xs text-navy-400">— @gmail.com addresses</span>
+          <Mail size={18} className="text-coral-500" />
+          <span className="text-sm font-semibold text-navy-800">Email account</span>
+          <span className="text-xs text-navy-400">— Gmail, Outlook and more</span>
           {gUser && (
             <span className="ml-auto inline-flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 border border-emerald-100 px-2.5 py-1 rounded-full">
               <CheckCircle size={11} />
@@ -242,57 +216,19 @@ export default function SettingsPage() {
               Checking connection…
             </div>
           ) : gUser ? (
-            <div className="space-y-5">
-              {/* Connected status */}
-              <div className="flex items-center justify-between p-4 bg-emerald-50 border border-emerald-100 rounded-xl">
-                <div>
-                  <p className="text-sm font-semibold text-navy-900">{gUser.email}</p>
-                  <p className="text-xs text-navy-400 mt-0.5">Sending via Gmail SMTP</p>
-                </div>
-                <button
-                  onClick={handleDisconnectGoogle}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-navy-500 hover:text-red-600 border border-cream-200 hover:border-red-200 bg-white rounded-xl transition-all"
-                >
-                  <LogOut size={12} />
-                  Disconnect
-                </button>
+            <div className="flex items-center justify-between p-4 bg-emerald-50 border border-emerald-100 rounded-xl">
+              <div>
+                <p className="text-sm font-semibold text-navy-900">{gUser.email}</p>
+                <p className="text-xs text-navy-400 mt-0.5">Connected — sending and inbox enabled</p>
               </div>
-
-              {/* IMAP inbox setup */}
-              <div className="border border-cream-200 rounded-xl overflow-hidden">
-                <div className="px-5 py-4 bg-cream-50 border-b border-cream-200">
-                  <p className="text-sm font-bold text-navy-900">Enable inbox view <span className="text-xs font-normal text-navy-400 ml-1">— see replies from brands inside Collabi</span></p>
-                </div>
-                <div className="px-5 py-4 space-y-4 text-xs text-navy-600 leading-relaxed">
-                  <div className="p-3 bg-blue-50 border border-blue-100 rounded-lg text-blue-800">
-                    <strong>This is safe and built into Gmail.</strong> The same technology Outlook, Apple Mail, and every other email app uses to access Gmail. It only gives Collabi read access to your outreach inbox — it cannot delete emails, access your personal Gmail, or make any changes.
-                  </div>
-                  <p className="text-navy-500">To enable it, you just need to flip one toggle inside Gmail settings:</p>
-                  <ol className="space-y-3">
-                    {[
-                      <>Open <strong>Gmail</strong> (your outreach account) in a new tab</>,
-                      <>Click the <strong>gear icon</strong> (top right) → <strong>See all settings</strong></>,
-                      <>Click the <strong>&quot;Forwarding and POP/IMAP&quot;</strong> tab</>,
-                      <>Under <strong>&quot;IMAP access&quot;</strong>, select <strong>Enable IMAP</strong></>,
-                      <>Click <strong>Save Changes</strong> — that&apos;s it</>,
-                    ].map((step, i) => (
-                      <li key={i} className="flex gap-3">
-                        <span className="flex-shrink-0 w-5 h-5 bg-coral-100 text-coral-600 text-[10px] font-bold rounded-full flex items-center justify-center mt-0.5">{i + 1}</span>
-                        <span>{step}</span>
-                      </li>
-                    ))}
-                  </ol>
-                  <a
-                    href="https://mail.google.com/mail/u/0/#settings/fwdandpop"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-coral-500 hover:bg-coral-600 text-white text-xs font-semibold rounded-xl transition-colors"
-                  >
-                    Open Gmail Settings directly →
-                  </a>
-                  <p className="text-navy-400 text-[11px]">Once done, click Inbox in the sidebar — your replies will load automatically.</p>
-                </div>
-              </div>
+              <button
+                onClick={handleDisconnectEmail}
+                disabled={disconnecting}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-navy-500 hover:text-red-600 border border-cream-200 hover:border-red-200 bg-white rounded-xl transition-all disabled:opacity-50"
+              >
+                {disconnecting ? <Loader2 size={12} className="animate-spin" /> : <LogOut size={12} />}
+                Disconnect
+              </button>
             </div>
           ) : (
             <div className="space-y-5">
@@ -306,80 +242,31 @@ export default function SettingsPage() {
                 </div>
                 <div className="flex-1">
                   <p className="text-sm font-bold text-coral-800 mb-0.5">First time? Use our step-by-step guide</p>
-                  <p className="text-xs text-coral-700 leading-relaxed">We&apos;ll walk you through creating a dedicated outreach Gmail and connecting it — takes about 3 minutes.</p>
+                  <p className="text-xs text-coral-700 leading-relaxed">We&apos;ll walk you through setting up a dedicated outreach address and connecting it — takes about a minute.</p>
                 </div>
                 <ArrowRight size={15} className="text-coral-400 flex-shrink-0 mt-1 group-hover:translate-x-0.5 transition-transform" />
               </Link>
 
               <div className="flex items-center gap-3">
                 <div className="flex-1 h-px bg-cream-200" />
-                <span className="text-xs text-navy-400">or connect manually</span>
+                <span className="text-xs text-navy-400">or connect right here</span>
                 <div className="flex-1 h-px bg-cream-200" />
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-navy-400 mb-1.5 uppercase tracking-widest">Gmail Address</label>
-                <input
-                  type="email"
-                  value={gmailForm.email}
-                  onChange={e => setGmailForm(f => ({ ...f, email: e.target.value }))}
-                  placeholder="yourname.brands@gmail.com"
-                  className="input-base"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-semibold text-navy-400 mb-1.5 uppercase tracking-widest">App Password</label>
-                <input
-                  type="password"
-                  value={gmailForm.password}
-                  onChange={e => setGmailForm(f => ({ ...f, password: e.target.value }))}
-                  placeholder="xxxx xxxx xxxx xxxx"
-                  className="input-base font-mono tracking-widest"
-                />
-                <p className="mt-1.5 text-xs text-navy-400">
-                  Not your regular Gmail password.{" "}
-                  <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener noreferrer" className="text-coral-500 hover:underline">
-                    Generate one here
-                  </a>{" "}
-                  (requires 2-Step Verification).
-                </p>
-              </div>
-              {gmailError && (
-                <p className="text-xs text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3">{gmailError}</p>
+              {emailError && (
+                <p className="text-xs text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3">{emailError}</p>
               )}
-              <button
-                onClick={handleConnectGoogle}
-                disabled={signing === "google" || !gmailForm.email.trim() || !gmailForm.password.trim()}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition-colors"
-              >
-                {signing === "google" ? <Loader2 size={15} className="animate-spin" /> : <LogIn size={15} />}
-                {signing === "google" ? "Verifying…" : "Connect Gmail"}
-              </button>
 
-              <button
-                onClick={() => setShowGmailInstructions(v => !v)}
-                className="w-full flex items-center justify-between text-xs font-semibold text-navy-500 hover:text-navy-800 transition-colors pt-1"
+              <a
+                href={connectEmailUrl("/settings")}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-coral-500 hover:bg-coral-600 text-white text-sm font-semibold rounded-xl transition-colors"
               >
-                <span>How to get an App Password</span>
-                {showGmailInstructions ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
-              </button>
-
-              {showGmailInstructions && (
-                <ol className="space-y-3 text-xs text-navy-700 bg-cream-50 border border-cream-200 rounded-xl p-4">
-                  {[
-                    <>Sign into your outreach Gmail, go to <a href="https://myaccount.google.com/security" target="_blank" rel="noopener noreferrer" className="text-coral-500 hover:underline">myaccount.google.com/security</a> and enable <strong>2-Step Verification</strong>.</>,
-                    <>Go to <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener noreferrer" className="text-coral-500 hover:underline">myaccount.google.com/apppasswords</a>.</>,
-                    <>In the <strong>App name</strong> field type <span className="font-mono bg-cream-200 px-1 rounded">Collabi</span> and click <strong>Create</strong>.</>,
-                    <>Google shows a <strong>16-character password</strong>. Copy it (spaces are fine).</>,
-                    <>Paste the Gmail address and that password above, then click <strong>Connect Gmail</strong>.</>,
-                  ].map((step, i) => (
-                    <li key={i} className="flex gap-3">
-                      <span className="flex-shrink-0 w-5 h-5 bg-coral-100 text-coral-600 text-[10px] font-bold rounded-full flex items-center justify-center mt-0.5">{i + 1}</span>
-                      <span className="leading-relaxed">{step}</span>
-                    </li>
-                  ))}
-                </ol>
-              )}
+                <Mail size={15} />
+                Connect email
+              </a>
+              <p className="text-xs text-navy-400">
+                You&apos;ll sign in securely with your provider (Google, Microsoft and more) and come straight back — Collabi never sees your password.
+              </p>
             </div>
           )}
         </div>

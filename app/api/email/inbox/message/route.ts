@@ -1,60 +1,22 @@
+import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { ImapFlow } from "imapflow";
-import PostalMime from "postal-mime";
+import { getAccountForUser, getMessage } from "@/lib/nylas";
 
 export async function POST(request: Request) {
-  const { gmailEmail, appPassword, uid } = await request.json();
-  if (!gmailEmail || !appPassword || !uid) {
-    return NextResponse.json({ error: "Missing fields." }, { status: 400 });
-  }
+  const { userId } = await auth();
+  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const client = new ImapFlow({
-    host: "imap.gmail.com",
-    port: 993,
-    secure: true,
-    auth: { user: gmailEmail, pass: appPassword },
-    logger: false,
-  });
+  const { id } = await request.json();
+  if (!id) return NextResponse.json({ error: "Missing message id." }, { status: 400 });
+
+  const account = await getAccountForUser(userId);
+  if (!account) return NextResponse.json({ error: "No email account connected." }, { status: 401 });
 
   try {
-    await client.connect();
-    const lock = await client.getMailboxLock("INBOX");
-    try {
-      // Fetch full source
-      const msg = await client.fetchOne(`${uid}`, { source: true, envelope: true, flags: true }, { uid: true });
-      if (!msg) return NextResponse.json({ error: "Message not found." }, { status: 404 });
-
-      // Mark as read
-      await client.messageFlagsAdd(`${uid}`, ["\\Seen"], { uid: true });
-
-      if (!msg.source) return NextResponse.json({ error: "Could not read message." }, { status: 500 });
-
-      // Parse email
-      const parsed = await PostalMime.parse(msg.source as unknown as ArrayBuffer);
-      const body = parsed.text || parsed.html?.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim() || "";
-
-      const env = msg.envelope;
-      const sender = env?.from?.[0];
-      const envDate = env?.date instanceof Date ? env.date.toISOString() : "";
-
-      return NextResponse.json({
-        uid: msg.uid,
-        subject: env?.subject || "(no subject)",
-        from: {
-          name: sender?.name || sender?.address || "",
-          address: sender?.address || "",
-        },
-        date: envDate,
-        isRead: true,
-        body,
-      });
-    } finally {
-      lock.release();
-    }
+    const message = await getMessage(account.grantId, id);
+    return NextResponse.json(message);
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Failed.";
+    const msg = err instanceof Error ? err.message : "Failed to load message.";
     return NextResponse.json({ error: msg }, { status: 500 });
-  } finally {
-    await client.logout().catch(() => {});
   }
 }
