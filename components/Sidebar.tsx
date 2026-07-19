@@ -10,7 +10,6 @@ import {
   Inbox,
   TrendingUp,
   BarChart3,
-  BookOpen,
   ShieldCheck,
   LogOut,
   Send,
@@ -49,8 +48,8 @@ const NAV_GROUPS: { label: string | null; items: NavItem[] }[] = [
   {
     label: "Manage",
     items: [
+      // Media Kit hidden for now — restore { href: "/media-kit", label: "Media Kit", icon: BookOpen, tourId: "tour-media-kit" } to revisit
       { href: "/pipeline",  label: "Pipeline",  icon: TrendingUp, tourId: "tour-pipeline" },
-      { href: "/media-kit", label: "Media Kit", icon: BookOpen,   tourId: "tour-media-kit" },
     ],
   },
 ];

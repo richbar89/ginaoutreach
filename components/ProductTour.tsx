@@ -80,17 +80,6 @@ const STEPS: Step[] = [
     ),
   },
   {
-    target: "#tour-media-kit",
-    placement: "right",
-    disableBeacon: true,
-    content: (
-      <div>
-        <p style={heading}>Media Kit</p>
-        <p style={body}>Build and share a professional media kit with your stats, niche, and rates — the thing brands ask for before saying yes.</p>
-      </div>
-    ),
-  },
-  {
     target: "body",
     placement: "center",
     disableBeacon: true,

@@ -4,9 +4,13 @@ import { useState, useEffect, useRef } from "react";
 import { Plus, Trash2, X, Check, Pencil, TrendingUp } from "lucide-react";
 import { useDb } from "@/lib/useDb";
 import { useAuth } from "@clerk/nextjs";
-import { dbGetDeals, dbUpsertDeal, dbDeleteDeal } from "@/lib/db";
+import { dbGetDeals, dbUpsertDeal, dbDeleteDeal, dbGetBrands } from "@/lib/db";
 import type { Deal, DealStatus } from "@/lib/types";
-import InitialsAvatar from "@/components/InitialsAvatar";
+import BrandLogo from "@/components/BrandLogo";
+
+type BrandOption = { name: string; domain?: string };
+
+const DOMAINS_KEY = "dashboard_brand_domains"; // shared cache with the dashboard
 
 // Functional stage accents — rendered quietly (header dot + tinted count pill)
 const STAGES: { key: DealStatus; label: string; accent: string }[] = [
@@ -20,10 +24,14 @@ const STAGES: { key: DealStatus; label: string; accent: string }[] = [
 
 function DealModal({
   initial,
+  brandOptions,
+  onPickBrand,
   onSave,
   onClose,
 }: {
   initial?: Deal;
+  brandOptions: BrandOption[];
+  onPickBrand: (name: string, domain?: string) => void;
   onSave: (d: Deal) => void;
   onClose: () => void;
 }) {
@@ -35,6 +43,11 @@ function DealModal({
     value: initial?.value || "",
     notes: initial?.notes || "",
   });
+  const [showSuggest, setShowSuggest] = useState(false);
+
+  const suggestions = form.company.trim().length >= 1
+    ? brandOptions.filter(b => b.name.toLowerCase().includes(form.company.trim().toLowerCase()) && b.name !== form.company).slice(0, 6)
+    : [];
 
   const handleSave = () => {
     if (!form.contactName.trim() || !form.company.trim()) return;
@@ -64,9 +77,37 @@ function DealModal({
               <label className="block text-xs font-semibold text-navy-400 mb-2 uppercase tracking-widest">Contact Name</label>
               <input value={form.contactName} onChange={(e) => setForm(f => ({ ...f, contactName: e.target.value }))} placeholder="Jane Smith" className="input-base" />
             </div>
-            <div>
+            <div className="relative">
               <label className="block text-xs font-semibold text-navy-400 mb-2 uppercase tracking-widest">Company / Brand</label>
-              <input value={form.company} onChange={(e) => setForm(f => ({ ...f, company: e.target.value }))} placeholder="Acme Foods" className="input-base" />
+              <input
+                value={form.company}
+                onChange={(e) => { setForm(f => ({ ...f, company: e.target.value })); setShowSuggest(true); }}
+                onFocus={() => setShowSuggest(true)}
+                onBlur={() => setTimeout(() => setShowSuggest(false), 150)}
+                placeholder="Start typing a brand…"
+                className="input-base"
+                autoComplete="off"
+              />
+              {showSuggest && suggestions.length > 0 && (
+                <div className="absolute left-0 right-0 top-full mt-1.5 z-20 bg-white border border-black/[0.06] rounded-2xl shadow-[0_12px_32px_rgba(0,0,0,0.10)] overflow-hidden">
+                  {suggestions.map(b => (
+                    <button
+                      key={b.name}
+                      type="button"
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => {
+                        setForm(f => ({ ...f, company: b.name }));
+                        setShowSuggest(false);
+                        onPickBrand(b.name, b.domain);
+                      }}
+                      className="w-full flex items-center gap-2.5 px-3.5 py-2.5 hover:bg-cream-50 transition-colors text-left"
+                    >
+                      <BrandLogo name={b.name} domain={b.domain} size={24} />
+                      <span className="text-sm font-medium text-navy-900 truncate">{b.name}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -114,6 +155,10 @@ export default function PipelinePage() {
   const [loading, setLoading] = useState(true);
   const [saveError, setSaveError] = useState("");
   const [editing, setEditing] = useState<Deal | "new" | null>(null);
+  const [brandOptions, setBrandOptions] = useState<BrandOption[]>([]);
+  const [extraDomains, setExtraDomains] = useState<Record<string, string>>(() => {
+    try { return JSON.parse(localStorage.getItem(DOMAINS_KEY) ?? "{}"); } catch { return {}; }
+  });
   const [dragOver, setDragOver] = useState<DealStatus | null>(null);
   const dragId = useRef<string | null>(null);
   const dragEnterCount = useRef<Record<string, number>>({});
@@ -137,6 +182,23 @@ export default function PipelinePage() {
 
         const data = await dbGetDeals(db);
         if (!cancelled) setDeals(data);
+
+        // Brand options for the Add Deal autocomplete: user brands + contact companies
+        const [brandsData, contactsRes] = await Promise.all([
+          userId ? dbGetBrands(db, userId) : Promise.resolve([]),
+          fetch("/api/contacts").catch(() => null),
+        ]);
+        const contactCompanies: string[] = contactsRes?.ok
+          ? (Array.from(new Set(
+              ((await contactsRes.json()) as { company?: string }[]).map(c => c.company).filter(Boolean)
+            )) as string[])
+          : [];
+        const merged = new Map<string, BrandOption>();
+        for (const name of contactCompanies) merged.set(name.toLowerCase(), { name });
+        for (const b of brandsData) merged.set(b.name.toLowerCase(), { name: b.name, domain: b.domain });
+        if (!cancelled) {
+          setBrandOptions(Array.from(merged.values()).sort((a, b) => a.name.localeCompare(b.name)));
+        }
       } catch {
         // Supabase unavailable — fall back to localStorage so mock data is still visible
         const lsRaw = typeof window !== "undefined" ? localStorage.getItem("ginaos_deals") : null;
@@ -147,6 +209,22 @@ export default function PipelinePage() {
     })();
     return () => { cancelled = true; };
   }, [getDb, userId]);
+
+  // Remember the brand's domain so its logo shows here and on the dashboard
+  const handlePickBrand = (name: string, domain?: string) => {
+    const cache = (d: string) => setExtraDomains(prev => {
+      const next = { ...prev, [name]: d };
+      localStorage.setItem(DOMAINS_KEY, JSON.stringify(next));
+      return next;
+    });
+    if (domain) cache(domain);
+    else {
+      fetch(`/api/resolve-domain?name=${encodeURIComponent(name)}`)
+        .then(r => r.json())
+        .then(({ domain: resolved }) => { if (resolved) cache(resolved); })
+        .catch(() => {});
+    }
+  };
 
   const handleSave = async (d: Deal) => {
     setSaveError("");
@@ -346,10 +424,14 @@ export default function PipelinePage() {
                         className="card-hover bg-white rounded-2xl p-4 border border-black/[0.05] shadow-[0_2px_12px_rgba(0,0,0,0.05),0_1px_3px_rgba(0,0,0,0.03)] cursor-grab active:cursor-grabbing active:opacity-60 active:scale-[0.98] select-none"
                       >
                         <div className="flex items-start gap-2.5 mb-2.5">
-                          <InitialsAvatar name={deal.contactName} email={deal.contactEmail} size="sm" />
+                          <BrandLogo
+                            name={deal.company || deal.contactName}
+                            domain={brandOptions.find(b => b.name === deal.company)?.domain ?? extraDomains[deal.company]}
+                            size={30}
+                          />
                           <div className="flex-1 min-w-0">
-                            <p className="font-semibold text-navy-900 text-sm tracking-[-0.01em] leading-tight truncate">{deal.contactName}</p>
-                            <p className="text-xs text-navy-500 truncate mt-0.5">{deal.company}</p>
+                            <p className="font-semibold text-navy-900 text-sm tracking-[-0.01em] leading-tight truncate">{deal.company || deal.contactName}</p>
+                            <p className="text-xs text-navy-500 truncate mt-0.5">{deal.contactName}</p>
                           </div>
                         </div>
 
@@ -392,6 +474,8 @@ export default function PipelinePage() {
       {editing !== null && (
         <DealModal
           initial={editing === "new" ? undefined : editing}
+          brandOptions={brandOptions}
+          onPickBrand={handlePickBrand}
           onSave={handleSave}
           onClose={() => setEditing(null)}
         />

@@ -6,7 +6,7 @@ import Papa from "papaparse";
 import {
   Upload, Plus, X, Check, ArrowRight, ArrowLeft,
   Search, FileText, ChevronDown, List, Trash2,
-  Calendar, Eye, Pencil,
+  Calendar, Eye, Pencil, Users, ShieldCheck,
 } from "lucide-react";
 import InitialsAvatar from "@/components/InitialsAvatar";
 import { useDb } from "@/lib/useDb";
@@ -14,7 +14,7 @@ import { dbSaveCampaign, dbGetTemplates } from "@/lib/db";
 import type { Contact, EmailTemplate, CampaignStep } from "@/lib/types";
 
 type ContactRow = Contact & { id: string; industry: string | null; category: string | null; subcategory: string | null; subcategories: string[] | null; country: string | null };
-type WizardStep = 1 | 2 | 3;
+type WizardStep = 0 | 1 | 2 | 3; // 0 = name gate
 type ContactTab = "contacts" | "csv" | "manual" | "list";
 
 type ContactList = {
@@ -81,8 +81,9 @@ function NewCampaignPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const getDb = useDb();
-  const [step, setStep] = useState<WizardStep>(1);
+  const [step, setStep] = useState<WizardStep>(0);
   const [tab, setTab] = useState<ContactTab>("contacts");
+  const [pickerOpen, setPickerOpen] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -112,10 +113,10 @@ function NewCampaignPage() {
   const [templates, setTemplates] = useState<EmailTemplate[]>([]);
   const [steps, setSteps] = useState<CampaignStep[]>([]);
 
-  // Cadence
-  const [emailsPerDay, setEmailsPerDay] = useState(25);
-  const [delayMinMins, setDelayMinMins] = useState(3);
-  const [delayMaxMins, setDelayMaxMins] = useState(10);
+  // Cadence — fixed sending policy: 30/day max, auto-staggered 2-5 mins
+  const emailsPerDay = 30;
+  const delayMinMins = 2;
+  const delayMaxMins = 5;
   const [sendWindowStart, setSendWindowStart] = useState(8);
   const [sendWindowEnd, setSendWindowEnd] = useState(18);
   const [sendDays, setSendDays] = useState<string[]>(["Mon", "Tue", "Wed", "Thu", "Fri"]);
@@ -136,7 +137,7 @@ function NewCampaignPage() {
 
   useEffect(() => {
     const listId = searchParams.get("listId");
-    if (listId && lists.length > 0) setTab("list");
+    if (listId && lists.length > 0) { setTab("list"); setPickerOpen(true); }
   }, [searchParams, lists]);
 
   const filterByList = (list: ContactList, leads: ContactRow[]) => {
@@ -276,9 +277,9 @@ function NewCampaignPage() {
   );
 
   const WIZARD_STEPS = [
-    { n: 1 as WizardStep, label: "Contacts" },
-    { n: 2 as WizardStep, label: "Sequence" },
-    { n: 3 as WizardStep, label: "Schedule" },
+    { n: 1 as WizardStep, label: "Audience" },
+    { n: 2 as WizardStep, label: "Copy & follow-ups" },
+    { n: 3 as WizardStep, label: "Launch" },
   ];
 
   // Preview helpers
@@ -290,7 +291,40 @@ function NewCampaignPage() {
 
   return (
     <div className={`p-8 mx-auto transition-all ${step === 2 ? "max-w-5xl" : "max-w-3xl"}`}>
+      {/* ── Step 0: Name gate — one question, Typeform style ── */}
+      {step === 0 && (
+        <div className="min-h-[70vh] flex items-center justify-center animate-fade-slide-up">
+          <div className="w-full max-w-xl text-center">
+            <div className="flex items-center justify-center gap-3 mb-7">
+              <div className="h-px w-8 bg-coral-400" />
+              <span className="text-[11px] font-bold uppercase tracking-widest text-coral-500">New campaign</span>
+              <div className="h-px w-8 bg-coral-400" />
+            </div>
+            <h1 className="text-[34px] font-bold tracking-[-0.03em] text-navy-900 mb-3">
+              What shall we call this campaign?
+            </h1>
+            <p className="text-sm text-navy-400 mb-10">Only you&apos;ll see the name — something like &ldquo;Food brands · July&rdquo; works well.</p>
+            <input
+              type="text"
+              value={campaignName}
+              onChange={e => setCampaignName(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && campaignName.trim() && setStep(1)}
+              placeholder="Campaign name…"
+              autoFocus
+              className="w-full text-center text-2xl font-semibold tracking-[-0.02em] text-navy-900 bg-transparent border-0 border-b-2 border-cream-300 focus:border-coral-400 focus:outline-none pb-3 placeholder:text-navy-200 transition-colors mb-10"
+            />
+            <div>
+              <button onClick={() => setStep(1)} disabled={!campaignName.trim()} className="btn-primary !px-8 !py-3 disabled:cursor-not-allowed">
+                Continue <ArrowRight size={15} />
+              </button>
+            </div>
+            <p className="mt-7"><a href="/campaigns" className="text-xs text-navy-400 hover:text-navy-600 transition-colors">← Back to campaigns</a></p>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
+      {step > 0 && (
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-3">
           <div className="h-px w-8 bg-coral-400" />
@@ -303,10 +337,12 @@ function NewCampaignPage() {
           placeholder="Name your campaign…"
           className="font-display text-[32px] font-bold tracking-tight text-navy-900 bg-transparent focus:outline-none placeholder:text-navy-300 w-full mb-1"
         />
-        <p className="text-navy-500 text-sm">Set up contacts, write your sequence, configure sending.</p>
+        <p className="text-navy-500 text-sm">Choose your audience, write your emails, launch.</p>
       </div>
+      )}
 
       {/* Step indicator */}
+      {step > 0 && (
       <div className="flex items-center gap-3 mb-10">
         {WIZARD_STEPS.map(({ n, label }, i) => {
           const done = step > n;
@@ -330,18 +366,44 @@ function NewCampaignPage() {
           );
         })}
       </div>
+      )}
 
-      {/* ── Step 1: Contacts ── */}
+      {/* ── Step 1: Audience ── */}
       {step === 1 && (
         <div className="space-y-4">
+          {!pickerOpen ? (
+            <div className="animate-fade-slide-up">
+              <h2 className="text-[26px] font-bold tracking-[-0.025em] text-navy-900 mb-2">Who do you want in this campaign?</h2>
+              <p className="text-sm text-navy-400 mb-8">Pick a saved list, or choose people from your contacts.</p>
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <button onClick={() => { setTab("list"); setPickerOpen(true); }} className="card card-hover p-6 text-left">
+                  <div className="w-10 h-10 rounded-xl bg-coral-50 flex items-center justify-center mb-4"><List size={18} className="text-coral-500" /></div>
+                  <p className="text-[15px] font-semibold tracking-[-0.01em] text-navy-900 mb-1">Use a saved list</p>
+                  <p className="text-xs text-navy-400">{lists.length > 0 ? `${lists.length} list${lists.length !== 1 ? "s" : ""} ready to go` : "Build lists from the Contacts page"}</p>
+                </button>
+                <button onClick={() => { setTab("contacts"); setPickerOpen(true); }} className="card card-hover p-6 text-left">
+                  <div className="w-10 h-10 rounded-xl bg-coral-50 flex items-center justify-center mb-4"><Users size={18} className="text-coral-500" /></div>
+                  <p className="text-[15px] font-semibold tracking-[-0.01em] text-navy-900 mb-1">Add contacts</p>
+                  <p className="text-xs text-navy-400">Browse, filter and tick from {allLeads.length.toLocaleString()} contacts</p>
+                </button>
+              </div>
+              <div className="flex items-center gap-2 text-xs text-navy-400">
+                or
+                <button onClick={() => { setTab("csv"); setPickerOpen(true); }} className="font-semibold text-navy-500 hover:text-coral-600 transition-colors">import a CSV</button>
+                ·
+                <button onClick={() => { setTab("manual"); setPickerOpen(true); }} className="font-semibold text-navy-500 hover:text-coral-600 transition-colors">add manually</button>
+              </div>
+            </div>
+          ) : (
           <div className="bg-cream-100 rounded-xl p-1 flex gap-1">
             {tabBtn("contacts", "From Contacts", allLeads.length)}
             {tabBtn("list", "From a List", lists.length || undefined)}
             {tabBtn("csv", "Upload CSV")}
             {tabBtn("manual", "Add manually")}
           </div>
+          )}
 
-          {tab === "contacts" && (
+          {pickerOpen && tab === "contacts" && (
             <div className="card overflow-hidden">
               <div className="px-4 py-3 border-b border-cream-100 flex gap-2">
                 <div className="relative flex-1">
@@ -380,7 +442,7 @@ function NewCampaignPage() {
             </div>
           )}
 
-          {tab === "list" && (
+          {pickerOpen && tab === "list" && (
             <div className="card overflow-hidden">
               {lists.length === 0 ? (
                 <div className="px-6 py-12 text-center">
@@ -446,7 +508,7 @@ function NewCampaignPage() {
             </div>
           )}
 
-          {tab === "csv" && (
+          {pickerOpen && tab === "csv" && (
             <div onDragOver={e => { e.preventDefault(); setDragging(true); }} onDragLeave={() => setDragging(false)} onDrop={e => { e.preventDefault(); setDragging(false); const f = e.dataTransfer.files[0]; if (f) parseCSV(f); }} className={`bg-white border-2 border-dashed rounded-[20px] p-10 text-center transition-all duration-200 ${dragging ? "border-coral-400 bg-coral-50" : "border-cream-300 hover:border-cream-400"}`}>
               <div className="w-10 h-10 bg-cream-100 rounded-xl flex items-center justify-center mx-auto mb-3"><Upload size={18} className="text-navy-400" /></div>
               <p className="text-sm font-semibold text-navy-700 mb-1">Drop a CSV here</p>
@@ -459,7 +521,7 @@ function NewCampaignPage() {
             </div>
           )}
 
-          {tab === "manual" && (
+          {pickerOpen && tab === "manual" && (
             <div className="card p-5">
               <div className="grid grid-cols-2 gap-3 mb-3">
                 {(["email", "name", "company", "position"] as const).map(field => (
@@ -491,11 +553,16 @@ function NewCampaignPage() {
             </div>
           )}
 
-          <div className="flex justify-end pt-2">
-            <button onClick={() => setStep(2)} disabled={contacts.length === 0} className="btn-primary disabled:cursor-not-allowed">
-              Continue <ArrowRight size={15} />
-            </button>
-          </div>
+          {(pickerOpen || contacts.length > 0) && (
+            <div className="flex items-center justify-between pt-2">
+              <span className="text-xs text-navy-400">
+                {contacts.length === 0 ? "Tick the people you want, then add them to the campaign." : `${contacts.length} contact${contacts.length !== 1 ? "s" : ""} in this campaign`}
+              </span>
+              <button onClick={() => setStep(2)} disabled={contacts.length === 0} className="btn-primary disabled:cursor-not-allowed">
+                Done — write your email <ArrowRight size={15} />
+              </button>
+            </div>
+          )}
         </div>
       )}
 
@@ -722,36 +789,17 @@ function NewCampaignPage() {
       {/* ── Step 3: Schedule ── */}
       {step === 3 && (
         <div className="space-y-4">
-          <div className="card overflow-hidden">
-            <div className="px-6 py-4 border-b border-cream-100">
-              <h3 className="text-[15px] font-semibold tracking-[-0.01em] text-navy-900">Sending limits</h3>
-              <p className="text-xs text-navy-400 mt-0.5">How many emails go out each day.</p>
+          {/* Fixed sending policy — not user-configurable, protects deliverability */}
+          <div className="card px-6 py-5 flex items-start gap-4">
+            <div className="w-10 h-10 rounded-xl bg-coral-50 flex items-center justify-center flex-shrink-0">
+              <ShieldCheck size={18} className="text-coral-500" />
             </div>
-            <div className="px-6 py-5">
-              <label className="block text-xs font-bold text-navy-400 uppercase tracking-widest mb-3">Max emails per day</label>
-              <div className="flex items-center gap-4">
-                <input type="range" min={5} max={50} step={5} value={emailsPerDay} onChange={e => setEmailsPerDay(Number(e.target.value))} className="flex-1 accent-coral-500" />
-                <span className="text-lg font-bold text-navy-900 w-10 text-right">{emailsPerDay}</span>
-              </div>
-              <div className="flex justify-between text-[10px] text-navy-300 mt-1"><span>5</span><span>25</span><span>50</span></div>
-            </div>
-          </div>
-
-          <div className="card overflow-hidden">
-            <div className="px-6 py-4 border-b border-cream-100">
-              <h3 className="text-[15px] font-semibold tracking-[-0.01em] text-navy-900">Sending speed</h3>
-              <p className="text-xs text-navy-400 mt-0.5">Randomised gap between each email — looks more human.</p>
-            </div>
-            <div className="px-6 py-5 flex items-center gap-4">
-              <div className="flex-1">
-                <label className="block text-xs font-bold text-navy-400 uppercase tracking-widest mb-2">Min delay (mins)</label>
-                <input type="number" min={1} max={60} value={delayMinMins} onChange={e => setDelayMinMins(Math.max(1, Number(e.target.value)))} className="input-base text-center" />
-              </div>
-              <div className="text-navy-300 mt-5">→</div>
-              <div className="flex-1">
-                <label className="block text-xs font-bold text-navy-400 uppercase tracking-widest mb-2">Max delay (mins)</label>
-                <input type="number" min={delayMinMins} max={120} value={delayMaxMins} onChange={e => setDelayMaxMins(Math.max(delayMinMins, Number(e.target.value)))} className="input-base text-center" />
-              </div>
+            <div>
+              <h3 className="text-[15px] font-semibold tracking-[-0.01em] text-navy-900 mb-1">Safe sending, handled for you</h3>
+              <p className="text-sm text-navy-500 leading-relaxed">
+                A maximum of <strong className="text-navy-800">{emailsPerDay} emails per day</strong>, automatically staggered
+                <strong className="text-navy-800"> {delayMinMins}–{delayMaxMins} minutes apart</strong> — so your outreach looks human and your address stays out of spam folders.
+              </p>
             </div>
           </div>
 
