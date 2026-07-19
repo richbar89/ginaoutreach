@@ -124,6 +124,32 @@ export async function GET(req: Request) {
         );
         if (replied) {
           await db.from("sequence_contacts").update({ status: "replied" }).eq("id", row.id);
+          // Reply → deal bridge: a genuine reply is a lead — surface it in the
+          // pipeline automatically (the dashboard promises exactly this).
+          try {
+            const { data: existingDeal } = await db
+              .from("deals")
+              .select("id")
+              .eq("user_id", row.user_id)
+              .eq("contact_email", row.contact_email.toLowerCase())
+              .limit(1);
+            if (!existingDeal || existingDeal.length === 0) {
+              const nowIso = new Date().toISOString();
+              await db.from("deals").insert({
+                id: crypto.randomUUID(),
+                user_id: row.user_id,
+                contact_email: row.contact_email.toLowerCase(),
+                contact_name: row.contact_name ?? "",
+                company: row.contact_company ?? "",
+                status: "replied",
+                notes: "Auto-created — replied to your campaign",
+                created_at: nowIso,
+                updated_at: nowIso,
+              });
+            }
+          } catch {
+            // deal creation is best-effort; never block the send loop
+          }
           continue;
         }
 
