@@ -564,7 +564,7 @@ function ContactsPage() {
               onClick={() => handleVerticalClick(v.key)}
               className="relative flex flex-col items-start p-4 rounded-2xl border-2 transition-all text-left group"
               style={{
-                borderColor: isActive ? v.accent : "#E5E7EB",
+                borderColor: isActive ? v.accent : "#E8E8ED",
                 background: isActive ? v.bg : "#FFFFFF",
               }}
             >
@@ -578,7 +578,7 @@ function ContactsPage() {
               <p className="text-xs text-navy-400 mt-0.5 leading-tight">{v.description}</p>
               <p
                 className="mt-2 text-xs font-bold"
-                style={{ color: count > 0 ? v.accent : "#9CA3AF" }}
+                style={{ color: count > 0 ? v.accent : "#86868B" }}
               >
                 {loading ? "—" : `${count.toLocaleString()} contacts`}
               </p>
@@ -604,7 +604,7 @@ function ContactsPage() {
             style={
               !activeSubcategory
                 ? { background: activeVerticalDef?.accent, color: "#fff", borderColor: activeVerticalDef?.accent }
-                : { background: "#fff", color: "#374151", borderColor: "#E5E7EB" }
+                : { background: "#fff", color: "#3A3A3D", borderColor: "#E8E8ED" }
             }
           >
             All {activeVerticalDef?.label}
@@ -624,8 +624,8 @@ function ContactsPage() {
                   isActive
                     ? { background: activeVerticalDef?.accent, color: "#fff", borderColor: activeVerticalDef?.accent }
                     : count > 0
-                      ? { background: "#fff", color: "#374151", borderColor: "#E5E7EB" }
-                      : { background: "#F9FAFB", color: "#9CA3AF", borderColor: "#E5E7EB" }
+                      ? { background: "#fff", color: "#3A3A3D", borderColor: "#E8E8ED" }
+                      : { background: "#FBFBFD", color: "#86868B", borderColor: "#E8E8ED" }
                 }
               >
                 {sub}
