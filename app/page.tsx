@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 type Brand = { name: string; category: string; country: string; domain?: string };
 
 const PALETTE = [
-  { bg: "#FFE4DC", fg: "#C4603A" },
+  { bg: "#FDE7D9", fg: "#B03F14" },
   { bg: "#E8E4FF", fg: "#6B50C4" },
   { bg: "#DCF0EE", fg: "#2A8F80" },
   { bg: "#FFE8F0", fg: "#C43A6B" },
@@ -68,6 +68,31 @@ function getRowBrands(all: Brand[], row: number): Brand[] {
   return rotated.slice(0, 7);
 }
 
+/* Adds .reveal-visible when scrolled into view — Apple-style staged entrance. */
+function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.classList.add("reveal-visible");
+          io.disconnect();
+        }
+      },
+      { threshold: 0.15 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return (
+    <div ref={ref} className="reveal" style={delay ? { transitionDelay: `${delay}ms` } : undefined}>
+      {children}
+    </div>
+  );
+}
+
 function BrandCard({ brand }: { brand: Brand }) {
   const col = avatarColor(brand.name);
   const letter = brand.name[0]?.toUpperCase() ?? "?";
@@ -78,14 +103,14 @@ function BrandCard({ brand }: { brand: Brand }) {
   return (
     <div style={{
       display: "inline-flex", alignItems: "center", gap: 11,
-      background: "rgba(255,255,255,0.68)", border: "1px solid rgba(200,185,170,0.26)",
+      background: "rgba(255,255,255,0.8)", border: "1px solid rgba(0,0,0,0.05)",
       borderRadius: 14, padding: "9px 16px", flexShrink: 0,
     }}>
       <div style={{
         width: 38, height: 38, borderRadius: 10, flexShrink: 0, overflow: "hidden",
         background: showLogo ? "#fff" : col.bg,
         display: "flex", alignItems: "center", justifyContent: "center",
-        border: showLogo ? "1px solid rgba(0,0,0,0.06)" : "none",
+        border: showLogo ? "1px solid rgba(0,0,0,0.05)" : "none",
       }}>
         {showLogo ? (
           <img src={`https://www.google.com/s2/favicons?domain=${brand.domain}&sz=64`} alt={brand.name} width={32} height={32} style={{ objectFit: "contain", width: 32, height: 32 }} onError={() => setLogoFailed(true)} />
@@ -94,8 +119,8 @@ function BrandCard({ brand }: { brand: Brand }) {
         )}
       </div>
       <div>
-        <div style={{ fontSize: 13, fontWeight: 600, color: "#1A1110", lineHeight: 1.3, whiteSpace: "nowrap" }}>{brand.name}</div>
-        {sub && <div style={{ fontSize: 11, color: "#9E9790", lineHeight: 1.3, whiteSpace: "nowrap" }}>{sub}</div>}
+        <div style={{ fontSize: 13, fontWeight: 600, color: "#1D1D1F", lineHeight: 1.3, whiteSpace: "nowrap", letterSpacing: "-0.01em" }}>{brand.name}</div>
+        {sub && <div style={{ fontSize: 11, color: "#86868B", lineHeight: 1.3, whiteSpace: "nowrap" }}>{sub}</div>}
       </div>
     </div>
   );
@@ -116,144 +141,17 @@ function ScrollRow({ brands, direction, duration }: { brands: Brand[]; direction
   );
 }
 
-function HeroPhone() {
-  const [perelloOk, setPerelloOk] = useState(true);
-
-  const brandRows = [
-    { name: "Graze", domain: "graze.com" },
-    { name: "Huel", domain: "huel.com" },
-    { name: "Innocent", domain: "innocentdrinks.co.uk" },
-  ];
-
-  return (
-    <div style={{ position: "relative", width: 270, flexShrink: 0 }}>
-      {/* Ambient glow under phone */}
-      <div style={{
-        position: "absolute", bottom: -40, left: "50%", transform: "translateX(-50%)",
-        width: 220, height: 80,
-        background: "radial-gradient(ellipse, rgba(232,98,42,0.30) 0%, transparent 70%)",
-        filter: "blur(24px)", pointerEvents: "none",
-      }} />
-
-      {/* Phone chassis */}
-      <div style={{
-        width: 270, height: 548,
-        borderRadius: 46,
-        background: "linear-gradient(160deg, #2e2e2e 0%, #111 100%)",
-        border: "7px solid #1e1e1e",
-        boxShadow: "0 0 0 1px rgba(255,255,255,0.06) inset, 0 40px 80px rgba(0,0,0,0.45), 0 8px 24px rgba(0,0,0,0.25)",
-        position: "relative",
-        overflow: "hidden",
-        animation: "phoneFloat 5s ease-in-out infinite",
-      }}>
-        {/* Dynamic Island */}
-        <div style={{
-          position: "absolute", top: 13, left: "50%", transform: "translateX(-50%)",
-          width: 90, height: 28, borderRadius: 14, background: "#111", zIndex: 20,
-        }} />
-
-        {/* Screen */}
-        <div style={{ position: "absolute", inset: 0, background: "#F7F3EE", borderRadius: 40, overflow: "hidden" }}>
-
-          {/* Status bar */}
-          <div style={{ padding: "15px 18px 0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span style={{ fontSize: 11, fontWeight: 700, color: "#111", letterSpacing: "-0.02em" }}>9:41</span>
-            <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-              {[1, 0.65, 0.35].map((o, i) => <div key={i} style={{ width: 3, height: 3, borderRadius: "50%", background: `rgba(17,17,17,${o})` }} />)}
-              <div style={{ width: 16, height: 8, borderRadius: 2, border: "1.5px solid rgba(17,17,17,0.6)", marginLeft: 3, position: "relative" }}>
-                <div style={{ position: "absolute", left: 1.5, top: 1.5, bottom: 1.5, width: "65%", background: "rgba(17,17,17,0.7)", borderRadius: 1 }} />
-              </div>
-            </div>
-          </div>
-
-          {/* App header */}
-          <div style={{ padding: "10px 16px 8px", borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
-            <p style={{ fontSize: 13, fontWeight: 800, color: "#C4603A", letterSpacing: "-0.04em", lineHeight: 1 }}>collabi</p>
-            <p style={{ fontSize: 9, color: "#9E9790", letterSpacing: "0.07em", textTransform: "uppercase", marginTop: 1 }}>Brand Monitor</p>
-          </div>
-
-          {/* Brand list */}
-          <div style={{ padding: "10px 12px", display: "flex", flexDirection: "column", gap: 7 }}>
-            {brandRows.map(b => (
-              <div key={b.name} style={{
-                display: "flex", alignItems: "center", gap: 9,
-                background: "white", borderRadius: 11, padding: "8px 10px",
-                boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
-              }}>
-                <div style={{ width: 26, height: 26, borderRadius: 7, background: "#f5f5f5", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <img src={`https://www.google.com/s2/favicons?domain=${b.domain}&sz=32`} width={20} height={20} style={{ objectFit: "contain" }} alt={b.name} />
-                </div>
-                <div style={{ flex: 1 }}>
-                  <p style={{ fontSize: 10, fontWeight: 600, color: "#1A1110", lineHeight: 1.2 }}>{b.name}</p>
-                  <p style={{ fontSize: 8, color: "#B5AFA8" }}>No active ads</p>
-                </div>
-                <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#E5E7EB" }} />
-              </div>
-            ))}
-          </div>
-
-          {/* Animated alert — slides in from top of phone screen */}
-          <div style={{
-            position: "absolute", top: 52, left: 8, right: 8,
-            background: "white",
-            borderRadius: 18,
-            padding: "12px 13px",
-            boxShadow: "0 8px 30px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.08)",
-            border: "1px solid rgba(232,98,42,0.18)",
-            display: "flex", gap: 10, alignItems: "flex-start",
-            animation: "alertLoop 7s ease-in-out infinite",
-            animationDelay: "1.8s",
-          }}>
-            {/* Perello logo */}
-            <div style={{
-              width: 38, height: 38, borderRadius: 11, flexShrink: 0,
-              background: "#fff8f5", border: "1px solid rgba(232,98,42,0.15)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              overflow: "hidden",
-            }}>
-              {perelloOk ? (
-                <img
-                  src="https://www.google.com/s2/favicons?domain=perelloolives.com&sz=64"
-                  width={28} height={28} style={{ objectFit: "contain" }}
-                  onError={() => setPerelloOk(false)}
-                  alt="Perello"
-                />
-              ) : (
-                <span style={{ fontSize: 16, fontWeight: 800, color: "#C4603A" }}>P</span>
-              )}
-            </div>
-
-            {/* Alert content */}
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 3 }}>
-                <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#E8622A", animation: "pulseDot 1.3s ease-in-out infinite", flexShrink: 0 }} />
-                <span style={{ fontSize: 9, fontWeight: 800, color: "#E8622A", letterSpacing: "0.05em", textTransform: "uppercase" }}>Alert</span>
-                <span style={{ fontSize: 8, color: "#B5AFA8", marginLeft: "auto" }}>just now</span>
-              </div>
-              <p style={{ fontSize: 11.5, fontWeight: 700, color: "#1A1110", lineHeight: 1.3, marginBottom: 2 }}>
-                Perello are running ads!
-              </p>
-              <p style={{ fontSize: 9, color: "#7A736B" }}>Meta Ads · Active now · Budget open 🟢</p>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  );
-}
-
 // Mini phone for "How it works" steps
 function MiniPhone({ step }: { step: number }) {
   const screens: Record<number, React.ReactNode> = {
     1: (
       <div style={{ padding: "28px 10px 10px" }}>
-        <p style={{ fontSize: 8, fontWeight: 700, color: "#C4603A", letterSpacing: "-0.03em", marginBottom: 6 }}>collabi</p>
+        <p style={{ fontSize: 8, fontWeight: 700, color: "#E8622A", letterSpacing: "-0.03em", marginBottom: 6 }}>collabi</p>
         {/* Search bar with blinking cursor */}
-        <div style={{ background: "#F7F3EE", borderRadius: 8, padding: "5px 8px", marginBottom: 7, display: "flex", alignItems: "center", gap: 5 }}>
-          <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#D1CBC3", flexShrink: 0 }} />
-          <div style={{ height: 4, background: "#C4603A", borderRadius: 2, width: "38%", opacity: 0.7 }} />
-          <div style={{ width: 1, height: 9, background: "#C4603A", animation: "pulseDot 1s ease-in-out infinite", borderRadius: 1 }} />
+        <div style={{ background: "#F5F5F7", borderRadius: 8, padding: "5px 8px", marginBottom: 7, display: "flex", alignItems: "center", gap: 5 }}>
+          <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#D2D2D7", flexShrink: 0 }} />
+          <div style={{ height: 4, background: "#E8622A", borderRadius: 2, width: "38%", opacity: 0.7 }} />
+          <div style={{ width: 1, height: 9, background: "#E8622A", animation: "pulseDot 1s ease-in-out infinite", borderRadius: 1 }} />
         </div>
         {[
           ["Graze", "graze.com", 0],
@@ -269,20 +167,20 @@ function MiniPhone({ step }: { step: number }) {
             animationDelay: `${delay}s`,
           }}>
             <img src={`https://www.google.com/s2/favicons?domain=${d}&sz=16`} width={12} height={12} style={{ borderRadius: 3, objectFit: "contain" }} alt={n as string} />
-            <div style={{ height: 4, background: "#1A1110", borderRadius: 2, width: "45%", opacity: 0.7 }} />
-            <div style={{ height: 4, background: "#E5E0DA", borderRadius: 2, flex: 1 }} />
+            <div style={{ height: 4, background: "#1D1D1F", borderRadius: 2, width: "45%", opacity: 0.7 }} />
+            <div style={{ height: 4, background: "#E8E8ED", borderRadius: 2, flex: 1 }} />
           </div>
         ))}
       </div>
     ),
     2: (
       <div style={{ padding: "28px 10px 10px", position: "relative", overflow: "hidden", height: "100%" }}>
-        <p style={{ fontSize: 8, fontWeight: 700, color: "#C4603A", letterSpacing: "-0.03em", marginBottom: 6 }}>collabi</p>
+        <p style={{ fontSize: 8, fontWeight: 700, color: "#E8622A", letterSpacing: "-0.03em", marginBottom: 6 }}>collabi</p>
         {[["Graze", "graze.com"], ["Huel", "huel.com"], ["Perello", "perelloolives.com"]].map(([n, d]) => (
           <div key={n as string} style={{ display: "flex", alignItems: "center", gap: 5, background: "white", borderRadius: 7, padding: "5px 7px", marginBottom: 4, boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>
             <img src={`https://www.google.com/s2/favicons?domain=${d}&sz=16`} width={12} height={12} style={{ borderRadius: 3, objectFit: "contain" }} alt={n as string} />
-            <div style={{ flex: 1, height: 4, background: "#D1CBC3", borderRadius: 2 }} />
-            <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#E5E0DA", flexShrink: 0 }} />
+            <div style={{ flex: 1, height: 4, background: "#D2D2D7", borderRadius: 2 }} />
+            <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#E8E8ED", flexShrink: 0 }} />
           </div>
         ))}
         {/* Animated Perello alert — loops like the hero phone */}
@@ -290,13 +188,13 @@ function MiniPhone({ step }: { step: number }) {
           position: "absolute", top: 28, left: 6, right: 6,
           background: "white", borderRadius: 12,
           padding: "8px 9px",
-          boxShadow: "0 4px 16px rgba(0,0,0,0.16)",
+          boxShadow: "0 4px 16px rgba(0,0,0,0.14)",
           border: "1px solid rgba(232,98,42,0.18)",
           display: "flex", gap: 7, alignItems: "flex-start",
           animation: "alertLoop 7s ease-in-out infinite",
           animationDelay: "1.8s",
         }}>
-          <div style={{ width: 22, height: 22, borderRadius: 6, background: "#fff8f5", border: "1px solid rgba(232,98,42,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, overflow: "hidden" }}>
+          <div style={{ width: 22, height: 22, borderRadius: 6, background: "#FFF4EE", border: "1px solid rgba(232,98,42,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, overflow: "hidden" }}>
             <img src="https://www.google.com/s2/favicons?domain=perelloolives.com&sz=32" width={16} height={16} style={{ objectFit: "contain" }} alt="Perello" />
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
@@ -304,25 +202,25 @@ function MiniPhone({ step }: { step: number }) {
               <div style={{ width: 4, height: 4, borderRadius: "50%", background: "#E8622A", animation: "pulseDot 1.3s ease-in-out infinite", flexShrink: 0 }} />
               <span style={{ fontSize: 6.5, fontWeight: 800, color: "#E8622A", letterSpacing: "0.04em", textTransform: "uppercase" }}>Alert</span>
             </div>
-            <p style={{ fontSize: 7.5, fontWeight: 700, color: "#1A1110", lineHeight: 1.3 }}>Perello are running ads!</p>
-            <p style={{ fontSize: 6, color: "#9E9790" }}>Meta · Active now 🟢</p>
+            <p style={{ fontSize: 7.5, fontWeight: 700, color: "#1D1D1F", lineHeight: 1.3 }}>Perello are running ads!</p>
+            <p style={{ fontSize: 6, color: "#86868B" }}>Meta · Active now 🟢</p>
           </div>
         </div>
       </div>
     ),
     3: (
       <div style={{ padding: "28px 10px 10px", position: "relative" }}>
-        <p style={{ fontSize: 8, fontWeight: 700, color: "#C4603A", letterSpacing: "-0.03em", marginBottom: 6 }}>collabi</p>
+        <p style={{ fontSize: 8, fontWeight: 700, color: "#E8622A", letterSpacing: "-0.03em", marginBottom: 6 }}>collabi</p>
         {/* Compose card — fades out when "sent" */}
         <div style={{
           background: "white", borderRadius: 8, padding: "7px 8px",
           boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
           animation: "composeHide 4s ease-in-out infinite",
         }}>
-          <div style={{ fontSize: 6.5, color: "#9E9790", marginBottom: 3 }}>To: marketing@huel.com</div>
-          <div style={{ height: 4, background: "#1A1110", borderRadius: 2, width: "80%", marginBottom: 5, opacity: 0.8 }} />
+          <div style={{ fontSize: 6.5, color: "#86868B", marginBottom: 3 }}>To: marketing@huel.com</div>
+          <div style={{ height: 4, background: "#1D1D1F", borderRadius: 2, width: "80%", marginBottom: 5, opacity: 0.8 }} />
           {[1, 0.65, 0.85, 0.5].map((w, i) => (
-            <div key={i} style={{ height: 3, background: "#D1CBC3", borderRadius: 2, width: `${w * 100}%`, marginBottom: 3 }} />
+            <div key={i} style={{ height: 3, background: "#D2D2D7", borderRadius: 2, width: `${w * 100}%`, marginBottom: 3 }} />
           ))}
           <div style={{
             marginTop: 7, background: "#E8622A", borderRadius: 5,
@@ -344,8 +242,8 @@ function MiniPhone({ step }: { step: number }) {
           <div style={{ width: 20, height: 20, borderRadius: "50%", background: "rgba(34,197,94,0.12)", border: "1.5px solid rgba(34,197,94,0.35)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 5 }}>
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
           </div>
-          <p style={{ fontSize: 8, fontWeight: 700, color: "#1A1110", marginBottom: 1 }}>Email sent!</p>
-          <p style={{ fontSize: 6.5, color: "#9E9790" }}>Huel · marketing@huel.com</p>
+          <p style={{ fontSize: 8, fontWeight: 700, color: "#1D1D1F", marginBottom: 1 }}>Email sent!</p>
+          <p style={{ fontSize: 6.5, color: "#86868B" }}>Huel · marketing@huel.com</p>
         </div>
       </div>
     ),
@@ -356,11 +254,11 @@ function MiniPhone({ step }: { step: number }) {
       width: 110, height: 220,
       borderRadius: 20, background: "linear-gradient(145deg, #2e2e2e, #111)",
       border: "4px solid #1e1e1e",
-      boxShadow: "0 0 0 1px rgba(255,255,255,0.05) inset, 0 20px 40px rgba(0,0,0,0.25)",
+      boxShadow: "0 0 0 1px rgba(255,255,255,0.05) inset, 0 20px 40px rgba(0,0,0,0.2)",
       position: "relative", overflow: "hidden", flexShrink: 0,
     }}>
       <div style={{ position: "absolute", top: 6, left: "50%", transform: "translateX(-50%)", width: 36, height: 11, borderRadius: 6, background: "#111", zIndex: 10 }} />
-      <div style={{ position: "absolute", inset: 0, background: "#F7F3EE", borderRadius: 17, overflow: "hidden" }}>
+      <div style={{ position: "absolute", inset: 0, background: "#F5F5F7", borderRadius: 17, overflow: "hidden" }}>
         {screens[step]}
       </div>
     </div>
@@ -381,13 +279,12 @@ const HOW_STEPS = [
   {
     n: 3,
     title: "Send your pitch",
-    body: "Personalised outreach from your own Gmail. Auto follow-ups handle the rest.",
+    body: "Personalised outreach from your own inbox. Auto follow-ups handle the rest.",
   },
 ];
 
 const FEATURES = [
   {
-    emoji: "📋",
     step: "01",
     tag: "Brand Contacts",
     title: "The right person, not a contact form.",
@@ -395,7 +292,6 @@ const FEATURES = [
     bullets: ["Brand managers & marketing leads", "Filtered by category & industry", "Request any missing contact"],
   },
   {
-    emoji: "📊",
     step: "02",
     tag: "Meta Ad Intelligence",
     title: "Pitch when the money is moving.",
@@ -403,7 +299,6 @@ const FEATURES = [
     bullets: ["Live ad status for every brand", "Daily automatic rescans"],
   },
   {
-    emoji: "✉️",
     step: "03",
     tag: "Email Outreach",
     title: "Lands in inboxes. Sounds like you.",
@@ -411,7 +306,6 @@ const FEATURES = [
     bullets: ["Sends from your own inbox", "Personalised at scale", "Automatic follow-up reminders"],
   },
   {
-    emoji: "💼",
     step: "04",
     tag: "Deal Pipeline",
     title: "Know exactly where every brand stands.",
@@ -449,6 +343,11 @@ export default function WaitlistPage() {
       setForm(f => ({ ...f, [field]: e.target.value }));
   }
 
+  function focusForm() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setTimeout(() => (formRef.current?.querySelector("input") as HTMLInputElement)?.focus(), 600);
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setStatus("loading");
@@ -468,11 +367,42 @@ export default function WaitlistPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body { background: #F5F0EA; font-size: 16px; }
-        .lp { -webkit-font-smoothing: antialiased; background: #F5F0EA; }
-        .lp h1, .lp h2, .lp h3 { font-family: 'DM Serif Display', serif; }
+        html, body { background: #FBFBFD; font-size: 16px; }
+        .lp {
+          -webkit-font-smoothing: antialiased;
+          text-rendering: optimizeLegibility;
+          background: #FBFBFD;
+          font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Segoe UI", Roboto, sans-serif;
+          color: #1D1D1F;
+        }
+        .lp h1, .lp h2, .lp h3 {
+          font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", "Segoe UI", Roboto, sans-serif;
+        }
+
+        /* Frosted top nav */
+        .lp-nav {
+          position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+          display: flex; align-items: center; justify-content: space-between;
+          padding: 0 max(24px, 4vw); height: 52px;
+          background: rgba(251,251,253,0.72);
+          backdrop-filter: saturate(180%) blur(20px);
+          -webkit-backdrop-filter: saturate(180%) blur(20px);
+          border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .lp-nav-logo {
+          font-size: 20px; font-weight: 700; letter-spacing: -0.04em; line-height: 1;
+          background: linear-gradient(135deg, #F07844 0%, #D14E1D 100%);
+          -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+          background-clip: text; user-select: none;
+        }
+        .lp-nav-cta {
+          font-size: 12.5px; font-weight: 600; color: #fff; text-decoration: none;
+          background: #1D1D1F; border-radius: 100px; padding: 7px 16px;
+          transition: background 0.2s cubic-bezier(0.4,0,0.2,1), transform 0.2s cubic-bezier(0.4,0,0.2,1);
+          cursor: pointer; border: none;
+        }
+        .lp-nav-cta:hover { background: #3A3A3D; transform: translateY(-1px); }
 
         .lp-hero {
           position: relative; min-height: 100vh;
@@ -497,12 +427,12 @@ export default function WaitlistPage() {
         .lp-vignette {
           position: absolute; inset: 0; pointer-events: none; z-index: 2;
           background: radial-gradient(ellipse 58% 68% at 50% 50%,
-            rgba(245,240,234,0.94) 0%, rgba(245,240,234,0.72) 25%,
-            rgba(245,240,234,0.30) 54%, transparent 74%);
+            rgba(251,251,253,0.95) 0%, rgba(251,251,253,0.75) 25%,
+            rgba(251,251,253,0.30) 54%, transparent 74%);
         }
         .lp-glow {
           position: fixed; width: 320px; height: 320px; border-radius: 50%;
-          background: radial-gradient(circle, rgba(200,96,58,0.22) 0%, rgba(200,96,58,0.08) 45%, transparent 70%);
+          background: radial-gradient(circle, rgba(232,98,42,0.14) 0%, rgba(232,98,42,0.05) 45%, transparent 70%);
           filter: blur(36px); transform: translate(-50%, -50%);
           pointer-events: none; z-index: 5; will-change: left, top; left: 50%; top: 50%;
         }
@@ -511,73 +441,88 @@ export default function WaitlistPage() {
         .lp-center {
           position: relative; z-index: 10;
           display: flex; flex-direction: column; align-items: center; text-align: center;
-          padding: 56px 24px 64px; max-width: 680px; width: 100%;
+          padding: 96px 24px 64px; max-width: 720px; width: 100%;
+          animation: lpHeroIn 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        @keyframes lpHeroIn {
+          0% { opacity: 0; transform: translateY(28px); }
+          100% { opacity: 1; transform: translateY(0); }
         }
 
-        .lp-logo {
-          font-family: system-ui, -apple-system, sans-serif;
-          font-size: clamp(52px, 8vw, 80px); font-weight: 700; letter-spacing: -0.04em; line-height: 1;
-          background: linear-gradient(135deg, #FF8C42 0%, #C4603A 100%);
-          -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-          background-clip: text; margin-bottom: 20px;
-          filter: drop-shadow(0 2px 28px rgba(196,96,58,0.55));
-        }
         .lp-badge {
           display: inline-flex; align-items: center; gap: 7px;
-          background: #FFFFFF; border: 1.5px solid rgba(196,96,58,0.25);
+          background: rgba(255,255,255,0.85); border: 1px solid rgba(0,0,0,0.06);
           border-radius: 100px; padding: 6px 14px;
-          font-size: 12px; font-weight: 600; color: #2E2521;
-          margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+          font-size: 12px; font-weight: 600; color: #1D1D1F; letter-spacing: -0.01em;
+          margin-bottom: 26px; box-shadow: 0 1px 8px rgba(0,0,0,0.04);
         }
-        .lp-dot-o { width: 7px; height: 7px; border-radius: 50%; background: #E8622A; flex-shrink: 0; }
+        .lp-dot-o {
+          width: 7px; height: 7px; border-radius: 50%; background: #E8622A; flex-shrink: 0;
+          animation: pulseDot 1.6s ease-in-out infinite;
+        }
         .lp-hl {
-          font-size: clamp(36px, 5.5vw, 64px); font-weight: 900;
-          color: #1A1110; line-height: 1.08; letter-spacing: -0.02em;
-          margin-bottom: 18px;
+          font-size: clamp(40px, 6vw, 72px); font-weight: 700;
+          color: #1D1D1F; line-height: 1.05; letter-spacing: -0.035em;
+          margin-bottom: 22px;
         }
-        .lp-hl em { font-style: italic; font-weight: 400; color: #C4603A; }
+        .lp-hl em {
+          font-style: normal;
+          background: linear-gradient(120deg, #F07844 0%, #D14E1D 100%);
+          -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
         .lp-sub {
-          font-size: 15px; color: #6B6560; line-height: 1.7;
-          max-width: 440px; margin-bottom: 28px;
+          font-size: 17px; color: #6E6E73; line-height: 1.6; letter-spacing: -0.01em;
+          max-width: 460px; margin-bottom: 32px;
         }
         .lp-card {
           width: 100%; max-width: 380px;
-          background: rgba(245,240,234,0.85); backdrop-filter: blur(16px);
-          -webkit-backdrop-filter: blur(16px);
-          border: 1.5px solid rgba(200,185,170,0.38);
-          border-radius: 20px; padding: 20px;
-          box-shadow: 0 8px 32px rgba(0,0,0,0.07);
+          background: rgba(255,255,255,0.72);
+          backdrop-filter: saturate(180%) blur(20px);
+          -webkit-backdrop-filter: saturate(180%) blur(20px);
+          border: 1px solid rgba(0,0,0,0.06);
+          border-radius: 24px; padding: 20px;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.06);
           margin-bottom: 14px;
         }
         .lp-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .lp-field {
           width: 100%; padding: 11px 14px;
-          border: 1.5px solid #E8E2DA; border-radius: 11px;
-          font-size: 14px; color: #1A1110; background: #FAFAF9; outline: none;
-          transition: border-color 0.15s, box-shadow 0.15s;
+          border: 1px solid rgba(0,0,0,0.08); border-radius: 12px;
+          font-size: 14px; color: #1D1D1F; background: #F5F5F7; outline: none;
+          font-family: inherit;
+          transition: border-color 0.2s cubic-bezier(0.4,0,0.2,1),
+                      box-shadow 0.2s cubic-bezier(0.4,0,0.2,1),
+                      background 0.2s cubic-bezier(0.4,0,0.2,1);
         }
-        .lp-field::placeholder { color: #B5AFA8; }
-        .lp-field:focus { border-color: #C4603A; box-shadow: 0 0 0 3px rgba(196,96,58,0.09); background: #fff; }
+        .lp-field::placeholder { color: #AEAEB2; }
+        .lp-field:focus {
+          border-color: #E8622A; background: #fff;
+          box-shadow: 0 0 0 3px rgba(232,98,42,0.10);
+        }
         .lp-sel {
           appearance: none; cursor: pointer;
-          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23B5AFA8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23AEAEB2' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
           background-repeat: no-repeat; background-position: right 14px center;
         }
         .lp-btn {
           width: 100%; padding: 13px;
-          background: #E8622A; color: #fff; border: none; border-radius: 11px;
-          font-size: 14px; font-weight: 600; cursor: pointer;
-          transition: background 0.14s, transform 0.12s;
-          box-shadow: 0 4px 18px rgba(232,98,42,0.38);
+          background: #E8622A; color: #fff; border: none; border-radius: 100px;
+          font-size: 14.5px; font-weight: 600; cursor: pointer; letter-spacing: -0.01em;
+          font-family: inherit;
+          transition: background 0.2s cubic-bezier(0.4,0,0.2,1),
+                      transform 0.2s cubic-bezier(0.4,0,0.2,1),
+                      box-shadow 0.2s cubic-bezier(0.4,0,0.2,1);
+          box-shadow: 0 2px 14px rgba(232,98,42,0.28);
         }
-        .lp-btn:hover:not(:disabled) { background: #C4500A; transform: translateY(-1px); }
+        .lp-btn:hover:not(:disabled) {
+          background: #D14E1D; transform: translateY(-1px);
+          box-shadow: 0 6px 20px rgba(232,98,42,0.34);
+        }
+        .lp-btn:active:not(:disabled) { transform: translateY(0) scale(0.98); }
         .lp-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
         /* Phone animations */
-        @keyframes phoneFloat {
-          0%, 100% { transform: translateY(0) rotate(-3deg); }
-          50% { transform: translateY(-14px) rotate(-3deg); }
-        }
         @keyframes alertLoop {
           0%   { transform: translateY(-115%); opacity: 0; }
           12%  { transform: translateY(0);     opacity: 1; }
@@ -589,12 +534,10 @@ export default function WaitlistPage() {
           0%, 100% { transform: scale(1); opacity: 1; }
           50%       { transform: scale(1.5); opacity: 0.65; }
         }
-        /* Step 1 — brand cards slide in staggered */
         @keyframes cardSlideIn {
           0%   { transform: translateX(40px); opacity: 0; }
           100% { transform: translateX(0);    opacity: 1; }
         }
-        /* Step 3 — send button pulse then sent flash */
         @keyframes btnPulse {
           0%,  60%, 100% { transform: scale(1);    box-shadow: 0 2px 6px rgba(232,98,42,0.35); }
           70%            { transform: scale(0.93); box-shadow: 0 1px 3px rgba(232,98,42,0.2);  }
@@ -609,12 +552,20 @@ export default function WaitlistPage() {
           65%, 100% { opacity: 0; }
         }
 
+        /* Scroll reveal (mirrors globals.css for this standalone page) */
+        .reveal {
+          opacity: 0; transform: translateY(26px);
+          transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+        }
+        .reveal-visible { opacity: 1; transform: translateY(0); }
+
         /* How it works */
         .lp-how {
-          background: #FFFFFF; padding: 100px 24px;
+          background: #FFFFFF; padding: 120px 24px;
+          border-top: 1px solid rgba(0,0,0,0.04);
         }
         .lp-how-grid {
-          max-width: 960px; margin: 64px auto 0;
+          max-width: 960px; margin: 72px auto 0;
           display: grid; grid-template-columns: repeat(3, 1fr);
           gap: 40px;
         }
@@ -623,33 +574,38 @@ export default function WaitlistPage() {
         }
 
         /* Features */
-        .lp-features { background: #EDE8E0; padding: 96px 24px; }
+        .lp-features { background: #F5F5F7; padding: 120px 24px; }
         .lp-feat-grid {
-          max-width: 960px; margin: 48px auto 0;
-          display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
+          max-width: 980px; margin: 56px auto 0;
+          display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px;
         }
         .lp-feat-card {
-          background: #FBF7F2; border-radius: 22px; padding: 30px;
-          border: 1px solid rgba(200,185,170,0.28);
+          background: #FFFFFF; border-radius: 24px; padding: 34px;
+          border: 1px solid rgba(0,0,0,0.05);
+          box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+          transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), box-shadow 0.3s cubic-bezier(0.16,1,0.3,1);
+        }
+        .lp-feat-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 16px 40px rgba(0,0,0,0.08);
         }
 
         .lp-footer {
-          background: #E5DED4; padding: 22px 36px;
+          background: #FBFBFD; padding: 26px 36px;
+          border-top: 1px solid rgba(0,0,0,0.05);
           display: flex; align-items: center; justify-content: space-between;
           flex-wrap: wrap; gap: 12px;
         }
         .lp-footer-logo {
-          font-family: system-ui, -apple-system, sans-serif;
-          font-size: 17px; font-weight: 600; letter-spacing: -0.04em;
-          background: linear-gradient(to right, #FFD4A3, #FF9D6F);
+          font-size: 17px; font-weight: 700; letter-spacing: -0.04em;
+          background: linear-gradient(135deg, #F07844, #D14E1D);
           -webkit-background-clip: text; -webkit-text-fill-color: transparent;
           background-clip: text;
         }
 
         @media (max-width: 600px) {
-          .lp-hl { font-size: clamp(32px, 9vw, 48px); }
-          .lp-logo { font-size: clamp(72px, 20vw, 96px); }
-          .lp-center { padding: 24px 20px 28px; }
+          .lp-hl { font-size: clamp(34px, 9.5vw, 48px); }
+          .lp-center { padding: 84px 20px 28px; }
           .lp-row2 { grid-template-columns: 1fr; }
           .lp-how-grid { grid-template-columns: 1fr; }
           .lp-feat-grid { grid-template-columns: 1fr; }
@@ -659,6 +615,12 @@ export default function WaitlistPage() {
 
       <div className="lp">
         <div className="lp-glow" ref={glowRef} />
+
+        {/* ── NAV ── */}
+        <nav className="lp-nav">
+          <span className="lp-nav-logo">collabi</span>
+          <button className="lp-nav-cta" onClick={focusForm}>Join the waitlist</button>
+        </nav>
 
         {/* ── HERO ── */}
         <div className="lp-hero">
@@ -671,8 +633,6 @@ export default function WaitlistPage() {
           <div className="lp-vignette" />
 
           <div className="lp-center">
-            <div className="lp-logo">collabi</div>
-
             <div className="lp-badge">
               <span className="lp-dot-o" />
               Invite-only beta · Coming June 2026
@@ -692,11 +652,11 @@ export default function WaitlistPage() {
 
             {status === "done" ? (
               <div style={{ textAlign: "center", marginBottom: 16 }}>
-                <div style={{ width: 52, height: 52, borderRadius: "50%", background: "rgba(232,98,42,0.10)", border: "2px solid rgba(232,98,42,0.28)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px" }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E8622A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                <div style={{ width: 52, height: 52, borderRadius: "50%", background: "rgba(34,197,94,0.10)", border: "2px solid rgba(34,197,94,0.30)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px" }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
                 </div>
-                <p style={{ fontSize: 22, fontWeight: 700, color: "#1A1110", marginBottom: 8 }}>You&apos;re on the list!</p>
-                <p style={{ fontSize: 14, color: "#7A736B" }}>We&apos;ll be in touch when Collabi launches.</p>
+                <p style={{ fontSize: 22, fontWeight: 700, color: "#1D1D1F", marginBottom: 8, letterSpacing: "-0.02em" }}>You&apos;re on the list!</p>
+                <p style={{ fontSize: 14, color: "#6E6E73" }}>We&apos;ll be in touch when Collabi launches.</p>
               </div>
             ) : (
               <div className="lp-card" ref={formRef}>
@@ -720,10 +680,10 @@ export default function WaitlistPage() {
                     <option value="other">Other</option>
                   </select>
                   <button className="lp-btn" type="submit" disabled={status === "loading"}>
-                    {status === "loading" ? "Joining…" : "Join the waitlist →"}
+                    {status === "loading" ? "Joining…" : "Join the waitlist"}
                   </button>
                   {status === "error" && <p style={{ fontSize: 12, color: "#e05252", textAlign: "center" }}>Something went wrong — please try again.</p>}
-                  <p style={{ fontSize: 11, color: "#B5AFA8", textAlign: "center" }}>No spam, ever. Unsubscribe anytime.</p>
+                  <p style={{ fontSize: 11, color: "#AEAEB2", textAlign: "center" }}>No spam, ever. Unsubscribe anytime.</p>
                 </form>
               </div>
             )}
@@ -732,107 +692,121 @@ export default function WaitlistPage() {
 
         {/* ── HOW IT WORKS ── */}
         <div className="lp-how">
-          <div style={{ maxWidth: 960, margin: "0 auto", textAlign: "center" }}>
-            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#9E9790", marginBottom: 10 }}>Simple by design</p>
-            <h2 style={{ fontSize: "clamp(28px, 3.5vw, 44px)", fontWeight: 900, color: "#1A1110", letterSpacing: "-0.025em", lineHeight: 1.1, marginBottom: 12 }}>
-              How it works
-            </h2>
-            <p style={{ fontSize: 15, color: "#7A736B", maxWidth: 420, margin: "0 auto" }}>
-              Three steps. Minutes to set up. Deals from day one.
-            </p>
-          </div>
+          <Reveal>
+            <div style={{ maxWidth: 960, margin: "0 auto", textAlign: "center" }}>
+              <p style={{ fontSize: 12, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "#86868B", marginBottom: 12 }}>Simple by design</p>
+              <h2 style={{ fontSize: "clamp(30px, 3.8vw, 48px)", fontWeight: 700, color: "#1D1D1F", letterSpacing: "-0.03em", lineHeight: 1.08, marginBottom: 14 }}>
+                How it works
+              </h2>
+              <p style={{ fontSize: 17, color: "#6E6E73", maxWidth: 420, margin: "0 auto", letterSpacing: "-0.01em" }}>
+                Three steps. Minutes to set up. Deals from day one.
+              </p>
+            </div>
+          </Reveal>
 
           <div className="lp-how-grid">
-            {HOW_STEPS.map(s => (
-              <div key={s.n} className="lp-how-step">
-                {/* Mini phone */}
-                <div style={{ marginBottom: 28, position: "relative" }}>
+            {HOW_STEPS.map((s, i) => (
+              <Reveal key={s.n} delay={i * 120}>
+                <div className="lp-how-step">
+                  {/* Mini phone */}
+                  <div style={{ marginBottom: 28, position: "relative" }}>
+                    <div style={{
+                      position: "absolute", bottom: -16, left: "50%", transform: "translateX(-50%)",
+                      width: 80, height: 30,
+                      background: "radial-gradient(ellipse, rgba(232,98,42,0.16) 0%, transparent 70%)",
+                      filter: "blur(10px)",
+                    }} />
+                    <MiniPhone step={s.n} />
+                  </div>
+
+                  {/* Step number */}
                   <div style={{
-                    position: "absolute", bottom: -16, left: "50%", transform: "translateX(-50%)",
-                    width: 80, height: 30,
-                    background: "radial-gradient(ellipse, rgba(232,98,42,0.20) 0%, transparent 70%)",
-                    filter: "blur(10px)",
-                  }} />
-                  <MiniPhone step={s.n} />
-                </div>
+                    width: 32, height: 32, borderRadius: "50%",
+                    background: "rgba(232,98,42,0.08)", border: "1px solid rgba(232,98,42,0.20)",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontSize: 13, fontWeight: 700, color: "#D14E1D",
+                    marginBottom: 14,
+                  }}>
+                    {s.n}
+                  </div>
 
-                {/* Step number */}
-                <div style={{
-                  width: 32, height: 32, borderRadius: "50%",
-                  background: "rgba(232,98,42,0.10)", border: "1.5px solid rgba(232,98,42,0.22)",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 13, fontWeight: 800, color: "#C4603A",
-                  marginBottom: 12,
-                }}>
-                  {s.n}
+                  <h3 style={{ fontSize: 19, fontWeight: 600, color: "#1D1D1F", letterSpacing: "-0.02em", marginBottom: 8 }}>{s.title}</h3>
+                  <p style={{ fontSize: 14.5, color: "#6E6E73", lineHeight: 1.6, letterSpacing: "-0.005em" }}>{s.body}</p>
                 </div>
-
-                <h3 style={{ fontSize: 18, fontWeight: 700, color: "#1A1110", letterSpacing: "-0.02em", marginBottom: 8 }}>{s.title}</h3>
-                <p style={{ fontSize: 14, color: "#7A736B", lineHeight: 1.65 }}>{s.body}</p>
-              </div>
+              </Reveal>
             ))}
-          </div>
-
-          {/* Connector line between steps (desktop only) */}
-          <div style={{ maxWidth: 960, margin: "0 auto", position: "relative", height: 0 }}>
           </div>
         </div>
 
         {/* ── FEATURES ── */}
         <div className="lp-features" id="features">
-          <div style={{ maxWidth: 960, margin: "0 auto", textAlign: "center" }}>
-            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#C4603A", marginBottom: 10 }}>The platform</p>
-            <h2 style={{ fontSize: "clamp(28px, 3.5vw, 44px)", fontWeight: 900, color: "#1A1110", letterSpacing: "-0.025em", lineHeight: 1.1 }}>
-              Four tools. One mission.
-            </h2>
-            <p style={{ fontSize: 16, color: "#7A736B", marginTop: 14, maxWidth: 420, margin: "14px auto 0", lineHeight: 1.65 }}>
-              Everything a creator needs to land brand deals — built into one place.
-            </p>
-          </div>
+          <Reveal>
+            <div style={{ maxWidth: 960, margin: "0 auto", textAlign: "center" }}>
+              <p style={{ fontSize: 12, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "#D14E1D", marginBottom: 12 }}>The platform</p>
+              <h2 style={{ fontSize: "clamp(30px, 3.8vw, 48px)", fontWeight: 700, color: "#1D1D1F", letterSpacing: "-0.03em", lineHeight: 1.08 }}>
+                Four tools. One mission.
+              </h2>
+              <p style={{ fontSize: 17, color: "#6E6E73", maxWidth: 440, margin: "16px auto 0", lineHeight: 1.6, letterSpacing: "-0.01em" }}>
+                Everything a creator needs to land brand deals — built into one place.
+              </p>
+            </div>
+          </Reveal>
           <div className="lp-feat-grid">
-            {FEATURES.map(f => (
-              <div key={f.tag} className="lp-feat-card">
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18 }}>
-                  <span style={{ fontSize: 11, fontWeight: 800, color: "#C4603A", background: "rgba(196,96,58,0.08)", padding: "2px 9px", borderRadius: 100, letterSpacing: "0.06em" }}>{f.step}</span>
-                  <span style={{ fontSize: 13 }} suppressHydrationWarning>{f.emoji}</span>
-                  <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: "#9E9790" }}>{f.tag}</span>
-                </div>
-                <h3 style={{ fontSize: 20, fontWeight: 700, color: "#1A1110", letterSpacing: "-0.02em", lineHeight: 1.25, marginBottom: 12 }}>{f.title}</h3>
-                <p style={{ fontSize: 14, color: "#7A736B", lineHeight: 1.75, marginBottom: 20 }}>{f.body}</p>
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  {f.bullets.map(b => (
-                    <div key={b} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <div style={{ width: 16, height: 16, borderRadius: "50%", background: "rgba(75,191,176,0.12)", border: "1px solid rgba(75,191,176,0.25)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                        <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#4BBFB0" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+            {FEATURES.map((f, i) => (
+              <Reveal key={f.tag} delay={(i % 2) * 120}>
+                <div className="lp-feat-card">
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20 }}>
+                    <span style={{ fontSize: 11, fontWeight: 700, color: "#D14E1D", background: "rgba(232,98,42,0.08)", padding: "3px 10px", borderRadius: 100, letterSpacing: "0.04em" }}>{f.step}</span>
+                    <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: "#86868B" }}>{f.tag}</span>
+                  </div>
+                  <h3 style={{ fontSize: 21, fontWeight: 600, color: "#1D1D1F", letterSpacing: "-0.025em", lineHeight: 1.25, marginBottom: 12 }}>{f.title}</h3>
+                  <p style={{ fontSize: 14.5, color: "#6E6E73", lineHeight: 1.7, marginBottom: 22, letterSpacing: "-0.005em" }}>{f.body}</p>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+                    {f.bullets.map(b => (
+                      <div key={b} style={{ display: "flex", alignItems: "center", gap: 9 }}>
+                        <div style={{ width: 16, height: 16, borderRadius: "50%", background: "rgba(34,197,94,0.10)", border: "1px solid rgba(34,197,94,0.25)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                          <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                        </div>
+                        <span style={{ fontSize: 13.5, color: "#3A3A3D", fontWeight: 500, letterSpacing: "-0.005em" }}>{b}</span>
                       </div>
-                      <span style={{ fontSize: 13, color: "#4B4540", fontWeight: 500 }}>{b}</span>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
+              </Reveal>
             ))}
           </div>
-          <div style={{ textAlign: "center", marginTop: 60 }}>
-            <p style={{ fontSize: 15, color: "#7A736B", marginBottom: 20 }}>Ready to land more brand deals?</p>
-            <a
-              href="#"
-              onClick={e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); setTimeout(() => (formRef.current?.querySelector("input") as HTMLInputElement)?.focus(), 600); }}
-              style={{ display: "inline-block", background: "#E8622A", color: "#fff", fontWeight: 700, fontSize: 15, padding: "14px 32px", borderRadius: 100, textDecoration: "none", boxShadow: "0 4px 18px rgba(232,98,42,0.38)" }}
-            >
-              Join the waitlist →
-            </a>
-          </div>
+          <Reveal>
+            <div style={{ textAlign: "center", marginTop: 72 }}>
+              <h2 style={{ fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 700, color: "#1D1D1F", letterSpacing: "-0.03em", marginBottom: 24 }}>
+                Ready to land more brand deals?
+              </h2>
+              <button
+                onClick={focusForm}
+                style={{
+                  display: "inline-block", background: "#E8622A", color: "#fff", fontWeight: 600,
+                  fontSize: 15.5, padding: "14px 34px", borderRadius: 100, border: "none",
+                  cursor: "pointer", letterSpacing: "-0.01em", fontFamily: "inherit",
+                  boxShadow: "0 2px 14px rgba(232,98,42,0.28)",
+                  transition: "background 0.2s cubic-bezier(0.4,0,0.2,1), transform 0.2s cubic-bezier(0.4,0,0.2,1), box-shadow 0.2s cubic-bezier(0.4,0,0.2,1)",
+                }}
+                onMouseEnter={e => { const el = e.currentTarget; el.style.background = "#D14E1D"; el.style.transform = "translateY(-1px)"; el.style.boxShadow = "0 6px 20px rgba(232,98,42,0.34)"; }}
+                onMouseLeave={e => { const el = e.currentTarget; el.style.background = "#E8622A"; el.style.transform = "translateY(0)"; el.style.boxShadow = "0 2px 14px rgba(232,98,42,0.28)"; }}
+              >
+                Join the waitlist
+              </button>
+            </div>
+          </Reveal>
         </div>
 
         {/* ── FOOTER ── */}
         <div className="lp-footer">
           <span className="lp-footer-logo">collabi</span>
-          <span style={{ fontSize: 12, color: "#9E9790" }}>© Collabi 2025</span>
+          <span style={{ fontSize: 12, color: "#86868B" }}>© Collabi 2026</span>
           <div style={{ display: "flex", gap: 20 }}>
             {[["Privacy", "/privacy"], ["Terms", "/terms"]].map(([l, h]) => (
-              <a key={l} href={h} style={{ fontSize: 12, color: "#9E9790", textDecoration: "none" }}
-                onMouseEnter={e => (e.currentTarget.style.color = "#1A1110")}
-                onMouseLeave={e => (e.currentTarget.style.color = "#9E9790")}
+              <a key={l} href={h} style={{ fontSize: 12, color: "#86868B", textDecoration: "none", transition: "color 0.2s" }}
+                onMouseEnter={e => (e.currentTarget.style.color = "#1D1D1F")}
+                onMouseLeave={e => (e.currentTarget.style.color = "#86868B")}
               >{l}</a>
             ))}
           </div>

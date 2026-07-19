@@ -13,6 +13,7 @@ import {
   BookOpen,
   ShieldCheck,
   LogOut,
+  type LucideIcon,
 } from "lucide-react";
 import { useUser, SignOutButton } from "@clerk/nextjs";
 
@@ -28,6 +29,37 @@ const NAV_ITEMS = [
   { href: "/ads",        label: "Meta Ads",     icon: BarChart3,       exact: false, tourId: "tour-ads"        },
 ];
 
+function NavLink({
+  href,
+  label,
+  icon: Icon,
+  active,
+  tourId,
+}: {
+  href: string;
+  label: string;
+  icon: LucideIcon;
+  active: boolean;
+  tourId?: string;
+}) {
+  return (
+    <Link
+      href={href}
+      id={tourId}
+      className={`flex items-center gap-2.5 px-2.5 py-[9px] rounded-xl flex-shrink-0 transition-all duration-200 ${
+        active
+          ? "bg-coral-500/10 text-coral-600"
+          : "text-navy-500 hover:bg-black/[0.04] hover:text-navy-700"
+      }`}
+    >
+      <Icon size={16} strokeWidth={active ? 2.4 : 1.75} className="flex-shrink-0" />
+      <span className={`text-[13px] tracking-[-0.01em] ${active ? "font-semibold" : "font-medium"}`}>
+        {label}
+      </span>
+    </Link>
+  );
+}
+
 export default function Sidebar() {
   const pathname = usePathname();
   const { user } = useUser();
@@ -36,159 +68,66 @@ export default function Sidebar() {
     .split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2);
 
   return (
-    <div style={{
-      background: "#FFFFFF",
-      borderRadius: 20,
-      border: "1px solid rgba(0,0,0,0.07)",
-      boxShadow: "0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)",
-      display: "flex",
-      flexDirection: "column",
-      padding: "14px 8px",
-      gap: 2,
-      width: 152,
-      height: "100%",
-    }}>
+    <div className="glass flex flex-col gap-0.5 w-[152px] h-full rounded-[20px] px-2 py-3.5 shadow-[0_2px_16px_rgba(0,0,0,0.05)]">
 
       {/* Wordmark */}
-      <div style={{ padding: "6px 8px 14px", textAlign: "center" }}>
-        <span style={{
-          fontFamily: "'Comfortaa', system-ui, sans-serif",
-          fontSize: 28,
-          fontWeight: 700,
-          lineHeight: 1,
-          display: "block",
-          background: "linear-gradient(90deg, #FFAE7E 0%, #E8622A 100%)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          backgroundClip: "text",
-          userSelect: "none",
-        }}>
+      <div className="px-2 pt-1.5 pb-3.5 text-center">
+        <span className="font-display text-[26px] font-bold leading-none tracking-[-0.04em] select-none bg-gradient-to-r from-coral-400 to-coral-600 bg-clip-text text-transparent">
           collabi
         </span>
       </div>
 
       {/* Nav items */}
-      {NAV_ITEMS.map(({ href, label, icon: Icon, exact, tourId }) => {
-        const active = exact ? pathname === href : pathname.startsWith(href);
-        return (
-          <Link
-            key={href}
-            href={href}
-            id={tourId}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 9,
-              padding: "9px 10px",
-              borderRadius: 11,
-              background: active ? "rgba(232,98,42,0.10)" : "transparent",
-              color: active ? "#E8622A" : "#6B7280",
-              textDecoration: "none",
-              transition: "all 0.12s",
-              flexShrink: 0,
-            }}
-            onMouseEnter={e => {
-              if (!active) {
-                (e.currentTarget as HTMLElement).style.background = "rgba(0,0,0,0.04)";
-                (e.currentTarget as HTMLElement).style.color = "#374151";
-              }
-            }}
-            onMouseLeave={e => {
-              if (!active) {
-                (e.currentTarget as HTMLElement).style.background = "transparent";
-                (e.currentTarget as HTMLElement).style.color = "#6B7280";
-              }
-            }}
-          >
-            <Icon size={16} strokeWidth={active ? 2.5 : 1.75} style={{ flexShrink: 0 }} />
-            <span style={{
-              fontSize: 13,
-              fontWeight: active ? 700 : 500,
-              letterSpacing: "-0.01em",
-            }}>
-              {label}
-            </span>
-          </Link>
-        );
-      })}
+      {NAV_ITEMS.map(({ href, label, icon, exact, tourId }) => (
+        <NavLink
+          key={href}
+          href={href}
+          label={label}
+          icon={icon}
+          tourId={tourId}
+          active={exact ? pathname === href : pathname.startsWith(href)}
+        />
+      ))}
 
       {/* Admin */}
       {isAdmin && (
-        <Link
+        <NavLink
           href="/admin"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 9,
-            padding: "9px 10px",
-            borderRadius: 11,
-            background: pathname.startsWith("/admin") ? "rgba(232,98,42,0.10)" : "transparent",
-            color: pathname.startsWith("/admin") ? "#E8622A" : "#6B7280",
-            textDecoration: "none",
-            transition: "all 0.12s",
-          }}
-        >
-          <ShieldCheck size={16} strokeWidth={1.75} style={{ flexShrink: 0 }} />
-          <span style={{ fontSize: 12.5, fontWeight: 500, letterSpacing: "-0.01em" }}>Admin</span>
-        </Link>
+          label="Admin"
+          icon={ShieldCheck}
+          active={pathname.startsWith("/admin")}
+        />
       )}
 
       {/* Spacer */}
-      <div style={{ flex: 1 }} />
+      <div className="flex-1" />
 
       {/* Settings */}
-      <Link
+      <NavLink
         href="/settings"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 9,
-          padding: "9px 10px",
-          borderRadius: 11,
-          background: pathname === "/settings" ? "rgba(232,98,42,0.10)" : "transparent",
-          color: pathname === "/settings" ? "#E8622A" : "#6B7280",
-          textDecoration: "none",
-          transition: "all 0.12s",
-        }}
-        onMouseEnter={e => {
-          if (pathname !== "/settings") {
-            (e.currentTarget as HTMLElement).style.background = "rgba(0,0,0,0.04)";
-            (e.currentTarget as HTMLElement).style.color = "#374151";
-          }
-        }}
-        onMouseLeave={e => {
-          if (pathname !== "/settings") {
-            (e.currentTarget as HTMLElement).style.background = "transparent";
-            (e.currentTarget as HTMLElement).style.color = "#6B7280";
-          }
-        }}
-      >
-        <Settings size={16} strokeWidth={1.75} style={{ flexShrink: 0 }} />
-        <span style={{ fontSize: 12.5, fontWeight: 500, letterSpacing: "-0.01em" }}>Settings</span>
-      </Link>
+        label="Settings"
+        icon={Settings}
+        active={pathname === "/settings"}
+      />
 
       {/* User + sign out */}
-      <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "12px 10px 2px", borderTop: "1px solid rgba(0,0,0,0.06)", marginTop: 4 }}>
-        <div style={{
-          width: 28, height: 28, borderRadius: "50%", overflow: "hidden",
-          background: "#E8622A", flexShrink: 0,
-          display: "flex", alignItems: "center", justifyContent: "center",
-        }}>
+      <div className="flex items-center gap-2 px-2.5 pt-3 pb-0.5 mt-1 border-t border-black/[0.06]">
+        <div className="w-7 h-7 rounded-full overflow-hidden bg-coral-500 flex-shrink-0 flex items-center justify-center">
           {user?.imageUrl ? (
-            <img src={user.imageUrl} alt={initials} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            <img src={user.imageUrl} alt={initials} className="w-full h-full object-cover" />
           ) : (
-            <span style={{ color: "white", fontSize: 10, fontWeight: 800 }}>{initials}</span>
+            <span className="text-white text-[10px] font-bold">{initials}</span>
           )}
         </div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <p style={{ fontSize: 12, fontWeight: 700, color: "#111827", letterSpacing: "-0.01em", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", margin: 0 }}>
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-semibold text-navy-900 tracking-[-0.01em] truncate m-0">
             {user?.firstName || user?.fullName || "Account"}
           </p>
         </div>
         <SignOutButton>
-          <button title="Sign out" style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: "#9CA3AF", display: "flex", alignItems: "center", borderRadius: 6, transition: "color 0.12s" }}
-            onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = "#EF4444"}
-            onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = "#9CA3AF"}
+          <button
+            title="Sign out"
+            className="bg-transparent border-0 cursor-pointer p-1 rounded-md flex items-center text-navy-300 hover:text-red-500 transition-colors duration-200"
           >
             <LogOut size={13} />
           </button>

@@ -7,11 +7,13 @@
   --orange:        #E8622A;
   --orange-light:  #F07844;
   --orange-dim:    rgba(232, 98, 42, 0.10);
-  --border:        rgba(0, 0, 0, 0.07);
-  --text:          #1A1110;
-  --muted:         #7A736B;
+  --border:        rgba(0, 0, 0, 0.06);
+  --text:          #1D1D1F;
+  --muted:         #6E6E73;
   --card-bg:       #FFFFFF;
-  --card-shadow:   0 2px 12px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+  --card-shadow:   0 2px 12px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 * {
@@ -19,24 +21,30 @@
 }
 
 html {
-  background: #F8F9FA;
+  background: #F5F5F7;
   min-height: 100vh;
   font-size: 17px;
+  scroll-behavior: smooth;
 }
 
 body {
-  font-family: 'Roboto', system-ui, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Segoe UI", Roboto, sans-serif;
   font-size: 1rem;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
   background: transparent;
   min-height: 100vh;
   color: var(--text);
 }
 
 h1, h2, h3, h4 {
-  font-family: 'Comfortaa', system-ui, sans-serif;
-  letter-spacing: -0.03em;
-  font-weight: 800;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", "Segoe UI", Roboto, sans-serif;
+  letter-spacing: -0.025em;
+  font-weight: 700;
+}
+
+::selection {
+  background: rgba(232, 98, 42, 0.16);
 }
 
 @keyframes live-glow {
@@ -48,6 +56,17 @@ h1, h2, h3, h4 {
   animation: live-glow 2s ease-in-out infinite;
 }
 
+/* Scroll-reveal — toggled by an IntersectionObserver adding .reveal-visible */
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+}
+.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 @layer utilities {
   .scrollbar-thin {
     scrollbar-width: thin;
@@ -55,35 +74,64 @@ h1, h2, h3, h4 {
   }
 
   .font-display {
-    font-family: 'Comfortaa', system-ui, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", "Segoe UI", Roboto, sans-serif;
+  }
+
+  /* Frosted material — Apple-style translucent surface */
+  .glass {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  .hairline {
+    border: 1px solid rgba(0, 0, 0, 0.06);
   }
 
   .input-base {
-    @apply w-full px-4 py-2.5 bg-white rounded-xl text-sm text-gray-900
-           placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400/30
-           focus:border-orange-400 transition;
-    border: 1px solid rgba(0,0,0,0.09);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-    font-family: 'Roboto', system-ui, sans-serif;
+    @apply w-full px-4 py-2.5 bg-white rounded-xl text-sm text-navy-900
+           placeholder:text-navy-300 focus:outline-none focus:ring-[3px] focus:ring-coral-500/15
+           focus:border-coral-400;
+    border: 1px solid rgba(0,0,0,0.08);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    transition: border-color 0.2s var(--ease-standard), box-shadow 0.2s var(--ease-standard);
   }
 
   .btn-primary {
-    @apply inline-flex items-center gap-2 px-5 py-2.5 text-white text-sm font-semibold
-           rounded-xl transition-colors;
+    @apply inline-flex items-center justify-center gap-2 px-6 py-2.5 text-white text-sm font-semibold
+           rounded-full;
     background: #E8622A;
-    box-shadow: 0 2px 12px rgba(232,98,42,0.30);
+    box-shadow: 0 2px 14px rgba(232,98,42,0.28);
+    transition: background 0.2s var(--ease-standard), transform 0.2s var(--ease-standard),
+                box-shadow 0.2s var(--ease-standard);
   }
   .btn-primary:hover {
-    background: #C4603A;
+    background: #D14E1D;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(232,98,42,0.34);
+  }
+  .btn-primary:active {
+    transform: translateY(0) scale(0.98);
   }
   .btn-primary:disabled {
     opacity: 0.4;
+    transform: none;
   }
 
   .card {
     background: #FFFFFF;
     border-radius: 20px;
-    border: 1px solid rgba(0, 0, 0, 0.07);
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03);
+  }
+
+  /* Hoverable card — gentle lift, Apple product-tile feel */
+  .card-hover {
+    transition: transform 0.3s var(--ease-out-expo), box-shadow 0.3s var(--ease-out-expo);
+  }
+  .card-hover:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
   }
 }
