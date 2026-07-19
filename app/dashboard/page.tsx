@@ -58,7 +58,9 @@ function MetaTokenBanner({ health }: { health: MetaHealth }) {
 
   if (!health.ok) {
     tone = { bg: "#FEF2F2", border: "#FECACA", fg: "#DC2626" };
-    message = `Ad Signals is down — ${health.error || "Meta token needs attention"}. Fix in Settings on developers.facebook.com, then update META_ACCESS_TOKEN.`;
+    message = health.error
+      ? `Ad Signals is down — ${health.error}`
+      : "Ad Signals is down — the Meta token needs attention. Regenerate it and update META_ACCESS_TOKEN.";
   } else if (health.daysLeft != null && health.daysLeft <= 1) {
     tone = { bg: "#FEF2F2", border: "#FECACA", fg: "#DC2626" };
     message = `Meta token expires ${health.daysLeft <= 0 ? "TODAY" : "tomorrow"} — regenerate it now or Ad Signals goes dark.`;
