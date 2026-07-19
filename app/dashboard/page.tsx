@@ -49,6 +49,43 @@ function StatTile({ label, value, sub, alert }: { label: string; value: number |
   );
 }
 
+type MetaHealth = { ok: boolean; adLibraryOk: boolean; tokenValid: boolean; expiresAt: string | null; daysLeft: number | null; error?: string };
+
+/** Admin-only warning strip: Ad Signals broken, or token expiring within 7 days. */
+function MetaTokenBanner({ health }: { health: MetaHealth }) {
+  let tone: { bg: string; border: string; fg: string } | null = null;
+  let message = "";
+
+  if (!health.ok) {
+    tone = { bg: "#FEF2F2", border: "#FECACA", fg: "#DC2626" };
+    message = `Ad Signals is down — ${health.error || "Meta token needs attention"}. Fix in Settings on developers.facebook.com, then update META_ACCESS_TOKEN.`;
+  } else if (health.daysLeft != null && health.daysLeft <= 1) {
+    tone = { bg: "#FEF2F2", border: "#FECACA", fg: "#DC2626" };
+    message = `Meta token expires ${health.daysLeft <= 0 ? "TODAY" : "tomorrow"} — regenerate it now or Ad Signals goes dark.`;
+  } else if (health.daysLeft != null && health.daysLeft <= 3) {
+    tone = { bg: "#FFF7ED", border: "#FED7AA", fg: "#EA580C" };
+    message = `Meta token expires in ${health.daysLeft} days — time to regenerate it.`;
+  } else if (health.daysLeft != null && health.daysLeft <= 7) {
+    tone = { bg: "#FFFBEB", border: "#FDE68A", fg: "#B45309" };
+    message = `Meta token expires in ${health.daysLeft} days.`;
+  }
+
+  if (!tone) return null;
+  return (
+    <div style={{
+      display: "flex", alignItems: "center", gap: 10, flexShrink: 0,
+      background: tone.bg, border: `1px solid ${tone.border}`, borderRadius: 14,
+      padding: "10px 16px",
+    }}>
+      <AlertTriangle size={15} style={{ color: tone.fg, flexShrink: 0 }} />
+      <p style={{ fontSize: 13, fontWeight: 600, color: tone.fg, flex: 1 }}>{message}</p>
+      <Link href="/admin/status" style={{ fontSize: 12, fontWeight: 700, color: tone.fg, textDecoration: "underline", flexShrink: 0 }}>
+        System Status →
+      </Link>
+    </div>
+  );
+}
+
 const FAV_KEY = "dashboard_fav_brands";
 const DOMAINS_KEY = "dashboard_brand_domains";
 
@@ -87,9 +124,14 @@ export default function DashboardPage() {
   const [loadingData, setLoadingData] = useState(true);
   const [companyCategories, setCompanyCategories] = useState<Record<string, string>>({});
   const [emailDomainMap, setEmailDomainMap] = useState<Record<string, string>>({});
+  const [metaHealth, setMetaHealth] = useState<MetaHealth | null>(null);
 
   useEffect(() => {
     getEmailAccount().then(acc => setEmailConnected(acc ? "connected" : null));
+    // Admin-only: watch Meta token health so Ad Signals can't die silently
+    if (user?.id && user.id === process.env.NEXT_PUBLIC_ADMIN_USER_ID) {
+      fetch("/api/meta-health").then(r => r.ok ? r.json() : null).then(h => h && setMetaHealth(h)).catch(() => {});
+    }
     const stored = localStorage.getItem(FAV_KEY);
     if (stored) {
       setFavBrands(JSON.parse(stored));
@@ -317,6 +359,9 @@ export default function DashboardPage() {
           </div>
         </div>
       )}
+
+      {/* ── Meta token health (admin only) ── */}
+      {metaHealth && <MetaTokenBanner health={metaHealth} />}
 
       {/* ── Stat strip ── */}
       {emailReady && (

@@ -4,7 +4,10 @@ import { useState, useCallback } from "react";
 import Link from "next/link";
 import { ArrowLeft, RefreshCw, CheckCircle, XCircle } from "lucide-react";
 
-type ServiceStatus = { ok: boolean; latencyMs?: number; error?: string; status?: number };
+type ServiceStatus = {
+  ok: boolean; latencyMs?: number; error?: string; status?: number;
+  expiresAt?: string | null; daysLeft?: number | null; adLibraryOk?: boolean; tokenValid?: boolean;
+};
 type StatusData = {
   supabase: ServiceStatus;
   clerk: ServiceStatus;
@@ -13,11 +16,19 @@ type StatusData = {
 };
 
 function StatusRow({ label, s }: { label: string; s: ServiceStatus }) {
+  const expiryTone =
+    s.daysLeft == null ? "" : s.daysLeft <= 1 ? "text-red-500 font-bold" : s.daysLeft <= 3 ? "text-orange-500 font-semibold" : s.daysLeft <= 7 ? "text-amber-600 font-semibold" : "text-navy-400";
   return (
     <div className="flex items-center gap-4 px-5 py-4 border-b last:border-0" style={{ borderColor: "var(--border)" }}>
       <div className="flex-1">
         <p className="font-bold text-navy-900 text-sm">{label}</p>
         {s.error && <p className="text-xs text-red-500 mt-0.5">{s.error}</p>}
+        {s.expiresAt && (
+          <p className={`text-xs mt-0.5 ${expiryTone}`}>
+            Token expires {new Date(s.expiresAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+            {s.daysLeft != null && ` — ${s.daysLeft} day${s.daysLeft === 1 ? "" : "s"} left`}
+          </p>
+        )}
       </div>
       <div className="flex items-center gap-2">
         {s.ok ? (

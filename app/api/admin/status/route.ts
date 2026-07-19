@@ -1,6 +1,7 @@
 import { requireAdmin } from "@/lib/adminAuth";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { NextResponse } from "next/server";
+import { checkMetaHealth } from "@/lib/metaHealth";
 
 async function checkSupabase() {
   try {
@@ -24,15 +25,15 @@ async function checkClerk() {
 }
 
 async function checkMetaApi() {
-  const token = process.env.META_ACCESS_TOKEN;
-  if (!token) return { ok: false, error: "META_ACCESS_TOKEN not configured" };
-  try {
-    const res = await fetch(`https://graph.facebook.com/v19.0/me?access_token=${token}`);
-    const json = await res.json();
-    return { ok: res.ok && !json.error, error: json.error?.message };
-  } catch (e) {
-    return { ok: false, error: String(e) };
-  }
+  const h = await checkMetaHealth();
+  return {
+    ok: h.ok,
+    error: h.ok ? undefined : h.error,
+    expiresAt: h.expiresAt,
+    daysLeft: h.daysLeft,
+    adLibraryOk: h.adLibraryOk,
+    tokenValid: h.tokenValid,
+  };
 }
 
 export async function GET() {
