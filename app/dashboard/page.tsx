@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
-  Send, Users, TrendingUp, Bell, ChevronRight, Clock,
+  Send, Users, TrendingUp, ChevronRight, Clock,
   Star, Edit2, Check, Mail, AlertTriangle, RefreshCw,
 } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
@@ -86,6 +86,26 @@ function BrandLogo({ name, size = 30, domain }: { name: string; size?: number; d
       {!hasImg && (
         <span style={{ color: "white", fontSize: 11, fontWeight: 800 }}>{name[0]?.toUpperCase()}</span>
       )}
+    </div>
+  );
+}
+
+function StatTile({ label, value, sub, alert }: { label: string; value: number | string; sub?: string; alert?: boolean }) {
+  return (
+    <div style={{
+      background: "#FFFFFF", borderRadius: 16, border: "1px solid rgba(0,0,0,0.05)",
+      boxShadow: "0 1px 8px rgba(0,0,0,0.04)", padding: "14px 18px",
+      display: "flex", flexDirection: "column", gap: 4, minWidth: 0,
+    }}>
+      <span style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em", color: "#86868B", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+        {label}
+      </span>
+      <div style={{ display: "flex", alignItems: "baseline", gap: 7 }}>
+        <span style={{ fontSize: 26, fontWeight: 700, letterSpacing: "-0.02em", color: alert ? "#E8622A" : "#1D1D1F", lineHeight: 1 }}>
+          {value}
+        </span>
+        {sub && <span style={{ fontSize: 11, color: "#AEAEB2", fontWeight: 500 }}>{sub}</span>}
+      </div>
     </div>
   );
 }
@@ -273,6 +293,8 @@ export default function DashboardPage() {
   const today = new Date().toLocaleDateString("en-GB", {
     weekday: "long", day: "numeric", month: "long",
   });
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
   const activeDeals = deals.filter(d => d.status !== "paid");
   const recentDeals = deals.slice(0, 5);
   const allBrandNames = Array.from(new Set([...brands.map(b => b.name), ...allCompanies])).sort();
@@ -294,10 +316,9 @@ export default function DashboardPage() {
       overflow: "hidden",
     }}>
 
-      {/* ── Header: greeting OR email prompt ── */}
-      <div className="flex items-center justify-between flex-shrink-0" style={{ ...CARD, padding: "20px 32px" }}>
-        {!emailReady ? (
-          /* Email connect prompt */
+      {/* ── Header: greeting on canvas, or connect prompt card ── */}
+      {!emailReady ? (
+        <div className="flex items-center justify-between flex-shrink-0" style={{ ...CARD, padding: "20px 28px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 16, flex: 1 }}>
             <div style={{ width: 42, height: 42, borderRadius: 13, background: emailConnected === "expired" ? "#FEF2F2" : "#FFF4EE", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
               {emailConnected === "expired"
@@ -317,47 +338,60 @@ export default function DashboardPage() {
             <Link
               href="/settings"
               className="inline-flex items-center gap-2 text-white text-sm font-semibold rounded-full transition-all flex-shrink-0"
-              style={{ padding: "10px 20px", background: emailConnected === "expired" ? "#EF4444" : "#E8622A", boxShadow: `0 2px 14px ${emailConnected === "expired" ? "rgba(239,68,68,0.35)" : "rgba(232,98,42,0.35)"}`, marginLeft: "auto" }}
+              style={{ padding: "10px 20px", background: emailConnected === "expired" ? "#EF4444" : "#E8622A", boxShadow: `0 2px 14px ${emailConnected === "expired" ? "rgba(239,68,68,0.35)" : "rgba(232,98,42,0.28)"}`, marginLeft: "auto" }}
               onMouseEnter={e => (e.currentTarget as HTMLElement).style.opacity = "0.88"}
               onMouseLeave={e => (e.currentTarget as HTMLElement).style.opacity = "1"}
             >
               {emailConnected === "expired" ? <><RefreshCw size={13} /> Reconnect</> : <><Mail size={13} /> Connect email</>}
             </Link>
           </div>
-        ) : (
-          /* Normal greeting */
-          <>
-            <div>
-              <p style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: "#AEAEB2", marginBottom: 6 }}>
-                {today}
-              </p>
-              <h1 style={{ fontSize: 32, fontWeight: 700, letterSpacing: "-0.03em", color: "#1D1D1F", lineHeight: 1 }}>
-                Hey {firstName}!
-              </h1>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <Link
-                href="/contacts"
-                className="inline-flex items-center gap-2 text-sm font-semibold rounded-full transition-all"
-                style={{ padding: "9px 18px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)", color: "#3A3A3D" }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "#E8622A"; (e.currentTarget as HTMLElement).style.color = "#E8622A"; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,0,0,0.08)"; (e.currentTarget as HTMLElement).style.color = "#3A3A3D"; }}
-              >
-                <Users size={13} /> New Campaign
-              </Link>
-              <Link
-                href="/send"
-                className="inline-flex items-center gap-2 text-white text-sm font-semibold rounded-full transition-all"
-                style={{ padding: "9px 18px", background: "#E8622A", boxShadow: "0 2px 14px rgba(232,98,42,0.38)" }}
-                onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = "#D14E1D"}
-                onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = "#E8622A"}
-              >
-                <Send size={13} /> Quick Send
-              </Link>
-            </div>
-          </>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="flex items-end justify-between flex-shrink-0">
+          <div>
+            <p style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", color: "#AEAEB2", marginBottom: 7 }}>
+              {today}
+            </p>
+            <h1 style={{ fontSize: 32, fontWeight: 700, letterSpacing: "-0.03em", color: "#1D1D1F", lineHeight: 1 }}>
+              {greeting}, {firstName}.
+            </h1>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <Link
+              href="/campaigns/new"
+              className="inline-flex items-center gap-2 text-sm font-semibold rounded-full transition-all"
+              style={{ padding: "9px 18px", background: "#FFFFFF", border: "1px solid rgba(0,0,0,0.08)", color: "#3A3A3D" }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "#E8622A"; (e.currentTarget as HTMLElement).style.color = "#E8622A"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,0,0,0.08)"; (e.currentTarget as HTMLElement).style.color = "#3A3A3D"; }}
+            >
+              <Users size={13} /> New Campaign
+            </Link>
+            <Link
+              href="/send"
+              className="inline-flex items-center gap-2 text-white text-sm font-semibold rounded-full transition-all"
+              style={{ padding: "9px 18px", background: "#E8622A", boxShadow: "0 2px 14px rgba(232,98,42,0.28)" }}
+              onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = "#D14E1D"}
+              onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = "#E8622A"}
+            >
+              <Send size={13} /> Quick Send
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* ── Stat strip ── */}
+      {emailReady && (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14, flexShrink: 0 }}>
+          <StatTile label="Emails sent" value={emailsSent} />
+          <StatTile label="Active deals" value={activeDeals.length} />
+          <StatTile label="Follow-ups due" value={followUps.length} alert={followUps.length > 0} />
+          <StatTile
+            label="Brands live on ads"
+            value={displayedBrands.filter(b => b.runningAds === true).length}
+            sub={`of ${favBrands.length} tracked`}
+          />
+        </div>
+      )}
 
       {/* ── Main grid — fills remaining height, no scroll ── */}
       <div style={{
@@ -372,9 +406,8 @@ export default function DashboardPage() {
           <div style={{ ...CARD, flex: 1, minHeight: 0, display: "flex", flexDirection: "column", overflow: "hidden" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 24px", borderBottom: CARD_DIVIDER, flexShrink: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <Star size={13} style={{ color: "#E8622A" }} />
-                <span style={{ fontSize: 15, fontWeight: 700, color: "#1D1D1F" }}>Meta Ads</span>
-                <span style={{ fontSize: 11, fontWeight: 600, background: "#FFF4EE", color: "#E8622A", padding: "2px 8px", borderRadius: 20, border: "1px solid #FAC5A8" }}>
+                <span style={{ fontSize: 15, fontWeight: 600, letterSpacing: "-0.01em", color: "#1D1D1F" }}>Ad Signals</span>
+                <span style={{ fontSize: 11, fontWeight: 600, background: "#FFF4EE", color: "#D14E1D", padding: "2px 8px", borderRadius: 20 }}>
                   {favBrands.length}/10
                 </span>
               </div>
@@ -529,10 +562,9 @@ export default function DashboardPage() {
           <div style={{ ...CARD, flex: 1, minHeight: 0, display: "flex", flexDirection: "column", overflow: "hidden" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 24px", borderBottom: CARD_DIVIDER, flexShrink: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <TrendingUp size={13} style={{ color: "#E8622A" }} />
-                <span style={{ fontSize: 15, fontWeight: 700, color: "#1D1D1F" }}>Deal Pipeline</span>
+                <span style={{ fontSize: 15, fontWeight: 600, letterSpacing: "-0.01em", color: "#1D1D1F" }}>Deals</span>
                 {activeDeals.length > 0 && (
-                  <span style={{ fontSize: 11, fontWeight: 600, background: "#FFF4EE", color: "#E8622A", padding: "2px 8px", borderRadius: 20, border: "1px solid #FAC5A8" }}>
+                  <span style={{ fontSize: 11, fontWeight: 600, background: "#FFF4EE", color: "#D14E1D", padding: "2px 8px", borderRadius: 20 }}>
                     {activeDeals.length} active
                   </span>
                 )}
@@ -587,10 +619,9 @@ export default function DashboardPage() {
           <div style={{ ...CARD, flex: 1, minHeight: 0, display: "flex", flexDirection: "column", overflow: "hidden" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 24px", borderBottom: CARD_DIVIDER, flexShrink: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <Bell size={13} style={{ color: "#E8622A" }} />
-                <span style={{ fontSize: 15, fontWeight: 700, color: "#1D1D1F" }}>Follow-up Reminders</span>
+                <span style={{ fontSize: 15, fontWeight: 600, letterSpacing: "-0.01em", color: "#1D1D1F" }}>Follow-ups</span>
                 {followUps.length > 0 && (
-                  <span style={{ fontSize: 11, fontWeight: 600, background: "#FEE2E2", color: "#DC2626", padding: "2px 8px", borderRadius: 20, border: "1px solid #FECACA" }}>
+                  <span style={{ fontSize: 11, fontWeight: 600, background: "#FEE2E2", color: "#DC2626", padding: "2px 8px", borderRadius: 20 }}>
                     {followUps.length} due
                   </span>
                 )}
