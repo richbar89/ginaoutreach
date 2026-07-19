@@ -518,9 +518,16 @@ export default function DashboardPage() {
                       {brand.checkedAt && <span style={{ fontSize: 11, color: "#AEAEB2" }}>{Math.floor((Date.now() - new Date(brand.checkedAt).getTime()) / 3600000)}h ago</span>}
                     </div>
                     {brand.runningAds !== null ? (
-                      <span style={{ fontSize: 11, fontWeight: 600, padding: "3px 9px", borderRadius: 20, flexShrink: 0, background: brand.runningAds ? "#DCFCE7" : "#FEE2E2", color: brand.runningAds ? "#15803D" : "#DC2626", border: `1px solid ${brand.runningAds ? "#BBF7D0" : "#FECACA"}` }}>
-                        {brand.runningAds ? "Live ads" : "No ads"}
-                      </span>
+                      brand.runningAds ? (
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 700, letterSpacing: "0.05em", padding: "3px 10px", borderRadius: 20, flexShrink: 0, background: "#FEF2F2", color: "#DC2626" }}>
+                          <span className="animate-live-pulse" style={{ width: 7, height: 7, borderRadius: "50%", background: "#DC2626", flexShrink: 0 }} />
+                          LIVE
+                        </span>
+                      ) : (
+                        <span style={{ fontSize: 11, fontWeight: 600, padding: "3px 9px", borderRadius: 20, flexShrink: 0, background: "#F5F5F7", color: "#86868B" }}>
+                          No ads
+                        </span>
+                      )
                     ) : (
                       <span style={{ fontSize: 11, fontWeight: 600, padding: "3px 9px", borderRadius: 20, flexShrink: 0, background: "#F5F5F7", color: "#86868B", border: "1px solid #E8E8ED" }}>
                         —

@@ -56,6 +56,16 @@ h1, h2, h3, h4 {
   animation: live-glow 2s ease-in-out infinite;
 }
 
+/* Broadcast-style pulsing dot for brands currently running ads */
+@keyframes live-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.45); }
+  70%  { box-shadow: 0 0 0 6px rgba(220, 38, 38, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+}
+.animate-live-pulse {
+  animation: live-pulse 1.6s ease-out infinite;
+}
+
 /* Rendered email bodies in the inbox reading pane */
 .email-body {
   font-size: 14px;
