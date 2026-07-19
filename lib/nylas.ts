@@ -211,7 +211,7 @@ function htmlToText(html: string): string {
 export async function getMessage(
   grantId: string,
   messageId: string
-): Promise<InboxMessage & { body: string }> {
+): Promise<InboxMessage & { body: string; bodyHtml: string }> {
   const res = await fetch(`${API}/v3/grants/${grantId}/messages/${messageId}`, {
     headers: { Authorization: `Bearer ${apiKey()}` },
   });
@@ -230,7 +230,12 @@ export async function getMessage(
     body: JSON.stringify({ unread: false }),
   }).catch(() => {});
 
-  return { ...toInboxMessage(data), isRead: true, body: htmlToText(data.body ?? "") };
+  return {
+    ...toInboxMessage(data),
+    isRead: true,
+    body: htmlToText(data.body ?? ""),
+    bodyHtml: data.body ?? "",
+  };
 }
 
 export async function deleteMessage(grantId: string, messageId: string): Promise<void> {

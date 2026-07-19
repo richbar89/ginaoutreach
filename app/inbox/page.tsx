@@ -1,9 +1,16 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import DOMPurify from "dompurify";
 import { RefreshCw, Loader2, MailOpen, Reply, Trash2, Send, CheckCircle, CheckSquare, Square } from "lucide-react";
 import { getEmailAccount, sendEmail, type ConnectedEmailAccount } from "@/lib/emailClient";
 import { EmailSetupWizard } from "@/components/EmailSetupWizard";
+
+/** Sanitise an email's HTML for inline display; links open in new tabs. */
+function sanitizeEmailHtml(html: string): string {
+  const clean = DOMPurify.sanitize(html, { USE_PROFILES: { html: true } });
+  return clean.replace(/<a\s/gi, '<a target="_blank" rel="noopener noreferrer" ');
+}
 
 type InboxMsg = {
   id: string;
@@ -14,7 +21,7 @@ type InboxMsg = {
   snippet?: string;
 };
 
-type InboxMsgDetail = InboxMsg & { body: string };
+type InboxMsgDetail = InboxMsg & { body: string; bodyHtml?: string };
 
 const AVATAR_TINTS = [
   { bg: "#FDE7D9", fg: "#B03F14" },
@@ -386,11 +393,16 @@ export default function InboxPage() {
                     </p>
                   </div>
 
-                  {/* Body */}
+                  {/* Body — render real (sanitised) email HTML; plain text as fallback */}
                   {loadingDetail ? (
                     <div className="flex items-center gap-2 text-navy-400 text-sm">
                       <Loader2 size={14} className="animate-spin" /> Loading message…
                     </div>
+                  ) : selected.bodyHtml ? (
+                    <div
+                      className="email-body"
+                      dangerouslySetInnerHTML={{ __html: sanitizeEmailHtml(selected.bodyHtml) }}
+                    />
                   ) : (
                     <pre className="text-[15px] text-navy-800 whitespace-pre-wrap font-sans leading-[1.75]">
                       {selected.body || "(No text content)"}
