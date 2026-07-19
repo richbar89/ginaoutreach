@@ -195,9 +195,9 @@ export default function AdsPage() {
                       {!status ? (
                         <span className="text-xs text-navy-300">Not checked</span>
                       ) : status.hasAds ? (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-coral-100 text-coral-700 text-xs font-semibold rounded-full">
-                          <span className="w-1.5 h-1.5 bg-coral-500 rounded-full animate-pulse" />
-                          Running ads
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-red-50 text-red-600 text-xs font-bold tracking-wide rounded-full">
+                          <span className="animate-live-pulse w-[7px] h-[7px] bg-red-600 rounded-full flex-shrink-0" />
+                          LIVE
                         </span>
                       ) : (
                         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-cream-100 text-navy-400 text-xs font-medium rounded-full">
