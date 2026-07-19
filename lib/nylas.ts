@@ -256,12 +256,12 @@ const AUTO_REPLY_SUBJECTS = [
   "i am away", "i'm away", "i am out", "i'm out", "be back",
 ];
 
-/** True if fromEmail sent a genuine (non-auto) reply after the given time. */
-export async function hasGenuineReplyFrom(
+/** Genuine (non-auto) replies from fromEmail after the given time. */
+export async function getGenuineRepliesFrom(
   grantId: string,
   fromEmail: string,
   receivedAfterUnix: number
-): Promise<boolean> {
+): Promise<{ subject: string; snippet: string }[]> {
   const params = new URLSearchParams({
     from: fromEmail,
     received_after: String(receivedAfterUnix),
@@ -270,10 +270,21 @@ export async function hasGenuineReplyFrom(
   const res = await fetch(`${API}/v3/grants/${grantId}/messages?${params.toString()}`, {
     headers: { Authorization: `Bearer ${apiKey()}` },
   });
-  if (!res.ok) return false;
+  if (!res.ok) return [];
   const { data } = await res.json();
-  return ((data ?? []) as RawMessage[]).some(m => {
-    const subject = (m.subject ?? "").toLowerCase();
-    return !AUTO_REPLY_SUBJECTS.some(s => subject.includes(s));
-  });
+  return ((data ?? []) as RawMessage[])
+    .filter(m => {
+      const subject = (m.subject ?? "").toLowerCase();
+      return !AUTO_REPLY_SUBJECTS.some(s => subject.includes(s));
+    })
+    .map(m => ({ subject: m.subject ?? "", snippet: m.snippet ?? "" }));
+}
+
+/** True if fromEmail sent a genuine (non-auto) reply after the given time. */
+export async function hasGenuineReplyFrom(
+  grantId: string,
+  fromEmail: string,
+  receivedAfterUnix: number
+): Promise<boolean> {
+  return (await getGenuineRepliesFrom(grantId, fromEmail, receivedAfterUnix)).length > 0;
 }

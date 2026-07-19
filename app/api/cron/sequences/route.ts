@@ -1,13 +1,26 @@
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase";
-import { hasGenuineReplyFrom, sendMessage, textToHtml } from "@/lib/nylas";
-import { getSuppressedSet } from "@/lib/suppression";
+import { getGenuineRepliesFrom, sendMessage, textToHtml } from "@/lib/nylas";
+import { getSuppressedSet, suppress } from "@/lib/suppression";
 import { applyMerge } from "@/lib/storage";
 import type { CampaignStep, Contact } from "@/lib/types";
 
 export const runtime = "nodejs";
 
 const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+// A reply containing any of these is an opt-out — honour it automatically.
+const OPT_OUT_PATTERNS = [
+  "unsubscribe", "stop emailing", "stop contacting", "remove me from",
+  "take me off", "don't email me", "do not email me", "opt me out", "no more emails",
+];
+
+function isOptOut(replies: { subject: string; snippet: string }[]): boolean {
+  return replies.some(r => {
+    const text = `${r.subject} ${r.snippet}`.toLowerCase();
+    return OPT_OUT_PATTERNS.some(p => text.includes(p));
+  });
+}
 
 export async function GET(req: Request) {
   const authHeader = req.headers.get("authorization");
@@ -127,11 +140,18 @@ export async function GET(req: Request) {
 
         // Check for a genuine reply before sending follow-up
         const enrolledAt = new Date(row.created_at);
-        const replied = await hasGenuineReplyFrom(
+        const replies = await getGenuineRepliesFrom(
           grantId,
           row.contact_email,
           Math.floor(enrolledAt.getTime() / 1000)
         );
+        const replied = replies.length > 0;
+        if (replied && isOptOut(replies)) {
+          // They asked to stop — honour it immediately, no deal created
+          await suppress(row.user_id, row.contact_email, "reply opt-out");
+          await db.from("sequence_contacts").update({ status: "suppressed" }).eq("id", row.id);
+          continue;
+        }
         if (replied) {
           await db.from("sequence_contacts").update({ status: "replied" }).eq("id", row.id);
           // Reply → deal bridge: a genuine reply is a lead — surface it in the

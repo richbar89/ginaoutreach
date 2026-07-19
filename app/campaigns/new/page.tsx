@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import InitialsAvatar from "@/components/InitialsAvatar";
 import { useDb } from "@/lib/useDb";
-import { dbSaveCampaign, dbGetTemplates } from "@/lib/db";
+import { dbSaveCampaign, dbGetTemplates, dbGetEmailLog } from "@/lib/db";
 import type { Contact, EmailTemplate, CampaignStep } from "@/lib/types";
 
 type ContactRow = Contact & { id: string; industry: string | null; category: string | null; subcategory: string | null; subcategories: string[] | null; country: string | null };
@@ -99,6 +99,7 @@ function NewCampaignPage() {
   const [contactSearch, setContactSearch] = useState("");
   const [industryFilter, setIndustryFilter] = useState("All");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [contactedSet, setContactedSet] = useState<Set<string>>(new Set());
 
   // Saved lists
   const [lists, setLists] = useState<ContactList[]>([]);
@@ -131,7 +132,13 @@ function NewCampaignPage() {
 
   useEffect(() => {
     fetch("/api/contacts").then(r => r.json()).then(data => setAllLeads(Array.isArray(data) ? data : [])).catch(() => {});
-    getDb().then(db => dbGetTemplates(db).then(setTemplates)).catch(() => {});
+    getDb().then(async db => {
+      dbGetTemplates(db).then(setTemplates).catch(() => {});
+      // Emails already sent — used to flag "contacted before" in the picker
+      dbGetEmailLog(db)
+        .then(log => setContactedSet(new Set(log.map(r => r.contactEmail.toLowerCase()))))
+        .catch(() => {});
+    }).catch(() => {});
     fetch("/api/lists").then(r => r.json()).then(data => { if (Array.isArray(data)) setLists(data); }).catch(() => {});
   }, [getDb]);
 
@@ -428,6 +435,9 @@ function NewCampaignPage() {
                         <p className="text-sm font-medium text-navy-900 truncate">{c.name || c.email}</p>
                         <p className="text-xs text-navy-400 truncate">{[c.company, c.position].filter(Boolean).join(" · ")}</p>
                       </div>
+                      {contactedSet.has(c.email.toLowerCase()) && !isAdded && (
+                        <span className="text-[10px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full flex-shrink-0">Contacted before</span>
+                      )}
                       {isAdded && <span className="text-xs text-navy-300">Added</span>}
                     </label>
                   );
@@ -476,6 +486,9 @@ function NewCampaignPage() {
                             <p className="text-sm font-semibold text-navy-900 truncate">{c.name || c.email}</p>
                             <p className="text-xs text-navy-400 truncate">{c.company || c.email}</p>
                           </div>
+                          {contactedSet.has(c.email.toLowerCase()) && !alreadyAdded && (
+                            <span className="text-[10px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full flex-shrink-0">Contacted before</span>
+                          )}
                           {alreadyAdded && <span className="text-[10px] text-emerald-600 font-bold">Added</span>}
                         </label>
                       );
