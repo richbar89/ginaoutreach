@@ -3,6 +3,7 @@
 
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { suppress } from "@/lib/suppression";
+import { AUTO_REPLY_SUBJECTS } from "@/lib/nylas";
 
 // A reply containing any of these is an opt-out — honour it automatically.
 export const OPT_OUT_PATTERNS = [
@@ -66,6 +67,12 @@ export async function processIncomingReply(
   subject: string,
   snippet: string
 ): Promise<{ handled: boolean }> {
+  // Out-of-office / auto-replies must not cancel sequences or create deals
+  const subjectLower = subject.toLowerCase();
+  if (AUTO_REPLY_SUBJECTS.some(p => subjectLower.includes(p))) {
+    return { handled: false };
+  }
+
   const db = getSupabaseAdmin();
 
   const { data: account } = await db

@@ -76,8 +76,7 @@ export default function AdminPage() {
     setScanRunning(true);
     setScanResult(null);
     try {
-      const secret = process.env.NEXT_PUBLIC_CRON_SECRET || "";
-      const res = await fetch(`/api/cron/meta-scan?secret=${encodeURIComponent(secret)}`);
+      const res = await fetch("/api/admin/run-scan", { method: "POST" });
       const data = await res.json();
       setScanResult({ processed: data.processed ?? 0, errors: data.errors ?? 0, totalCompanies: data.totalCompanies ?? 0 });
     } catch {

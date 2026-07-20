@@ -250,7 +250,7 @@ export async function deleteMessage(grantId: string, messageId: string): Promise
 
 // ── Reply detection ──────────────────────────────────────────────
 
-const AUTO_REPLY_SUBJECTS = [
+export const AUTO_REPLY_SUBJECTS = [
   "out of office", "automatic reply", "auto-reply", "autoreply",
   "on vacation", "away from", "on annual leave", "on leave",
   "i am away", "i'm away", "i am out", "i'm out", "be back",
