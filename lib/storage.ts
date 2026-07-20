@@ -182,16 +182,18 @@ export function applyMerge(
   contact: { name?: string; email?: string; position?: string; company?: string },
   signature?: string
 ): string {
-  const firstName = contact.name ? contact.name.split(" ")[0] : "";
+  // Fallbacks: a blank field must never render "Hi ," in a real email
+  const firstName = contact.name?.trim() ? contact.name.trim().split(/\s+/)[0] : "there";
+  const company = contact.company?.trim() || "your brand";
   const sig = signature ?? (typeof window !== "undefined" ? getSignature() : "");
   return template
     // legacy double-brace format
-    .replace(/\{\{name\}\}/g, contact.name || "")
+    .replace(/\{\{name\}\}/g, firstName)
     .replace(/\{\{email\}\}/g, contact.email || "")
     .replace(/\{\{position\}\}/g, contact.position || "")
-    .replace(/\{\{company\}\}/g, contact.company || "")
+    .replace(/\{\{company\}\}/g, company)
     // new bracket format
     .replace(/\[FirstName\]/g, firstName)
-    .replace(/\[BusinessName\]/g, contact.company || "")
+    .replace(/\[BusinessName\]/g, company)
     .replace(/\[Signature\]/g, sig);
 }

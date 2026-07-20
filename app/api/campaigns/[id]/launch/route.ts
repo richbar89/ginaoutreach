@@ -52,6 +52,7 @@ export async function POST(
     .from("campaigns")
     .select("*")
     .eq("id", id)
+    .eq("user_id", userId)
     .single();
 
   if (campErr || !campaign) {

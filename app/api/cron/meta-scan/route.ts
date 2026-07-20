@@ -3,6 +3,7 @@ import { getSupabaseAdmin } from "@/lib/supabase";
 import { sendMessage, textToHtml } from "@/lib/nylas";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 300; // batched Meta scans must not hit the default timeout
 
 // Favourites-first scanning: every user's tracked brands (10 max each) are
 // kept fresh; everything else gets a small background trickle. This keeps

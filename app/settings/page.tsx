@@ -137,7 +137,7 @@ export default function SettingsPage() {
 
   const handleSaveSignature = async () => {
     const db = await getDb();
-    await dbSaveSignature(db, signature);
+    await dbSaveSignature(db, signature, userId ?? undefined);
     setSigSaved(true);
     setTimeout(() => setSigSaved(false), 2500);
   };

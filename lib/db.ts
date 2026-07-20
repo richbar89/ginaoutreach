@@ -283,8 +283,8 @@ export async function dbGetSignature(db: DB): Promise<string> {
   return (data?.signature as string) || "";
 }
 
-export async function dbSaveSignature(db: DB, sig: string): Promise<void> {
-  await db.from("user_settings").upsert({ signature: sig });
+export async function dbSaveSignature(db: DB, sig: string, userId?: string): Promise<void> {
+  await db.from("user_settings").upsert(userId ? { user_id: userId, signature: sig } : { signature: sig });
 }
 
 export async function dbGetMediaKit(db: DB): Promise<MediaKit> {
@@ -292,6 +292,6 @@ export async function dbGetMediaKit(db: DB): Promise<MediaKit> {
   return data?.media_kit ? { ...DEFAULT_MEDIA_KIT, ...(data.media_kit as object) } : { ...DEFAULT_MEDIA_KIT };
 }
 
-export async function dbSaveMediaKit(db: DB, kit: MediaKit): Promise<void> {
-  await db.from("user_settings").upsert({ media_kit: kit });
+export async function dbSaveMediaKit(db: DB, kit: MediaKit, userId?: string): Promise<void> {
+  await db.from("user_settings").upsert(userId ? { user_id: userId, media_kit: kit } : { media_kit: kit });
 }

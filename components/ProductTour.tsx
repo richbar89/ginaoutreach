@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Joyride, { CallBackProps, STATUS, EVENTS, Step } from "react-joyride";
 import { useDb } from "@/lib/useDb";
+import { useAuth } from "@clerk/nextjs";
 
 const TOUR_KEY = "collabi_tour_done";
 
@@ -146,6 +147,7 @@ export default function ProductTour() {
   const [run, setRun] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
   const getDb = useDb();
+  const { userId } = useAuth();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -179,7 +181,7 @@ export default function ProductTour() {
       setRun(false);
       localStorage.setItem(TOUR_KEY, "1");
       getDb().then(db =>
-        db.from("user_settings").upsert({ tour_done: true })
+        db.from("user_settings").upsert(userId ? { user_id: userId, tour_done: true } : { tour_done: true })
       ).catch(() => {});
     }
   };

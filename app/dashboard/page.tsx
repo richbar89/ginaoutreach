@@ -234,7 +234,7 @@ export default function DashboardPage() {
         const initial = brandsData.slice(0, 10).map(b => b.name);
         setFavBrands(initial);
         localStorage.setItem(FAV_KEY, JSON.stringify(initial));
-        db.from("user_settings").upsert({ fav_brands: initial });
+        if (user?.id) db.from("user_settings").upsert({ user_id: user.id, fav_brands: initial });
       }
 
       // Resolve domains for fav brands not already in the brands table
@@ -268,7 +268,7 @@ export default function DashboardPage() {
         ? prev.filter(n => n !== name)
         : prev.length < 10 ? [...prev, name] : prev;
       localStorage.setItem(FAV_KEY, JSON.stringify(next));
-      getDb().then(db => db.from("user_settings").upsert({ fav_brands: next })).catch(() => {});
+      if (user?.id) getDb().then(db => db.from("user_settings").upsert({ user_id: user!.id, fav_brands: next })).catch(() => {});
       return next;
     });
   }

@@ -94,9 +94,9 @@ export default function OnboardingPage() {
         handle: handle.trim() ? (handle.startsWith("@") ? handle.trim() : `@${handle.trim()}`) : existing.handle,
         tagline: selectedType ? `${selectedType.label} creator` : existing.tagline,
         email: connectedEmail || existing.email,
-      });
+      }, userId ?? undefined);
       if (creatorType) {
-        await db.from("user_settings").upsert({ creator_type: creatorType });
+        await db.from("user_settings").upsert(userId ? { user_id: userId, creator_type: creatorType } : { creator_type: creatorType });
       }
       if (userId) {
         const [existingDeals, existingBrands] = await Promise.all([

@@ -7,11 +7,13 @@ import {
 } from "lucide-react";
 import { useDb } from "@/lib/useDb";
 import { dbGetMediaKit, dbSaveMediaKit } from "@/lib/db";
+import { useAuth } from "@clerk/nextjs";
 import { DEFAULT_MEDIA_KIT } from "@/lib/storage";
 import type { MediaKit } from "@/lib/types";
 
 export default function MediaKitPage() {
   const getDb = useDb();
+  const { userId } = useAuth();
   const [kit, setKit] = useState<MediaKit | null>(null);
   const [generating, setGenerating] = useState(false);
   const [shareUrl, setShareUrl] = useState("");
@@ -35,7 +37,7 @@ export default function MediaKitPage() {
   const handleSave = async () => {
     if (!kit) return;
     const db = await getDb();
-    await dbSaveMediaKit(db, kit);
+    await dbSaveMediaKit(db, kit, userId ?? undefined);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };

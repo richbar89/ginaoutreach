@@ -36,11 +36,12 @@ const MERGE_TAGS = [
 const ALL_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 function applyMerge(template: string, contact: Contact) {
+  const firstName = contact.name?.trim() ? contact.name.trim().split(/\s+/)[0] : "there";
   return template
-    .replace(/\{\{name\}\}/g, contact.name || "")
+    .replace(/\{\{name\}\}/g, firstName)
     .replace(/\{\{email\}\}/g, contact.email || "")
     .replace(/\{\{position\}\}/g, contact.position || "")
-    .replace(/\{\{company\}\}/g, contact.company || "");
+    .replace(/\{\{company\}\}/g, contact.company?.trim() || "your brand");
 }
 
 function TemplatePicker({ templates, onSelect }: { templates: EmailTemplate[]; onSelect: (t: EmailTemplate) => void }) {

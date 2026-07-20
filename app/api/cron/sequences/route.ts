@@ -6,6 +6,7 @@ import { applyMerge } from "@/lib/storage";
 import type { CampaignStep, Contact } from "@/lib/types";
 
 export const runtime = "nodejs";
+export const maxDuration = 300; // large batches must not hit the default timeout
 
 const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -47,6 +48,39 @@ function warmupCap(connectedAt: string | null): number | null {
   return weeks >= 0 && weeks < WARMUP_WEEKLY_CAPS.length ? WARMUP_WEEKLY_CAPS[weeks] : null;
 }
 
+type SequenceRow = {
+  id: string; user_id: string; contact_email: string;
+  contact_name: string | null; contact_company: string | null; created_at: string;
+};
+
+/** A genuine reply is a lead — surface it in the pipeline (deduped by email). */
+async function createDealFromReply(db: ReturnType<typeof getSupabaseAdmin>, row: SequenceRow): Promise<void> {
+  try {
+    const { data: existingDeal } = await db
+      .from("deals")
+      .select("id")
+      .eq("user_id", row.user_id)
+      .eq("contact_email", row.contact_email.toLowerCase())
+      .limit(1);
+    if (!existingDeal || existingDeal.length === 0) {
+      const nowIso = new Date().toISOString();
+      await db.from("deals").insert({
+        id: crypto.randomUUID(),
+        user_id: row.user_id,
+        contact_email: row.contact_email.toLowerCase(),
+        contact_name: row.contact_name ?? "",
+        company: row.contact_company ?? "",
+        status: "replied",
+        notes: "Auto-created — replied to your campaign",
+        created_at: nowIso,
+        updated_at: nowIso,
+      });
+    }
+  } catch {
+    // deal creation is best-effort; never block the send loop
+  }
+}
+
 export async function GET(req: Request) {
   const authHeader = req.headers.get("authorization");
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
@@ -59,14 +93,23 @@ export async function GET(req: Request) {
   startOfDay.setHours(0, 0, 0, 0);
 
   // Find all active sequence contacts due to send
-  const { data: due, error } = await db
+  const { data: dueActive, error } = await db
     .from("sequence_contacts")
     .select("*")
     .eq("status", "active")
     .lte("next_send_at", now.toISOString());
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  if (!due || due.length === 0) return NextResponse.json({ sent: 0 });
+
+  // Recover rows stuck in "sending" — a previous run died mid-send
+  const staleCutoff = new Date(Date.now() - 30 * 60000).toISOString();
+  const { data: dueStale } = await db
+    .from("sequence_contacts")
+    .select("*")
+    .eq("status", "sending")
+    .lte("next_send_at", staleCutoff);
+
+  const due = [...(dueActive ?? []), ...(dueStale ?? [])];
 
   let sent = 0;
   let failed = 0;
@@ -185,32 +228,7 @@ export async function GET(req: Request) {
         }
         if (replied) {
           await db.from("sequence_contacts").update({ status: "replied" }).eq("id", row.id);
-          // Reply → deal bridge: a genuine reply is a lead — surface it in the
-          // pipeline automatically (the dashboard promises exactly this).
-          try {
-            const { data: existingDeal } = await db
-              .from("deals")
-              .select("id")
-              .eq("user_id", row.user_id)
-              .eq("contact_email", row.contact_email.toLowerCase())
-              .limit(1);
-            if (!existingDeal || existingDeal.length === 0) {
-              const nowIso = new Date().toISOString();
-              await db.from("deals").insert({
-                id: crypto.randomUUID(),
-                user_id: row.user_id,
-                contact_email: row.contact_email.toLowerCase(),
-                contact_name: row.contact_name ?? "",
-                company: row.contact_company ?? "",
-                status: "replied",
-                notes: "Auto-created — replied to your campaign",
-                created_at: nowIso,
-                updated_at: nowIso,
-              });
-            }
-          } catch {
-            // deal creation is best-effort; never block the send loop
-          }
+          await createDealFromReply(db, row);
           continue;
         }
 
@@ -224,6 +242,17 @@ export async function GET(req: Request) {
         subject = applyMerge(step.subject || `Re: ${campaignRow.subject ?? ""}`, contact);
         body = applyMerge(step.body, contact);
       }
+
+      // Claim the row before sending — prevents overlapping cron runs from
+      // double-emailing the same contact. If the claim misses, another run
+      // (or a concurrent tick) already owns it.
+      const { data: claimed } = await db
+        .from("sequence_contacts")
+        .update({ status: "sending" })
+        .eq("id", row.id)
+        .in("status", ["active", "sending"])
+        .select("id");
+      if (!claimed || claimed.length === 0) continue;
 
       // Follow-ups thread onto the initial email when we know its message id
       const { messageId } = await sendMessage(grantId, {
@@ -257,7 +286,7 @@ export async function GET(req: Request) {
         ).toISOString();
         await db
           .from("sequence_contacts")
-          .update({ current_step: nextStep, next_send_at: nextSendAt, last_message_id: messageId })
+          .update({ status: "active", current_step: nextStep, next_send_at: nextSendAt, last_message_id: messageId })
           .eq("id", row.id);
       }
 
@@ -265,8 +294,61 @@ export async function GET(req: Request) {
       sent++;
     } catch {
       failed++;
+      // Release a claimed-but-unsent row so the next run retries it
+      try {
+        await db.from("sequence_contacts").update({ status: "active" }).eq("id", row.id).eq("status", "sending");
+      } catch { /* best effort */ }
     }
   }
 
-  return NextResponse.json({ sent, failed });
+  // ── Reply sweep ──────────────────────────────────────────────
+  // Most replies arrive AFTER the last step has sent, and single-email
+  // campaigns never hit the follow-up reply check at all. Sweep recently
+  // completed sequences once an hour so late replies still get flagged,
+  // dealt, and opt-outs honoured.
+  let sweptReplies = 0;
+  if (now.getMinutes() < 15) {
+    const sweepCutoff = new Date(Date.now() - 14 * 86400000).toISOString();
+    const { data: completedRows } = await db
+      .from("sequence_contacts")
+      .select("*")
+      .eq("status", "completed")
+      .gte("created_at", sweepCutoff)
+      .limit(40);
+
+    for (const row of completedRows ?? []) {
+      try {
+        if (!(row.user_id in accountCache)) {
+          const { data } = await db
+            .from("user_email_accounts")
+            .select("email, nylas_grant_id, connected_at")
+            .eq("user_id", row.user_id)
+            .single();
+          accountCache[row.user_id] = data ?? null;
+        }
+        const acct = accountCache[row.user_id];
+        if (!acct?.nylas_grant_id) continue;
+
+        const replies = await getGenuineRepliesFrom(
+          acct.nylas_grant_id,
+          row.contact_email,
+          Math.floor(new Date(row.created_at).getTime() / 1000)
+        );
+        if (replies.length === 0) continue;
+
+        if (isOptOut(replies)) {
+          await suppress(row.user_id, row.contact_email, "reply opt-out");
+          await db.from("sequence_contacts").update({ status: "suppressed" }).eq("id", row.id);
+        } else {
+          await db.from("sequence_contacts").update({ status: "replied" }).eq("id", row.id);
+          await createDealFromReply(db, row);
+        }
+        sweptReplies++;
+      } catch {
+        // best-effort; a single bad row must not kill the sweep
+      }
+    }
+  }
+
+  return NextResponse.json({ sent, failed, sweptReplies });
 }
