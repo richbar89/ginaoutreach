@@ -35,6 +35,9 @@ const MERGE_TAGS = [
 
 const ALL_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
+// A half-written campaign survives refreshes and crashes
+const DRAFT_KEY = "collabi_campaign_draft";
+
 function applyMerge(template: string, contact: Contact) {
   const firstName = contact.name?.trim() ? contact.name.trim().split(/\s+/)[0] : "there";
   return template
@@ -164,6 +167,48 @@ function NewCampaignPage() {
     if (listId && lists.length > 0) { setTab("list"); setPickerOpen(true); }
   }, [searchParams, lists]);
 
+  // Restore an unfinished draft once on mount
+  const [draftRestored, setDraftRestored] = useState(false);
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(DRAFT_KEY);
+      if (!raw) return;
+      const d = JSON.parse(raw);
+      if (!d?.campaignName && !(d?.contacts?.length) && !d?.body) return;
+      setCampaignName(d.campaignName ?? "");
+      setContacts(Array.isArray(d.contacts) ? d.contacts : []);
+      setSubject(d.subject ?? "");
+      setBody(d.body ?? "");
+      setSteps(Array.isArray(d.steps) ? d.steps : []);
+      if (Array.isArray(d.sendDays) && d.sendDays.length) setSendDays(d.sendDays);
+      if (typeof d.sendWindowStart === "number") setSendWindowStart(d.sendWindowStart);
+      if (typeof d.sendWindowEnd === "number") setSendWindowEnd(d.sendWindowEnd);
+      if (d.step === 1 || d.step === 2 || d.step === 3) setStep(d.step);
+      if (d.pickerOpen) setPickerOpen(true);
+      setDraftRestored(true);
+    } catch { /* corrupt draft — ignore */ }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Autosave (debounced) whenever the draft has any content
+  useEffect(() => {
+    const t = setTimeout(() => {
+      try {
+        if (!campaignName && contacts.length === 0 && !subject && !body && steps.length === 0) return;
+        localStorage.setItem(DRAFT_KEY, JSON.stringify({
+          campaignName, contacts, subject, body, steps,
+          sendDays, sendWindowStart, sendWindowEnd, step, pickerOpen,
+        }));
+      } catch { /* storage full — non-fatal */ }
+    }, 400);
+    return () => clearTimeout(t);
+  }, [campaignName, contacts, subject, body, steps, sendDays, sendWindowStart, sendWindowEnd, step, pickerOpen]);
+
+  const discardDraft = () => {
+    localStorage.removeItem(DRAFT_KEY);
+    window.location.href = "/campaigns/new";
+  };
+
   const filterByList = (list: ContactList, leads: ContactRow[]) => {
     if (list.contact_ids && list.contact_ids.length > 0) {
       const ids = new Set(list.contact_ids.map(e => e.toLowerCase()));
@@ -287,6 +332,7 @@ function NewCampaignPage() {
       };
       const db = await getDb();
       await dbSaveCampaign(db, campaign);
+      localStorage.removeItem(DRAFT_KEY);
       router.push(`/campaigns/${campaign.id}`);
     } finally {
       setSaving(false);
@@ -390,6 +436,18 @@ function NewCampaignPage() {
           );
         })}
       </div>
+      )}
+
+      {/* Draft-restored notice */}
+      {draftRestored && step > 0 && (
+        <div className="flex items-center gap-2 text-xs text-navy-500 -mt-6 mb-6">
+          <span className="w-1.5 h-1.5 rounded-full bg-coral-400 flex-shrink-0" />
+          Draft restored from your last session
+          <span className="text-navy-300">·</span>
+          <button onClick={discardDraft} className="font-semibold text-coral-600 hover:text-coral-700 transition-colors">
+            Start fresh
+          </button>
+        </div>
       )}
 
       {/* ── Step 1: Audience ── */}
