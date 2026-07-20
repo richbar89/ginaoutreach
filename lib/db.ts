@@ -19,8 +19,9 @@ export async function dbGetCampaigns(db: DB): Promise<Campaign[]> {
   return (data || []).map(rowToCampaign);
 }
 
-export async function dbSaveCampaign(db: DB, campaign: Campaign): Promise<void> {
-  await db.from("campaigns").upsert({
+export async function dbSaveCampaign(db: DB, campaign: Campaign, userId?: string): Promise<void> {
+  const { error } = await db.from("campaigns").upsert({
+    ...(userId ? { user_id: userId } : {}),
     id: campaign.id,
     name: campaign.name,
     subject: campaign.subject,
@@ -36,6 +37,7 @@ export async function dbSaveCampaign(db: DB, campaign: Campaign): Promise<void> 
     send_window_end: campaign.sendWindowEnd ?? 18,
     send_days: campaign.sendDays ?? ["Mon", "Tue", "Wed", "Thu", "Fri"],
   });
+  if (error) throw new Error(`Campaign save failed: ${error.message}`);
 }
 
 export async function dbDeleteCampaign(db: DB, id: string): Promise<void> {
@@ -179,8 +181,9 @@ export async function dbGetTemplates(db: DB): Promise<EmailTemplate[]> {
   return (data || []).map(rowToTemplate);
 }
 
-export async function dbUpsertTemplate(db: DB, template: EmailTemplate): Promise<void> {
+export async function dbUpsertTemplate(db: DB, template: EmailTemplate, userId?: string): Promise<void> {
   await db.from("templates").upsert({
+    ...(userId ? { user_id: userId } : {}),
     id: template.id,
     name: template.name,
     subject: template.subject,
@@ -213,8 +216,9 @@ export async function dbGetScheduledPosts(db: DB): Promise<ScheduledPost[]> {
   return (data || []).map(rowToPost);
 }
 
-export async function dbUpsertScheduledPost(db: DB, post: ScheduledPost): Promise<void> {
+export async function dbUpsertScheduledPost(db: DB, post: ScheduledPost, userId?: string): Promise<void> {
   await db.from("scheduled_posts").upsert({
+    ...(userId ? { user_id: userId } : {}),
     id: post.id,
     date: post.date,
     time: post.time || null,

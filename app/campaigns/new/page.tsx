@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useMemo, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
 import Papa from "papaparse";
 import {
   Upload, Plus, X, Check, ArrowRight, ArrowLeft,
@@ -85,11 +86,13 @@ function NewCampaignPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const getDb = useDb();
+  const { userId } = useAuth();
   const [step, setStep] = useState<WizardStep>(0);
   const [tab, setTab] = useState<ContactTab>("contacts");
   const [pickerOpen, setPickerOpen] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
 
   // Step 2 — sequence editor
   const [selectedStep, setSelectedStep] = useState<number>(-1); // -1 = initial email
@@ -331,7 +334,7 @@ function NewCampaignPage() {
         sendDays,
       };
       const db = await getDb();
-      await dbSaveCampaign(db, campaign);
+      await dbSaveCampaign(db, campaign, userId ?? undefined);
       localStorage.removeItem(DRAFT_KEY);
       // The button says Launch — actually launch (enrol + schedule), don't
       // strand the campaign as a draft behind a second launch button.
@@ -339,6 +342,8 @@ function NewCampaignPage() {
         await fetch(`/api/campaigns/${campaign.id}/launch`, { method: "POST" });
       } catch { /* detail page still offers Launch if this failed */ }
       router.push(`/campaigns/${campaign.id}`);
+    } catch (e) {
+      setSaveError(e instanceof Error ? e.message : "Failed to save campaign — please try again.");
     } finally {
       setSaving(false);
     }
@@ -955,6 +960,9 @@ function NewCampaignPage() {
             </div>
           ); })()}
 
+          {saveError && (
+            <p className="text-sm text-red-600 bg-red-50 rounded-xl px-4 py-3">{saveError}</p>
+          )}
           <div className="flex items-center justify-between pt-2">
             <button onClick={() => setStep(2)} className="inline-flex items-center gap-2 px-4 py-2.5 text-navy-500 hover:text-navy-900 text-sm font-medium transition-colors">
               <ArrowLeft size={15} />Back

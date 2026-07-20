@@ -156,7 +156,7 @@ export default function SettingsPage() {
 
   const handleSaveTemplate = async (t: EmailTemplate) => {
     const db = await getDb();
-    await dbUpsertTemplate(db, t);
+    await dbUpsertTemplate(db, t, userId ?? undefined);
     setTemplates(await dbGetTemplates(db));
     setEditingTemplate(null);
   };

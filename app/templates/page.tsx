@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Plus, Pencil, Trash2, FileText, X, Check } from "lucide-react";
 import { useDb } from "@/lib/useDb";
+import { useAuth } from "@clerk/nextjs";
 import { dbGetTemplates, dbUpsertTemplate, dbDeleteTemplate } from "@/lib/db";
 import type { EmailTemplate } from "@/lib/types";
 
@@ -133,6 +134,7 @@ function TemplateModal({
 
 export default function TemplatesPage() {
   const getDb = useDb();
+  const { userId } = useAuth();
   const [templates, setTemplates] = useState<EmailTemplate[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<EmailTemplate | "new" | null>(null);
@@ -151,7 +153,7 @@ export default function TemplatesPage() {
 
   const handleSave = async (t: EmailTemplate) => {
     const db = await getDb();
-    await dbUpsertTemplate(db, t);
+    await dbUpsertTemplate(db, t, userId ?? undefined);
     const updated = await dbGetTemplates(db);
     setTemplates(updated);
     setEditing(null);
