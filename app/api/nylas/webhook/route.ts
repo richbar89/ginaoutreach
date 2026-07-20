@@ -14,9 +14,10 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   const raw = await request.text();
 
-  // Verify the payload came from Nylas when a secret is configured
+  // Fail closed: a public side-effectful endpoint must never run unsigned
   const secret = process.env.NYLAS_WEBHOOK_SECRET;
-  if (secret) {
+  if (!secret) return NextResponse.json({ error: "Webhook not configured" }, { status: 503 });
+  {
     const signature = request.headers.get("x-nylas-signature") ?? "";
     const expected = crypto.createHmac("sha256", secret).update(raw, "utf8").digest("hex");
     const sigBuf = Buffer.from(signature);

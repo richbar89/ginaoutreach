@@ -5,7 +5,9 @@ import { getSupabaseAdmin } from "@/lib/supabase";
 
 export async function getSuppressedSet(userId: string): Promise<Set<string>> {
   const db = getSupabaseAdmin();
-  const { data } = await db.from("suppression_list").select("email").eq("user_id", userId);
+  const { data, error } = await db.from("suppression_list").select("email").eq("user_id", userId);
+  // Fail CLOSED: if we can't read the do-not-contact list, we must not send
+  if (error) throw new Error(`Suppression list unavailable: ${error.message}`);
   return new Set((data ?? []).map(r => (r.email as string).toLowerCase()));
 }
 

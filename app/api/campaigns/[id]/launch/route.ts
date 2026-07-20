@@ -20,7 +20,7 @@ function londonOffsetHours(d: Date): number {
   return ((lon - d.getUTCHours()) + 24) % 24;
 }
 
-function advanceToNextWindow(t: Date, windowStart: number, sendDays: string[]): Date {
+function advanceToNextWindow(t: Date, windowStart: number, windowEnd: number, sendDays: string[]): Date {
   const d = new Date(t);
   for (let tries = 0; tries < 14; tries++) {
     const dayName = DAY_NAMES[d.getDay()];
@@ -30,7 +30,8 @@ function advanceToNextWindow(t: Date, windowStart: number, sendDays: string[]): 
         d.setHours(windowStart, randomInt(0, 30), 0, 0);
         return d;
       }
-      // Already in or past window — advance to next valid day
+      if (hour < windowEnd) return d; // already inside the window — usable as-is
+      // Past the window — advance to next valid day
     }
     d.setDate(d.getDate() + 1);
     d.setHours(windowStart, randomInt(0, 30), 0, 0);
@@ -101,7 +102,7 @@ export async function POST(
     currentTime.getHours() < windowEndUtc;
 
   if (!inWindow) {
-    currentTime = advanceToNextWindow(currentTime, windowStartUtc, sendDays);
+    currentTime = advanceToNextWindow(currentTime, windowStartUtc, windowEndUtc, sendDays);
   }
 
   let dailyCount = 0;
@@ -117,7 +118,7 @@ export async function POST(
         const nextDay = new Date(currentTime);
         nextDay.setDate(nextDay.getDate() + 1);
         nextDay.setHours(windowStartUtc, randomInt(0, 30), 0, 0);
-        currentTime = advanceToNextWindow(nextDay, windowStartUtc, sendDays);
+        currentTime = advanceToNextWindow(nextDay, windowStartUtc, windowEndUtc, sendDays);
         dailyCount = 0;
         currentDay = currentTime.toDateString();
       }
@@ -135,7 +136,7 @@ export async function POST(
       const nextDay = new Date(currentTime);
       nextDay.setDate(nextDay.getDate() + 1);
       nextDay.setHours(windowStartUtc, randomInt(0, 30), 0, 0);
-      currentTime = advanceToNextWindow(nextDay, windowStartUtc, sendDays);
+      currentTime = advanceToNextWindow(nextDay, windowStartUtc, windowEndUtc, sendDays);
       dailyCount = 0;
       currentDay = currentTime.toDateString();
     }

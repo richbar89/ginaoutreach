@@ -8,7 +8,7 @@ export async function GET(request: Request) {
   if (!userId) return NextResponse.redirect(new URL("/sign-in", url.origin));
 
   const returnTo = url.searchParams.get("returnTo") || "/inbox";
-  const state = returnTo.startsWith("/") && !returnTo.startsWith("//") ? returnTo : "/inbox";
+  const state = /^\/(?![\/\\])[\x20-\x7E]*$/.test(returnTo) ? returnTo : "/inbox";
   const base = process.env.NEXT_PUBLIC_APP_URL || url.origin;
   const redirectUri = `${base}/api/nylas/callback`;
 

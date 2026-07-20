@@ -93,7 +93,11 @@ export async function GET(req: Request) {
           .select("subject, body, steps, status, emails_per_day, send_window_start, send_window_end, send_days")
           .eq("id", row.campaign_id)
           .single();
-        if (!c) return;
+        if (!c) {
+          // Campaign deleted — retire orphaned rows instead of retrying forever
+          await db.from("sequence_contacts").update({ status: "completed" }).eq("id", row.id);
+          return;
+        }
         campaignCache[row.campaign_id] = c as Record<string, unknown>;
       }
       const campaignRow = campaignCache[row.campaign_id];
@@ -210,9 +214,10 @@ export async function GET(req: Request) {
       // (or a concurrent tick) already owns it.
       const { data: claimed } = await db
         .from("sequence_contacts")
-        .update({ status: "sending" })
+        .update({ status: "sending", next_send_at: new Date().toISOString() })
         .eq("id", row.id)
-        .in("status", ["active", "sending"])
+        .eq("status", row.status)
+        .eq("next_send_at", row.next_send_at)  // optimistic lock — concurrent claimers miss
         .select("id");
       if (!claimed || claimed.length === 0) {
         userSentToday[row.user_id] = Math.max(0, (userSentToday[row.user_id] ?? 1) - 1);
@@ -242,18 +247,21 @@ export async function GET(req: Request) {
       const nextStep = row.current_step + 1;
       const nextStepIndex = nextStep - 2;
       if (nextStepIndex >= steps.length) {
-        await db
+        const { error: updErr } = await db
           .from("sequence_contacts")
           .update({ status: "completed", current_step: nextStep, last_message_id: messageId })
           .eq("id", row.id);
+        // A failed post-send update must never allow a re-send — park as error
+        if (updErr) await db.from("sequence_contacts").update({ status: "error" }).eq("id", row.id);
       } else {
         const nextSendAt = new Date(
           Date.now() + steps[nextStepIndex].delay_days * 86400000
         ).toISOString();
-        await db
+        const { error: updErr } = await db
           .from("sequence_contacts")
           .update({ status: "active", current_step: nextStep, next_send_at: nextSendAt, last_message_id: messageId })
           .eq("id", row.id);
+        if (updErr) await db.from("sequence_contacts").update({ status: "error" }).eq("id", row.id);
       }
 
       sent++;

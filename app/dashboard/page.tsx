@@ -136,7 +136,7 @@ export default function DashboardPage() {
     }
     const stored = localStorage.getItem(FAV_KEY);
     if (stored) {
-      setFavBrands(JSON.parse(stored));
+      try { setFavBrands(JSON.parse(stored)); } catch { localStorage.removeItem(FAV_KEY); }
     } else {
       // Fall back to Supabase for cross-browser persistence
       getDb().then(db =>
@@ -238,7 +238,7 @@ export default function DashboardPage() {
       }
 
       // Resolve domains for fav brands not already in the brands table
-      const favStored: string[] = stored ? JSON.parse(stored) : [];
+      const favStored: string[] = (() => { try { return stored ? JSON.parse(stored) : []; } catch { return []; } })();
       const cachedDomains: Record<string, string> = (() => {
         try { return JSON.parse(localStorage.getItem(DOMAINS_KEY) ?? "{}"); } catch { return {}; }
       })();

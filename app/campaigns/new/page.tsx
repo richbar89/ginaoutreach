@@ -960,6 +960,9 @@ function NewCampaignPage() {
             </div>
           ); })()}
 
+          {sendWindowEnd <= sendWindowStart && (
+            <p className="text-sm text-red-600 bg-red-50 rounded-xl px-4 py-3">The sending window must end after it starts — nothing would ever send.</p>
+          )}
           {saveError && (
             <p className="text-sm text-red-600 bg-red-50 rounded-xl px-4 py-3">{saveError}</p>
           )}
@@ -969,7 +972,7 @@ function NewCampaignPage() {
             </button>
             <button
               onClick={saveCampaign}
-              disabled={saving || sendDays.length === 0}
+              disabled={saving || sendDays.length === 0 || sendWindowEnd <= sendWindowStart}
               className="btn-primary !px-8 !py-3 !text-[15px]"
             >
               {saving ? null : <Calendar size={16} />}

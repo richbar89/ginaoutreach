@@ -9,7 +9,7 @@ export async function GET(request: Request) {
   if (!userId) return NextResponse.redirect(new URL("/sign-in", url.origin));
 
   const rawState = decodeURIComponent(url.searchParams.get("state") || "/inbox");
-  const returnTo = rawState.startsWith("/") && !rawState.startsWith("//") ? rawState : "/inbox";
+  const returnTo = /^\/(?![\/\\])[\x20-\x7E]*$/.test(rawState) ? rawState : "/inbox";
   const redirect = (params: string) =>
     NextResponse.redirect(new URL(`${returnTo}${returnTo.includes("?") ? "&" : "?"}${params}`, url.origin));
 

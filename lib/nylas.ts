@@ -270,7 +270,8 @@ export async function getGenuineRepliesFrom(
   const res = await fetch(`${API}/v3/grants/${grantId}/messages?${params.toString()}`, {
     headers: { Authorization: `Bearer ${apiKey()}` },
   });
-  if (!res.ok) return [];
+  // Fail CLOSED: an API error must not read as "no reply" — callers skip the send
+  if (!res.ok) throw new Error(`Nylas reply check failed (${res.status})`);
   const { data } = await res.json();
   return ((data ?? []) as RawMessage[])
     .filter(m => {

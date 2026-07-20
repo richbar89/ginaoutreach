@@ -78,6 +78,7 @@ export default function InboxPage() {
   const [replying, setReplying] = useState(false);
   const [replyBody, setReplyBody] = useState("");
   const [sendingReply, setSendingReply] = useState(false);
+  const [replyError, setReplyError] = useState("");
   const [replySent, setReplySent] = useState(false);
 
   // Delete state
@@ -156,9 +157,11 @@ export default function InboxPage() {
       setReplySent(true);
       setReplying(false);
       setReplyBody("");
+      setReplyError("");
       setTimeout(() => setReplySent(false), 4000);
-    } catch {
-      // keep the compose box open so the reply isn't lost
+    } catch (e) {
+      // keep the compose box open so the reply isn't lost — but say why
+      setReplyError(e instanceof Error ? e.message : "Reply failed to send — try again.");
     } finally {
       setSendingReply(false);
     }
@@ -465,6 +468,9 @@ export default function InboxPage() {
                   <p className="text-[11px] font-semibold text-navy-400 uppercase tracking-[0.08em] mb-3">
                     Replying to {selected.from.name || selected.from.address}
                   </p>
+                  {replyError && (
+                    <p className="text-xs text-red-600 bg-red-50 rounded-xl px-3 py-2 mb-3">{replyError}</p>
+                  )}
                   <textarea
                     value={replyBody}
                     onChange={e => setReplyBody(e.target.value)}

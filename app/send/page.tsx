@@ -58,7 +58,12 @@ function SendEmailForm() {
     if (account) {
       setSending(true);
       try {
-        await sendEmail({ to: form.to, subject: form.subject, body: form.body });
+        const mergeContact = { name: form.toName, email: form.to, company: "" };
+        await sendEmail({
+          to: form.to,
+          subject: applyMerge(form.subject, mergeContact),
+          body: applyMerge(form.body, mergeContact),
+        });
         const db = await getDb();
         await dbAppendEmailRecord(db, { contactEmail: form.to, subject: form.subject, body: form.body }, userId ?? undefined);
         setSuccess(true);
