@@ -22,6 +22,16 @@ function isOptOut(replies: { subject: string; snippet: string }[]): boolean {
   });
 }
 
+// Warm-up ramp: freshly connected inboxes send less while they build
+// sender reputation. Weeks since connect → daily cap; null = fully warmed.
+const WARMUP_WEEKLY_CAPS = [10, 15, 20];
+
+function warmupCap(connectedAt: string | null): number | null {
+  if (!connectedAt) return null;
+  const weeks = Math.floor((Date.now() - new Date(connectedAt).getTime()) / (7 * 86400000));
+  return weeks >= 0 && weeks < WARMUP_WEEKLY_CAPS.length ? WARMUP_WEEKLY_CAPS[weeks] : null;
+}
+
 export async function GET(req: Request) {
   const authHeader = req.headers.get("authorization");
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
@@ -50,6 +60,7 @@ export async function GET(req: Request) {
   const campaignCache: Record<string, Record<string, unknown>> = {};
   const userSentToday: Record<string, number> = {};
   const suppressedCache: Record<string, Set<string>> = {};
+  const accountCache: Record<string, { email: string; nylas_grant_id: string | null; connected_at: string | null } | null> = {};
 
   for (const row of due) {
     try {
@@ -87,8 +98,27 @@ export async function GET(req: Request) {
         continue; // Outside allowed window — skip this run
       }
 
-      // Check per-user daily limit using campaign's emails_per_day setting
-      const dailyLimit = (campaignRow.emails_per_day as number) || 25;
+      // Get the user's connected email account (Nylas grant), cached per run
+      if (!(row.user_id in accountCache)) {
+        const { data } = await db
+          .from("user_email_accounts")
+          .select("email, nylas_grant_id, connected_at")
+          .eq("user_id", row.user_id)
+          .single();
+        accountCache[row.user_id] = data ?? null;
+      }
+      const emailAccount = accountCache[row.user_id];
+
+      if (!emailAccount?.nylas_grant_id) {
+        await db.from("sequence_contacts").update({ status: "error" }).eq("id", row.id);
+        continue;
+      }
+      const grantId = emailAccount.nylas_grant_id as string;
+
+      // Daily limit: campaign cap, tightened by the warm-up ramp for fresh inboxes
+      const campaignCap = (campaignRow.emails_per_day as number) || 25;
+      const ramp = warmupCap(emailAccount.connected_at);
+      const dailyLimit = ramp !== null ? Math.min(campaignCap, ramp) : campaignCap;
       if (!(row.user_id in userSentToday)) {
         const { count } = await db
           .from("email_log")
@@ -98,19 +128,6 @@ export async function GET(req: Request) {
         userSentToday[row.user_id] = count ?? 0;
       }
       if (userSentToday[row.user_id] >= dailyLimit) continue;
-
-      // Get the user's connected email account (Nylas grant)
-      const { data: emailAccount } = await db
-        .from("user_email_accounts")
-        .select("email, nylas_grant_id")
-        .eq("user_id", row.user_id)
-        .single();
-
-      if (!emailAccount?.nylas_grant_id) {
-        await db.from("sequence_contacts").update({ status: "error" }).eq("id", row.id);
-        continue;
-      }
-      const grantId = emailAccount.nylas_grant_id as string;
 
       // Resolve email subject + body based on which step we're on
       let subject: string;
