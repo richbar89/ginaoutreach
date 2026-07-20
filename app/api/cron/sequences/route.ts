@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { getGenuineRepliesFrom, sendMessage, textToHtml } from "@/lib/nylas";
 import { getSuppressedSet, suppress } from "@/lib/suppression";
+import { isOptOut, createDealFromReply } from "@/lib/replies";
 import { applyMerge } from "@/lib/storage";
 import type { CampaignStep, Contact } from "@/lib/types";
 
@@ -25,19 +26,6 @@ function ukTimeParts(d: Date): { hour: number; day: string } {
   };
 }
 
-// A reply containing any of these is an opt-out — honour it automatically.
-const OPT_OUT_PATTERNS = [
-  "unsubscribe", "stop emailing", "stop contacting", "remove me from",
-  "take me off", "don't email me", "do not email me", "opt me out", "no more emails",
-];
-
-function isOptOut(replies: { subject: string; snippet: string }[]): boolean {
-  return replies.some(r => {
-    const text = `${r.subject} ${r.snippet}`.toLowerCase();
-    return OPT_OUT_PATTERNS.some(p => text.includes(p));
-  });
-}
-
 // Warm-up ramp: freshly connected inboxes send less while they build
 // sender reputation. Weeks since connect → daily cap; null = fully warmed.
 const WARMUP_WEEKLY_CAPS = [10, 15, 20];
@@ -46,39 +34,6 @@ function warmupCap(connectedAt: string | null): number | null {
   if (!connectedAt) return null;
   const weeks = Math.floor((Date.now() - new Date(connectedAt).getTime()) / (7 * 86400000));
   return weeks >= 0 && weeks < WARMUP_WEEKLY_CAPS.length ? WARMUP_WEEKLY_CAPS[weeks] : null;
-}
-
-type SequenceRow = {
-  id: string; user_id: string; contact_email: string;
-  contact_name: string | null; contact_company: string | null; created_at: string;
-};
-
-/** A genuine reply is a lead — surface it in the pipeline (deduped by email). */
-async function createDealFromReply(db: ReturnType<typeof getSupabaseAdmin>, row: SequenceRow): Promise<void> {
-  try {
-    const { data: existingDeal } = await db
-      .from("deals")
-      .select("id")
-      .eq("user_id", row.user_id)
-      .eq("contact_email", row.contact_email.toLowerCase())
-      .limit(1);
-    if (!existingDeal || existingDeal.length === 0) {
-      const nowIso = new Date().toISOString();
-      await db.from("deals").insert({
-        id: crypto.randomUUID(),
-        user_id: row.user_id,
-        contact_email: row.contact_email.toLowerCase(),
-        contact_name: row.contact_name ?? "",
-        company: row.contact_company ?? "",
-        status: "replied",
-        notes: "Auto-created — replied to your campaign",
-        created_at: nowIso,
-        updated_at: nowIso,
-      });
-    }
-  } catch {
-    // deal creation is best-effort; never block the send loop
-  }
 }
 
 export async function GET(req: Request) {
@@ -120,7 +75,8 @@ export async function GET(req: Request) {
   const suppressedCache: Record<string, Set<string>> = {};
   const accountCache: Record<string, { email: string; nylas_grant_id: string | null; connected_at: string | null } | null> = {};
 
-  for (const row of due) {
+  const processRow = async (row: (typeof due)[number]) => {
+    let reserved = false;
     try {
       // Never email anyone on the user's do-not-contact list
       if (!(row.user_id in suppressedCache)) {
@@ -128,7 +84,7 @@ export async function GET(req: Request) {
       }
       if (suppressedCache[row.user_id].has(row.contact_email.toLowerCase())) {
         await db.from("sequence_contacts").update({ status: "suppressed" }).eq("id", row.id);
-        continue;
+        return;
       }
       // Fetch + cache campaign
       if (!campaignCache[row.campaign_id]) {
@@ -137,13 +93,13 @@ export async function GET(req: Request) {
           .select("subject, body, steps, status, emails_per_day, send_window_start, send_window_end, send_days")
           .eq("id", row.campaign_id)
           .single();
-        if (!c) continue;
+        if (!c) return;
         campaignCache[row.campaign_id] = c as Record<string, unknown>;
       }
       const campaignRow = campaignCache[row.campaign_id];
 
       // Skip paused campaigns
-      if (campaignRow.status === "paused") continue;
+      if (campaignRow.status === "paused") return;
 
       // Check send window
       const windowStart = (campaignRow.send_window_start as number) ?? 8;
@@ -152,7 +108,7 @@ export async function GET(req: Request) {
       const { hour: currentHour, day: currentDay } = ukTimeParts(now);
 
       if (!sendDays.includes(currentDay) || currentHour < windowStart || currentHour >= windowEnd) {
-        continue; // Outside allowed window — skip this run
+        return; // Outside allowed window — skip this run
       }
 
       // Get the user's connected email account (Nylas grant), cached per run
@@ -168,7 +124,7 @@ export async function GET(req: Request) {
 
       if (!emailAccount?.nylas_grant_id) {
         await db.from("sequence_contacts").update({ status: "error" }).eq("id", row.id);
-        continue;
+        return;
       }
       const grantId = emailAccount.nylas_grant_id as string;
 
@@ -182,9 +138,10 @@ export async function GET(req: Request) {
           .select("*", { count: "exact", head: true })
           .eq("user_id", row.user_id)
           .gte("sent_at", startOfDay.toISOString());
-        userSentToday[row.user_id] = count ?? 0;
+        // Re-check after the await — another worker may have set it since
+        if (!(row.user_id in userSentToday)) userSentToday[row.user_id] = count ?? 0;
       }
-      if (userSentToday[row.user_id] >= dailyLimit) continue;
+      if (userSentToday[row.user_id] >= dailyLimit) return;
 
       // Resolve email subject + body based on which step we're on
       let subject: string;
@@ -209,7 +166,7 @@ export async function GET(req: Request) {
         const stepIndex = row.current_step - 2; // step 2 → steps[0]
         if (stepIndex < 0 || stepIndex >= steps.length) {
           await db.from("sequence_contacts").update({ status: "completed" }).eq("id", row.id);
-          continue;
+          return;
         }
 
         // Check for a genuine reply before sending follow-up
@@ -224,12 +181,12 @@ export async function GET(req: Request) {
           // They asked to stop — honour it immediately, no deal created
           await suppress(row.user_id, row.contact_email, "reply opt-out");
           await db.from("sequence_contacts").update({ status: "suppressed" }).eq("id", row.id);
-          continue;
+          return;
         }
         if (replied) {
           await db.from("sequence_contacts").update({ status: "replied" }).eq("id", row.id);
           await createDealFromReply(db, row);
-          continue;
+          return;
         }
 
         const step = steps[stepIndex];
@@ -243,6 +200,11 @@ export async function GET(req: Request) {
         body = applyMerge(step.body, contact);
       }
 
+      // Reserve a daily-cap slot (check+increment is atomic between awaits)
+      if ((userSentToday[row.user_id] ?? 0) >= dailyLimit) return;
+      userSentToday[row.user_id] = (userSentToday[row.user_id] ?? 0) + 1;
+      reserved = true;
+
       // Claim the row before sending — prevents overlapping cron runs from
       // double-emailing the same contact. If the claim misses, another run
       // (or a concurrent tick) already owns it.
@@ -252,7 +214,11 @@ export async function GET(req: Request) {
         .eq("id", row.id)
         .in("status", ["active", "sending"])
         .select("id");
-      if (!claimed || claimed.length === 0) continue;
+      if (!claimed || claimed.length === 0) {
+        userSentToday[row.user_id] = Math.max(0, (userSentToday[row.user_id] ?? 1) - 1);
+        reserved = false;
+        return;
+      }
 
       // Follow-ups thread onto the initial email when we know its message id
       const { messageId } = await sendMessage(grantId, {
@@ -290,16 +256,29 @@ export async function GET(req: Request) {
           .eq("id", row.id);
       }
 
-      userSentToday[row.user_id] = (userSentToday[row.user_id] ?? 0) + 1;
       sent++;
     } catch {
       failed++;
+      if (reserved) userSentToday[row.user_id] = Math.max(0, (userSentToday[row.user_id] ?? 1) - 1);
       // Release a claimed-but-unsent row so the next run retries it
       try {
         await db.from("sequence_contacts").update({ status: "active" }).eq("id", row.id).eq("status", "sending");
       } catch { /* best effort */ }
     }
-  }
+  };
+
+  // Bounded-concurrency worker pool — throughput scales with users while
+  // the shared userSentToday reservations keep daily caps exact.
+  const CONCURRENCY = 6;
+  let cursor = 0;
+  await Promise.all(
+    Array.from({ length: Math.min(CONCURRENCY, due.length) }, async () => {
+      while (cursor < due.length) {
+        const row = due[cursor++];
+        await processRow(row);
+      }
+    })
+  );
 
   // ── Reply sweep ──────────────────────────────────────────────
   // Most replies arrive AFTER the last step has sent, and single-email
@@ -309,12 +288,20 @@ export async function GET(req: Request) {
   let sweptReplies = 0;
   if (now.getMinutes() < 15) {
     const sweepCutoff = new Date(Date.now() - 14 * 86400000).toISOString();
+    const { count: completedCount } = await db
+      .from("sequence_contacts")
+      .select("*", { count: "exact", head: true })
+      .eq("status", "completed")
+      .gte("created_at", sweepCutoff);
+    const totalCompleted = completedCount ?? 0;
+    const sweepOffset = totalCompleted > 40 ? (now.getUTCHours() * 40) % totalCompleted : 0;
     const { data: completedRows } = await db
       .from("sequence_contacts")
       .select("*")
       .eq("status", "completed")
       .gte("created_at", sweepCutoff)
-      .limit(40);
+      .order("created_at", { ascending: true })
+      .range(sweepOffset, sweepOffset + 39);
 
     for (const row of completedRows ?? []) {
       try {

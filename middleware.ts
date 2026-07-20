@@ -10,6 +10,7 @@ const isPublicRoute = createRouteMatcher([
   "/data-removal",
   "/api/data-removal",
   "/api/cron/(.*)",
+  "/api/nylas/webhook",
   "/kit/(.*)",
 ]);
 

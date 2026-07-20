@@ -155,10 +155,15 @@ export async function GET(req: NextRequest) {
     )
   );
 
-  const favToScan = [...favSet].filter((c) => {
-    const s = statusMap.get(c);
-    return !s || s.checkedAt < favStaleThreshold;
-  });
+  // Cap each run so big fleets rotate oldest-first instead of timing out
+  const FAV_BATCH = 150;
+  const favToScan = [...favSet]
+    .filter((c) => {
+      const s = statusMap.get(c);
+      return !s || s.checkedAt < favStaleThreshold;
+    })
+    .sort((a, b) => (statusMap.get(a)?.checkedAt ?? "").localeCompare(statusMap.get(b)?.checkedAt ?? ""))
+    .slice(0, FAV_BATCH);
 
   const trickle = allCompanies
     .filter((c) => !favSet.has(c))
