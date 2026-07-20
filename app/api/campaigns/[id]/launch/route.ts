@@ -11,6 +11,15 @@ function randomInt(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+// Window hours are user-facing UK times; the server runs UTC. Shift the
+// bounds by the current London offset so 8am means 8am in the UK.
+function londonOffsetHours(d: Date): number {
+  const lon = Number(
+    new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/London", hour: "numeric", hour12: false }).format(d)
+  );
+  return ((lon - d.getUTCHours()) + 24) % 24;
+}
+
 function advanceToNextWindow(t: Date, windowStart: number, sendDays: string[]): Date {
   const d = new Date(t);
   for (let tries = 0; tries < 14; tries++) {
@@ -79,15 +88,19 @@ export async function POST(
     });
   }
 
-  // Schedule with staggered send times, respecting window + daily limit
+  // Schedule with staggered send times, respecting window + daily limit.
+  // Window bounds are converted from UK time to the server's UTC clock.
   let currentTime = new Date();
+  const off = londonOffsetHours(currentTime);
+  const windowStartUtc = (sendWindowStart - off + 24) % 24;
+  const windowEndUtc = (sendWindowEnd - off + 24) % 24;
   const inWindow =
     DAY_NAMES[currentTime.getDay()] && sendDays.includes(DAY_NAMES[currentTime.getDay()]) &&
-    currentTime.getHours() >= sendWindowStart &&
-    currentTime.getHours() < sendWindowEnd;
+    currentTime.getHours() >= windowStartUtc &&
+    currentTime.getHours() < windowEndUtc;
 
   if (!inWindow) {
-    currentTime = advanceToNextWindow(currentTime, sendWindowStart, sendDays);
+    currentTime = advanceToNextWindow(currentTime, windowStartUtc, sendDays);
   }
 
   let dailyCount = 0;
@@ -102,8 +115,8 @@ export async function POST(
       if (dailyCount >= emailsPerDay) {
         const nextDay = new Date(currentTime);
         nextDay.setDate(nextDay.getDate() + 1);
-        nextDay.setHours(sendWindowStart, randomInt(0, 30), 0, 0);
-        currentTime = advanceToNextWindow(nextDay, sendWindowStart, sendDays);
+        nextDay.setHours(windowStartUtc, randomInt(0, 30), 0, 0);
+        currentTime = advanceToNextWindow(nextDay, windowStartUtc, sendDays);
         dailyCount = 0;
         currentDay = currentTime.toDateString();
       }
@@ -117,11 +130,11 @@ export async function POST(
     currentTime = new Date(currentTime.getTime() + delaySecs * 1000);
 
     // If we've passed the window end, move to next valid day
-    if (currentTime.getHours() >= sendWindowEnd) {
+    if (currentTime.getHours() >= windowEndUtc) {
       const nextDay = new Date(currentTime);
       nextDay.setDate(nextDay.getDate() + 1);
-      nextDay.setHours(sendWindowStart, randomInt(0, 30), 0, 0);
-      currentTime = advanceToNextWindow(nextDay, sendWindowStart, sendDays);
+      nextDay.setHours(windowStartUtc, randomInt(0, 30), 0, 0);
+      currentTime = advanceToNextWindow(nextDay, windowStartUtc, sendDays);
       dailyCount = 0;
       currentDay = currentTime.toDateString();
     }
