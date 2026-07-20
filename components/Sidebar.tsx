@@ -27,7 +27,7 @@ const NAV_GROUPS: { label: string | null; items: NavItem[] }[] = [
   {
     label: null,
     items: [
-      { href: "/dashboard", label: "Today", icon: LayoutDashboard, exact: true, tourId: "tour-dashboard" },
+      { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, exact: true, tourId: "tour-dashboard" },
     ],
   },
   {
@@ -87,9 +87,9 @@ export default function Sidebar() {
   return (
     <div className="glass flex flex-col w-[200px] h-full rounded-[20px] px-2.5 py-4 shadow-[0_2px_16px_rgba(0,0,0,0.05)] overflow-y-auto scrollbar-thin">
 
-      {/* Wordmark */}
-      <div className="px-3 pt-0.5 pb-4">
-        <span className="font-display text-[24px] font-bold leading-none tracking-[-0.04em] select-none bg-gradient-to-r from-coral-400 to-coral-600 bg-clip-text text-transparent">
+      {/* Wordmark — sized to sit flush with the New Campaign button below */}
+      <div className="px-1 pt-1 pb-4 text-center">
+        <span className="font-display text-[34px] font-bold leading-none tracking-[-0.04em] select-none bg-gradient-to-r from-coral-400 to-coral-600 bg-clip-text text-transparent">
           collabi
         </span>
       </div>
