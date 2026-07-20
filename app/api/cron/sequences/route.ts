@@ -9,6 +9,21 @@ export const runtime = "nodejs";
 
 const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
+// Send windows are user-facing times — evaluate them in UK time, not the
+// server's UTC clock (which made an 8am window mean 9am for UK users).
+function ukTimeParts(d: Date): { hour: number; day: string } {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/London",
+    hour: "numeric",
+    hour12: false,
+    weekday: "short",
+  }).formatToParts(d);
+  return {
+    hour: Number(parts.find(p => p.type === "hour")?.value ?? d.getUTCHours()),
+    day: parts.find(p => p.type === "weekday")?.value ?? DAY_NAMES[d.getUTCDay()],
+  };
+}
+
 // A reply containing any of these is an opt-out — honour it automatically.
 const OPT_OUT_PATTERNS = [
   "unsubscribe", "stop emailing", "stop contacting", "remove me from",
@@ -91,8 +106,7 @@ export async function GET(req: Request) {
       const windowStart = (campaignRow.send_window_start as number) ?? 8;
       const windowEnd = (campaignRow.send_window_end as number) ?? 18;
       const sendDays = (campaignRow.send_days as string[]) || ["Mon", "Tue", "Wed", "Thu", "Fri"];
-      const currentHour = now.getHours();
-      const currentDay = DAY_NAMES[now.getDay()];
+      const { hour: currentHour, day: currentDay } = ukTimeParts(now);
 
       if (!sendDays.includes(currentDay) || currentHour < windowStart || currentHour >= windowEnd) {
         continue; // Outside allowed window — skip this run
