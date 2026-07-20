@@ -333,6 +333,11 @@ function NewCampaignPage() {
       const db = await getDb();
       await dbSaveCampaign(db, campaign);
       localStorage.removeItem(DRAFT_KEY);
+      // The button says Launch — actually launch (enrol + schedule), don't
+      // strand the campaign as a draft behind a second launch button.
+      try {
+        await fetch(`/api/campaigns/${campaign.id}/launch`, { method: "POST" });
+      } catch { /* detail page still offers Launch if this failed */ }
       router.push(`/campaigns/${campaign.id}`);
     } finally {
       setSaving(false);
