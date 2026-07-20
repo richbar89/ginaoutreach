@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { Plus, Trash2, X, Check, Pencil, TrendingUp } from "lucide-react";
 import { useDb } from "@/lib/useDb";
 import { useAuth } from "@clerk/nextjs";
@@ -148,6 +149,7 @@ function DealModal({
 }
 
 export default function PipelinePage() {
+  const router = useRouter();
   const getDb = useDb();
   const { userId: clerkUserId } = useAuth();
   const userId = clerkUserId ?? undefined;
@@ -421,7 +423,8 @@ export default function PipelinePage() {
                           dragEnterCount.current = {};
                           setDragOver(null);
                         }}
-                        className="card-hover bg-white rounded-2xl p-4 border border-black/[0.05] shadow-[0_2px_12px_rgba(0,0,0,0.05),0_1px_3px_rgba(0,0,0,0.03)] cursor-grab active:cursor-grabbing active:opacity-60 active:scale-[0.98] select-none"
+                        onClick={() => router.push(`/pipeline/${deal.id}`)}
+                        className="card-hover bg-white rounded-2xl p-4 border border-black/[0.05] shadow-[0_2px_12px_rgba(0,0,0,0.05),0_1px_3px_rgba(0,0,0,0.03)] cursor-pointer active:opacity-60 active:scale-[0.98] select-none"
                       >
                         <div className="flex items-start gap-2.5 mb-2.5">
                           <BrandLogo
@@ -447,14 +450,14 @@ export default function PipelinePage() {
 
                         <div className="flex items-center justify-end gap-1 pt-2 border-t border-black/[0.05]">
                           <button
-                            onClick={() => setEditing(deal)}
+                            onClick={(e) => { e.stopPropagation(); setEditing(deal); }}
                             className="p-1.5 hover:bg-black/[0.04] rounded-full transition-all duration-200"
                             title="Edit"
                           >
                             <Pencil size={12} className="text-navy-400" />
                           </button>
                           <button
-                            onClick={() => handleDelete(deal.id)}
+                            onClick={(e) => { e.stopPropagation(); handleDelete(deal.id); }}
                             className="p-1.5 hover:bg-red-50 rounded-full transition-all duration-200"
                             title="Remove"
                           >

@@ -587,7 +587,7 @@ export default function DashboardPage() {
                   const companyName = deal.company || deal.contactName;
                   const domain = brands.find(b => b.name === companyName)?.domain ?? extraDomains[companyName];
                   return (
-                    <div key={deal.id} style={{ borderRadius: 14, padding: "12px 16px", display: "flex", alignItems: "center", gap: 12, background: "rgba(255,255,255,0.6)", border: "1px solid rgba(0,0,0,0.04)", borderLeft: `3px solid ${accent}` }}>
+                    <Link key={deal.id} href={`/pipeline/${deal.id}`} className="hover:bg-coral-50/40 transition-colors" style={{ borderRadius: 14, padding: "12px 16px", display: "flex", alignItems: "center", gap: 12, background: "rgba(255,255,255,0.6)", border: "1px solid rgba(0,0,0,0.04)", borderLeft: `3px solid ${accent}`, textDecoration: "none" }}>
                       <BrandLogo name={companyName} domain={domain} size={36} />
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <p style={{ fontSize: 14, fontWeight: 700, color: "#1D1D1F", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
@@ -601,7 +601,7 @@ export default function DashboardPage() {
                           {DEAL_STAGE_LABELS[deal.status] || deal.status}
                         </span>
                       </div>
-                    </div>
+                    </Link>
                   );
                 })}
               </div>
